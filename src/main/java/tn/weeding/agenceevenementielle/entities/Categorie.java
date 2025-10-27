@@ -1,5 +1,8 @@
 package tn.weeding.agenceevenementielle.entities;
 
 public enum Categorie {
-    Lumiere, Mobilier, Decoration, Accessoires
+    Lumiere,
+    Mobilier,
+    Decoration,
+    Accessoires
 }
