@@ -11,6 +11,7 @@ import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,16 +30,30 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     private final CodeGeneratorServiceProduit codeGeneratorService;
 
     private static final Integer SEUIL_CRITIQUE_DEFAUT = 5;
+    private final ImageService imageService;
 
     // ============ GESTION DES PRODUITS ============
 
     @Override
     public ProduitResponseDto creerProduit(ProduitRequestDto produitDto, String username) {
         log.info("Création d'un nouveau produit : {}", produitDto.getNomProduit());
+        String imagePath = null;
+        String codeProduit = codeGeneratorService.generateProduitCode(produitDto.getNomProduit());
 
+        if (produitDto.getImageProduit() != null &&
+                produitDto.getImageProduit().startsWith("data:image")) {
+            try {
+                 imagePath = imageService.saveBase64Image(
+                        produitDto.getImageProduit(),
+                        codeProduit
+                );
+            } catch (Exception e) {
+                log.error("❌ Erreur sauvegarde image ");
+            }
+        }
         // Créer l'entité produit
         Produit produit = new Produit();
-        produit.setCodeProduit(codeGeneratorService.generateProduitCode(produitDto.getNomProduit()));
+        produit.setCodeProduit(codeProduit);
         produit.setNomProduit(produitDto.getNomProduit());
         produit.setDescriptionProduit(produitDto.getDescriptionProduit());
         produit.setCategorieProduit(produitDto.getCategorieProduit());
@@ -47,7 +62,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         produit.setQuantiteDisponible(produitDto.getQuantiteInitial());
         produit.setTypeProduit(produitDto.getTypeProduit());
         produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
-        produit.setImageProduit(produitDto.getImageProduit());
+        produit.setImageProduit(imagePath);
 
         // Sauvegarder le produit
         Produit savedProduit = produitRepository.save(produit);
@@ -66,6 +81,8 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             );
         }
 
+
+
         log.info("Produit créé avec succès : Code={}", savedProduit.getCodeProduit());
         return convertToDto(savedProduit);
     }
@@ -81,6 +98,20 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Integer ancienneQuantiteInitiale = produit.getQuantiteInitial();
         Integer nouvelleQuantiteInitiale = produitDto.getQuantiteInitial();
 
+        String imagePath=produit.getImageProduit() ;
+        if (produitDto.getImageProduit() != null &&
+                produitDto.getImageProduit().startsWith("data:image")) {
+            try {
+                imagePath = imageService.saveBase64Image(
+                        produitDto.getImageProduit(),
+                        produit.getCodeProduit()
+                );
+            } catch (Exception e) {
+                log.error("❌ Erreur sauvegarde image ");
+            }
+        }
+
+
         // Mettre à jour les informations du produit
         produit.setNomProduit(produitDto.getNomProduit());
         produit.setDescriptionProduit(produitDto.getDescriptionProduit());
@@ -88,7 +119,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         produit.setPrixUnitaire(produitDto.getPrixUnitaire());
         produit.setTypeProduit(produitDto.getTypeProduit());
         produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
-        produit.setImageProduit(produitDto.getImageProduit());
+        produit.setImageProduit(imagePath);
 
         // Si la quantité initiale a changé, ajuster le stock disponible
         if (!ancienneQuantiteInitiale.equals(nouvelleQuantiteInitiale)) {
@@ -641,6 +672,9 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setMaintenanceRequise(produit.getMaintenanceRequise());
         dto.setTypeProduit(produit.getTypeProduit());
         dto.setSeuilCritique(SEUIL_CRITIQUE_DEFAUT);
+        dto.setDateDerniereModification(produit.getDateModification());
+        dto.setDateCreation(produit.getDateCreation());
+
 
         // Calculer les indicateurs
         dto.setEnStock(produit.getQuantiteDisponible() > 0);

@@ -34,6 +34,7 @@ public class ProduitRequestDto {
     private TypeProduit typeProduit;
 
     private Boolean maintenanceRequise = false;
+
     private String imageProduit;
 
     @Min(value = 0)

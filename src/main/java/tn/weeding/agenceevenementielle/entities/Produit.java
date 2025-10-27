@@ -1,5 +1,6 @@
 package tn.weeding.agenceevenementielle.entities;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -62,6 +63,23 @@ public class Produit implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TypeProduit typeProduit;
+
+    @Column
+    private LocalDateTime dateCreation;
+
+    @Column
+    private LocalDateTime dateModification;
+
+
+    @PrePersist
+    public void onCreate (){
+        dateCreation = LocalDateTime.now();
+        dateModification = LocalDateTime.now();
+    }
+    @PreUpdate
+    public void onUpdate (){
+        dateModification = LocalDateTime.now();
+    }
 
 
     //====================================== Relations ========================

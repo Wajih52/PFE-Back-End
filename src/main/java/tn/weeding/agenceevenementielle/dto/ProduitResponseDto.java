@@ -3,6 +3,8 @@ package tn.weeding.agenceevenementielle.dto;
 import lombok.*;
 import tn.weeding.agenceevenementielle.entities.Categorie;
 import tn.weeding.agenceevenementielle.entities.TypeProduit;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -32,6 +34,6 @@ public class ProduitResponseDto {
     private Integer nombreReservations;
     private Double moyenneNotes;
     private Integer nombreAvis;
-    private Date dateCreation;
-    private Date dateDerniereModification;
+    private LocalDateTime dateCreation;
+    private LocalDateTime dateDerniereModification;
 }
