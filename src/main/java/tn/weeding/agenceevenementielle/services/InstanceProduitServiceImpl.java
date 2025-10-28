@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.dto.InstanceProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.*;
+import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
 import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -61,10 +63,11 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .produit(produit)
                 .statut(dto.getStatut() != null ? dto.getStatut() : StatutInstance.DISPONIBLE)
                 .etatPhysique(dto.getEtatPhysique() != null ? dto.getEtatPhysique() : EtatPhysique.BON_ETAT)
-                .observations(dto.getObservations())
+                .observation(dto.getObservation())
                 .dateAcquisition(dto.getDateAcquisition() != null ? dto.getDateAcquisition() : LocalDate.now())
                 .dateDerniereMaintenance(dto.getDateDerniereMaintenance())
                 .dateProchaineMaintenance(dto.getDateProchaineMaintenance())
+                .ajoutPar(username)
                 .build();
 
         instance = instanceRepo.save(instance);
@@ -75,7 +78,8 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 TypeMouvement.AJOUT_INSTANCE,
                 1,
                 "Ajout instance " + instance.getNumeroSerie(),
-                username
+                username,
+                instance.getNumeroSerie()
         );
 
         // Mettre à jour la quantité disponible du produit
@@ -104,10 +108,11 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         // Mettre à jour les champs
         instance.setStatut(dto.getStatut());
         instance.setEtatPhysique(dto.getEtatPhysique());
-        instance.setObservations(dto.getObservations());
-        instance.setDateAcquisition(dto.getDateAcquisition());
+        instance.setObservation(dto.getObservation());
+       // instance.setDateAcquisition(dto.getDateAcquisition());
         instance.setDateDerniereMaintenance(dto.getDateDerniereMaintenance());
         instance.setDateProchaineMaintenance(dto.getDateProchaineMaintenance());
+        instance.setAjoutPar(username);
 
         instance = instanceRepo.save(instance);
 
@@ -142,7 +147,8 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 TypeMouvement.SUPPRESSION_INSTANCE,
                 -1,
                 "Suppression instance " + instance.getNumeroSerie(),
-                "admin"
+                "admin",
+                instance.getNumeroSerie()
         );
 
         // Mettre à jour la quantité du produit
@@ -154,6 +160,12 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     // ============ CONSULTATION ============
 
     @Override
+    public List<InstanceProduitResponseDto> getInstances() {
+        return instanceRepo.findAll().stream()
+                .map(this::toDto)
+                .toList();
+    }
+    @Override
     @Transactional(readOnly = true)
     public InstanceProduitResponseDto getInstanceById(Long idInstance) {
         InstanceProduit instance = instanceRepo.findById(idInstance)
@@ -161,6 +173,8 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                         "Instance avec ID " + idInstance + " introuvable"));
         return toDto(instance);
     }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -214,6 +228,13 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                         "Instance avec ID " + idInstance + " introuvable"));
 
         StatutInstance ancienStatut = instance.getStatut();
+        if(ancienStatut.equals(StatutInstance.EN_MAINTENANCE)){
+            throw new CustomException("Changement De Statut Simple De Maintenance ==> En Disponible est impossible");
+        }
+
+        if(ancienStatut.equals(StatutInstance.DISPONIBLE)&&nouveauStatut==StatutInstance.EN_MAINTENANCE) {
+           throw new CustomException("Changement De Statut Simple De Disponible ==> En Maintenance est impossible ");
+        }
         instance.setStatut(nouveauStatut);
         instance = instanceRepo.save(instance);
 
@@ -222,8 +243,9 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                     instance.getProduit(),
                     TypeMouvement.PRODUIT_ENDOMMAGE,
                     -1,
-                    "Instance " + instance.getNumeroSerie() + " - " + nouveauStatut,
-                    username
+                    "Instance : "+nouveauStatut,
+                    username,
+                    instance.getNumeroSerie()
             );
         }
 
@@ -241,7 +263,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     // ============ GESTION DE LA MAINTENANCE ============
 
     @Override
-    public InstanceProduitResponseDto envoyerEnMaintenance(Long idInstance, LocalDate dateRetourPrevue, String username) {
+    public InstanceProduitResponseDto envoyerEnMaintenance(Long idInstance, String motif, String username) {
         log.info("Envoi en maintenance de l'instance ID: {} par {}", idInstance, username);
 
         InstanceProduit instance = instanceRepo.findById(idInstance)
@@ -256,7 +278,9 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         }
 
         instance.setStatut(StatutInstance.EN_MAINTENANCE);
-        instance.setDateProchaineMaintenance(dateRetourPrevue);
+        instance.setDateDerniereMaintenance(LocalDate.now());
+        instance.setDateProchaineMaintenance(LocalDate.now().plusMonths(4));
+        instance.setMotif(motif);
         instance = instanceRepo.save(instance);
 
         // Enregistrer le mouvement
@@ -264,20 +288,21 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 instance.getProduit(),
                 TypeMouvement.MAINTENANCE,
                 -1,
-                "Instance " + instance.getNumeroSerie() + " envoyée en maintenance",
-                username
+                "Instance envoyée en maintenance",
+                username,
+                instance.getNumeroSerie()
         );
 
         // Mettre à jour la quantité disponible
         mettreAJourQuantiteDisponible(instance.getProduit());
 
-        log.info("Instance {} envoyée en maintenance, retour prévu le {}",
-                instance.getNumeroSerie(), dateRetourPrevue);
+        log.info("Instance {} envoyée en maintenance",
+                instance.getNumeroSerie());
         return toDto(instance);
     }
 
     @Override
-    public InstanceProduitResponseDto retournerDeMaintenance(Long idInstance, String username) {
+    public InstanceProduitResponseDto retournerDeMaintenance(Long idInstance,LocalDate dateProchainMaintenance, String username) {
         log.info("Retour de maintenance de l'instance ID: {} par {}", idInstance, username);
 
         InstanceProduit instance = instanceRepo.findById(idInstance)
@@ -286,6 +311,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
 
         instance.setStatut(StatutInstance.DISPONIBLE);
         instance.setDateDerniereMaintenance(LocalDate.now());
+        instance.setDateProchaineMaintenance(dateProchainMaintenance);
         instance = instanceRepo.save(instance);
 
         // Enregistrer le mouvement
@@ -293,8 +319,9 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 instance.getProduit(),
                 TypeMouvement.RETOUR_MAINTENANCE,
                 1,
-                "Instance " + instance.getNumeroSerie() + " retournée de maintenance",
-                username
+                "Instance retournée de maintenance",
+                username,
+                instance.getNumeroSerie()
         );
 
         // Mettre à jour la quantité disponible
@@ -404,14 +431,15 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         // Créer les instances
         List<InstanceProduit> instances = new java.util.ArrayList<>();
         for (int i = 1; i <= quantite; i++) {
-            String numeroSerie = String.format("%s-%03d", produit.getCodeProduit(), maxNumero + i);
+            String numeroSerie = String.format("%s-%04d", produit.getCodeProduit(), maxNumero + i);
 
             InstanceProduit instance = InstanceProduit.builder()
                     .numeroSerie(numeroSerie)
                     .produit(produit)
                     .statut(StatutInstance.DISPONIBLE)
-                    .etatPhysique(EtatPhysique.NEUF)
+                    .etatPhysique(EtatPhysique.BON_ETAT)
                     .dateAcquisition(LocalDate.now())
+                    .ajoutPar(username)
                     .build();
 
             instances.add(instanceRepo.save(instance));
@@ -423,7 +451,8 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 TypeMouvement.AJOUT_INSTANCE,
                 quantite,
                 "Ajout lot de " + quantite + " instances (" + produit.getCodeProduit() + ")",
-                username
+                username,
+                produit.getCodeProduit()
         );
 
         // Mettre à jour la quantité disponible du produit
@@ -455,7 +484,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
      * Enregistre un mouvement de stock pour traçabilité
      */
     private void enregistrerMouvement(Produit produit, TypeMouvement type,
-                                      int quantite, String motif, String username) {
+                                      int quantite, String motif, String username, String codeInstance) {
         Integer quantiteAvant = produit.getQuantiteDisponible();
         Integer quantiteApres = quantiteAvant + quantite;
 
@@ -468,6 +497,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         mouvement.setMotif(motif);
         mouvement.setEffectuePar(username);
         mouvement.setDateMouvement(new Date());
+        mouvement.setCodeInstance(codeInstance);
 
         mouvementStockRepo.save(mouvement);
 
@@ -488,12 +518,13 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .nomProduit(instance.getProduit().getNomProduit())
                 .codeProduit(instance.getProduit().getCodeProduit())
                 .idLigneReservation(instance.getIdLigneReservation())
-                .observations(instance.getObservations())
+                .observation(instance.getObservation())
                 .dateAcquisition(instance.getDateAcquisition())
                 .dateDerniereMaintenance(instance.getDateDerniereMaintenance())
                 .dateProchaineMaintenance(instance.getDateProchaineMaintenance())
                 .disponible(instance.isDisponible())
                 .maintenanceRequise(instance.maintenanceNecessaire())
+                .ajoutPar(instance.getAjoutPar())
                 .build();
 
         // Calculer les jours avant maintenance

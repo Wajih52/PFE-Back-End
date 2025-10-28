@@ -99,7 +99,7 @@ public class Produit implements Serializable {
     @OneToMany(mappedBy = "produit")
     Set<LigneReservation> ligneReservationProduit;
 
-    @OneToMany(mappedBy = "produit")
+    @OneToMany(mappedBy = "produit", orphanRemoval = true)
     private Set<MouvementStock> mouvementStockProduit;
 
     // ============ MÉTHODES UTILITAIRES ============

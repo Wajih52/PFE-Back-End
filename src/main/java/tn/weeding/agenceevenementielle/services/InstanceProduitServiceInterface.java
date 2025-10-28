@@ -36,6 +36,10 @@ public interface InstanceProduitServiceInterface {
     InstanceProduitResponseDto getInstanceById(Long idInstance);
 
     /**
+     * Récupérer toutes les instances
+     */
+    List<InstanceProduitResponseDto> getInstances();
+    /**
      * Récupérer une instance par son numéro de série
      */
     InstanceProduitResponseDto getInstanceByNumeroSerie(String numeroSerie);
@@ -74,12 +78,12 @@ public interface InstanceProduitServiceInterface {
     /**
      * Marquer une instance comme en maintenance
      */
-    InstanceProduitResponseDto envoyerEnMaintenance(Long idInstance, LocalDate dateRetourPrevue, String username);
+    InstanceProduitResponseDto envoyerEnMaintenance(Long idInstance, String motif, String username);
 
     /**
      * Marquer une instance comme retournée de maintenance
      */
-    InstanceProduitResponseDto retournerDeMaintenance(Long idInstance, String username);
+    InstanceProduitResponseDto retournerDeMaintenance(Long idInstance,LocalDate dateProchainMaintenance , String username);
 
     /**
      * Récupérer les instances nécessitant une maintenance

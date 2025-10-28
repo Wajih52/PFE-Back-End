@@ -91,6 +91,13 @@ public class InstanceProduitController {
         InstanceProduitResponseDto instance = instanceService.getInstanceById(id);
         return ResponseEntity.ok(instance);
     }
+    @GetMapping("/all")
+    @Operation(summary = "Obtenir une instance par ID", description = "Récupère les détails d'une instance")
+    public ResponseEntity<List<InstanceProduitResponseDto>> getInstances() {
+        log.info("Récupération de toutes les instanses");
+        List<InstanceProduitResponseDto> instances = instanceService.getInstances();
+        return ResponseEntity.ok(instances);
+    }
 
     @GetMapping("/numero-serie/{numeroSerie}")
     @Operation(summary = "Rechercher par numéro de série",
@@ -166,11 +173,11 @@ public class InstanceProduitController {
             description = "Marque une instance comme étant en maintenance")
     public ResponseEntity<InstanceProduitResponseDto> envoyerEnMaintenance(
             @PathVariable Long id,
-            @RequestParam LocalDate dateRetourPrevue) {
-        log.info("Envoi en maintenance de l'instance ID: {}, retour prévu: {}", id, dateRetourPrevue);
+            @RequestParam String motif) {
+        log.info("Envoi en maintenance de l'instance ID: {}, à cause de : {}", id, motif);
         String username = authenticationFacade.getAuthentication().getName();
         InstanceProduitResponseDto instance =
-                instanceService.envoyerEnMaintenance(id, dateRetourPrevue, username);
+                instanceService.envoyerEnMaintenance(id, motif, username);
         return ResponseEntity.ok(instance);
     }
 
@@ -178,10 +185,11 @@ public class InstanceProduitController {
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
     @Operation(summary = "Retour de maintenance",
             description = "Marque une instance comme revenue de maintenance")
-    public ResponseEntity<InstanceProduitResponseDto> retournerDeMaintenance(@PathVariable Long id) {
+    public ResponseEntity<InstanceProduitResponseDto> retournerDeMaintenance(@PathVariable Long id,
+          @Valid  @RequestParam LocalDate dateProchainMaintenance) {
         log.info("Retour de maintenance de l'instance ID: {}", id);
         String username = authenticationFacade.getAuthentication().getName();
-        InstanceProduitResponseDto instance = instanceService.retournerDeMaintenance(id, username);
+        InstanceProduitResponseDto instance = instanceService.retournerDeMaintenance(id,dateProchainMaintenance, username);
         return ResponseEntity.ok(instance);
     }
 

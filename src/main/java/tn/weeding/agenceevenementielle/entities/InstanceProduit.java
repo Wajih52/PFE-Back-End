@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -61,12 +62,19 @@ public class InstanceProduit implements Serializable {
      * Observations générales
      */
     @Column(length = 1000)
-    private String observations;
+    private String observation;
 
     /**
      * Date d'acquisition de l'instance
      */
     private LocalDate dateAcquisition;
+
+    /**
+     * Date d'acquisition de l'instance
+     */
+    private String ajoutPar;
+
+
 
     /**
      * Date de dernière maintenance
@@ -76,7 +84,20 @@ public class InstanceProduit implements Serializable {
     /**
      * Date de prochaine maintenance prévue
      */
+    @Future
     private LocalDate dateProchaineMaintenance;
+
+    /**
+     * Motif Dernier maintenance
+     */
+    private String motif;
+
+
+
+    @PrePersist
+    public void prePersist() {
+        dateAcquisition = LocalDate.now();
+    }
 
     // ============ MÉTHODES UTILITAIRES ============
 
@@ -103,4 +124,5 @@ public class InstanceProduit implements Serializable {
                 && dateProchaineMaintenance.isBefore(LocalDate.now())
                 && statut != StatutInstance.EN_MAINTENANCE;
     }
+
 }

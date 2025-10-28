@@ -44,7 +44,7 @@ public class CodeGeneratorServiceProduit {
     @Transactional(readOnly = true)
     public String generateInstanceCode(String nomProduit) {
         int currentYear = Year.now().getValue();
-        String yearPrefix = PRODUIT_PREFIX + "-" + currentYear + "-"+generateProductPrefix(nomProduit);
+        String yearPrefix = PRODUIT_PREFIX + "-" + currentYear + "-"+generateProductPrefix(nomProduit) + "-";
 
         // Récupérer le dernier code de l'année en cours
         Optional<String> lastCode = instanceProduitRepository.findAll()
@@ -57,7 +57,7 @@ public class CodeGeneratorServiceProduit {
             // Extraire le numéro et incrémenter
             String code = lastCode.get();
             int number = extractNumber(code, yearPrefix);
-            int nextNumber = number - 1;
+            int nextNumber = number + 1;
             String newCode = String.format("%s%04d", yearPrefix, nextNumber);
             log.debug("📦 Dernier code produit : {} → Nouveau : {}", code, newCode);
             return newCode;

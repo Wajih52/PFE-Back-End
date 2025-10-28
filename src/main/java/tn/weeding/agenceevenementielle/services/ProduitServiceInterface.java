@@ -33,6 +33,11 @@ public interface ProduitServiceInterface {
     void supprimerProduit(Long idProduit, String username);
 
     /**
+     * Supprimer un produit (suppression logique en mettant quantité à 0)
+     */
+    void supprimerProduitDeBase(Long idProduit, String username);
+
+    /**
      * Désactiver un produit (quantité disponible = 0, mais garde les données)
      */
     void desactiverProduit(Long idProduit, String username);

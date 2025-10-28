@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Builder
 public class InstanceProduitRequestDto {
 
-    @NotBlank(message = "Le numéro de série est obligatoire")
+
     @Size(min = 3, max = 50, message = "Le numéro de série doit contenir entre 3 et 50 caractères")
     private String numeroSerie;
 
@@ -29,7 +29,7 @@ public class InstanceProduitRequestDto {
     private EtatPhysique etatPhysique;
 
     @Size(max = 1000, message = "Les observations ne doivent pas dépasser 1000 caractères")
-    private String observations;
+    private String observation;
 
     @PastOrPresent(message = "La date d'acquisition ne peut pas être dans le futur")
     private LocalDate dateAcquisition;

@@ -30,8 +30,8 @@ public class InstanceProduitResponseDto {
     private Long idReservation;
     private String clientNom;
     private String clientPrenom;
-
-    private String observations;
+    private String ajoutPar;
+    private String observation;
     private LocalDate dateAcquisition;
     private LocalDate dateDerniereMaintenance;
     private LocalDate dateProchaineMaintenance;

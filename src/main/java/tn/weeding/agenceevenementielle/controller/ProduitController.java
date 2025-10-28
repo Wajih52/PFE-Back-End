@@ -73,6 +73,16 @@ public class ProduitController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{id}/base")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Supprimer un produit", description = "Suppression  d'un produit De la base de données(réservé aux admins)")
+    public ResponseEntity<Void> supprimerProduitDeBase(@PathVariable Long id) {
+        log.info("Requête de suppression de la base du produit ID : {}", id);
+        String username = authenticationFacade.getAuthentication().getName();
+        produitService.supprimerProduitDeBase(id, username);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{id}/desactiver")
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
     @Operation(summary = "Désactiver un produit", description = "Met la quantité disponible à 0 sans supprimer le produit")

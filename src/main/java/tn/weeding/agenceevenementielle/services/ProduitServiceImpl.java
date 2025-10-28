@@ -8,12 +8,13 @@ import tn.weeding.agenceevenementielle.dto.MouvementStockResponseDto;
 import tn.weeding.agenceevenementielle.dto.ProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.ProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.*;
+import tn.weeding.agenceevenementielle.exceptions.CustomException;
+import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
 import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +29,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     private final ProduitRepository produitRepository;
     private final MouvementStockRepository mouvementStockRepository;
     private final CodeGeneratorServiceProduit codeGeneratorService;
+    private final InstanceProduitRepository instanceProduitRepository ;
 
     private static final Integer SEUIL_CRITIQUE_DEFAUT = 5;
     private final ImageService imageService;
@@ -57,11 +59,26 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         produit.setNomProduit(produitDto.getNomProduit());
         produit.setDescriptionProduit(produitDto.getDescriptionProduit());
         produit.setCategorieProduit(produitDto.getCategorieProduit());
+
+        //si un produit de réference donc la quantité est rélié aux nombres des instances
+        if(produitDto.getTypeProduit().equals(TypeProduit.avecReference)){
+            produit.setQuantiteInitial(0);
+        }else{
+            produit.setQuantiteInitial(produitDto.getQuantiteInitial());
+        }
+
         produit.setPrixUnitaire(produitDto.getPrixUnitaire());
         produit.setQuantiteInitial(produitDto.getQuantiteInitial());
         produit.setQuantiteDisponible(produitDto.getQuantiteInitial());
         produit.setTypeProduit(produitDto.getTypeProduit());
-        produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
+        //pour un produit de réference la maintenance est rélié aux instances
+        if(produitDto.getTypeProduit().equals(TypeProduit.avecReference)){
+            produit.setMaintenanceRequise(false);
+        }else{
+            produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
+        }
+
+        produit.setSeuilCritique(produitDto.getSeuilCritique());
         produit.setImageProduit(imagePath);
 
         // Sauvegarder le produit
@@ -94,6 +111,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
+
         // Vérifier si la quantité initiale a changé
         Integer ancienneQuantiteInitiale = produit.getQuantiteInitial();
         Integer nouvelleQuantiteInitiale = produitDto.getQuantiteInitial();
@@ -113,12 +131,44 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
 
         // Mettre à jour les informations du produit
-        produit.setNomProduit(produitDto.getNomProduit());
+
+        List<InstanceProduit> instanceProduits =
+                instanceProduitRepository.findByProduit_IdProduit(produit.getIdProduit());
+
+        //si changement de nom donc géneration de nouveau code
+        if((!produitDto.getNomProduit().equals(produit.getNomProduit())) && instanceProduits.isEmpty()){
+            String code = codeGeneratorService.generateProduitCode(produitDto.getNomProduit());
+            produit.setCodeProduit(code);
+            produit.setNomProduit(produitDto.getNomProduit());
+        }else{
+            produit.setNomProduit(produitDto.getNomProduit());
+        }
+
         produit.setDescriptionProduit(produitDto.getDescriptionProduit());
         produit.setCategorieProduit(produitDto.getCategorieProduit());
         produit.setPrixUnitaire(produitDto.getPrixUnitaire());
+
+
+
+        if(!instanceProduits.isEmpty()&& produitDto.getTypeProduit().equals(TypeProduit.enQuantite)){
+            throw new CustomException("Tu ne peux pas modifier Le type du produit :" +
+                    produit.getCodeProduit()+
+                    " car il contient des instances "
+                    );
+        }
+
         produit.setTypeProduit(produitDto.getTypeProduit());
-        produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
+
+        if( hasInstancesProblematiques(instanceProduits)&& produitDto.getTypeProduit().equals(TypeProduit.avecReference)){
+            produit.setMaintenanceRequise(true);
+        } else if(produitDto.getTypeProduit().equals(TypeProduit.avecReference)&& !hasInstancesProblematiques(instanceProduits)) {
+            produit.setMaintenanceRequise(false);
+        }else {
+            produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
+        }
+
+
+
         produit.setImageProduit(imagePath);
 
         // Si la quantité initiale a changé, ajuster le stock disponible
@@ -181,6 +231,20 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         log.info("Produit supprimé (logiquement) avec succès : Code={}", produit.getCodeProduit());
     }
+
+    @Override
+    public void supprimerProduitDeBase(Long idProduit, String username) {
+        log.info("Suppression du produit ID : {} De la base de données", idProduit);
+
+        Produit produit = produitRepository.findById(idProduit)
+                .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
+
+        // Vérifier si le produit a des réservations actives
+        // TODO: Implémenter la vérification des réservations actives
+
+        produitRepository.delete(produit);
+    }
+
 
     @Override
     public void desactiverProduit(Long idProduit, String username) {
@@ -671,7 +735,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setQuantiteDisponible(produit.getQuantiteDisponible());
         dto.setMaintenanceRequise(produit.getMaintenanceRequise());
         dto.setTypeProduit(produit.getTypeProduit());
-        dto.setSeuilCritique(SEUIL_CRITIQUE_DEFAUT);
+        dto.setSeuilCritique(produit.getSeuilCritique());
         dto.setDateDerniereModification(produit.getDateModification());
         dto.setDateCreation(produit.getDateCreation());
 
@@ -716,5 +780,55 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 .effectuePar(mouvement.getEffectuePar())
                 .idReservation(mouvement.getIdReservation())
                 .build();
+    }
+
+    /**
+     * Vérifie s'il existe des instances endommagées ou hors service
+     */
+    public boolean hasInstancesProblematiques(List<InstanceProduit> instances) {
+        if (instances == null || instances.isEmpty()) {
+            return false;
+        }
+
+        return instances.stream()
+                .anyMatch(instance ->
+                        instance.getEtatPhysique() == EtatPhysique.ENDOMMAGE ||
+                                instance.getStatut() == StatutInstance.HORS_SERVICE ||
+                                instance.getStatut() == StatutInstance.EN_MAINTENANCE
+                );
+    }
+
+    /**
+     * Retourne la liste des instances problématiques
+     */
+    public List<InstanceProduit> getInstancesProblematiques(List<InstanceProduit> instances) {
+        if (instances == null || instances.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return instances.stream()
+                .filter(instance ->
+                        instance.getEtatPhysique() == EtatPhysique.ENDOMMAGE ||
+                                instance.getStatut() == StatutInstance.HORS_SERVICE ||
+                                instance.getStatut() == StatutInstance.EN_MAINTENANCE
+                )
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Compte le nombre d'instances problématiques
+     */
+    public long countInstancesProblematiques(List<InstanceProduit> instances) {
+        if (instances == null || instances.isEmpty()) {
+            return 0;
+        }
+
+        return instances.stream()
+                .filter(instance ->
+                        instance.getEtatPhysique() == EtatPhysique.ENDOMMAGE ||
+                                instance.getStatut() == StatutInstance.HORS_SERVICE ||
+                                instance.getStatut() == StatutInstance.EN_MAINTENANCE
+                )
+                .count();
     }
 }

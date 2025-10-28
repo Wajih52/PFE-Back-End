@@ -39,6 +39,8 @@ public class MouvementStock implements Serializable {
     private String effectuePar;
     private Long idReservation;
 
+    private String codeInstance ;
+
     @PrePersist
     protected void onCreate() {
         dateMouvement = new Date();
