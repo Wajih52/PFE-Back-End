@@ -14173,3 +14173,232 @@ Consider defining a bean of type 'tn.weeding.agenceevenementielle.services.Insta
 2025-10-28 23:13:24 [http-nio-8080-exec-10] DEBUG t.w.a.s.InstanceProduitServiceImpl - Mouvement enregistré: RETOUR_MAINTENANCE - Instance retournée de maintenance (4→5)
 2025-10-28 23:13:24 [http-nio-8080-exec-10] DEBUG t.w.a.s.InstanceProduitServiceImpl - Quantité disponible du produit Projecteur Led mise à jour : 5
 2025-10-28 23:13:24 [http-nio-8080-exec-10] INFO  t.w.a.s.InstanceProduitServiceImpl - Instance PRD-2025-PR-0001 retournée de maintenance
+2025-10-28 23:15:48 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits
+2025-10-28 23:15:48 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/instances/23
+2025-10-28 23:15:48 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits
+2025-10-28 23:15:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:15:48 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:15:48 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:15:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:15:48 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:15:48 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/instances/23
+2025-10-28 23:15:48 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:15:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:15:48 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:15:48 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:15:48 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits
+2025-10-28 23:15:48 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:15:48 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:15:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:15:48 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:15:48 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:15:48 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:15:48 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:15:48 [http-nio-8080-exec-7] INFO  t.w.a.c.InstanceProduitController - Récupération de l'instance ID: 23
+2025-10-28 23:15:48 [http-nio-8080-exec-5] INFO  t.w.a.controller.ProduitController - Requête de récupération de tous les produits
+2025-10-28 23:15:59 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/instances/produit/2
+2025-10-28 23:15:59 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:15:59 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:15:59 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:15:59 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:15:59 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/instances/produit/2
+2025-10-28 23:16:00 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:16:00 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:16:00 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:16:00 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:16:00 [http-nio-8080-exec-6] INFO  t.w.a.c.InstanceProduitController - Récupération des instances du produit ID: 2
+2025-10-28 23:16:08 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/instances/27
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing DELETE /api/instances/27
+2025-10-28 23:16:08 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:16:08 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured DELETE /api/instances/27
+2025-10-28 23:16:08 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:16:08 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.InstanceProduitController.supprimerInstance(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.InstanceProduitController]
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.InstanceProduitController.supprimerInstance(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.InstanceProduitController]
+2025-10-28 23:16:08 [http-nio-8080-exec-3] INFO  t.w.a.c.InstanceProduitController - Suppression de l'instance ID: 27
+2025-10-28 23:16:08 [http-nio-8080-exec-3] INFO  t.w.a.s.InstanceProduitServiceImpl - Suppression de l'instance ID: 27
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG t.w.a.s.InstanceProduitServiceImpl - Mouvement enregistré: SUPPRESSION_INSTANCE - Suppression instance PRD-2025-PR-0005 (5→4)
+2025-10-28 23:16:08 [http-nio-8080-exec-3] DEBUG t.w.a.s.InstanceProduitServiceImpl - Quantité disponible du produit Projecteur Led mise à jour : 4
+2025-10-28 23:16:08 [http-nio-8080-exec-3] INFO  t.w.a.s.InstanceProduitServiceImpl - Instance supprimée avec succès
+2025-10-28 23:16:25 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/instances/23
+2025-10-28 23:16:25 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:16:25 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:16:25 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:16:25 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:16:25 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/instances/23
+2025-10-28 23:16:25 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:16:25 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:16:25 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:16:25 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:16:25 [http-nio-8080-exec-1] INFO  t.w.a.c.InstanceProduitController - Récupération de l'instance ID: 23
+2025-10-28 23:20:13 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/instances/produit/2
+2025-10-28 23:20:13 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:13 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:13 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:13 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:13 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/instances/produit/2
+2025-10-28 23:20:13 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:13 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:13 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:13 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:13 [http-nio-8080-exec-2] INFO  t.w.a.c.InstanceProduitController - Récupération des instances du produit ID: 2
+2025-10-28 23:20:14 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/WajihAdmin_1761559383086.jpg
+2025-10-28 23:20:14 [http-nio-8080-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-10-28 23:20:14 [http-nio-8080-exec-8] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 8E4F3B02A7D0D84B599AA4DF28C6A9E1
+2025-10-28 23:20:14 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/WajihAdmin_1761559383086.jpg
+2025-10-28 23:20:17 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /utilisateurs/all
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/all
+2025-10-28 23:20:17 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:17 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/all
+2025-10-28 23:20:17 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:17 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-10-28 23:20:17 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-10-28 23:20:25 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/WajihAdmin_1761559383086.jpg
+2025-10-28 23:20:25 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-10-28 23:20:25 [http-nio-8080-exec-6] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 8E4F3B02A7D0D84B599AA4DF28C6A9E1
+2025-10-28 23:20:25 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/WajihAdmin_1761559383086.jpg
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/all
+2025-10-28 23:20:26 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:26 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/all
+2025-10-28 23:20:26 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:26 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-10-28 23:20:26 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-10-28 23:20:27 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /roles/afficheRoles
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /roles/afficheRoles
+2025-10-28 23:20:27 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:27 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /roles/afficheRoles
+2025-10-28 23:20:27 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:27 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.RoleController.AfficheRoles(); target is of class [tn.weeding.agenceevenementielle.controller.RoleController]
+2025-10-28 23:20:27 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.RoleController.AfficheRoles(); target is of class [tn.weeding.agenceevenementielle.controller.RoleController]
+2025-10-28 23:20:28 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits
+2025-10-28 23:20:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:29 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:29 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:29 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits
+2025-10-28 23:20:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:29 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:29 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:29 [http-nio-8080-exec-9] INFO  t.w.a.controller.ProduitController - Requête de récupération de tous les produits
+2025-10-28 23:20:46 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/2
+2025-10-28 23:20:46 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/2
+2025-10-28 23:20:46 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:46 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:46 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:46 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:46 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/2
+2025-10-28 23:20:46 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:46 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:46 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:46 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:46 [http-nio-8080-exec-2] INFO  t.w.a.controller.ProduitController - Requête de récupération du produit ID : 2
+2025-10-28 23:20:59 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/2
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing PUT /api/produits/2
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured PUT /api/produits/2
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ProduitController.modifierProduit(java.lang.Long,tn.weeding.agenceevenementielle.dto.ProduitRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.ProduitController]
+2025-10-28 23:20:59 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ProduitController.modifierProduit(java.lang.Long,tn.weeding.agenceevenementielle.dto.ProduitRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.ProduitController]
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.controller.ProduitController - Requête de modification du produit ID : 2
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - Modification du produit ID : 2
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.services.ImageService - ✅ Image sauvegardée : PRD-2025-PR_1761690059606.jpg
+2025-10-28 23:20:59 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - Produit modifié avec succès : Code=PRD-2025-PR
+2025-10-28 23:21:01 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits
+2025-10-28 23:21:01 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:01 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:01 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:01 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:01 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits
+2025-10-28 23:21:01 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:01 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:01 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:01 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:01 [http-nio-8080-exec-5] INFO  t.w.a.controller.ProduitController - Requête de récupération de tous les produits
+2025-10-28 23:21:01 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1761690059606.jpg
+2025-10-28 23:21:01 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-10-28 23:21:01 [http-nio-8080-exec-6] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 8E4F3B02A7D0D84B599AA4DF28C6A9E1
+2025-10-28 23:21:01 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1761690059606.jpg
+2025-10-28 23:21:04 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1761690059606.jpg
+2025-10-28 23:21:04 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-10-28 23:21:04 [http-nio-8080-exec-4] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 8E4F3B02A7D0D84B599AA4DF28C6A9E1
+2025-10-28 23:21:04 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1761690059606.jpg
+2025-10-28 23:21:15 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/instances/all
+2025-10-28 23:21:15 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/instances/all
+2025-10-28 23:21:15 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:15 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:15 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:15 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:15 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/instances/all
+2025-10-28 23:21:15 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:15 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:15 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:15 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:15 [http-nio-8080-exec-10] INFO  t.w.a.c.InstanceProduitController - Récupération de toutes les instanses
+2025-10-28 23:21:33 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits
+2025-10-28 23:21:33 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:34 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:34 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:34 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:34 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits
+2025-10-28 23:21:34 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:34 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:34 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:34 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:34 [http-nio-8080-exec-8] INFO  t.w.a.controller.ProduitController - Requête de récupération de tous les produits
+2025-10-28 23:21:34 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1761690059606.jpg
+2025-10-28 23:21:34 [http-nio-8080-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-10-28 23:21:34 [http-nio-8080-exec-7] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 8E4F3B02A7D0D84B599AA4DF28C6A9E1
+2025-10-28 23:21:34 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1761690059606.jpg
+2025-10-28 23:21:36 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/instances/all
+2025-10-28 23:21:36 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:36 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:36 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:36 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:36 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/instances/all
+2025-10-28 23:21:36 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:21:36 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:21:36 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:21:36 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:21:36 [http-nio-8080-exec-5] INFO  t.w.a.c.InstanceProduitController - Récupération de toutes les instanses
+2025-10-28 23:22:22 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/instances/23
+2025-10-28 23:22:22 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/instances/23
+2025-10-28 23:22:22 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:22:22 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:22:22 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:22:22 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:22:22 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/instances/23
+2025-10-28 23:22:22 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-10-28 23:22:22 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-10-28 23:22:22 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-10-28 23:22:22 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-10-28 23:22:22 [http-nio-8080-exec-3] INFO  t.w.a.c.InstanceProduitController - Récupération de l'instance ID: 23
