@@ -84,7 +84,7 @@ public class ProduitController {
     }
 
     @PatchMapping("/{id}/desactiver")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Désactiver un produit", description = "Met la quantité disponible à 0 sans supprimer le produit")
     public ResponseEntity<Void> desactiverProduit(@PathVariable Long id) {
         log.info("Requête de désactivation du produit ID : {}", id);
@@ -94,7 +94,7 @@ public class ProduitController {
     }
 
     @PatchMapping("/{id}/reactiver")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Réactiver un produit", description = "Réactive un produit désactivé avec une nouvelle quantité")
     public ResponseEntity<ProduitResponseDto> reactiverProduit(
             @PathVariable Long id,
@@ -138,7 +138,7 @@ public class ProduitController {
     }
 
     @GetMapping("/rupture")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir les produits en rupture de stock", description = "Liste des produits avec quantité = 0")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsEnRupture() {
         log.info("Requête de récupération des produits en rupture");
@@ -147,7 +147,7 @@ public class ProduitController {
     }
 
     @GetMapping("/stock-critique")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir les produits avec stock critique", description = "Liste des produits dont le stock est en dessous du seuil critique")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsStockCritique(
             @RequestParam(required = false) @Parameter(description = "Seuil critique personnalisé (défaut: 5)") Integer seuil) {
@@ -214,7 +214,7 @@ public class ProduitController {
     // ============ GESTION DU STOCK ============
 
     @PatchMapping("/{id}/ajuster-stock")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Ajuster manuellement le stock", description = "Permet d'augmenter ou diminuer le stock d'un produit")
     public ResponseEntity<ProduitResponseDto> ajusterStock(
             @PathVariable Long id,
@@ -227,7 +227,7 @@ public class ProduitController {
     }
 
     @PatchMapping("/{id}/marquer-endommage")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Marquer un produit comme endommagé", description = "Retire du stock les unités endommagées")
     public ResponseEntity<Void> marquerProduitEndommage(
             @PathVariable Long id,
@@ -253,7 +253,7 @@ public class ProduitController {
     }
 
     @PatchMapping("/{id}/retour-maintenance")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Retourner un produit de la maintenance", description = "Réintègre les unités au stock après maintenance")
     public ResponseEntity<Void> retournerDeMaintenance(
             @PathVariable Long id,
@@ -286,7 +286,7 @@ public class ProduitController {
     // ============ HISTORIQUE DES MOUVEMENTS ============
 
     @GetMapping("/{id}/historique")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir l'historique des mouvements d'un produit", description = "Liste complète des mouvements de stock")
     public ResponseEntity<List<MouvementStockResponseDto>> getHistoriqueMouvements(@PathVariable Long id) {
         log.info("Requête d'historique des mouvements pour le produit ID : {}", id);
@@ -295,7 +295,7 @@ public class ProduitController {
     }
 
     @GetMapping("/mouvements/type/{type}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir les mouvements par type", description = "Filtre les mouvements par type")
     public ResponseEntity<List<MouvementStockResponseDto>> getMouvementsByType(@PathVariable TypeMouvement type) {
         log.info("Requête des mouvements de type : {}", type);
@@ -304,7 +304,7 @@ public class ProduitController {
     }
 
     @GetMapping("/mouvements/utilisateur/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir les mouvements par utilisateur", description = "Historique des mouvements effectués par un utilisateur")
     public ResponseEntity<List<MouvementStockResponseDto>> getMouvementsByUser(@PathVariable String username) {
         log.info("Requête des mouvements de l'utilisateur : {}", username);
@@ -313,7 +313,7 @@ public class ProduitController {
     }
 
     @GetMapping("/mouvements/periode")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir les mouvements par période", description = "Filtre les mouvements entre deux dates")
     public ResponseEntity<List<MouvementStockResponseDto>> getMouvementsByPeriode(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateDebut,
@@ -324,7 +324,7 @@ public class ProduitController {
     }
 
     @GetMapping("/mouvements/recents")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir les mouvements récents", description = "Derniers mouvements de stock pour le dashboard")
     public ResponseEntity<List<MouvementStockResponseDto>> getRecentMouvements(
             @RequestParam(required = false, defaultValue = "10") Integer limit) {
@@ -334,7 +334,7 @@ public class ProduitController {
     }
 
     @GetMapping("/{id}/statistiques")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Obtenir les statistiques d'un produit", description = "Statistiques détaillées des mouvements de stock")
     public ResponseEntity<StockStatistiquesDto> getStatistiquesProduit(@PathVariable Long id) {
         log.info("Requête des statistiques pour le produit ID : {}", id);

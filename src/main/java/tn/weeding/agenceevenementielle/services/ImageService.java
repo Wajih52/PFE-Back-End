@@ -29,7 +29,7 @@ import java.util.Base64;
 public class ImageService {
 
     // Dossier où sauvegarder les images
-    private static final String UPLOAD_DIR = "uploads"+ File.separator + "profiles"+ File.separator;
+    private static final String UPLOAD_DIR = "uploads" + File.separator + "profiles" + File.separator;
 
     // Taille max : 5 Mo
     private static final long MAX_SIZE = 5 * 1024 * 1024;
@@ -38,7 +38,7 @@ public class ImageService {
      * Sauvegarde une image Base64 dans un fichier
      *
      * @param base64Image Format : "data:image/png;base64,iVBORw0KG..."
-     * @param username Utilisé pour nommer le fichier
+     * @param username    Utilisé pour nommer le fichier
      * @return Chemin relatif : "/uploads/profiles/username_timestamp.jpg"
      */
     public String saveBase64Image(String base64Image, String username) {
@@ -104,5 +104,30 @@ public class ImageService {
                 log.warn("⚠️ Impossible de supprimer l'image : {}", imageUrl);
             }
         }
+    }
+
+    public String modifierImage(String base64Image, String imageUrl, String pseudo) {
+        // Cas 1 : Nouvelle image (Base64)
+        if (base64Image != null && base64Image.startsWith("data:image")) {
+
+            // Supprimer l'ancienne image
+            if (imageUrl != null) {
+                deleteImage(imageUrl);
+            }
+
+            // Sauvegarder la nouvelle
+            return saveBase64Image(base64Image, pseudo);
+
+        }
+        // Cas 2 : Supprimer l'image (null)
+        else if (base64Image == null) {
+            if (imageUrl != null) {
+                deleteImage(imageUrl);
+                return null;
+            }
+            log.info("🗑️ Image supprimée");
+        }
+
+        return imageUrl ;
     }
 }

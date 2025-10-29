@@ -40,4 +40,5 @@ public class InstanceProduitResponseDto {
     private Boolean disponible;
     private Boolean maintenanceRequise;
     private Integer joursAvantMaintenance; // Nombre de jours avant la prochaine maintenance
+    private String motif;
 }

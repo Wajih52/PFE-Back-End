@@ -525,6 +525,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .disponible(instance.isDisponible())
                 .maintenanceRequise(instance.maintenanceNecessaire())
                 .ajoutPar(instance.getAjoutPar())
+                .motif(instance.getMotif())
                 .build();
 
         // Calculer les jours avant maintenance

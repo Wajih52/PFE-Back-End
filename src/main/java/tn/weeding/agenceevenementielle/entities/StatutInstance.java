@@ -11,6 +11,8 @@ public enum StatutInstance {
     EN_RETOUR,
     EN_MAINTENANCE,     // En cours de réparation/maintenance
     HORS_SERVICE,       // Défectueux, ne peut pas être utilisé
-    PERDU            // Perdu ou volé
+    PERDU ,// Perdu ou volé
+    EN_UTILISATION,
+    EN_PANNE
 
 }

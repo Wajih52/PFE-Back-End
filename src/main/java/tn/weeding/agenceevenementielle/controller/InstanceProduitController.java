@@ -36,7 +36,7 @@ public class InstanceProduitController {
     // ============ CRUD DE BASE ============
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Créer une instance", description = "Ajoute une nouvelle instance pour un produit avec référence")
     public ResponseEntity<InstanceProduitResponseDto> creerInstance(
             @Valid @RequestBody InstanceProduitRequestDto dto) {
@@ -47,7 +47,7 @@ public class InstanceProduitController {
     }
 
     @PostMapping("/lot")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Créer des instances en lot",
             description = "Crée plusieurs instances avec numérotation automatique")
     public ResponseEntity<List<InstanceProduitResponseDto>> creerInstancesEnLot(
@@ -62,7 +62,7 @@ public class InstanceProduitController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Modifier une instance", description = "Modifie les informations d'une instance existante")
     public ResponseEntity<InstanceProduitResponseDto> modifierInstance(
             @PathVariable Long id,
@@ -140,7 +140,7 @@ public class InstanceProduitController {
     }
 
     @GetMapping("/ligne-reservation/{idLigneReservation}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Instances d'une ligne de réservation",
             description = "Récupère les instances affectées à une ligne de réservation")
     public ResponseEntity<List<InstanceProduitResponseDto>> getInstancesByLigneReservation(
@@ -154,7 +154,7 @@ public class InstanceProduitController {
     // ============ GESTION DES STATUTS ============
 
     @PatchMapping("/{id}/statut")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Changer le statut", description = "Modifie le statut d'une instance")
     public ResponseEntity<InstanceProduitResponseDto> changerStatut(
             @PathVariable Long id,
@@ -168,7 +168,7 @@ public class InstanceProduitController {
     // ============ GESTION DE LA MAINTENANCE ============
 
     @PostMapping("/{id}/maintenance")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Envoyer en maintenance",
             description = "Marque une instance comme étant en maintenance")
     public ResponseEntity<InstanceProduitResponseDto> envoyerEnMaintenance(
@@ -182,7 +182,7 @@ public class InstanceProduitController {
     }
 
     @PostMapping("/{id}/maintenance/retour")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Retour de maintenance",
             description = "Marque une instance comme revenue de maintenance")
     public ResponseEntity<InstanceProduitResponseDto> retournerDeMaintenance(@PathVariable Long id,
@@ -194,7 +194,7 @@ public class InstanceProduitController {
     }
 
     @GetMapping("/maintenance/necessaire")
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Instances nécessitant maintenance",
             description = "Liste des instances dont la date de maintenance est dépassée")
     public ResponseEntity<List<InstanceProduitResponseDto>> getInstancesNecessitantMaintenance() {

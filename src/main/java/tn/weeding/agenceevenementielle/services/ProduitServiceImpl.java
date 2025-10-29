@@ -106,6 +106,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
     @Override
     public ProduitResponseDto modifierProduit(Long idProduit, ProduitRequestDto produitDto, String username) {
+        String imagePath = null;
         log.info("Modification du produit ID : {}", idProduit);
 
         Produit produit = produitRepository.findById(idProduit)
@@ -116,18 +117,6 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Integer ancienneQuantiteInitiale = produit.getQuantiteInitial();
         Integer nouvelleQuantiteInitiale = produitDto.getQuantiteInitial();
 
-        String imagePath=produit.getImageProduit() ;
-        if (produitDto.getImageProduit() != null &&
-                produitDto.getImageProduit().startsWith("data:image")) {
-            try {
-                imagePath = imageService.saveBase64Image(
-                        produitDto.getImageProduit(),
-                        produit.getCodeProduit()
-                );
-            } catch (Exception e) {
-                log.error("❌ Erreur sauvegarde image ");
-            }
-        }
 
 
         // Mettre à jour les informations du produit
@@ -140,8 +129,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             String code = codeGeneratorService.generateProduitCode(produitDto.getNomProduit());
             produit.setCodeProduit(code);
             produit.setNomProduit(produitDto.getNomProduit());
+            imagePath= imageService.modifierImage(produitDto.getImageProduit(),produit.getImageProduit(),code);
         }else{
             produit.setNomProduit(produitDto.getNomProduit());
+            imagePath= imageService.modifierImage(produitDto.getImageProduit(),produit.getImageProduit(),produit.getCodeProduit());
         }
 
         produit.setDescriptionProduit(produitDto.getDescriptionProduit());
@@ -166,6 +157,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         }else {
             produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
         }
+
 
 
 
@@ -206,6 +198,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
+
         // Vérifier si le produit a des réservations actives
         // TODO: Implémenter la vérification des réservations actives
 
@@ -239,6 +232,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
+        imageService.deleteImage(produit.getImageProduit());
         // Vérifier si le produit a des réservations actives
         // TODO: Implémenter la vérification des réservations actives
 
