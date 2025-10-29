@@ -11,9 +11,6 @@ import java.util.Date;
 public class MouvementStockResponseDto {
 
     private Long idMouvement;
-    private Long idProduit;
-    private String nomProduit;
-    private String codeProduit;
     private TypeMouvement typeMouvement;
     private Integer quantite;
     private Integer quantiteAvant;
@@ -22,4 +19,13 @@ public class MouvementStockResponseDto {
     private String motif;
     private String effectuePar;
     private Long idReservation;
+
+    private Long idProduit;
+    private String nomProduit;
+    private String codeProduit;
+
+    // === Informations de l'instance (si applicable) ===
+    private Long idInstance;
+    private String numeroSerie;
+    private String codeInstance;
 }

@@ -204,6 +204,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         // Suppression logique : mettre la quantité disponible à 0
         Integer ancienneQuantite = produit.getQuantiteDisponible();
+        produit.setQuantiteInitial(0);
         produit.setQuantiteDisponible(0);
 
         produitRepository.save(produit);
@@ -760,7 +761,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
      * Convertir une entité MouvementStock en DTO
      */
     private MouvementStockResponseDto convertMouvementToDto(MouvementStock mouvement) {
-        return MouvementStockResponseDto.builder()
+        MouvementStockResponseDto dto = MouvementStockResponseDto.builder()
                 .idMouvement(mouvement.getIdMouvement())
                 .idProduit(mouvement.getProduit().getIdProduit())
                 .nomProduit(mouvement.getProduit().getNomProduit())
@@ -773,7 +774,19 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 .motif(mouvement.getMotif())
                 .effectuePar(mouvement.getEffectuePar())
                 .idReservation(mouvement.getIdReservation())
+                .codeInstance(mouvement.getCodeInstance())
                 .build();
+
+        // Si le mouvement concerne une instance, récupérer les infos complètes
+        if (mouvement.getCodeInstance() != null) {
+            instanceProduitRepository.findByNumeroSerie(mouvement.getCodeInstance())
+                    .ifPresent(instance -> {
+                        dto.setIdInstance(instance.getIdInstance());
+                        dto.setNumeroSerie(instance.getNumeroSerie());
+                    });
+        }
+
+        return  dto ;
     }
 
     /**

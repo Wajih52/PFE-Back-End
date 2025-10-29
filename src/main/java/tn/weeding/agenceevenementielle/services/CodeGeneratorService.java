@@ -31,13 +31,13 @@ public class CodeGeneratorService {
             int number = extractNumber(code, prefix);
             int nextNumber = number + 1;
 
-            String newCode = String.format("%s%03d", prefix, nextNumber);
+            String newCode = String.format("%s%04d", prefix, nextNumber);
             log.debug("📊 Dernier code {} : {} → Nouveau : {}", typeRole, code, newCode);
             return newCode;
 
         } else {
             // Premier utilisateur de ce type
-            String firstCode = prefix + "001";
+            String firstCode = prefix + "0001";
             log.debug("🆕 Premier code {} : {}", typeRole, firstCode);
             return firstCode;
         }
