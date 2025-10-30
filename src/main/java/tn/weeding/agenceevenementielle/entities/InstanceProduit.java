@@ -3,6 +3,9 @@ package tn.weeding.agenceevenementielle.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import lombok.*;
+import tn.weeding.agenceevenementielle.entities.enums.EtatPhysique;
+import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 

@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.services;
 
 import tn.weeding.agenceevenementielle.dto.*;
+import tn.weeding.agenceevenementielle.dto.authentification.ChangePasswordDto;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
 
 import java.util.List;

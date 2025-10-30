@@ -1,8 +1,8 @@
 package tn.weeding.agenceevenementielle.services;
 
-import tn.weeding.agenceevenementielle.dto.InstanceProduitRequestDto;
-import tn.weeding.agenceevenementielle.dto.InstanceProduitResponseDto;
-import tn.weeding.agenceevenementielle.entities.StatutInstance;
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
+import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 
 import java.time.LocalDate;
 import java.util.List;

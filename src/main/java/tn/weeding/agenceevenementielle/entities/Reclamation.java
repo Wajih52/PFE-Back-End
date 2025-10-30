@@ -2,6 +2,8 @@ package tn.weeding.agenceevenementielle.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tn.weeding.agenceevenementielle.entities.enums.StatutReclamation;
+import tn.weeding.agenceevenementielle.entities.enums.TypeReclamation;
 
 import java.io.Serializable;
 import java.util.Date;

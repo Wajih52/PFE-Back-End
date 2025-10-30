@@ -5,6 +5,7 @@ import java.util.Date;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
 
 /**
  * Entité représentant l'historique des mouvements de stock

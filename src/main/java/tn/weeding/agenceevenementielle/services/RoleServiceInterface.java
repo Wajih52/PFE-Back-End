@@ -1,8 +1,7 @@
 package tn.weeding.agenceevenementielle.services;
 
-import tn.weeding.agenceevenementielle.dto.RoleRequestDto;
-import tn.weeding.agenceevenementielle.dto.RoleResponseDto;
-import tn.weeding.agenceevenementielle.entities.Role;
+import tn.weeding.agenceevenementielle.dto.authentification.RoleRequestDto;
+import tn.weeding.agenceevenementielle.dto.authentification.RoleResponseDto;
 
 import java.util.List;
 

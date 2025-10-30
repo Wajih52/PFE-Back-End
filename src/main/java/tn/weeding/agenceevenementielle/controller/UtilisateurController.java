@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import tn.weeding.agenceevenementielle.dto.ChangePasswordDto;
+import tn.weeding.agenceevenementielle.dto.authentification.ChangePasswordDto;
 import tn.weeding.agenceevenementielle.dto.UtilisateurRequestDto;
 import tn.weeding.agenceevenementielle.dto.UtilisateurRequestPatchDto;
 import tn.weeding.agenceevenementielle.dto.UtilisateurResponseDto;

@@ -2,7 +2,7 @@ package tn.weeding.agenceevenementielle.dto;
 
 import lombok.Data;
 import lombok.Getter;
-import tn.weeding.agenceevenementielle.entities.StatutEmp;
+import tn.weeding.agenceevenementielle.entities.enums.StatutEmp;
 
 import java.util.Date;
 @Data

@@ -1,4 +1,6 @@
 package tn.weeding.agenceevenementielle.services;
 
-public class LigneReservationServiceImpl implements LigneReservationServiceInterface{
+import tn.weeding.agenceevenementielle.services.LigneReservationServiceInterface;
+
+public class LigneReservationServiceImpl implements LigneReservationServiceInterface {
 }

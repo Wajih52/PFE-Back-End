@@ -4,16 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tn.weeding.agenceevenementielle.dto.MouvementStockResponseDto;
-import tn.weeding.agenceevenementielle.dto.ProduitRequestDto;
-import tn.weeding.agenceevenementielle.dto.ProduitResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.ProduitRequestDto;
+import tn.weeding.agenceevenementielle.dto.produit.ProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.*;
+import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
 import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 

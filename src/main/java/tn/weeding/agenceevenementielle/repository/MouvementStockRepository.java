@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tn.weeding.agenceevenementielle.entities.MouvementStock;
 import tn.weeding.agenceevenementielle.entities.Produit;
-import tn.weeding.agenceevenementielle.entities.TypeMouvement;
+import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
 
 import java.util.Date;
 import java.util.List;

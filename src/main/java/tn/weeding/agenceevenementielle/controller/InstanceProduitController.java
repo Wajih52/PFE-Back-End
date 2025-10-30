@@ -10,9 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
-import tn.weeding.agenceevenementielle.dto.InstanceProduitRequestDto;
-import tn.weeding.agenceevenementielle.dto.InstanceProduitResponseDto;
-import tn.weeding.agenceevenementielle.entities.StatutInstance;
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
+import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 import tn.weeding.agenceevenementielle.services.InstanceProduitServiceInterface;
 
 import java.time.LocalDate;

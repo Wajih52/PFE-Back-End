@@ -1,11 +1,11 @@
 package tn.weeding.agenceevenementielle.services;
 
-import tn.weeding.agenceevenementielle.dto.MouvementStockResponseDto;
-import tn.weeding.agenceevenementielle.dto.ProduitRequestDto;
-import tn.weeding.agenceevenementielle.dto.ProduitResponseDto;
-import tn.weeding.agenceevenementielle.entities.Categorie;
-import tn.weeding.agenceevenementielle.entities.TypeMouvement;
-import tn.weeding.agenceevenementielle.entities.TypeProduit;
+import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.ProduitRequestDto;
+import tn.weeding.agenceevenementielle.dto.produit.ProduitResponseDto;
+import tn.weeding.agenceevenementielle.entities.enums.Categorie;
+import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
+import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 
 import java.util.Date;
 import java.util.List;

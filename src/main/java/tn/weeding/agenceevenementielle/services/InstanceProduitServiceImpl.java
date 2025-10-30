@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tn.weeding.agenceevenementielle.dto.InstanceProduitRequestDto;
-import tn.weeding.agenceevenementielle.dto.InstanceProduitResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.*;
+import tn.weeding.agenceevenementielle.entities.enums.EtatPhysique;
+import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
+import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
+import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
@@ -17,7 +21,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**

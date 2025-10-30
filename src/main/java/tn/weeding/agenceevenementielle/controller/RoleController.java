@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import tn.weeding.agenceevenementielle.dto.RoleRequestDto;
-import tn.weeding.agenceevenementielle.dto.RoleResponseDto;
+import tn.weeding.agenceevenementielle.dto.authentification.RoleRequestDto;
+import tn.weeding.agenceevenementielle.dto.authentification.RoleResponseDto;
 import tn.weeding.agenceevenementielle.services.RoleServiceInterface;
 
 import java.util.List;

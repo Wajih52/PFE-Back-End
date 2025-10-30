@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import tn.weeding.agenceevenementielle.entities.enums.StatutCompte;
+import tn.weeding.agenceevenementielle.entities.enums.StatutEmp;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;

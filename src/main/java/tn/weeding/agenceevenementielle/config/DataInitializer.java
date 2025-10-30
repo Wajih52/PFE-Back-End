@@ -6,6 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import tn.weeding.agenceevenementielle.dto.UserCreationDataInitializer;
 import tn.weeding.agenceevenementielle.entities.*;
+import tn.weeding.agenceevenementielle.entities.enums.StatutCompte;
+import tn.weeding.agenceevenementielle.entities.enums.StatutEmp;
 import tn.weeding.agenceevenementielle.repository.RoleRepository;
 import tn.weeding.agenceevenementielle.repository.UtilisateurRepository;
 

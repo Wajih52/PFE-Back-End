@@ -3,6 +3,7 @@ package tn.weeding.agenceevenementielle.entities;
 import java.io.Serializable;
 import jakarta.persistence.*;
 import lombok.*;
+import tn.weeding.agenceevenementielle.entities.enums.ModePaiement;
 
 
 import java.util.Date;

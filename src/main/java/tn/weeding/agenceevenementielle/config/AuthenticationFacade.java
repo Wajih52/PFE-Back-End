@@ -1,11 +1,18 @@
 package tn.weeding.agenceevenementielle.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import tn.weeding.agenceevenementielle.entities.Utilisateur;
+import tn.weeding.agenceevenementielle.exceptions.CustomException;
+import tn.weeding.agenceevenementielle.repository.UtilisateurRepository;
 
 @Component
+@RequiredArgsConstructor
 public class AuthenticationFacade {
+
+    private final UtilisateurRepository utilisateurRepository;
 
     /**
      * Récupère l'authentification actuelle
@@ -34,5 +41,14 @@ public class AuthenticationFacade {
         Authentication authentication = getAuthentication();
         return authentication != null && authentication.isAuthenticated()
                 && !"anonymousUser".equals(authentication.getName());
+    }
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(username)
+                .orElseThrow(() -> new CustomException("Utilisateur non trouvé"));
+
+        return utilisateur.getIdUtilisateur();
     }
 }

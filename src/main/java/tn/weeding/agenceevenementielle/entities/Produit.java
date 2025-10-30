@@ -5,6 +5,8 @@ import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tn.weeding.agenceevenementielle.entities.enums.Categorie;
+import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 
 @Entity
 @Getter

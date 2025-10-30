@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import tn.weeding.agenceevenementielle.entities.StatutCompte;
-import tn.weeding.agenceevenementielle.entities.StatutEmp;
+import tn.weeding.agenceevenementielle.entities.enums.StatutCompte;
+import tn.weeding.agenceevenementielle.entities.enums.StatutEmp;
 
 import java.time.LocalDateTime;
 import java.util.Date;

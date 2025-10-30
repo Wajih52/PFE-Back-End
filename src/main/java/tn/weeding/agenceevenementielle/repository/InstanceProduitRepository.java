@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tn.weeding.agenceevenementielle.entities.InstanceProduit;
-import tn.weeding.agenceevenementielle.entities.StatutInstance;
+import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 
 import java.time.LocalDate;
 import java.util.List;

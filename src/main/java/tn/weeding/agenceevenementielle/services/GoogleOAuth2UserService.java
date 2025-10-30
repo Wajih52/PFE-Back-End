@@ -6,7 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.entities.Role;
-import tn.weeding.agenceevenementielle.entities.StatutCompte;
+import tn.weeding.agenceevenementielle.entities.enums.StatutCompte;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
 import tn.weeding.agenceevenementielle.entities.UtilisateurRole;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
@@ -14,7 +14,6 @@ import tn.weeding.agenceevenementielle.repository.RoleRepository;
 import tn.weeding.agenceevenementielle.repository.UtilisateurRepository;
 import tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 
