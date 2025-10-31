@@ -35,6 +35,12 @@ public class Reservation implements Serializable {
     @Enumerated(EnumType.STRING)
     StatutLivraison statutLivraisonRes;
 
+    @Column(length = 2000)
+    String commentaireAdmin;
+
+    @Column(length = 2000)
+    String commentaireClient;
+
     //Reservation 0..* ----------- 1 Utilisateur
     @ManyToOne
     Utilisateur utilisateur;
@@ -44,6 +50,6 @@ public class Reservation implements Serializable {
     Set<Paiement> paiements;
 
      //Reservation 1----------- 1..* LigneReservation
-    @OneToMany
+    @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL,orphanRemoval = true)
     Set<LigneReservation> ligneReservations;
 }

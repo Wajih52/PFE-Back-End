@@ -114,6 +114,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             ligne.setStatutLivraisonLigne(StatutLivraison.EN_ATTENTE);
             ligne.setObservations(ligneDto.getObservations());
 
+
             double sousTotal = ligne.getQuantite() * ligne.getPrixUnitaire();
             montantTotal += sousTotal;
 
@@ -229,8 +230,9 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .limit(verificationDto.getQuantite())
                 .map(InstanceProduit::getNumeroSerie)
                 .collect(Collectors.toList());
-        response.setInstancesDisponibles(numerosSeries);
 
+        response.setInstancesDisponibles(numerosSeries);
+        System.out.println(response.getInstancesDisponibles());
         if (response.getDisponible()) {
             response.setMessage("Produit disponible. " + instancesDisponiblesPourPeriode + " instances disponibles.");
         } else {
@@ -267,7 +269,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         if (reservation.getStatutReservation() != StatutReservation.EN_ATTENTE) {
             throw new CustomException("Seuls les devis en attente peuvent être modifiés");
         }
-
+        double montantOriginal1 = reservation.getMontantTotal();
         // 1. Modifier les lignes individuelles (prix unitaire, quantité)
         if (modificationDto.getLignesModifiees() != null) {
             for (LigneModificationDto ligneModif : modificationDto.getLignesModifiees()) {
@@ -291,15 +293,15 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
 
         // 2. Recalculer le montant original
-        double montantOriginal = reservation.getLigneReservations().stream()
+        double montantOriginal2 = reservation.getLigneReservations().stream()
                 .mapToDouble(ligne -> ligne.getQuantite() * ligne.getPrixUnitaire())
                 .sum();
 
         // 3. Appliquer les remises
-        double montantFinal = montantOriginal;
+        double montantFinal = montantOriginal2;
 
         if (modificationDto.getRemisePourcentage() != null && modificationDto.getRemisePourcentage() > 0) {
-            double remise = montantOriginal * (modificationDto.getRemisePourcentage() / 100.0);
+            double remise = montantOriginal2 * (modificationDto.getRemisePourcentage() / 100.0);
             montantFinal -= remise;
             log.info("💸 Remise de {}%: -{} TND", modificationDto.getRemisePourcentage(), remise);
         }
@@ -315,6 +317,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
 
         reservation.setMontantTotal(montantFinal);
+        reservation.setCommentaireAdmin(modificationDto.getCommentaireAdmin());
 
         // 4. Sauvegarder le commentaire de l'admin (via observations si besoin)
         // Note: Vous pouvez ajouter un champ "commentaireAdmin" à l'entité Reservation si nécessaire
@@ -322,7 +325,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         reservationRepo.save(reservation);
 
         log.info("✅ Devis modifié - Montant original: {} TND, Montant final: {} TND",
-                montantOriginal, montantFinal);
+                montantOriginal1, montantFinal);
 
         return convertToResponseDto(reservation);
     }
@@ -366,6 +369,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
             // Passer au statut CONFIRMÉ
             reservation.setStatutReservation(StatutReservation.CONFIRME);
+            reservation.setCommentaireClient(validationDto.getCommentaireClient());
 
             // Pour les produits AVEC RÉFÉRENCE: Réserver les instances spécifiques
             for (LigneReservation ligne : reservation.getLigneReservations()) {
@@ -724,10 +728,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         // Calculer la durée
         long joursLocation = 0;
         if (reservation.getDateDebut() != null && reservation.getDateFin() != null) {
-            LocalDate debut = reservation.getDateDebut().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate fin = reservation.getDateFin().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate debut = convertToLocalDate(reservation.getDateDebut());
+            LocalDate fin = convertToLocalDate(reservation.getDateFin());
             joursLocation = ChronoUnit.DAYS.between(debut, fin) + 1;  // +1 pour inclure le dernier jour
         }
 
@@ -752,6 +754,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .paiementComplet(montantRestant <= 0)
                 .nombreProduits(lignesDto.size())
                 .joursLocation((int) joursLocation)
+                .commentaireAdmin(reservation.getCommentaireAdmin())
+                .observationsClient(reservation.getCommentaireClient())
                 .build();
     }
 
@@ -787,5 +791,24 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .idLivraison(ligne.getLivraison() != null ? ligne.getLivraison().getIdLivraison() : null)
                 .titreLivraison(ligne.getLivraison() != null ? ligne.getLivraison().getTitreLivraison() : null)
                 .build();
+    }
+
+    /**
+     * Méthode utilitaire pour convertir java.sql.Date en LocalDate de manière sécurisée
+     */
+    private LocalDate convertToLocalDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        if (date instanceof java.sql.Date) {
+            // Conversion directe pour java.sql.Date
+            return ((java.sql.Date) date).toLocalDate();
+        } else {
+            // Conversion pour java.util.Date
+            return date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        }
     }
 }

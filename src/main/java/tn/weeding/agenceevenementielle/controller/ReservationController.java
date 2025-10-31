@@ -261,7 +261,7 @@ public class ReservationController {
     @GetMapping("/statut/{statut}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
     @Operation(summary = "Filtrer par statut (ADMIN)",
-            description = "Récupérer toutes les réservations d'un statut donné (EnAttente, confirme, annule)")
+            description = "Récupérer toutes les réservations d'un statut donné (EN_ATTENTE, CONFIRME, ANNULE)")
     public ResponseEntity<List<ReservationResponseDto>> getReservationsByStatut(
             @PathVariable StatutReservation statut) {
 

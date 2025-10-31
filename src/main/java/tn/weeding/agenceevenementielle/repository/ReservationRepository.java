@@ -63,14 +63,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     /**
      * Trouver tous les DEVIS en attente (StatutReservation = EnAttente)
      */
-    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'EnAteente' ORDER BY r.dateDebut DESC")
+    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'EN_ATTENTE' ORDER BY r.dateDebut DESC")
     List<Reservation> findAllDevisEnAttente();
 
     /**
      * Trouver tous les devis en attente d'un client
      */
     @Query("SELECT r FROM Reservation r WHERE r.utilisateur.idUtilisateur = :idUtilisateur " +
-            "AND r.statutReservation = 'EnAteente' ORDER BY r.dateDebut DESC")
+            "AND r.statutReservation = 'EN_ATTENTE' ORDER BY r.dateDebut DESC")
     List<Reservation> findDevisEnAttenteByClient(@Param("idUtilisateur") Long idUtilisateur);
 
     // ============ FILTRAGE PAR DATE ============
@@ -89,7 +89,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      * Utile pour vérifier les conflits de disponibilité
      */
     @Query("SELECT r FROM Reservation r WHERE " +
-            "r.statutReservation = 'confirme' AND " +
+            "r.statutReservation = 'CONFIRME' AND " +
             "((r.dateDebut <= :dateFin AND r.dateFin >= :dateDebut))")
     List<Reservation> findReservationsOverlapping(
             @Param("dateDebut") Date dateDebut,
@@ -99,14 +99,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     /**
      * Trouver les réservations confirmées à venir (futures)
      */
-    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'confirme' " +
+    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'CONFIRME' " +
             "AND r.dateDebut > CURRENT_DATE ORDER BY r.dateDebut ASC")
     List<Reservation> findReservationsConfirmeesAVenir();
 
     /**
      * Trouver les réservations en cours (date actuelle entre dateDebut et dateFin)
      */
-    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'confirme' " +
+    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'CONFIRME' " +
             "AND CURRENT_DATE BETWEEN r.dateDebut AND r.dateFin")
     List<Reservation> findReservationsEnCours();
 
@@ -123,14 +123,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      * Calculer le chiffre d'affaires total (réservations confirmées)
      */
     @Query("SELECT SUM(r.montantTotal) FROM Reservation r " +
-            "WHERE r.statutReservation = 'confirme'")
+            "WHERE r.statutReservation = 'CONFIRME'")
     Double calculateChiffreAffairesTotal();
 
     /**
      * Calculer le chiffre d'affaires pour une période
      */
     @Query("SELECT SUM(r.montantTotal) FROM Reservation r " +
-            "WHERE r.statutReservation = 'confirme' " +
+            "WHERE r.statutReservation = 'CONFIRME' " +
             "AND r.dateDebut >= :dateDebut AND r.dateFin <= :dateFin")
     Double calculateChiffreAffairesPeriode(
             @Param("dateDebut") Date dateDebut,
@@ -140,7 +140,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     /**
      * Trouver les réservations avec paiement incomplet
      */
-    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'confirme' " +
+    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'CONFIRME' " +
             "AND r.montantPaye < r.montantTotal")
     List<Reservation> findReservationsAvecPaiementIncomplet();
 
@@ -181,14 +181,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     /**
      * Trouver les réservations qui commencent bientôt (dans les N jours)
      */
-    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'confirme' " +
+    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'CONFIRME' " +
             "AND r.dateDebut BETWEEN CURRENT_DATE AND :dateLimit")
     List<Reservation> findReservationsCommencantDansNJours(@Param("dateLimit") Date dateLimit);
 
     /**
      * Trouver les réservations dont la date de fin approche
      */
-    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'confirme' " +
+    @Query("SELECT r FROM Reservation r WHERE r.statutReservation = 'CONFIRME' " +
             "AND r.dateFin BETWEEN CURRENT_DATE AND :dateLimit")
     List<Reservation> findReservationsFinissantDansNJours(@Param("dateLimit") Date dateLimit);
 
@@ -196,7 +196,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      * Trouver les devis en attente depuis plus de N jours
      * (pour relance client)
      */
-    @Query(value = "SELECT r FROM Reservation r WHERE r.statutReservation = 'EnAteente' " +
+    @Query(value = "SELECT r FROM Reservation r WHERE r.statutReservation = 'EN_ATTENTE' " +
             "AND DATEDIFF(CURRENT_DATE, r.dateDebut) > :nbreJours")
     List<Reservation> findDevisExpires(@Param("nbreJours") int nbreJours);
 }
