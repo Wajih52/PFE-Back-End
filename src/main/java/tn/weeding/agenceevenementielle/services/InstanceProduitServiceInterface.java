@@ -3,6 +3,7 @@ package tn.weeding.agenceevenementielle.services;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
+import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -102,6 +103,17 @@ public interface InstanceProduitServiceInterface {
      * Libérer les instances d'une ligne de réservation
      */
     void libererInstances(Long idLigneReservation, String username);
+
+    /**
+     * Libérer une instance spécifique d'une réservation
+     * Remet l'instance à DISPONIBLE et supprime la référence à la ligne de réservation
+     *
+     * @param idInstance ID de l'instance à libérer
+     * @param username Utilisateur effectuant l'action
+     * @return DTO de l'instance libérée
+     * @throws ProduitException si l'instance n'existe pas
+     */
+    InstanceProduitResponseDto libererInstance(Long idInstance, String username);
 
     // ============ CRÉATION EN LOT ============
 

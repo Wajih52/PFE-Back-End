@@ -44,17 +44,17 @@ public interface MouvementStockRepository extends JpaRepository<MouvementStock, 
     // Statistiques : Total des entrées pour un produit
     @Query("SELECT SUM(m.quantite) FROM MouvementStock m " +
             "WHERE m.produit.idProduit = :idProduit " +
-            "AND m.typeMouvement IN (tn.weeding.agenceevenementielle.entities.TypeMouvement.ENTREE_STOCK, " +
-            "tn.weeding.agenceevenementielle.entities.TypeMouvement.RETOUR_RESERVATION, " +
-            "tn.weeding.agenceevenementielle.entities.TypeMouvement.RETOUR_MAINTENANCE)")
+            "AND m.typeMouvement IN (tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.ENTREE_STOCK, " +
+            "tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETOUR_RESERVATION, " +
+            "tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETOUR_MAINTENANCE)")
     Integer getTotalEntrees(@Param("idProduit") Long idProduit);
 
     // Statistiques : Total des sorties pour un produit
     @Query("SELECT SUM(m.quantite) FROM MouvementStock m " +
             "WHERE m.produit.idProduit = :idProduit " +
-            "AND m.typeMouvement IN (tn.weeding.agenceevenementielle.entities.TypeMouvement.SORTIE_RESERVATION, " +
-            "tn.weeding.agenceevenementielle.entities.TypeMouvement.PRODUIT_ENDOMMAGE, " +
-            "tn.weeding.agenceevenementielle.entities.TypeMouvement.MAINTENANCE)")
+            "AND m.typeMouvement IN (tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.SORTIE_RESERVATION, " +
+            "tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.PRODUIT_ENDOMMAGE, " +
+            "tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.MAINTENANCE)")
     Integer getTotalSorties(@Param("idProduit") Long idProduit);
 
 }

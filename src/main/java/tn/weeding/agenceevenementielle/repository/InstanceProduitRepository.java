@@ -80,7 +80,7 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
     /**
      * Récupérer les instances hors service
      */
-    @Query("SELECT i FROM InstanceProduit i WHERE i.statut IN (tn.weeding.agenceevenementielle.entities.StatutInstance.HORS_SERVICE," +
-            " tn.weeding.agenceevenementielle.entities.StatutInstance.PERDU)")
+    @Query("SELECT i FROM InstanceProduit i WHERE i.statut IN (tn.weeding.agenceevenementielle.entities.enums.StatutInstance.HORS_SERVICE," +
+            " tn.weeding.agenceevenementielle.entities.enums.StatutInstance.PERDU)")
     List<InstanceProduit> findInstancesHorsService();
 }

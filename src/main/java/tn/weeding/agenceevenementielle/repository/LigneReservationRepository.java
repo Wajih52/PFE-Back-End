@@ -235,4 +235,120 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             @Param("idUtilisateur") Long idUtilisateur,
             @Param("idProduit") Long idProduit
     );
+
+
+    // ============================================
+    // RECHERCHES AVANCÉES
+    // ============================================
+
+    /**
+     * Récupérer les lignes d'une réservation triées par produit
+     */
+    @Query("SELECT l FROM LigneReservation l " +
+            "WHERE l.reservation.idReservation = :idReservation " +
+            "ORDER BY l.produit.nomProduit")
+    List<LigneReservation> findByReservationOrderByProduit(@Param("idReservation") Long idReservation);
+
+    /**
+     * Récupérer les lignes dont la date de début est dans une période
+     * Utile pour le planning
+     */
+    @Query("SELECT l FROM LigneReservation l " +
+            "WHERE l.dateDebut BETWEEN :dateDebut AND :dateFin")
+    List<LigneReservation> findByDateDebutBetween(
+            @Param("dateDebut") Date dateDebut,
+            @Param("dateFin") Date dateFin
+    );
+
+    /**
+     * Récupérer les lignes avec un produit spécifique et un statut
+     */
+    @Query("SELECT l FROM LigneReservation l " +
+            "WHERE l.produit.idProduit = :idProduit " +
+            "AND l.statutLivraisonLigne = :statut")
+    List<LigneReservation> findByProduitAndStatut(
+            @Param("idProduit") Long idProduit,
+            @Param("statut") StatutLivraison statut
+    );
+
+    /**
+     * Récupérer les lignes en attente de livraison pour une période
+     * Utile pour planifier les livraisons
+     */
+    @Query("SELECT l FROM LigneReservation l " +
+            "WHERE l.statutLivraisonLigne = 'EN_ATTENTE' " +
+            "AND l.dateDebut BETWEEN :dateDebut AND :dateFin")
+    List<LigneReservation> findLignesEnAttenteParPeriode(
+            @Param("dateDebut") Date dateDebut,
+            @Param("dateFin") Date dateFin
+    );
+
+    // ============================================
+    // STATISTIQUES ET COMPTAGES
+    // ============================================
+
+    /**
+     * Compter le nombre de lignes d'une réservation
+     */
+    @Query("SELECT COUNT(l) FROM LigneReservation l " +
+            "WHERE l.reservation.idReservation = :idReservation")
+    Long countByReservation(@Param("idReservation") Long idReservation);
+
+    /**
+     * Calculer la quantité totale de produits réservés pour un produit
+     * Utile pour suivre la popularité d'un produit
+     */
+    @Query("SELECT COALESCE(SUM(l.quantite), 0) FROM LigneReservation l " +
+            "WHERE l.produit.idProduit = :idProduit")
+    Integer getTotalQuantiteReserveePourProduit(@Param("idProduit") Long idProduit);
+
+    /**
+     * Calculer le montant total d'une réservation
+     */
+    @Query("SELECT COALESCE(SUM(l.quantite * l.prixUnitaire), 0.0) FROM LigneReservation l " +
+            "WHERE l.reservation.idReservation = :idReservation")
+    Double calculateMontantTotalReservation(@Param("idReservation") Long idReservation);
+
+    /**
+     * Compter les lignes par statut
+     * Utile pour les dashboards
+     */
+    @Query("SELECT COUNT(l) FROM LigneReservation l " +
+            "WHERE l.statutLivraisonLigne = :statut")
+    Long countByStatut(@Param("statut") StatutLivraison statut);
+
+
+    // ============================================
+    // VÉRIFICATIONS MÉTIER
+    // ============================================
+
+    /**
+     * Vérifier si un produit est utilisé dans des réservations actives
+     * Utile avant de supprimer ou désactiver un produit
+     */
+    @Query("SELECT CASE WHEN COUNT(l) > 0 THEN true ELSE false END " +
+            "FROM LigneReservation l " +
+            "WHERE l.produit.idProduit = :idProduit " +
+            "AND l.statutLivraisonLigne IN (tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.EN_ATTENTE, " +
+            "tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.EN_COURS)")
+    boolean isProduitUtiliseDansReservationsActives(@Param("idProduit") Long idProduit);
+
+    /**
+     * Récupérer les lignes avec des instances spécifiques
+     * Utile pour le suivi des produits avec référence
+     */
+    @Query("SELECT l FROM LigneReservation l " +
+            "JOIN l.instancesReservees i " +
+            "WHERE i.idInstance = :idInstance")
+    List<LigneReservation> findByInstanceReservee(@Param("idInstance") Long idInstance);
+
+    /**
+     * Récupérer les lignes nécessitant une livraison dans les N prochains jours
+     * Utile pour les alertes de planning
+     */
+    @Query("SELECT l FROM LigneReservation l " +
+            "WHERE l.statutLivraisonLigne = 'EN_ATTENTE' " +
+            "AND l.dateDebut <= :dateLimite " +
+            "ORDER BY l.dateDebut ASC")
+    List<LigneReservation> findLignesNecessitantLivraisonAvant(@Param("dateLimite") Date dateLimite);
 }

@@ -45,8 +45,7 @@ public class AuthenticationFacade {
     public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
-        Utilisateur utilisateur = utilisateurRepository.findByEmail(username)
+        Utilisateur utilisateur = utilisateurRepository.findByPseudo(username)
                 .orElseThrow(() -> new CustomException("Utilisateur non trouvé"));
 
         return utilisateur.getIdUtilisateur();

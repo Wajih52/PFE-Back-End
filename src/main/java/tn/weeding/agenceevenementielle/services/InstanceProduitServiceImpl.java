@@ -400,6 +400,50 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         }
     }
 
+    /**
+     * 🔓 Libérer UNE instance spécifique d'une réservation
+     */
+    @Override
+    public InstanceProduitResponseDto libererInstance(Long idInstance, String username) {
+        log.info("🔓 Libération de l'instance ID: {} par {}", idInstance, username);
+
+        // Récupérer l'instance
+        InstanceProduit instance = instanceRepo.findById(idInstance)
+                .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
+                        "Instance avec ID " + idInstance + " introuvable"));
+
+        // Vérifier qu'elle est bien réservée
+        if (instance.getIdLigneReservation() == null) {
+            log.warn("⚠️ L'instance {} n'est pas réservée", instance.getNumeroSerie());
+            throw new CustomException(
+                    "L'instance " + instance.getNumeroSerie() + " n'est pas actuellement réservée");
+        }
+
+        Long idLigneReservation = instance.getIdLigneReservation();
+
+        // Libérer l'instance
+        instance.setStatut(StatutInstance.DISPONIBLE);
+        instance.setIdLigneReservation(null);
+        instance = instanceRepo.save(instance);
+
+        // Enregistrer le mouvement
+        enregistrerMouvement(
+                instance.getProduit(),
+                TypeMouvement.ANNULATION_RESERVATION,
+                1,
+                "Instance libérée de la ligne de réservation " + idLigneReservation,
+                username,
+                instance.getNumeroSerie()
+        );
+
+        // Mettre à jour la quantité disponible du produit
+        mettreAJourQuantiteDisponible(instance.getProduit());
+
+        log.info("✅ Instance {} libérée avec succès", instance.getNumeroSerie());
+        return toDto(instance);
+    }
+
+
     // ============ CRÉATION EN LOT ============
 
     @Override
