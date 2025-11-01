@@ -206,6 +206,21 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             VerificationDisponibiliteDto verificationDto,
             DisponibiliteResponseDto response) {
 
+
+        // Compter les instances disponibles sur la période
+        int instancesDisponiblesPourPeriode = instanceProduitRepo.countInstancesDisponiblesSurPeriode(
+                produit.getIdProduit(),
+                verificationDto.getDateDebut(),
+                verificationDto.getDateFin()
+        );
+
+
+
+        log.debug("📊 Instances disponibles sur période [{} - {}]: {}",
+                verificationDto.getDateDebut(),
+                verificationDto.getDateFin(),
+                instancesDisponiblesPourPeriode);
+
         // Compter les instances réservées sur cette période
         Long instancesReservees = ligneReservationRepo.countInstancesReserveesSurPeriode(
                 produit.getIdProduit(),
@@ -217,22 +232,22 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             instancesReservees = 0L;
         }
 
-        // Compter les instances DISPONIBLES
-        int instancesDisponiblesTotal = instanceProduitRepo.countInstancesDisponibles(produit.getIdProduit());
-        int instancesDisponiblesPourPeriode = (int) (instancesDisponiblesTotal - instancesReservees);
-
         response.setQuantiteDisponible(instancesDisponiblesPourPeriode);
         response.setDisponible(instancesDisponiblesPourPeriode >= verificationDto.getQuantite());
 
-        // Récupérer les numéros de série des instances disponibles
-        List<InstanceProduit> instancesDispos = instanceProduitRepo.findInstancesDisponibles(produit.getIdProduit());
+        // Récupérer les instances disponibles
+        List<InstanceProduit> instancesDispos = instanceProduitRepo.findInstancesDisponiblesSurPeriode(
+                produit.getIdProduit(),
+                verificationDto.getDateDebut(),
+                verificationDto.getDateFin()
+        );
         List<String> numerosSeries = instancesDispos.stream()
                 .limit(verificationDto.getQuantite())
                 .map(InstanceProduit::getNumeroSerie)
                 .collect(Collectors.toList());
 
         response.setInstancesDisponibles(numerosSeries);
-        System.out.println(response.getInstancesDisponibles());
+
         if (response.getDisponible()) {
             response.setMessage("Produit disponible. " + instancesDisponiblesPourPeriode + " instances disponibles.");
         } else {
@@ -405,7 +420,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         log.info("🔒 Réservation de {} instances pour {}", quantiteRequise, produit.getNomProduit());
 
         // Récupérer les N premières instances disponibles
-        List<InstanceProduit> instancesDispos = instanceProduitRepo.findInstancesDisponibles(produit.getIdProduit());
+        List<InstanceProduit> instancesDispos = instanceProduitRepo.
+                findInstancesDisponiblesSurPeriode(produit.getIdProduit(),ligne.getDateDebut(),ligne.getDateFin());
 
         if (instancesDispos.size() < quantiteRequise) {
             throw new CustomException(

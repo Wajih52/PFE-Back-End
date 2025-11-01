@@ -197,6 +197,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      * (pour relance client)
      */
     @Query(value = "SELECT r FROM Reservation r WHERE r.statutReservation = 'EN_ATTENTE' " +
-            "AND DATEDIFF(CURRENT_DATE, r.dateDebut) > :nbreJours")
+            "AND DATEDIFF(CURRENT_DATE, r.dateCreation) > :nbreJours")
     List<Reservation> findDevisExpires(@Param("nbreJours") int nbreJours);
 }

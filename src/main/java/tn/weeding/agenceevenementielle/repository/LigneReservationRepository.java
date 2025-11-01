@@ -121,7 +121,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      */
     @Query("SELECT COUNT(lr) FROM LigneReservation lr " +
             "WHERE lr.produit.idProduit = :idProduit " +
-            "AND lr.reservation.statutReservation = 'confirme'")
+            "AND lr.reservation.statutReservation = 'CONFIRME'")
     Long countReservationsByProduit(@Param("idProduit") Long idProduit);
 
     /**
@@ -129,7 +129,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      */
     @Query("SELECT SUM(lr.quantite * lr.prixUnitaire) FROM LigneReservation lr " +
             "WHERE lr.produit.idProduit = :idProduit " +
-            "AND lr.reservation.statutReservation = 'confirme'")
+            "AND lr.reservation.statutReservation = 'CONFIRME'")
     Double calculateChiffreAffairesByProduit(@Param("idProduit") Long idProduit);
 
     /**
@@ -137,7 +137,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      */
     @Query("SELECT lr.produit.idProduit, lr.produit.nomProduit, COUNT(lr) as nbReservations " +
             "FROM LigneReservation lr " +
-            "WHERE lr.reservation.statutReservation = 'confirme' " +
+            "WHERE lr.reservation.statutReservation = 'CONFIRME' " +
             "GROUP BY lr.produit.idProduit, lr.produit.nomProduit " +
             "ORDER BY nbReservations DESC")
     List<Object[]> findProduitsLesPlusReserves();
@@ -172,7 +172,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      */
     @Query("SELECT lr FROM LigneReservation lr " +
             "WHERE lr.dateFin = CURRENT_DATE " +
-            "AND lr.reservation.statutReservation = 'confirme' " +
+            "AND lr.reservation.statutReservation = 'CONFIRME' " +
             "AND lr.statutLivraisonLigne IN (tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.LIVREE, " +
             "tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.EN_COURS)")
     List<LigneReservation> findRetoursAujourdhui();
@@ -182,7 +182,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      */
     @Query("SELECT lr FROM LigneReservation lr " +
             "WHERE lr.dateFin < CURRENT_DATE " +
-            "AND lr.reservation.statutReservation = 'confirme' " +
+            "AND lr.reservation.statutReservation = 'CONFIRME' " +
             "AND lr.statutLivraisonLigne NOT IN (tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.RETOUR," +
             " tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.RETOUR_PARTIEL) " +
             "ORDER BY lr.dateFin ASC")
@@ -206,7 +206,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "FROM LigneReservation lr " +
             "JOIN lr.instancesReservees ip " +
             "WHERE ip.idInstance = :idInstance " +
-            "AND lr.reservation.statutReservation = 'confirme' " +
+            "AND lr.reservation.statutReservation = 'CONFIRME' " +
             "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
     boolean isInstanceReserveeSurPeriode(
             @Param("idInstance") Long idInstance,

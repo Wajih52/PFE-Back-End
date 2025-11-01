@@ -23,6 +23,13 @@ public class Reservation implements Serializable {
     Long idReservation;
     @Column(name = "referenceReservation")
     String referenceReservation;
+
+    @Temporal(TemporalType.DATE)
+    Date dateCreation;
+
+    @Temporal(TemporalType.DATE)
+    Date dateModification;
+
     @Temporal(TemporalType.DATE)
     Date dateDebut;
     @Temporal(TemporalType.DATE)
@@ -52,4 +59,16 @@ public class Reservation implements Serializable {
      //Reservation 1----------- 1..* LigneReservation
     @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL,orphanRemoval = true)
     Set<LigneReservation> ligneReservations;
+
+
+    @PrePersist
+    public void prePersist(){
+        dateCreation = new Date();
+        dateModification = new Date();
+    }
+    @PreUpdate
+    public void preUpdate(){
+        dateModification = new Date();
+    }
+
 }

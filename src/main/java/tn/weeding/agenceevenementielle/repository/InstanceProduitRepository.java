@@ -8,6 +8,7 @@ import tn.weeding.agenceevenementielle.entities.InstanceProduit;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,27 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
     List<InstanceProduit> findInstancesDisponibles(@Param("idProduit") Long idProduit);
 
     /**
+     * Récupérer les instances disponibles d'un produit sur une période
+     * (statut DISPONIBLE et pas de ligne réservation)
+     */
+    @Query("SELECT i FROM InstanceProduit i " +
+            "WHERE i.produit.idProduit = :idProduit " +
+            "AND NOT EXISTS (" +
+            "    SELECT lr FROM LigneReservation lr " +
+            "    WHERE lr.produit.idProduit = :idProduit " +
+            "    AND i MEMBER OF lr.instancesReservees " +
+            "    AND lr.dateDebut <= :dateFin " +
+            "    AND lr.dateFin >= :dateDebut " +
+            "    AND lr.reservation.statutReservation = 'CONFIRME'" +
+            ") " +
+            "ORDER BY i.numeroSerie")
+    List<InstanceProduit> findInstancesDisponiblesSurPeriode(
+            @Param("idProduit") Long idProduit,
+            @Param("dateDebut") Date dateDebut,
+            @Param("dateFin") Date dateFin
+    );
+
+    /**
      * Récupérer les N premières instances disponibles d'un produit
      */
     @Query("SELECT i FROM InstanceProduit i WHERE i.produit.idProduit = :idProduit " +
@@ -55,6 +77,25 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "AND i.statut = 'DISPONIBLE' AND i.idLigneReservation IS NULL")
     int countInstancesDisponibles(@Param("idProduit") Long idProduit);
 
+
+    /**
+     * Compter les instances disponibles d'un produit sur une période
+     */
+    @Query("SELECT COUNT(i) FROM InstanceProduit i " +
+            "WHERE i.produit.idProduit = :idProduit " +
+            "AND NOT EXISTS (" +
+            "    SELECT lr FROM LigneReservation lr " +
+            "    WHERE lr.produit.idProduit = :idProduit " +
+            "    AND i MEMBER OF lr.instancesReservees " +
+            "    AND lr.dateDebut <= :dateFin " +
+            "    AND lr.dateFin >= :dateDebut " +
+            "    AND lr.reservation.statutReservation = 'CONFIRME'" +
+            ")")
+    int countInstancesDisponiblesSurPeriode(
+            @Param("idProduit") Long idProduit,
+            @Param("dateDebut") Date dateDebut,
+            @Param("dateFin") Date dateFin
+    );
     /**
      * Récupérer les instances d'un produit par statut
      */
