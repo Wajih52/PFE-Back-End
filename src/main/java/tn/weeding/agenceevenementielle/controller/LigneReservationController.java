@@ -10,20 +10,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationRequestDto;
 import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationResponseDto;
+
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 import tn.weeding.agenceevenementielle.services.LigneReservationServiceInterface;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * ==========================================
  * CONTRÔLEUR REST POUR LA GESTION DES LIGNES DE RÉSERVATION
  * Sprint 4 - Gestion des réservations (incluant devis)
  * ==========================================
- *
  * Endpoints disponibles:
  * - POST   /api/lignes-reservation/{idReservation}           : Ajouter une ligne à une réservation
  * - GET    /api/lignes-reservation/{id}                      : Récupérer une ligne par ID
@@ -243,6 +245,15 @@ public class LigneReservationController {
         Map<String, Object> stats = ligneReservationService.getStatistiquesReservation(idReservation);
 
         return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping("/{id}/instances")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(summary = "Instances d'une ligne de réservation")
+    public ResponseEntity<Set<InstanceProduitResponseDto>> getInstancesLigneReservation(
+            @PathVariable Long id) {
+        Set<InstanceProduitResponseDto> instances = ligneReservationService.getInstancesLigneReservation(id);
+        return ResponseEntity.ok(instances);
     }
 
     // ============================================

@@ -1655,3 +1655,183 @@ Consider defining a bean of type 'tn.weeding.agenceevenementielle.services.Reser
 2025-11-01 09:44:23 [http-nio-8080-exec-1] INFO  t.w.a.s.ReservationServiceImpl - 📝 Ligne ajoutée: Projecteur Led x 2 = 50.0 TND
 2025-11-01 09:44:23 [http-nio-8080-exec-1] INFO  t.w.a.s.ReservationServiceImpl - 📝 Ligne ajoutée: Projecteur Led x 2 = 50.0 TND
 2025-11-01 09:44:23 [http-nio-8080-exec-1] INFO  t.w.a.s.ReservationServiceImpl - ✅ Devis créé avec succès: RES-2025-0003 - Montant: 100.0 TND
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/devis/2/valider
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/devis/2/valider
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.c.ReservationController - 🎯 Validation du devis ID: 2 par le client
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.ReservationServiceImpl - 🎯 Validation du devis ID: 2 par le client ClientTest - Accepté: true
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.ReservationServiceImpl - ✅ Client accepte le devis - Confirmation de la réservation
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: 2025-11-03 -> 2025-11-03
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-03 - 2025-11-03]: 3
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 2, Disponibles: 3
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: 2025-11-04 -> 2025-11-04
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-04 - 2025-11-04]: 5
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 0, Disponibles: 5
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.ReservationServiceImpl - 🔒 Réservation de 2 instances pour Projecteur Led
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0003
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0004
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.ReservationServiceImpl - 🔒 Réservation de 2 instances pour Projecteur Led
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0001
+2025-11-01 09:44:48 [http-nio-8080-exec-3] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0002
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.ReservationServiceImpl - 📊 Mouvement de stock enregistré: SORTIE_RESERVATION pour réservation RES-2025-0002
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.s.ReservationServiceImpl - 🎉 Réservation confirmée avec succès: RES-2025-0002
+2025-11-01 09:44:48 [http-nio-8080-exec-3] INFO  t.w.a.c.ReservationController - 🎉 Réservation confirmée avec succès!
+2025-11-01 09:44:59 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/devis/3/valider
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/devis/3/valider
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.c.ReservationController - 🎯 Validation du devis ID: 3 par le client
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.ReservationServiceImpl - 🎯 Validation du devis ID: 3 par le client ClientTest - Accepté: true
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.ReservationServiceImpl - ✅ Client accepte le devis - Confirmation de la réservation
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: 2025-11-03 -> 2025-11-03
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-03 - 2025-11-03]: 3
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 2, Disponibles: 3
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: 2025-11-04 -> 2025-11-04
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-04 - 2025-11-04]: 3
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 2, Disponibles: 3
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.ReservationServiceImpl - 🔒 Réservation de 2 instances pour Projecteur Led
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0001
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0002
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.ReservationServiceImpl - 🔒 Réservation de 2 instances pour Projecteur Led
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0001
+2025-11-01 09:45:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0002
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.ReservationServiceImpl - 📊 Mouvement de stock enregistré: SORTIE_RESERVATION pour réservation RES-2025-0003
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.s.ReservationServiceImpl - 🎉 Réservation confirmée avec succès: RES-2025-0003
+2025-11-01 09:45:00 [http-nio-8080-exec-5] INFO  t.w.a.c.ReservationController - 🎉 Réservation confirmée avec succès!
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/disponibilite/verifier
+2025-11-01 09:47:20 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:47:20 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/disponibilite/verifier
+2025-11-01 09:47:20 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:47:20 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.verifierDisponibilite(tn.weeding.agenceevenementielle.dto.reservation.VerificationDisponibiliteDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.verifierDisponibilite(tn.weeding.agenceevenementielle.dto.reservation.VerificationDisponibiliteDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 1, Période: Mon Nov 03 01:00:00 CET 2025 -> Tue Nov 04 01:00:00 CET 2025
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [Mon Nov 03 01:00:00 CET 2025 - Tue Nov 04 01:00:00 CET 2025]: 1
+2025-11-01 09:47:20 [http-nio-8080-exec-7] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 1, Réservées: 4, Disponibles: 1
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/disponibilite/verifier
+2025-11-01 09:47:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:47:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/disponibilite/verifier
+2025-11-01 09:47:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:47:29 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.verifierDisponibilite(tn.weeding.agenceevenementielle.dto.reservation.VerificationDisponibiliteDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.verifierDisponibilite(tn.weeding.agenceevenementielle.dto.reservation.VerificationDisponibiliteDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: Mon Nov 03 01:00:00 CET 2025 -> Tue Nov 04 01:00:00 CET 2025
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [Mon Nov 03 01:00:00 CET 2025 - Tue Nov 04 01:00:00 CET 2025]: 1
+2025-11-01 09:47:29 [http-nio-8080-exec-9] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 4, Disponibles: 1
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/devis/3/valider
+2025-11-01 09:49:01 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:49:01 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/devis/3/valider
+2025-11-01 09:49:01 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:49:01 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:49:01 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:49:01 [http-nio-8080-exec-1] INFO  t.w.a.c.ReservationController - 🎯 Validation du devis ID: 3 par le client
+2025-11-01 09:49:01 [http-nio-8080-exec-1] INFO  t.w.a.s.ReservationServiceImpl - 🎯 Validation du devis ID: 3 par le client ClientTest - Accepté: true
+2025-11-01 09:49:01 [http-nio-8080-exec-1] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [tn.weeding.agenceevenementielle.exceptions.CustomException: Seuls les devis en attente peuvent être validés]
+2025-11-01 09:49:54 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/devis
+2025-11-01 09:49:54 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:49:54 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:49:54 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:49:54 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:49:54 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/devis
+2025-11-01 09:49:54 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.creerDevis(tn.weeding.agenceevenementielle.dto.reservation.DevisRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.creerDevis(tn.weeding.agenceevenementielle.dto.reservation.DevisRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.c.ReservationController - 📝 Nouvelle demande de devis reçue
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.s.ReservationServiceImpl - 🎯 Création d'un devis par le client ID: 3 (ClientTest)
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.s.ReservationServiceImpl - 📦 Vérification de la disponibilité de 2 produits
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: Mon Nov 03 01:00:00 CET 2025 -> Mon Nov 03 01:00:00 CET 2025
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [Mon Nov 03 01:00:00 CET 2025 - Mon Nov 03 01:00:00 CET 2025]: 3
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 2, Disponibles: 3
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: Tue Nov 04 01:00:00 CET 2025 -> Tue Nov 04 01:00:00 CET 2025
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [Tue Nov 04 01:00:00 CET 2025 - Tue Nov 04 01:00:00 CET 2025]: 3
+2025-11-01 09:49:55 [http-nio-8080-exec-2] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 2, Disponibles: 3
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.s.ReservationServiceImpl - ✅ Tous les produits sont disponibles
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.s.ReservationServiceImpl - 📝 Ligne ajoutée: Projecteur Led x 2 = 50.0 TND
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.s.ReservationServiceImpl - 📝 Ligne ajoutée: Projecteur Led x 2 = 50.0 TND
+2025-11-01 09:49:55 [http-nio-8080-exec-2] INFO  t.w.a.s.ReservationServiceImpl - ✅ Devis créé avec succès: RES-2025-0004 - Montant: 100.0 TND
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/disponibilite/verifier
+2025-11-01 09:51:22 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:51:22 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/disponibilite/verifier
+2025-11-01 09:51:22 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:51:22 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.verifierDisponibilite(tn.weeding.agenceevenementielle.dto.reservation.VerificationDisponibiliteDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.verifierDisponibilite(tn.weeding.agenceevenementielle.dto.reservation.VerificationDisponibiliteDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: Mon Nov 03 01:00:00 CET 2025 -> Tue Nov 04 01:00:00 CET 2025
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [Mon Nov 03 01:00:00 CET 2025 - Tue Nov 04 01:00:00 CET 2025]: 1
+2025-11-01 09:51:22 [http-nio-8080-exec-4] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 4, Disponibles: 1
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/devis/4/valider
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/devis/4/valider
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.validerDevisParClient(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.ValidationDevisDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.c.ReservationController - 🎯 Validation du devis ID: 4 par le client
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.ReservationServiceImpl - 🎯 Validation du devis ID: 4 par le client ClientTest - Accepté: true
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.ReservationServiceImpl - ✅ Client accepte le devis - Confirmation de la réservation
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: 2025-11-04 -> 2025-11-04
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-04 - 2025-11-04]: 3
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 2, Disponibles: 3
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 2, Période: 2025-11-03 -> 2025-11-03
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-03 - 2025-11-03]: 3
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 📊 Instances - Demandées: 2, Réservées: 2, Disponibles: 3
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.ReservationServiceImpl - 🔒 Réservation de 2 instances pour Projecteur Led
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0003
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0004
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.ReservationServiceImpl - 🔒 Réservation de 2 instances pour Projecteur Led
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0001
+2025-11-01 09:54:54 [http-nio-8080-exec-6] DEBUG t.w.a.s.ReservationServiceImpl - 🔒 Instance réservée: PRD-2025-PR-0002
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.ReservationServiceImpl - 📊 Mouvement de stock enregistré: SORTIE_RESERVATION pour réservation RES-2025-0004
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.s.ReservationServiceImpl - 🎉 Réservation confirmée avec succès: RES-2025-0004
+2025-11-01 09:54:54 [http-nio-8080-exec-6] INFO  t.w.a.c.ReservationController - 🎉 Réservation confirmée avec succès!
+2025-11-01 10:45:01 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-01 10:45:03 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-11-01 10:45:03 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-01 10:45:03 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-16 - Shutdown initiated...
+2025-11-01 10:45:03 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-16 - Shutdown completed.

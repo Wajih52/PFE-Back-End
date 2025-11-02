@@ -40,8 +40,11 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     public ProduitResponseDto creerProduit(ProduitRequestDto produitDto, String username) {
         log.info("Création d'un nouveau produit : {}", produitDto.getNomProduit());
         String imagePath = null;
+
+        //génére un code produit à partie de nom de produit (les deux premieres lettres)
         String codeProduit = codeGeneratorService.generateProduitCode(produitDto.getNomProduit());
 
+        //vérification de l'existence de l'image
         if (produitDto.getImageProduit() != null &&
                 produitDto.getImageProduit().startsWith("data:image")) {
             try {
@@ -68,7 +71,6 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         }
 
         produit.setPrixUnitaire(produitDto.getPrixUnitaire());
-        produit.setQuantiteInitial(produitDto.getQuantiteInitial());
         produit.setQuantiteDisponible(produitDto.getQuantiteInitial());
         produit.setTypeProduit(produitDto.getTypeProduit());
         //pour un produit de réference la maintenance est rélié aux instances
@@ -158,9 +160,6 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             produit.setMaintenanceRequise(produitDto.getMaintenanceRequise());
         }
 
-
-
-
         produit.setImageProduit(imagePath);
 
         // Si la quantité initiale a changé, ajuster le stock disponible
@@ -202,27 +201,56 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         // Vérifier si le produit a des réservations actives
         // TODO: Implémenter la vérification des réservations actives
 
-        // Suppression logique : mettre la quantité disponible à 0
-        Integer ancienneQuantite = produit.getQuantiteDisponible();
-        produit.setQuantiteInitial(0);
-        produit.setQuantiteDisponible(0);
 
-        produitRepository.save(produit);
+        if (produit.getTypeProduit()==TypeProduit.avecReference){
 
-        // Enregistrer le mouvement
-        if (ancienneQuantite > 0) {
-            enregistrerMouvement(
-                    produit,
-                    TypeMouvement.AJUSTEMENT_INVENTAIRE,
-                    ancienneQuantite,
-                    ancienneQuantite,
-                    0,
-                    "Suppression logique du produit",
-                    username,
-                    null
-            );
+            // Suppression logique : mettre la quantité disponible à 0
+            Integer ancienneQuantite = produit.getQuantiteDisponible();
+            produit.setQuantiteInitial(0);
+            produit.setQuantiteDisponible(0);
+
+            List<InstanceProduit> instanceProduits = instanceProduitRepository.findByProduit_IdProduit(idProduit);
+            for(InstanceProduit instanceProduit: instanceProduits){
+                instanceProduit.setStatut(StatutInstance.HORS_SERVICE);
+            }
+            produitRepository.save(produit);
+
+            // Enregistrer le mouvement
+            if (ancienneQuantite > 0) {
+                enregistrerMouvement(
+                        produit,
+                        TypeMouvement.AJUSTEMENT_INVENTAIRE,
+                        ancienneQuantite,
+                        ancienneQuantite,
+                        0,
+                        "Suppression logique d'un produit de réference",
+                        username,
+                        null
+                );
+            }
+
+        }else {
+            // Suppression logique : mettre la quantité disponible à 0
+            Integer ancienneQuantite = produit.getQuantiteDisponible();
+            produit.setQuantiteInitial(0);
+            produit.setQuantiteDisponible(0);
+
+            produitRepository.save(produit);
+
+            // Enregistrer le mouvement
+            if (ancienneQuantite > 0) {
+                enregistrerMouvement(
+                        produit,
+                        TypeMouvement.AJUSTEMENT_INVENTAIRE,
+                        ancienneQuantite,
+                        ancienneQuantite,
+                        0,
+                        "Suppression logique du produit",
+                        username,
+                        null
+                );
+            }
         }
-
         log.info("Produit supprimé (logiquement) avec succès : Code={}", produit.getCodeProduit());
     }
 
@@ -248,25 +276,50 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
-        Integer ancienneQuantite = produit.getQuantiteDisponible();
-        produit.setQuantiteDisponible(0);
 
-        produitRepository.save(produit);
+        if (produit.getTypeProduit()==TypeProduit.avecReference){
+            Integer ancienneQuantite = produit.getQuantiteDisponible();
+            produit.setQuantiteDisponible(0);
+            List<InstanceProduit> instanceProduits = instanceProduitRepository.findByProduit_IdProduit(idProduit);
+            for(InstanceProduit instanceProduit: instanceProduits){
+                instanceProduit.setStatut(StatutInstance.HORS_SERVICE);
+            }
+            produitRepository.save(produit);
 
-        // Enregistrer le mouvement
-        if (ancienneQuantite > 0) {
-            enregistrerMouvement(
-                    produit,
-                    TypeMouvement.AJUSTEMENT_INVENTAIRE,
-                    ancienneQuantite,
-                    ancienneQuantite,
-                    0,
-                    "Désactivation du produit",
-                    username,
-                    null
-            );
+            // Enregistrer le mouvement
+            if (ancienneQuantite > 0) {
+                enregistrerMouvement(
+                        produit,
+                        TypeMouvement.AJUSTEMENT_INVENTAIRE,
+                        ancienneQuantite,
+                        ancienneQuantite,
+                        0,
+                        "Désactivation du produit de réference",
+                        username,
+                        null
+                );
+            }
+
+        }else {
+
+            Integer ancienneQuantite = produit.getQuantiteDisponible();
+            produit.setQuantiteDisponible(0);
+            produitRepository.save(produit);
+
+            // Enregistrer le mouvement
+            if (ancienneQuantite > 0) {
+                enregistrerMouvement(
+                        produit,
+                        TypeMouvement.AJUSTEMENT_INVENTAIRE,
+                        ancienneQuantite,
+                        ancienneQuantite,
+                        0,
+                        "Désactivation du produit",
+                        username,
+                        null
+                );
+            }
         }
-
         log.info("Produit désactivé avec succès : Code={}", produit.getCodeProduit());
     }
 
@@ -277,26 +330,53 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
-        Integer ancienneQuantite = produit.getQuantiteDisponible();
-        produit.setQuantiteDisponible(quantite);
+        if(produit.getTypeProduit()==TypeProduit.avecReference){
+            Integer ancienneQuantite = produit.getQuantiteDisponible();
+            int i=0
+;            List<InstanceProduit> instanceProduits = instanceProduitRepository.findByProduit_IdProduit(idProduit);
+            for(InstanceProduit instanceProduit: instanceProduits){
+                instanceProduit.setStatut(StatutInstance.DISPONIBLE);
+                i = i+1;
+            }
+            produit.setQuantiteDisponible(i);
+            Produit savedProduit = produitRepository.save(produit);
 
-        Produit savedProduit = produitRepository.save(produit);
+            // Enregistrer le mouvement
+            enregistrerMouvement(
+                    savedProduit,
+                    TypeMouvement.ENTREE_STOCK,
+                    i,
+                    ancienneQuantite,
+                    quantite,
+                    "Réactivation du produit",
+                    username,
+                    null
+            );
+            log.info("Produit réactivé avec succès : Code={}", savedProduit.getCodeProduit());
+            return convertToDto(savedProduit);
 
-        // Enregistrer le mouvement
-        enregistrerMouvement(
-                savedProduit,
-                TypeMouvement.ENTREE_STOCK,
-                quantite,
-                ancienneQuantite,
-                quantite,
-                "Réactivation du produit",
-                username,
-                null
-        );
+        }else {
+            Integer ancienneQuantite = produit.getQuantiteDisponible();
+            produit.setQuantiteDisponible(quantite);
 
-        log.info("Produit réactivé avec succès : Code={}", savedProduit.getCodeProduit());
-        return convertToDto(savedProduit);
-    }
+            Produit savedProduit = produitRepository.save(produit);
+
+            // Enregistrer le mouvement
+            enregistrerMouvement(
+                    savedProduit,
+                    TypeMouvement.ENTREE_STOCK,
+                    quantite,
+                    ancienneQuantite,
+                    quantite,
+                    "Réactivation du produit",
+                    username,
+                    null
+            );
+            log.info("Produit réactivé avec succès: Code={}", savedProduit.getCodeProduit());
+            return convertToDto(savedProduit);
+        }
+        }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -416,6 +496,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
+        if(produit.getTypeProduit()==TypeProduit.avecReference){
+            throw new CustomException("Les produits de Type Réference s'ajustent séparement");
+        }
+
         Integer ancienneQuantite = produit.getQuantiteDisponible();
         Integer nouvelleQuantite = ancienneQuantite + quantite;
 
@@ -450,6 +534,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
+        if(produit.getTypeProduit()==TypeProduit.avecReference){
+            throw new CustomException("Les produits de Type Réference se décrementent en supprimant des instances");
+        }
+
         Integer ancienneQuantite = produit.getQuantiteDisponible();
 
         if (ancienneQuantite < quantite) {
@@ -464,11 +552,11 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         // Enregistrer le mouvement
         enregistrerMouvement(
                 produit,
-                TypeMouvement.SORTIE_RESERVATION,
+                TypeMouvement.AJUSTEMENT_INVENTAIRE,
                 quantite,
                 ancienneQuantite,
                 nouvelleQuantite,
-                "Réservation confirmée",
+                "Ajuster L'inventaire",
                 username,
                 idReservation
         );
@@ -511,6 +599,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
 
+        if(produit.getTypeProduit()==TypeProduit.avecReference){
+            throw new CustomException("pour marquer un produit de réference comme endommagé," +
+                    " il faut consulter ses intances");
+        }
         Integer ancienneQuantite = produit.getQuantiteDisponible();
 
         if (ancienneQuantite < quantite) {
@@ -543,7 +635,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
-
+        if(produit.getTypeProduit()==TypeProduit.avecReference){
+            throw new CustomException("pour mettre un produit de réference en Maintenance," +
+                    " il faut consulter ses intances");
+        }
         Integer ancienneQuantite = produit.getQuantiteDisponible();
 
         if (ancienneQuantite < quantite) {
@@ -577,7 +672,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new RuntimeException("Produit introuvable avec l'ID : " + idProduit));
-
+        if(produit.getTypeProduit()==TypeProduit.avecReference){
+            throw new CustomException("pour faire retourner un produit de réference de la maintenance," +
+                    " il faut consulter ses intances");
+        }
         Integer ancienneQuantite = produit.getQuantiteDisponible();
         Integer nouvelleQuantite = ancienneQuantite + quantite;
 

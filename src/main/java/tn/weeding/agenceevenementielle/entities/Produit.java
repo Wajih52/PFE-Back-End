@@ -129,7 +129,7 @@ public class Produit implements Serializable {
     public int getNombreInstancesDisponibles() {
         if (typeProduit == TypeProduit.avecReference && instances != null) {
             return (int) instances.stream()
-                    .filter(InstanceProduit::isDisponible)
+                    .filter(InstanceProduit::isDisponiblePhysiquement)
                     .count();
         }
         return quantiteDisponible != null ? quantiteDisponible : 0;

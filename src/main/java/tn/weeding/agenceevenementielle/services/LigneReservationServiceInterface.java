@@ -1,12 +1,15 @@
 package tn.weeding.agenceevenementielle.services;
 
+import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationRequestDto;
 import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 import  tn.weeding.agenceevenementielle.exceptions.CustomException;
+import  tn.weeding.agenceevenementielle.exceptions.ReservationException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * ==========================================
@@ -61,7 +64,7 @@ public interface LigneReservationServiceInterface {
      *
      * @param idReservation ID de la réservation
      * @return Liste des lignes
-     * @throws ReservationException si la réservation n'existe pas
+     * @throws tn.weeding.agenceevenementielle.exceptions.ReservationException si la réservation n'existe pas
      */
     List<LigneReservationResponseDto> getLignesReservationByReservation(Long idReservation);
 
@@ -149,4 +152,6 @@ public interface LigneReservationServiceInterface {
      * @return Map contenant les statistiques
      */
     Map<String, Object> getStatistiquesReservation(Long idReservation);
+
+    Set<InstanceProduitResponseDto> getInstancesLigneReservation(Long idLigneReservation);
 }

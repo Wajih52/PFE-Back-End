@@ -8,6 +8,7 @@ import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
+import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.repository.*;
 
 import java.time.LocalDate;
@@ -34,6 +35,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     private final UtilisateurRepository utilisateurRepo;
     private final InstanceProduitRepository instanceProduitRepo;
     private final MouvementStockRepository mouvementStockRepo;
+    private final InstanceProduitServiceInterface instanceProduitService;
 
     // ============ CRÉATION DE DEVIS PAR LE CLIENT ============
 
@@ -355,92 +357,64 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         Reservation reservation = reservationRepo.findById(validationDto.getIdReservation())
                 .orElseThrow(() -> new CustomException("Réservation introuvable"));
 
+        if (!validationDto.getAccepter()) {
+            // Client refuse le devis
+            reservation.setStatutReservation(StatutReservation.ANNULE);
+            reservationRepo.save(reservation);
+            return convertToResponseDto(reservation);
+        }
+
+
         // Vérifier que c'est bien un devis en attente
         if (reservation.getStatutReservation() != StatutReservation.EN_ATTENTE) {
             throw new CustomException("Seuls les devis en attente peuvent être validés");
         }
 
-        if (validationDto.getAccepter()) {
-            // ✅ CLIENT ACCEPTE LE DEVIS → CONFIRMER LA RÉSERVATION
-            log.info("✅ Client accepte le devis - Confirmation de la réservation");
 
-            // Revérifier la disponibilité avant de confirmer
-            for (LigneReservation ligne : reservation.getLigneReservations()) {
-                VerificationDisponibiliteDto verif = VerificationDisponibiliteDto.builder()
-                        .idProduit(ligne.getProduit().getIdProduit())
-                        .quantite(ligne.getQuantite())
-                        .dateDebut(ligne.getDateDebut())
-                        .dateFin(ligne.getDateFin())
-                        .build();
+        // Client accepte → Affecter les instances
+        for (LigneReservation ligne : reservation.getLigneReservations()) {
+            if (ligne.isProduitAvecReference()) {
 
-                DisponibiliteResponseDto dispo = verifierDisponibilite(verif);
-                if (!dispo.getDisponible()) {
-                    throw new CustomException(
-                            "Le produit '" + dispo.getNomProduit() + "' n'est plus disponible. " +
-                                    "Veuillez créer un nouveau devis."
+                // ✅ Vérifier la disponibilité sur la période
+                List<InstanceProduit> instancesDisponibles = instanceProduitRepo.findInstancesDisponiblesSurPeriode(
+                        ligne.getProduit().getIdProduit(),
+                        ligne.getDateDebut(),
+                        ligne.getDateFin()
+                );
+
+                if (instancesDisponibles.size() < ligne.getQuantite()) {
+                    throw new ProduitException(
+                            "Stock insuffisant pour " + ligne.getProduit().getNomProduit() +
+                                    " du " + ligne.getDateDebut() + " au " + ligne.getDateFin()
                     );
                 }
-            }
 
-            // Passer au statut CONFIRMÉ
-            reservation.setStatutReservation(StatutReservation.CONFIRME);
-            reservation.setCommentaireClient(validationDto.getCommentaireClient());
+                // ✅ Affecter les instances à la ligne (ManyToMany)
+                Set<InstanceProduit> instancesAAffecter = instancesDisponibles.stream()
+                        .limit(ligne.getQuantite())
+                        .collect(Collectors.toSet());
 
-            // Pour les produits AVEC RÉFÉRENCE: Réserver les instances spécifiques
-            for (LigneReservation ligne : reservation.getLigneReservations()) {
-                if (ligne.getProduit().getTypeProduit() == TypeProduit.avecReference) {
-                    reserverInstances(ligne);
-                }
+                ligne.setInstancesReservees(instancesAAffecter);
+                ligneReservationRepo.save(ligne);
+
+                log.info("{} instances affectées à la ligne {} pour la période {}-{}",
+                        ligne.getQuantite(),
+                        ligne.getIdLigneReservation(),
+                        ligne.getDateDebut(),
+                        ligne.getDateFin());
             }
+        }
+        // Confirmer la réservation
+        reservation.setStatutReservation(StatutReservation.CONFIRME);
 
             // Enregistrer un mouvement de stock (sortie pour réservation)
             enregistrerMouvementStock(reservation, TypeMouvement.SORTIE_RESERVATION);
 
             log.info("🎉 Réservation confirmée avec succès: {}", reservation.getReferenceReservation());
 
-        } else {
-            // ❌ CLIENT REFUSE LE DEVIS → ANNULER
-            log.info("❌ Client refuse le devis - Annulation");
-            reservation.setStatutReservation(StatutReservation.ANNULE);
-        }
-
         reservationRepo.save(reservation);
 
         return convertToResponseDto(reservation);
-    }
-
-    /**
-     * Réserver des instances spécifiques pour une ligne de réservation
-     * (pour produits avec référence uniquement)
-     */
-    private void reserverInstances(LigneReservation ligne) {
-        Produit produit = ligne.getProduit();
-        int quantiteRequise = ligne.getQuantite();
-
-        log.info("🔒 Réservation de {} instances pour {}", quantiteRequise, produit.getNomProduit());
-
-        // Récupérer les N premières instances disponibles
-        List<InstanceProduit> instancesDispos = instanceProduitRepo.
-                findInstancesDisponiblesSurPeriode(produit.getIdProduit(),ligne.getDateDebut(),ligne.getDateFin());
-
-        if (instancesDispos.size() < quantiteRequise) {
-            throw new CustomException(
-                    "Pas assez d'instances disponibles pour " + produit.getNomProduit()
-            );
-        }
-
-        Set<InstanceProduit> instancesReservees = new HashSet<>();
-        for (int i = 0; i < quantiteRequise; i++) {
-            InstanceProduit instance = instancesDispos.get(i);
-            instance.setStatut(StatutInstance.RESERVE);
-            instance.setIdLigneReservation(ligne.getIdLigneReservation());
-            instanceProduitRepo.save(instance);
-            instancesReservees.add(instance);
-
-            log.debug("🔒 Instance réservée: {}", instance.getNumeroSerie());
-        }
-
-        ligne.setInstancesReservees(instancesReservees);
     }
 
     // ============ ANNULATION ============
@@ -464,11 +438,23 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         // Libérer les instances si c'était confirmé
         if (reservation.getStatutReservation() == StatutReservation.CONFIRME) {
-            libererInstancesReservation(reservation);
-            enregistrerMouvementStock(reservation, TypeMouvement.ANNULATION_RESERVATION);
+            // ✅ Libérer les instances via ManyToMany
+            for (LigneReservation ligne : reservation.getLigneReservations()) {
+                if (ligne.isProduitAvecReference()) {
+                    // Simplement vider la collection
+                    ligne.getInstancesReservees().clear();
+                    ligneReservationRepo.save(ligne);
+
+                    log.info("Instances de la ligne {} libérées automatiquement",
+                            ligne.getIdLigneReservation());
+                    enregistrerMouvementStock(reservation, TypeMouvement.ANNULATION_RESERVATION);
+                }
+            }
+
         }
 
         reservation.setStatutReservation(StatutReservation.ANNULE);
+        reservation.setCommentaireClient(motif);
         reservationRepo.save(reservation);
 
         log.info("✅ Réservation annulée avec succès");

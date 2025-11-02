@@ -14,6 +14,7 @@ import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
+import tn.weeding.agenceevenementielle.repository.LigneReservationRepository;
 import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 
@@ -37,6 +38,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     private final ProduitRepository produitRepo;
     private final CodeGeneratorServiceProduit codeGeneratorServiceProduit;
     private final MouvementStockRepository mouvementStockRepo;
+    private final LigneReservationRepository ligneReservationRepo;
 
     // ============ CRUD DE BASE ============
 
@@ -51,7 +53,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
 
         if (produit.getTypeProduit() != TypeProduit.avecReference) {
             throw new ProduitException(
-                    "Les instances ne peuvent être créées que pour les produits de type avecReference");
+                    "Les instances ne peuvent être créées que pour les produits de type <<avecReference>>");
         }
 
         // Vérifier l'unicité du numéro de série
@@ -127,15 +129,19 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     }
 
     @Override
-    public void supprimerInstance(Long idInstance) {
+    public void supprimerInstance(Long idInstance,String username) {
         log.info("Suppression de l'instance ID: {}", idInstance);
 
         InstanceProduit instance = instanceRepo.findById(idInstance)
                 .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
                         "Instance avec ID " + idInstance + " introuvable"));
 
-        // Vérifier que l'instance n'est pas réservée
-        if (instance.getIdLigneReservation() != null) {
+        boolean estReservee = ligneReservationRepo.existsActiveReservationForInstance(
+                instance.getIdInstance(),
+                new Date()
+        );
+
+        if (estReservee) {
             throw new ProduitException(
                     "Impossible de supprimer l'instance " + instance.getNumeroSerie() +
                             " car elle est actuellement réservée");
@@ -150,7 +156,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 TypeMouvement.SUPPRESSION_INSTANCE,
                 -1,
                 "Suppression instance " + instance.getNumeroSerie(),
-                "admin",
+                username,
                 instance.getNumeroSerie()
         );
 
@@ -205,6 +211,13 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     }
 
     @Override
+    public List<InstanceProduitResponseDto> getInstancesDisponiblesSurPeriode(Long idProduit, Date dateDebut, Date dateFin) {
+        return instanceRepo.findInstancesDisponiblesSurPeriode(idProduit,dateDebut,dateFin).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<InstanceProduitResponseDto> getInstancesByStatut(StatutInstance statut) {
         return instanceRepo.findByStatut(statut).stream()
@@ -212,13 +225,8 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<InstanceProduitResponseDto> getInstancesByLigneReservation(Long idLigneReservation) {
-        return instanceRepo.findByIdLigneReservation(idLigneReservation).stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
+
+
 
     // ============ GESTION DES STATUTS ============
 
@@ -238,6 +246,18 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         if(ancienStatut.equals(StatutInstance.DISPONIBLE)&&nouveauStatut==StatutInstance.EN_MAINTENANCE) {
            throw new CustomException("Changement De Statut Simple De Disponible ==> En Maintenance est impossible ");
         }
+
+        boolean estReservee = ligneReservationRepo.existsActiveReservationForInstance(
+                instance.getIdInstance(),
+                new Date()
+        );
+
+        if (estReservee) {
+            throw new ProduitException(
+                    "Impossible de mettre l'instance " + instance.getNumeroSerie() +
+                            "en Etat :"+nouveauStatut+" car elle est actuellement réservée");
+        }
+
         instance.setStatut(nouveauStatut);
         instance = instanceRepo.save(instance);
 
@@ -274,12 +294,16 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                         "Instance avec ID " + idInstance + " introuvable"));
 
         // Vérifier que l'instance n'est pas réservée
-        if (instance.getIdLigneReservation() != null) {
-            throw new ProduitException(
-                    "Impossible d'envoyer en maintenance l'instance " + instance.getNumeroSerie() +
-                            " car elle est actuellement réservée");
-        }
+        boolean estReservee = ligneReservationRepo.existsActiveReservationForInstance(
+                instance.getIdInstance(),
+                new Date()
+        );
 
+        if (estReservee) {
+            throw new ProduitException(
+                    "Impossible d'envoyer l'instance " + instance.getNumeroSerie() +
+                            "En maintenance car elle est actuellement réservée");
+        }
         instance.setStatut(StatutInstance.EN_MAINTENANCE);
         instance.setDateDerniereMaintenance(LocalDate.now());
         instance.setDateProchaineMaintenance(LocalDate.now().plusMonths(4));
@@ -345,104 +369,45 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     // ============ RÉSERVATION ============
 
     @Override
-    public List<InstanceProduitResponseDto> reserverInstances(Long idProduit, int quantite,
-                                                              Long idLigneReservation, String username) {
-        log.info("Réservation de {} instances du produit ID: {} pour la ligne {} par {}",
-                quantite, idProduit, idLigneReservation, username);
+    public List<InstanceProduitResponseDto> reserverInstances(
+            Long idProduit,
+            int quantite,
+            Long idLigneReservation,
+            Date dateDebut,
+            Date dateFin,
+            String username) {
 
-        // Vérifier la disponibilité
-        List<InstanceProduit> instancesDisponibles = instanceRepo.findTopNInstancesDisponibles(idProduit);
+        log.info("Affectation de {} instances du produit ID: {} à la ligne {} (période: {}-{})",
+                quantite, idProduit, idLigneReservation, dateDebut, dateFin);
+
+        // ✅ Vérifier la disponibilité sur la PÉRIODE
+        List<InstanceProduit> instancesDisponibles = instanceRepo.findInstancesDisponiblesSurPeriode(
+                idProduit,
+                dateDebut,
+                dateFin
+        );
 
         if (instancesDisponibles.size() < quantite) {
             throw new ProduitException(
-                    "Stock insuffisant : seulement " + instancesDisponibles.size() +
-                            " instances disponibles sur " + quantite + " demandées");
+                    "Stock insuffisant du " + dateDebut + " au " + dateFin + ": " +
+                            "seulement " + instancesDisponibles.size() + " instances disponibles " +
+                            "(demandé: " + quantite + ")");
         }
 
-        // Réserver les N premières instances
-        List<InstanceProduit> instancesReservees = instancesDisponibles.stream()
+        // ✅ Récupérer les instances (SANS changer leur statut)
+        List<InstanceProduit> instancesAAffecter = instancesDisponibles.stream()
                 .limit(quantite)
-                .map(instance -> {
-                    instance.setStatut(StatutInstance.RESERVE);
-                    instance.setIdLigneReservation(idLigneReservation);
-                    return instanceRepo.save(instance);
-                })
                 .toList();
 
-        // Mettre à jour la quantité disponible du produit
-        if (!instancesReservees.isEmpty()) {
-            mettreAJourQuantiteDisponible(instancesReservees.get(0).getProduit());
-        }
+        // ⚠️ NE PAS modifier l'instance ici !
+        // La relation ManyToMany est gérée dans le ReservationService
 
-        log.info("{} instances réservées avec succès pour la ligne {}", quantite, idLigneReservation);
-        return instancesReservees.stream()
+        log.info("{} instances identifiées pour la ligne {}", quantite, idLigneReservation);
+
+        return instancesAAffecter.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public void libererInstances(Long idLigneReservation, String username) {
-        log.info("Libération des instances de la ligne {} par {}", idLigneReservation, username);
-
-        List<InstanceProduit> instances = instanceRepo.findByIdLigneReservation(idLigneReservation);
-
-        if (!instances.isEmpty()) {
-            instances.forEach(instance -> {
-                instance.setStatut(StatutInstance.DISPONIBLE);
-                instance.setIdLigneReservation(null);
-                instanceRepo.save(instance);
-            });
-
-            // Mettre à jour la quantité disponible
-            mettreAJourQuantiteDisponible(instances.get(0).getProduit());
-
-            log.info("{} instances libérées avec succès", instances.size());
-        }
-    }
-
-    /**
-     * 🔓 Libérer UNE instance spécifique d'une réservation
-     */
-    @Override
-    public InstanceProduitResponseDto libererInstance(Long idInstance, String username) {
-        log.info("🔓 Libération de l'instance ID: {} par {}", idInstance, username);
-
-        // Récupérer l'instance
-        InstanceProduit instance = instanceRepo.findById(idInstance)
-                .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
-                        "Instance avec ID " + idInstance + " introuvable"));
-
-        // Vérifier qu'elle est bien réservée
-        if (instance.getIdLigneReservation() == null) {
-            log.warn("⚠️ L'instance {} n'est pas réservée", instance.getNumeroSerie());
-            throw new CustomException(
-                    "L'instance " + instance.getNumeroSerie() + " n'est pas actuellement réservée");
-        }
-
-        Long idLigneReservation = instance.getIdLigneReservation();
-
-        // Libérer l'instance
-        instance.setStatut(StatutInstance.DISPONIBLE);
-        instance.setIdLigneReservation(null);
-        instance = instanceRepo.save(instance);
-
-        // Enregistrer le mouvement
-        enregistrerMouvement(
-                instance.getProduit(),
-                TypeMouvement.ANNULATION_RESERVATION,
-                1,
-                "Instance libérée de la ligne de réservation " + idLigneReservation,
-                username,
-                instance.getNumeroSerie()
-        );
-
-        // Mettre à jour la quantité disponible du produit
-        mettreAJourQuantiteDisponible(instance.getProduit());
-
-        log.info("✅ Instance {} libérée avec succès", instance.getNumeroSerie());
-        return toDto(instance);
-    }
-
 
     // ============ CRÉATION EN LOT ============
 
@@ -555,7 +520,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     /**
      * Convertit une entité InstanceProduit en DTO
      */
-    private InstanceProduitResponseDto toDto(InstanceProduit instance) {
+    public InstanceProduitResponseDto toDto(InstanceProduit instance) {
         InstanceProduitResponseDto dto = InstanceProduitResponseDto.builder()
                 .idInstance(instance.getIdInstance())
                 .numeroSerie(instance.getNumeroSerie())
@@ -564,12 +529,11 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .idProduit(instance.getProduit().getIdProduit())
                 .nomProduit(instance.getProduit().getNomProduit())
                 .codeProduit(instance.getProduit().getCodeProduit())
-                .idLigneReservation(instance.getIdLigneReservation())
                 .observation(instance.getObservation())
                 .dateAcquisition(instance.getDateAcquisition())
                 .dateDerniereMaintenance(instance.getDateDerniereMaintenance())
                 .dateProchaineMaintenance(instance.getDateProchaineMaintenance())
-                .disponible(instance.isDisponible())
+                .disponible(instance.isDisponiblePhysiquement())
                 .maintenanceRequise(instance.maintenanceNecessaire())
                 .ajoutPar(instance.getAjoutPar())
                 .motif(instance.getMotif())

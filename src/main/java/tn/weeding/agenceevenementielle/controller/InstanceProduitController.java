@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 import tn.weeding.agenceevenementielle.services.InstanceProduitServiceInterface;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,7 +80,8 @@ public class InstanceProduitController {
     @Operation(summary = "Supprimer une instance", description = "Supprime définitivement une instance")
     public ResponseEntity<Void> supprimerInstance(@PathVariable Long id) {
         log.info("Suppression de l'instance ID: {}", id);
-        instanceService.supprimerInstance(id);
+        String username = authenticationFacade.getAuthentication().getName();
+        instanceService.supprimerInstance(id,username);
         return ResponseEntity.noContent().build();
     }
 
@@ -92,7 +95,7 @@ public class InstanceProduitController {
         return ResponseEntity.ok(instance);
     }
     @GetMapping("/all")
-    @Operation(summary = "Obtenir une instance par ID", description = "Récupère les détails d'une instance")
+    @Operation(summary = "Obtenir toutes les instances", description = "Récupère Toutes les instances qui existent ")
     public ResponseEntity<List<InstanceProduitResponseDto>> getInstances() {
         log.info("Récupération de toutes les instanses");
         List<InstanceProduitResponseDto> instances = instanceService.getInstances();
@@ -121,11 +124,24 @@ public class InstanceProduitController {
 
     @GetMapping("/produit/{idProduit}/disponibles")
     @Operation(summary = "Lister les instances disponibles",
-            description = "Récupère uniquement les instances disponibles pour réservation")
+            description = "Récupère uniquement les instances disponibles pour réservation, ici on veut vérifier seulement l'état phyique")
     public ResponseEntity<List<InstanceProduitResponseDto>> getInstancesDisponibles(
             @PathVariable Long idProduit) {
         log.info("Récupération des instances disponibles du produit ID: {}", idProduit);
         List<InstanceProduitResponseDto> instances = instanceService.getInstancesDisponibles(idProduit);
+        return ResponseEntity.ok(instances);
+    }
+
+    @GetMapping("/produit/{idProduit}/disponiblesSurPeriode")
+    @Operation(summary = "Lister les instances disponibles",
+            description = "Récupère uniquement les instances disponibles pour réservation")
+    public ResponseEntity<List<InstanceProduitResponseDto>> getInstancesDisponiblesSurPeriode(
+            @PathVariable Long idProduit,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateDebut,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFin) {
+        log.info("Récupération des instances disponibles du produit ID: {} dans une pàriode donné", idProduit);
+        List<InstanceProduitResponseDto> instances =
+                instanceService.getInstancesDisponiblesSurPeriode(idProduit,dateDebut,dateFin);
         return ResponseEntity.ok(instances);
     }
 
@@ -139,17 +155,6 @@ public class InstanceProduitController {
         return ResponseEntity.ok(instances);
     }
 
-    @GetMapping("/ligne-reservation/{idLigneReservation}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Instances d'une ligne de réservation",
-            description = "Récupère les instances affectées à une ligne de réservation")
-    public ResponseEntity<List<InstanceProduitResponseDto>> getInstancesByLigneReservation(
-            @PathVariable Long idLigneReservation) {
-        log.info("Récupération des instances de la ligne de réservation ID: {}", idLigneReservation);
-        List<InstanceProduitResponseDto> instances =
-                instanceService.getInstancesByLigneReservation(idLigneReservation);
-        return ResponseEntity.ok(instances);
-    }
 
     // ============ GESTION DES STATUTS ============
 

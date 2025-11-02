@@ -77,8 +77,12 @@ public class LigneReservation implements Serializable {
      * Exemple pour 3 projecteurs réservés:
      * instancesReservees = [PROJ-2025-001, PROJ-2025-002, PROJ-2025-003]
      */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idLigneReservation")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ligne_reservation_instances",
+            joinColumns = @JoinColumn(name = "idLigneReservation"),
+            inverseJoinColumns = @JoinColumn(name = "idInstance")
+    )
     private Set<InstanceProduit> instancesReservees;
 
     /**

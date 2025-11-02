@@ -35,25 +35,27 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
     List<InstanceProduit> findByProduit_IdProduit(Long idProduit);
 
     /**
-     * Récupérer les instances disponibles d'un produit (statut DISPONIBLE et pas de ligne réservation)
+     * Récupérer les instances disponibles d'un produit (statut DISPONIBLE pour vérifier l'etat physique)
      */
     @Query("SELECT i FROM InstanceProduit i WHERE i.produit.idProduit = :idProduit " +
-            "AND i.statut = 'DISPONIBLE' AND i.idLigneReservation IS NULL")
+            "AND i.statut = tn.weeding.agenceevenementielle.entities.enums.StatutInstance.DISPONIBLE ")
     List<InstanceProduit> findInstancesDisponibles(@Param("idProduit") Long idProduit);
 
     /**
      * Récupérer les instances disponibles d'un produit sur une période
-     * (statut DISPONIBLE et pas de ligne réservation)
+     * (statut DISPONIBLE et pas de ligne réservation sur une prériode donnée)
      */
     @Query("SELECT i FROM InstanceProduit i " +
             "WHERE i.produit.idProduit = :idProduit " +
+            "AND i.statut = tn.weeding.agenceevenementielle.entities.enums.StatutInstance.DISPONIBLE " +
             "AND NOT EXISTS (" +
             "    SELECT lr FROM LigneReservation lr " +
-            "    WHERE lr.produit.idProduit = :idProduit " +
-            "    AND i MEMBER OF lr.instancesReservees " +
-            "    AND lr.dateDebut <= :dateFin " +
-            "    AND lr.dateFin >= :dateDebut " +
-            "    AND lr.reservation.statutReservation = 'CONFIRME'" +
+            "    WHERE i MEMBER OF lr.instancesReservees " +
+            "    AND lr.dateDebut < :dateFin " +      // Chevauche si début < fin demandée
+            "    AND lr.dateFin > :dateDebut " +       // ET fin > début demandé
+            "    AND lr.reservation.statutReservation IN " +
+            "        (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
+            "         tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)" +
             ") " +
             "ORDER BY i.numeroSerie")
     List<InstanceProduit> findInstancesDisponiblesSurPeriode(
@@ -66,7 +68,7 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
      * Récupérer les N premières instances disponibles d'un produit
      */
     @Query("SELECT i FROM InstanceProduit i WHERE i.produit.idProduit = :idProduit " +
-            "AND i.statut = 'DISPONIBLE' AND i.idLigneReservation IS NULL " +
+            "AND i.statut = tn.weeding.agenceevenementielle.entities.enums.StatutInstance.DISPONIBLE " +
             "ORDER BY i.numeroSerie")
     List<InstanceProduit> findTopNInstancesDisponibles(@Param("idProduit") Long idProduit);
 
@@ -74,7 +76,7 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
      * Compter les instances disponibles d'un produit
      */
     @Query("SELECT COUNT(i) FROM InstanceProduit i WHERE i.produit.idProduit = :idProduit " +
-            "AND i.statut = 'DISPONIBLE' AND i.idLigneReservation IS NULL")
+            "AND i.statut = 'DISPONIBLE'")
     int countInstancesDisponibles(@Param("idProduit") Long idProduit);
 
 
@@ -83,13 +85,15 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
      */
     @Query("SELECT COUNT(i) FROM InstanceProduit i " +
             "WHERE i.produit.idProduit = :idProduit " +
+            "AND i.statut = tn.weeding.agenceevenementielle.entities.enums.StatutInstance.DISPONIBLE " +
             "AND NOT EXISTS (" +
             "    SELECT lr FROM LigneReservation lr " +
-            "    WHERE lr.produit.idProduit = :idProduit " +
-            "    AND i MEMBER OF lr.instancesReservees " +
-            "    AND lr.dateDebut <= :dateFin " +
-            "    AND lr.dateFin >= :dateDebut " +
-            "    AND lr.reservation.statutReservation = 'CONFIRME'" +
+            "    WHERE i MEMBER OF lr.instancesReservees " +
+            "    AND lr.dateDebut < :dateFin " +
+            "    AND lr.dateFin > :dateDebut " +
+            "    AND lr.reservation.statutReservation IN " +
+            "        (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
+            "         tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)" +
             ")")
     int countInstancesDisponiblesSurPeriode(
             @Param("idProduit") Long idProduit,
@@ -106,10 +110,6 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
      */
     List<InstanceProduit> findByStatut(StatutInstance statut);
 
-    /**
-     * Récupérer les instances d'une ligne de réservation
-     */
-    List<InstanceProduit> findByIdLigneReservation(Long idLigneReservation);
 
     /**
      * Récupérer les instances nécessitant une maintenance

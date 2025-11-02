@@ -54,12 +54,6 @@ public class InstanceProduit implements Serializable {
     @Enumerated(EnumType.STRING)
     private EtatPhysique etatPhysique;
 
-    /**
-     * FK nullable vers LigneReservation
-     * Si NULL → instance disponible
-     * Si NOT NULL → instance réservée dans cette ligne
-     */
-    private Long idLigneReservation;
 
     /**
      * Observations générales
@@ -97,26 +91,13 @@ public class InstanceProduit implements Serializable {
 
 
 
-    @PrePersist
-    public void prePersist() {
-        dateAcquisition = LocalDate.now();
-    }
-
     // ============ MÉTHODES UTILITAIRES ============
-
-    /**
-     * Vérifie si l'instance est actuellement réservée
-     */
-    public boolean isReservee() {
-        return idLigneReservation != null &&
-                (statut == StatutInstance.RESERVE || statut == StatutInstance.EN_LIVRAISON);
-    }
 
     /**
      * Vérifie si l'instance est disponible pour réservation
      */
-    public boolean isDisponible() {
-        return statut == StatutInstance.DISPONIBLE && idLigneReservation == null;
+    public boolean isDisponiblePhysiquement() {
+        return statut == StatutInstance.DISPONIBLE ;
     }
 
     /**

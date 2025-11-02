@@ -47,6 +47,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     private final ProduitRepository produitRepo;
     private final InstanceProduitRepository instanceProduitRepo;
     private final InstanceProduitServiceInterface instanceProduitService;
+    private final InstanceProduitServiceImpl instanceProduitServiceImpl;
 
     // ============================================
     // PARTIE 1: CRÉATION ET AJOUT DE LIGNES
@@ -117,6 +118,8 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                     produit.getIdProduit(),
                     quantite,
                     ligne.getIdLigneReservation(),
+                    ligne.getDateDebut(),
+                    ligne.getDateFin(),
                     username
             );
 
@@ -406,6 +409,17 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         return stats;
     }
 
+    @Override
+    public Set<InstanceProduitResponseDto> getInstancesLigneReservation(Long idLigneReservation) {
+        LigneReservation ligne = ligneReservationRepo.findById(idLigneReservation).
+                orElseThrow(() -> new CustomException("Ligne " + idLigneReservation + " n'existe pas "));
+
+         Set<InstanceProduitResponseDto> instances = ligne.getInstancesReservees().stream()
+                .map(instanceProduitServiceImpl::toDto)
+                .collect(Collectors.toSet());
+        return instances ;
+    }
+
     /**
      * 📊 Grouper les produits par catégorie
      */
@@ -429,7 +443,8 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
         if (produit.getTypeProduit() == TypeProduit.avecReference) {
             // Pour les produits avec référence, vérifier le nombre d'instances disponibles
-            int instancesDisponibles = instanceProduitRepo.countInstancesDisponibles(produit.getIdProduit());
+            int instancesDisponibles =
+                    instanceProduitRepo.countInstancesDisponiblesSurPeriode(produit.getIdProduit(),dateDebut,dateFin);
 
             if (instancesDisponibles < quantiteDemandee) {
                 throw new CustomException(String.format(

@@ -6,6 +6,7 @@ package tn.weeding.agenceevenementielle.entities.enums;
  */
 public enum StatutInstance {
     DISPONIBLE,         // Disponible pour réservation
+    @Deprecated
     RESERVE,            // Réservé (dans une ligne de réservation)
     EN_LIVRAISON,       // En cours de livraison chez le client
     EN_RETOUR,
@@ -13,6 +14,6 @@ public enum StatutInstance {
     HORS_SERVICE,       // Défectueux, ne peut pas être utilisé
     PERDU ,// Perdu ou volé
     EN_UTILISATION,
-    EN_PANNE
-
+    EN_PANNE,
+    EN_ATTENTE      //le Jour de la livraison où la livraison est pas encore affecté
 }

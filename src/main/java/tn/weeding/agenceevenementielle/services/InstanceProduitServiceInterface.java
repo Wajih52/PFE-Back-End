@@ -6,7 +6,9 @@ import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Interface du service pour la gestion des instances de produits
@@ -29,7 +31,7 @@ public interface InstanceProduitServiceInterface {
     /**
      * Supprimer une instance
      */
-    void supprimerInstance(Long idInstance);
+    void supprimerInstance(Long idInstance,String username);
 
     /**
      * Récupérer une instance par son ID
@@ -53,19 +55,19 @@ public interface InstanceProduitServiceInterface {
     List<InstanceProduitResponseDto> getInstancesByProduit(Long idProduit);
 
     /**
-     * Récupérer les instances disponibles d'un produit
+     * Récupérer les instances disponibles d'un produit pour vérifie l'etat physique
      */
     List<InstanceProduitResponseDto> getInstancesDisponibles(Long idProduit);
+    /**
+     * Récupérer les instances disponibles d'un produit dans une période donnée
+     */
+    List<InstanceProduitResponseDto> getInstancesDisponiblesSurPeriode(Long idProduit, Date dateDebut, Date dateFin);
 
     /**
      * Récupérer les instances par statut
      */
     List<InstanceProduitResponseDto> getInstancesByStatut(StatutInstance statut);
 
-    /**
-     * Récupérer les instances d'une ligne de réservation
-     */
-    List<InstanceProduitResponseDto> getInstancesByLigneReservation(Long idLigneReservation);
 
     // ============ GESTION DES STATUTS ============
 
@@ -92,28 +94,13 @@ public interface InstanceProduitServiceInterface {
     List<InstanceProduitResponseDto> getInstancesNecessitantMaintenance();
 
     // ============ RÉSERVATION (Utilisé par ReservationService) ============
-
-    /**
-     * Réserver des instances pour une ligne de réservation
-     * Sélectionne automatiquement N instances disponibles
-     */
-    List<InstanceProduitResponseDto> reserverInstances(Long idProduit, int quantite, Long idLigneReservation, String username);
-
-    /**
-     * Libérer les instances d'une ligne de réservation
-     */
-    void libererInstances(Long idLigneReservation, String username);
-
-    /**
-     * Libérer une instance spécifique d'une réservation
-     * Remet l'instance à DISPONIBLE et supprime la référence à la ligne de réservation
-     *
-     * @param idInstance ID de l'instance à libérer
-     * @param username Utilisateur effectuant l'action
-     * @return DTO de l'instance libérée
-     * @throws ProduitException si l'instance n'existe pas
-     */
-    InstanceProduitResponseDto libererInstance(Long idInstance, String username);
+    List<InstanceProduitResponseDto> reserverInstances(
+            Long idProduit,
+            int quantite,
+            Long idLigneReservation,
+            Date dateDebut,
+            Date dateFin,
+            String username);
 
     // ============ CRÉATION EN LOT ============
 
@@ -121,4 +108,6 @@ public interface InstanceProduitServiceInterface {
      * Créer plusieurs instances en lot pour un produit
      */
     List<InstanceProduitResponseDto> creerInstancesEnLot(Long idProduit, int quantite, String prefixeNumeroSerie, String username);
+
+
 }
