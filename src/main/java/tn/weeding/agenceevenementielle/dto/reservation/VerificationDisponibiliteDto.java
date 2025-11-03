@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -26,8 +27,8 @@ public class VerificationDisponibiliteDto {
     private Integer quantite;
 
     @NotNull(message = "La date de début est obligatoire")
-    private Date dateDebut;
+    private LocalDate dateDebut;
 
     @NotNull(message = "La date de fin est obligatoire")
-    private Date dateFin;
+    private LocalDate dateFin;
 }

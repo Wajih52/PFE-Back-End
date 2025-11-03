@@ -35,4 +35,5 @@ public class ProduitResponseDto {
     private Integer nombreAvis;
     private LocalDateTime dateCreation;
     private LocalDateTime dateDerniereModification;
+    private Double tauxOccupation ;
 }

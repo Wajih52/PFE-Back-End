@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import tn.weeding.agenceevenementielle.entities.LigneReservation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -60,12 +61,14 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      */
     @Query("SELECT COALESCE(SUM(lr.quantite), 0) FROM LigneReservation lr " +
             "WHERE lr.produit.idProduit = :idProduit " +
-            "AND lr.reservation.statutReservation = 'CONFIRME' " +
+            "      AND lr.reservation.statutReservation IN " +
+            "         (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
+            "          tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME) " +
             "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
     Integer calculateQuantiteReserveeSurPeriode(
             @Param("idProduit") Long idProduit,
-            @Param("dateDebut") Date dateDebut,
-            @Param("dateFin") Date dateFin
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
     );
 
     /**
@@ -79,8 +82,8 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
     Long countInstancesReserveesSurPeriode(
             @Param("idProduit") Long idProduit,
-            @Param("dateDebut") Date dateDebut,
-            @Param("dateFin") Date dateFin
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
     );
 
     // ============ GESTION DES LIVRAISONS ============

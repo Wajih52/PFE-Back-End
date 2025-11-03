@@ -12,6 +12,7 @@ import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.repository.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -86,13 +87,13 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         reservation.setMontantPaye(0.0);
 
         // Dates globales (du premier au dernier jour)
-        Date dateDebutMin = devisRequest.getLignesReservation().stream()
+        LocalDate dateDebutMin = devisRequest.getLignesReservation().stream()
                 .map(LigneReservationRequestDto::getDateDebut)
-                .min(Date::compareTo)
+                .min(LocalDate::compareTo)
                 .orElseThrow();
-        Date dateFinMax = devisRequest.getLignesReservation().stream()
+        LocalDate dateFinMax = devisRequest.getLignesReservation().stream()
                 .map(LigneReservationRequestDto::getDateFin)
-                .max(Date::compareTo)
+                .max(LocalDate::compareTo)
                 .orElseThrow();
 
         reservation.setDateDebut(dateDebutMin);
@@ -154,7 +155,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .build();
 
         // Vérifier selon le type de produit
-        if (produit.getTypeProduit() == TypeProduit.enQuantite) {
+        if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
             return verifierDisponibiliteQuantite(produit, verificationDto, response);
         } else {
             return verifierDisponibiliteAvecReference(produit, verificationDto, response);
@@ -168,7 +169,6 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             Produit produit,
             VerificationDisponibiliteDto verificationDto,
             DisponibiliteResponseDto response) {
-
         // Calculer la quantité déjà réservée sur cette période
         Integer quantiteReservee = ligneReservationRepo.calculateQuantiteReserveeSurPeriode(
                 produit.getIdProduit(),
@@ -344,7 +344,11 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         log.info("✅ Devis modifié - Montant original: {} TND, Montant final: {} TND",
                 montantOriginal1, montantFinal);
 
-        return convertToResponseDto(reservation);
+
+        return buildToResponseDto(reservation,montantOriginal1,modificationDto.getRemiseMontant(),
+                modificationDto.getRemisePourcentage());
+
+
     }
 
     // ============ VALIDATION DU DEVIS PAR LE CLIENT ============
@@ -402,6 +406,18 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                         ligne.getIdLigneReservation(),
                         ligne.getDateDebut(),
                         ligne.getDateFin());
+            }else{
+                int quantiteDisponible = produitRepo.calculerQuantiteDisponibleSurPeriode(
+                        ligne.getProduit().getIdProduit(),
+                        ligne.getDateDebut(),
+                        ligne.getDateFin()
+                );
+                if(quantiteDisponible < ligne.getQuantite()){
+                    throw new ProduitException(
+                            "Stock insuffisant pour " + ligne.getProduit().getNomProduit() +
+                                    " du " + ligne.getDateDebut() + " au " + ligne.getDateFin()
+                    );
+                }
             }
         }
         // Confirmer la réservation
@@ -464,22 +480,6 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     public void annulerDevisParAdmin(Long idReservation, String motif, String username) {
         // Même logique que l'annulation par le client
         annulerReservationParClient(idReservation, motif, username);
-    }
-
-    /**
-     * Libérer toutes les instances d'une réservation
-     */
-    private void libererInstancesReservation(Reservation reservation) {
-        for (LigneReservation ligne : reservation.getLigneReservations()) {
-            if (ligne.getInstancesReservees() != null) {
-                for (InstanceProduit instance : ligne.getInstancesReservees()) {
-                    instance.setStatut(StatutInstance.DISPONIBLE);
-                    instance.setIdLigneReservation(null);
-                    instanceProduitRepo.save(instance);
-                    log.debug("🔓 Instance libérée: {}", instance.getNumeroSerie());
-                }
-            }
-        }
     }
 
     // ============ CONSULTATION ============
@@ -730,8 +730,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         // Calculer la durée
         long joursLocation = 0;
         if (reservation.getDateDebut() != null && reservation.getDateFin() != null) {
-            LocalDate debut = convertToLocalDate(reservation.getDateDebut());
-            LocalDate fin = convertToLocalDate(reservation.getDateFin());
+            LocalDate debut = reservation.getDateDebut();
+            LocalDate fin = reservation.getDateFin();
             joursLocation = ChronoUnit.DAYS.between(debut, fin) + 1;  // +1 pour inclure le dernier jour
         }
 
@@ -792,6 +792,61 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .numerosSeries(numerosSeries)
                 .idLivraison(ligne.getLivraison() != null ? ligne.getLivraison().getIdLivraison() : null)
                 .titreLivraison(ligne.getLivraison() != null ? ligne.getLivraison().getTitreLivraison() : null)
+                .build();
+    }
+
+    /**
+     * Convertir une entité Reservation en DTO de réponse
+     */
+    private ReservationResponseDto buildToResponseDto(Reservation reservation,Double montantOriginal2,
+                                                      Double remiseMontant,Double remisePourcentage) {
+        Utilisateur client = reservation.getUtilisateur();
+
+        List<LigneReservationResponseDto> lignesDto = new ArrayList<>();
+        if (reservation.getLigneReservations() != null) {
+            lignesDto = reservation.getLigneReservations().stream()
+                    .map(this::convertLigneToDto)
+                    .collect(Collectors.toList());
+        }
+
+        // Calculer le montant restant
+        double montantRestant = reservation.getMontantTotal() -
+                (reservation.getMontantPaye() != null ? reservation.getMontantPaye() : 0.0);
+
+        // Calculer la durée
+        long joursLocation = 0;
+        if (reservation.getDateDebut() != null && reservation.getDateFin() != null) {
+            LocalDate debut = reservation.getDateDebut();
+            LocalDate fin = reservation.getDateFin();
+            joursLocation = ChronoUnit.DAYS.between(debut, fin) + 1;  // +1 pour inclure le dernier jour
+        }
+
+        return ReservationResponseDto.builder()
+                .idReservation(reservation.getIdReservation())
+                .referenceReservation(reservation.getReferenceReservation())
+                .idUtilisateur(client.getIdUtilisateur())
+                .nomClient(client.getNom())
+                .prenomClient(client.getPrenom())
+                .emailClient(client.getEmail())
+                .telephoneClient(client.getTelephone())
+                .dateDebut(reservation.getDateDebut())
+                .dateFin(reservation.getDateFin())
+                .statutReservation(reservation.getStatutReservation())
+                .statutLivraisonRes(reservation.getStatutLivraisonRes())
+                .montantTotal(reservation.getMontantTotal())
+                .montantPaye(reservation.getMontantPaye())
+                .montantRestant(montantRestant)
+                .modePaiementRes(reservation.getModePaiementRes())
+                .lignesReservation(lignesDto)
+                .estDevis(reservation.getStatutReservation() == StatutReservation.EN_ATTENTE)
+                .paiementComplet(montantRestant <= 0)
+                .nombreProduits(lignesDto.size())
+                .joursLocation((int) joursLocation)
+                .commentaireAdmin(reservation.getCommentaireAdmin())
+                .observationsClient(reservation.getCommentaireClient())
+                .montantOriginal(montantOriginal2)
+                .remiseMontant(remiseMontant)
+                .remisePourcentage(remisePourcentage)
                 .build();
     }
 

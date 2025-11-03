@@ -19,7 +19,9 @@ import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,14 +48,14 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     public InstanceProduitResponseDto creerInstance(InstanceProduitRequestDto dto, String username) {
         log.info("Création d'une instance pour le produit ID: {} par {}", dto.getIdProduit(), username);
 
-        // Vérifier que le produit existe et est de type avecReference
+        // Vérifier que le produit existe et est de type AVEC_REFERENCE
         Produit produit = produitRepo.findById(dto.getIdProduit())
                 .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
                         "Produit avec ID " + dto.getIdProduit() + " introuvable"));
 
-        if (produit.getTypeProduit() != TypeProduit.avecReference) {
+        if (produit.getTypeProduit() != TypeProduit.AVEC_REFERENCE) {
             throw new ProduitException(
-                    "Les instances ne peuvent être créées que pour les produits de type <<avecReference>>");
+                    "Les instances ne peuvent être créées que pour les produits de type <<AVEC_REFERENCE>>");
         }
 
         // Vérifier l'unicité du numéro de série
@@ -211,7 +213,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     }
 
     @Override
-    public List<InstanceProduitResponseDto> getInstancesDisponiblesSurPeriode(Long idProduit, Date dateDebut, Date dateFin) {
+    public List<InstanceProduitResponseDto> getInstancesDisponiblesSurPeriode(Long idProduit, LocalDate dateDebut, LocalDate dateFin) {
         return instanceRepo.findInstancesDisponiblesSurPeriode(idProduit,dateDebut,dateFin).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
@@ -373,8 +375,8 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
             Long idProduit,
             int quantite,
             Long idLigneReservation,
-            Date dateDebut,
-            Date dateFin,
+            LocalDate dateDebut,
+            LocalDate dateFin,
             String username) {
 
         log.info("Affectation de {} instances du produit ID: {} à la ligne {} (période: {}-{})",
@@ -420,9 +422,9 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
                         "Produit avec ID " + idProduit + " introuvable"));
 
-        if (produit.getTypeProduit() != TypeProduit.avecReference) {
+        if (produit.getTypeProduit() != TypeProduit.AVEC_REFERENCE) {
             throw new ProduitException(
-                    "Les instances ne peuvent être créées que pour les produits de type avecReference");
+                    "Les instances ne peuvent être créées que pour les produits de type AVEC_REFERENCE");
         }
 
         // Trouver le prochain numéro disponible
@@ -479,12 +481,15 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     // ============ MÉTHODES UTILITAIRES ============
 
     /**
-     * Met à jour la quantité disponible d'un produit avecReference
+     * Met à jour la quantité disponible d'un produit AVEC_REFERENCE
      * en comptant les instances avec statut DISPONIBLE
      */
     private void mettreAJourQuantiteDisponible(Produit produit) {
-        if (produit.getTypeProduit() == TypeProduit.avecReference) {
-            int disponibles = instanceRepo.countInstancesDisponibles(produit.getIdProduit());
+        if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
+            // Pour chercher les instances disponibles pour AUJOURD'HUI
+
+            int disponibles = instanceRepo.countInstancesDisponiblesSurPeriode(
+                    produit.getIdProduit(), LocalDate.now(), LocalDate.now());
             produit.setQuantiteDisponible(disponibles);
             produitRepo.save(produit);
             log.debug("Quantité disponible du produit {} mise à jour : {}",

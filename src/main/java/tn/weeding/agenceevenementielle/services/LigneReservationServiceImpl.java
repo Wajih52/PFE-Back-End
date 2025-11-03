@@ -18,6 +18,7 @@ import tn.weeding.agenceevenementielle.repository.LigneReservationRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 import tn.weeding.agenceevenementielle.repository.ReservationRepository;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,8 +27,7 @@ import java.util.stream.Collectors;
  * SERVICE POUR LA GESTION DES LIGNES DE RÉSERVATION
  * Sprint 4 - Gestion des réservations (incluant devis)
  * ==========================================
- *
- * Responsabilités:
+ * Responsabilités :
  * - CRUD des lignes de réservation (produits dans le panier)
  * - Vérification de disponibilité AVANT création
  * - Affectation automatique des instances (produits avec référence)
@@ -50,7 +50,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     private final InstanceProduitServiceImpl instanceProduitServiceImpl;
 
     // ============================================
-    // PARTIE 1: CRÉATION ET AJOUT DE LIGNES
+    // CRÉATION ET AJOUT DE LIGNES
     // ============================================
 
     /**
@@ -90,7 +90,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         log.info("✅ Ligne créée avec ID: {}", ligne.getIdLigneReservation());
 
         // Gérer le stock selon le type de produit
-        if (produit.getTypeProduit() == TypeProduit.avecReference) {
+        if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
             // Affecter automatiquement les instances disponibles
             affecterInstancesAutomatiquement(ligne, produit, dto.getQuantite(), username);
         } else {
@@ -142,7 +142,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     }
 
     // ============================================
-    // PARTIE 2: CONSULTATION DES LIGNES
+    // CONSULTATION DES LIGNES
     // ============================================
 
     /**
@@ -208,7 +208,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     }
 
     // ============================================
-    // PARTIE 3: MODIFICATION DES LIGNES
+    // MODIFICATION DES LIGNES
     // ============================================
 
     /**
@@ -231,7 +231,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         if (!ancienneQuantite.equals(nouvelleQuantite)) {
             log.info("🔄 Changement de quantité: {} -> {}", ancienneQuantite, nouvelleQuantite);
 
-            if (produit.getTypeProduit() == TypeProduit.avecReference) {
+            if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
                 // Gérer les instances
                 gererChangementQuantiteAvecInstances(ligne, ancienneQuantite, nouvelleQuantite, username);
             } else {
@@ -279,11 +279,14 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
             log.info("➖ Libération de {} instances", nombreALiberer);
 
             List<InstanceProduit> instancesActuelles = new ArrayList<>(ligne.getInstancesReservees());
-            List<InstanceProduit> instancesALiberer = instancesActuelles.subList(0, Math.min(nombreALiberer, instancesActuelles.size()));
 
-            for (InstanceProduit instance : instancesALiberer) {
-                instanceProduitService.libererInstance(instance.getIdInstance(), username);
-            }
+            //pour trier la liste suivant la date de prochaine maintenance (libérer qui ont une date de maintenance plus proche)
+            List<InstanceProduit> instancesTries = instancesActuelles.stream()
+                    .sorted(Comparator.comparing(InstanceProduit::getDateProchaineMaintenance).reversed())
+                    .toList();
+            List<InstanceProduit> instancesALiberer = instancesTries.subList(0, Math.min(nombreALiberer, instancesActuelles.size()));
+
+
 
             // Mettre à jour la liste des instances
             instancesActuelles.removeAll(instancesALiberer);
@@ -327,7 +330,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     }
 
     // ============================================
-    // PARTIE 4: SUPPRESSION DES LIGNES
+    // SUPPRESSION DES LIGNES
     // ============================================
 
     /**
@@ -341,30 +344,6 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         LigneReservation ligne = ligneReservationRepo.findById(id)
                 .orElseThrow(() -> new ReservationException.ReservationNotFoundException(
                         "Ligne de réservation avec ID " + id + " introuvable"));
-
-        Produit produit = ligne.getProduit();
-
-        // Libérer le stock selon le type de produit
-        if (produit.getTypeProduit() == TypeProduit.avecReference) {
-            // Libérer les instances
-            if (ligne.getInstancesReservees() != null) {
-                for (InstanceProduit instance : ligne.getInstancesReservees()) {
-                    try {
-                        instanceProduitService.libererInstance(instance.getIdInstance(), username);
-                    } catch (Exception e) {
-                        log.error("⚠️ Erreur lors de la libération de l'instance {}: {}",
-                                instance.getNumeroSerie(), e.getMessage());
-                    }
-                }
-                log.info("✅ {} instances libérées", ligne.getInstancesReservees().size());
-            }
-        } else {
-            // Libérer le stock quantitatif
-            produit.setQuantiteDisponible(produit.getQuantiteDisponible() + ligne.getQuantite());
-            produitRepo.save(produit);
-            log.info("📈 Stock libéré: +{} (Total: {})", ligne.getQuantite(), produit.getQuantiteDisponible());
-        }
-
         // Supprimer la ligne
         ligneReservationRepo.delete(ligne);
         log.info("✅ Ligne supprimée avec succès");
@@ -432,16 +411,16 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     }
 
     // ============================================
-    // PARTIE 6: VÉRIFICATIONS ET VALIDATIONS
+    // VÉRIFICATIONS ET VALIDATIONS
     // ============================================
 
     /**
      * ✅ Vérifier la disponibilité d'un produit
      */
-    private void verifierDisponibilite(Produit produit, Integer quantiteDemandee, Date dateDebut, Date dateFin) {
+    private void verifierDisponibilite(Produit produit, Integer quantiteDemandee, LocalDate dateDebut, LocalDate dateFin) {
         log.info("🔍 Vérification de disponibilité pour {} unités de {}", quantiteDemandee, produit.getNomProduit());
 
-        if (produit.getTypeProduit() == TypeProduit.avecReference) {
+        if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
             // Pour les produits avec référence, vérifier le nombre d'instances disponibles
             int instancesDisponibles =
                     instanceProduitRepo.countInstancesDisponiblesSurPeriode(produit.getIdProduit(),dateDebut,dateFin);
@@ -453,7 +432,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
             }
         } else {
             // Pour les produits quantitatifs, vérifier le stock
-            if (produit.getQuantiteDisponible() < quantiteDemandee) {
+            if (produitRepo.calculerQuantiteDisponibleSurPeriode(produit.getIdProduit(),dateDebut,dateFin) < quantiteDemandee) {
                 throw new CustomException(String.format(
                         "❌ Stock insuffisant pour %s. Demandé: %d, Disponible: %d",
                         produit.getNomProduit(), quantiteDemandee, produit.getQuantiteDisponible()));
@@ -464,11 +443,11 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     }
 
     // ============================================
-    // PARTIE 7: CONVERSION DTO
+    //  CONVERSION DTO 🔄
     // ============================================
 
     /**
-     * 🔄 Convertir une entité en DTO
+     *  Convertir une entité en DTO
      */
     private LigneReservationResponseDto toDto(LigneReservation ligne) {
         Produit produit = ligne.getProduit();

@@ -124,7 +124,7 @@ public class InstanceProduitController {
 
     @GetMapping("/produit/{idProduit}/disponibles")
     @Operation(summary = "Lister les instances disponibles",
-            description = "Récupère uniquement les instances disponibles pour réservation, ici on veut vérifier seulement l'état phyique")
+            description = "Récupère uniquement les instances disponibles, ici on veut vérifier seulement l'état phyique")
     public ResponseEntity<List<InstanceProduitResponseDto>> getInstancesDisponibles(
             @PathVariable Long idProduit) {
         log.info("Récupération des instances disponibles du produit ID: {}", idProduit);
@@ -137,8 +137,8 @@ public class InstanceProduitController {
             description = "Récupère uniquement les instances disponibles pour réservation")
     public ResponseEntity<List<InstanceProduitResponseDto>> getInstancesDisponiblesSurPeriode(
             @PathVariable Long idProduit,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateDebut,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFin) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateDebut,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFin) {
         log.info("Récupération des instances disponibles du produit ID: {} dans une pàriode donné", idProduit);
         List<InstanceProduitResponseDto> instances =
                 instanceService.getInstancesDisponiblesSurPeriode(idProduit,dateDebut,dateFin);

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -30,11 +31,11 @@ public class LigneReservationRequestDto {
 
     @NotNull(message = "La date de début est obligatoire")
     @Future(message = "La date de début doit être dans le futur")
-    private Date dateDebut;
+    private LocalDate dateDebut;
 
     @NotNull(message = "La date de fin est obligatoire")
     @Future(message = "La date de fin doit être dans le futur")
-    private Date dateFin;
+    private LocalDate dateFin;
 
     // Optionnel: observations spécifiques pour cette ligne
     @Size(max = 1000, message = "Les observations ne doivent pas dépasser 1000 caractères")

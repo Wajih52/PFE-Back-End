@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class LigneReservationResponseDto {
     private Integer quantite;
     private Double prixUnitaire;
     private Double sousTotal;  // quantite * prixUnitaire
-    private Date dateDebut;
-    private Date dateFin;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
     private StatutLivraison statutLivraisonLigne;
     private String observations;
 

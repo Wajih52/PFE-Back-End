@@ -1,5 +1,6 @@
 package tn.weeding.agenceevenementielle.entities.enums;
 
 public enum TypeProduit {
-    avecReference, enQuantite
+    AVEC_REFERENCE,
+    EN_QUANTITE
 }

@@ -8,6 +8,8 @@ import tn.weeding.agenceevenementielle.entities.enums.ModePaiement;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +34,9 @@ public class ReservationResponseDto {
     private Long telephoneClient;
 
     // Dates
-    private Date dateDebut;
-    private Date dateFin;
-    private Date dateCreation;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+    private LocalDateTime dateCreation;
 
     // Statut
     private StatutReservation statutReservation;  // EnAttente, confirme, annule

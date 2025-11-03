@@ -61,7 +61,7 @@ public interface InstanceProduitServiceInterface {
     /**
      * Récupérer les instances disponibles d'un produit dans une période donnée
      */
-    List<InstanceProduitResponseDto> getInstancesDisponiblesSurPeriode(Long idProduit, Date dateDebut, Date dateFin);
+    List<InstanceProduitResponseDto> getInstancesDisponiblesSurPeriode(Long idProduit, LocalDate dateDebut, LocalDate dateFin);
 
     /**
      * Récupérer les instances par statut
@@ -98,8 +98,8 @@ public interface InstanceProduitServiceInterface {
             Long idProduit,
             int quantite,
             Long idLigneReservation,
-            Date dateDebut,
-            Date dateFin,
+            LocalDate dateDebut,
+            LocalDate dateFin,
             String username);
 
     // ============ CRÉATION EN LOT ============

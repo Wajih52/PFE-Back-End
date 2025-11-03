@@ -2,6 +2,8 @@ package tn.weeding.agenceevenementielle.dto.produit;
 
 import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data

@@ -7,6 +7,8 @@ import tn.weeding.agenceevenementielle.entities.enums.ModePaiement;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -24,16 +26,16 @@ public class Reservation implements Serializable {
     @Column(name = "referenceReservation")
     String referenceReservation;
 
-    @Temporal(TemporalType.DATE)
-    Date dateCreation;
 
-    @Temporal(TemporalType.DATE)
-    Date dateModification;
+    LocalDateTime dateCreation;
 
+
+    LocalDateTime dateModification;
+
+
+    LocalDate dateDebut;
     @Temporal(TemporalType.DATE)
-    Date dateDebut;
-    @Temporal(TemporalType.DATE)
-    Date dateFin;
+    LocalDate dateFin;
     @Enumerated(EnumType.STRING)
     StatutReservation statutReservation;
     Double montantTotal;
@@ -63,12 +65,12 @@ public class Reservation implements Serializable {
 
     @PrePersist
     public void prePersist(){
-        dateCreation = new Date();
-        dateModification = new Date();
+        dateCreation = LocalDateTime.now();
+        dateModification = LocalDateTime.now();
     }
     @PreUpdate
     public void preUpdate(){
-        dateModification = new Date();
+        dateModification = LocalDateTime.now();
     }
 
 }

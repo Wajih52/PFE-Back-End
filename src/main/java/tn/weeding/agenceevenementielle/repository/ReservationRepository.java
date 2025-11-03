@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -163,8 +164,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> searchReservations(
             @Param("idUtilisateur") Long idUtilisateur,
             @Param("statut") StatutReservation statut,
-            @Param("dateDebutMin") Date dateDebutMin,
-            @Param("dateDebutMax") Date dateDebutMax,
+            @Param("dateDebutMin") LocalDate dateDebutMin,
+            @Param("dateDebutMax") LocalDate dateDebutMax,
             @Param("reference") String reference
     );
 

@@ -40,16 +40,16 @@ public class Produit implements Serializable {
 
     /**
      * Quantité initiale totale
-     * - Pour enQuantite: stock initial (ex: 50 chaises)
-     * - Pour avecReference: nombre total d'instances (ex: 15 projecteurs)
+     * - Pour EN_QUANTITE: stock initial (ex: 50 chaises)
+     * - Pour AVEC_REFERENCE: nombre total d'instances (ex: 15 projecteurs)
      */
     @Column(nullable = false)
     private Integer quantiteInitial;
 
     /**
      * Quantité actuellement disponible
-     * - Pour enQuantite: nombre d'unités disponibles (géré manuellement)
-     * - Pour avecReference: nombre d'instances DISPONIBLES (calculé automatiquement)
+     * - Pour EN_QUANTITE: nombre d'unités disponibles (géré manuellement)
+     * - Pour AVEC_REFERENCE: nombre d'instances DISPONIBLES (calculé automatiquement)
      */
     @Column(nullable = false)
     private Integer quantiteDisponible;
@@ -87,7 +87,7 @@ public class Produit implements Serializable {
     //====================================== Relations ========================
 
     /**
-     * Instances individuelles (uniquement pour typeProduit = avecReference)
+     * Instances individuelles (uniquement pour typeProduit = AVEC_REFERENCE)
      * Permet le suivi détaillé de chaque unité physique
      */
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -111,7 +111,7 @@ public class Produit implements Serializable {
      */
     public boolean isStockCritique() {
         if (seuilCritique == null) {
-            seuilCritique = (typeProduit == TypeProduit.avecReference) ? 2 : 5;
+            seuilCritique = (typeProduit == TypeProduit.AVEC_REFERENCE) ? 2 : 5;
         }
         return quantiteDisponible != null && quantiteDisponible <= seuilCritique;
     }
@@ -124,10 +124,10 @@ public class Produit implements Serializable {
     }
 
     /**
-     * Pour les produits avecReference: compte le nombre d'instances disponibles
+     * Pour les produits AVEC_REFERENCE: compte le nombre d'instances disponibles
      */
     public int getNombreInstancesDisponibles() {
-        if (typeProduit == TypeProduit.avecReference && instances != null) {
+        if (typeProduit == TypeProduit.AVEC_REFERENCE && instances != null) {
             return (int) instances.stream()
                     .filter(InstanceProduit::isDisponiblePhysiquement)
                     .count();

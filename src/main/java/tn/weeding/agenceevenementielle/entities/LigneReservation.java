@@ -5,6 +5,8 @@ import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -21,8 +23,8 @@ public class LigneReservation implements Serializable {
 
     /**
      * Quantité réservée
-     * - Pour produits quantitatifs (enQuantite): nombre d'unités (ex: 50 chaises)
-     * - Pour produits avec référence (avecReference): nombre d'instances (ex: 3 projecteurs)
+     * - Pour produits quantitatifs (EN_QUANTITE): nombre d'unités (ex: 50 chaises)
+     * - Pour produits avec référence (AVEC_REFERENCE): nombre d'instances (ex: 3 projecteurs)
      */
     @Column(nullable = false)
     private Integer quantite;
@@ -37,14 +39,13 @@ public class LigneReservation implements Serializable {
     /**
      * Date de début de la réservation
      */
-    @Temporal(TemporalType.DATE)
-    Date dateDebut;
+
+    LocalDate dateDebut;
 
     /**
      * Date de fin de la réservation
      */
-    @Temporal(TemporalType.DATE)
-    Date dateFin;
+    LocalDate dateFin;
 
     /**
      * Statut de la ligne de réservation
@@ -70,7 +71,7 @@ public class LigneReservation implements Serializable {
     /**
      * NOUVEAU : Instances spécifiques réservées
      *
-     * Utilisé UNIQUEMENT pour les produits avec référence (typeProduit = avecReference)
+     * Utilisé UNIQUEMENT pour les produits avec référence (typeProduit = AVEC_REFERENCE)
      * - Pour produits quantitatifs: cette liste est vide/null (NORMAL)
      * - Pour produits avec référence: contient les N instances réservées
      *
@@ -108,7 +109,7 @@ public class LigneReservation implements Serializable {
      * Vérifie si cette ligne concerne un produit avec référence
      */
     public boolean isProduitAvecReference() {
-        return produit != null && produit.getTypeProduit() == TypeProduit.avecReference;
+        return produit != null && produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE;
     }
 
     /**

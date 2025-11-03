@@ -51,8 +51,8 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "AND NOT EXISTS (" +
             "    SELECT lr FROM LigneReservation lr " +
             "    WHERE i MEMBER OF lr.instancesReservees " +
-            "    AND lr.dateDebut < :dateFin " +      // Chevauche si début < fin demandée
-            "    AND lr.dateFin > :dateDebut " +       // ET fin > début demandé
+            "    AND lr.dateDebut <= :dateFin " +      // Chevauche si début < fin demandée
+            "    AND lr.dateFin >= :dateDebut " +       // ET fin > début demandé
             "    AND lr.reservation.statutReservation IN " +
             "        (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
             "         tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)" +
@@ -60,8 +60,8 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "ORDER BY i.numeroSerie")
     List<InstanceProduit> findInstancesDisponiblesSurPeriode(
             @Param("idProduit") Long idProduit,
-            @Param("dateDebut") Date dateDebut,
-            @Param("dateFin") Date dateFin
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
     );
 
     /**
@@ -89,16 +89,16 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "AND NOT EXISTS (" +
             "    SELECT lr FROM LigneReservation lr " +
             "    WHERE i MEMBER OF lr.instancesReservees " +
-            "    AND lr.dateDebut < :dateFin " +
-            "    AND lr.dateFin > :dateDebut " +
+            "    AND lr.dateDebut <= :dateFin " +
+            "    AND lr.dateFin >= :dateDebut " +
             "    AND lr.reservation.statutReservation IN " +
             "        (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
             "         tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)" +
             ")")
     int countInstancesDisponiblesSurPeriode(
             @Param("idProduit") Long idProduit,
-            @Param("dateDebut") Date dateDebut,
-            @Param("dateFin") Date dateFin
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
     );
     /**
      * Récupérer les instances d'un produit par statut
