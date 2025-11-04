@@ -86,7 +86,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 1,
                 "Ajout instance " + instance.getNumeroSerie(),
                 username,
-                instance.getNumeroSerie()
+                instance
         );
 
         // Mettre à jour la quantité disponible du produit
@@ -159,7 +159,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 -1,
                 "Suppression instance " + instance.getNumeroSerie(),
                 username,
-                instance.getNumeroSerie()
+                instance
         );
 
         // Mettre à jour la quantité du produit
@@ -270,7 +270,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                     -1,
                     "Instance : "+nouveauStatut,
                     username,
-                    instance.getNumeroSerie()
+                    instance
             );
         }
 
@@ -319,7 +319,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 -1,
                 "Instance envoyée en maintenance",
                 username,
-                instance.getNumeroSerie()
+                instance
         );
 
         // Mettre à jour la quantité disponible
@@ -350,7 +350,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 1,
                 "Instance retournée de maintenance",
                 username,
-                instance.getNumeroSerie()
+                instance
         );
 
         // Mettre à jour la quantité disponible
@@ -466,7 +466,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 quantite,
                 "Ajout lot de " + quantite + " instances (" + produit.getCodeProduit() + ")",
                 username,
-                produit.getCodeProduit()
+                instances.get(0)
         );
 
         // Mettre à jour la quantité disponible du produit
@@ -501,7 +501,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
      * Enregistre un mouvement de stock pour traçabilité
      */
     private void enregistrerMouvement(Produit produit, TypeMouvement type,
-                                      int quantite, String motif, String username, String codeInstance) {
+                                      int quantite, String motif, String username, InstanceProduit instanceProduit) {
         Integer quantiteAvant = produit.getQuantiteDisponible();
         Integer quantiteApres = quantiteAvant + quantite;
 
@@ -514,7 +514,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         mouvement.setMotif(motif);
         mouvement.setEffectuePar(username);
         mouvement.setDateMouvement(LocalDateTime.now());
-        mouvement.setCodeInstance(codeInstance);
+        mouvement.setCodeInstance(instanceProduit.getNumeroSerie());
 
         mouvementStockRepo.save(mouvement);
 

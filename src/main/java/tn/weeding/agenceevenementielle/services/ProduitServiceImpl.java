@@ -13,10 +13,7 @@ import tn.weeding.agenceevenementielle.entities.Produit;
 import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ProduitException;
-import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
-import tn.weeding.agenceevenementielle.repository.LigneReservationRepository;
-import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
-import tn.weeding.agenceevenementielle.repository.ProduitRepository;
+import tn.weeding.agenceevenementielle.repository.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,6 +35,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     private final InstanceProduitRepository instanceProduitRepository;
     private final ImageService imageService;
     private final LigneReservationRepository ligneReservationRepository;
+    private final ReservationRepository reservationRepository;
 
     private static final Integer SEUIL_CRITIQUE_DEFAUT = 5;
 
@@ -153,9 +151,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 .orElseThrow(() -> new CustomException(
                         "Produit avec ID " + id + " introuvable"));
 
-        boolean exist = ligneReservationRepository.existsActiveReservationForInstance(
+
+        boolean exist = ligneReservationRepository.existsActiveReservationForProduit(
                 id,
-                new Date()
+                LocalDate.now()
         );
 
         if(exist){
@@ -163,24 +162,40 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         }
         if(produit.getTypeProduit()==TypeProduit.AVEC_REFERENCE){
             List<InstanceProduit> instanceProduits = instanceProduitRepository.findByProduit_IdProduit(id);
+            log.info("nombre instances produit trouvé {}",instanceProduits.size());
             for(InstanceProduit instanceProduit : instanceProduits){
                 instanceProduit.setStatut(StatutInstance.HORS_SERVICE);
+                enregistrerMouvementInstance(
+                        instanceProduit.getProduit(),
+                        TypeMouvement.DESACTIVATION,
+                        -1,
+                        "Instance :désactivé/supprimé "+StatutInstance.HORS_SERVICE,
+                        username,
+                        instanceProduit
+                );
+                produit.setQuantiteDisponible(produit.getQuantiteDisponible()-1);
+               // produitRepository.save(produit);
             }
-        }
-        // Soft delete
-        produit.setQuantiteDisponible(0);
+            produit.setQuantiteDisponible(0);
 
-        // Enregistrer le mouvement
-        enregistrerMouvement(
-                produit,
-                TypeMouvement.DESACTIVATION,
-                0,
-                produit.getQuantiteDisponible(),
-                0,
-                "Produit désactivé/supprimé",
-                username,
-                null
-        );
+
+        }else{
+            // Soft delete
+            produit.setQuantiteDisponible(0);
+
+            // Enregistrer le mouvement
+            enregistrerMouvement(
+                    produit,
+                    TypeMouvement.DESACTIVATION,
+                    0,
+                    produit.getQuantiteDisponible(),
+                    0,
+                    "Produit désactivé/supprimé",
+                    username,
+                    null
+            );
+
+        }
 
         produitRepository.save(produit);
 
@@ -195,9 +210,9 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 .orElseThrow(() -> new CustomException(
                         "Produit avec ID " + id + " introuvable"));
 
-        boolean exist = ligneReservationRepository.existsActiveReservationForInstance(
+        boolean exist = ligneReservationRepository.existsActiveReservationForProduit(
                 id,
-              new Date()
+                LocalDate.now()
         );
 
         if(exist){
@@ -222,7 +237,11 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             throw new CustomException("pour Réactiver produit de réference il faut réactiver ses instances");
         }
 
-        Integer quantiteAvant = produit.getQuantiteDisponible();
+        if(produit.getQuantiteDisponible()!=0){
+            throw new CustomException("produit déjà activer !!!");
+        }
+
+        Integer quantiteAvant = 0;
         produit.setQuantiteDisponible(quantite);
 
         // Enregistrer le mouvement
@@ -892,12 +911,39 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         mouvement.setMotif(motif);
         mouvement.setEffectuePar(effectuePar);
         mouvement.setIdReservation(idReservation);
+        mouvement.setCodeInstance(produit.getCodeProduit());
 
         mouvementStockRepository.save(mouvement);
 
         log.debug("📝 Mouvement enregistré: Type={}, Quantité={}, Motif={}",
                 typeMouvement, quantite, motif);
     }
+    /**
+     * Enregistre un mouvement de stock pour traçabilité
+     */
+    private void enregistrerMouvementInstance(Produit produit, TypeMouvement type,
+                                      int quantite, String motif, String username, InstanceProduit instanceProduit) {
+        Integer quantiteAvant = produit.getQuantiteDisponible();
+        Integer quantiteApres = quantiteAvant + quantite;
+
+        MouvementStock mouvement = new MouvementStock();
+        mouvement.setProduit(produit);
+        mouvement.setTypeMouvement(type);
+        mouvement.setQuantite(Math.abs(quantite));
+        mouvement.setQuantiteAvant(quantiteAvant);
+        mouvement.setQuantiteApres(quantiteApres);
+        mouvement.setMotif(motif);
+        mouvement.setEffectuePar(username);
+        mouvement.setDateMouvement(LocalDateTime.now());
+        mouvement.setCodeInstance(instanceProduit.getNumeroSerie());
+        mouvement.setIdInstance(instanceProduit.getIdInstance());
+
+        mouvementStockRepository.save(mouvement);
+
+        log.debug("Mouvement enregistré: {} - {} ({}→{})",
+                type, motif, quantiteAvant, quantiteApres);
+    }
+
 
     /**
      * Convertir une entité Produit en DTO

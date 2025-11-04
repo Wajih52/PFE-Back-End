@@ -4,6 +4,7 @@ public enum StatutReservation {
     /**
      * État initial - Devis créé mais pas encore validé
      */
+    @Deprecated
     DEVIS,
 
     /**
@@ -29,6 +30,7 @@ public enum StatutReservation {
     /**
      * Devis rejeté par l'admin
      */
+    @Deprecated
     REJETE,
 
     /**
@@ -41,5 +43,5 @@ public enum StatutReservation {
      */
     PARTIELLEMENT_PAYE,
 
-    EN_ATTENTE
+    EN_ATTENTE,
 }

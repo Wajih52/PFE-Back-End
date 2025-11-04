@@ -155,6 +155,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
            Reservation resValide = reserverStockPourReservation(devisCree );
             log.info("✅ Devis validé automatiquement {} - montant {} TND - Réservation confirmée",
                     devisCree.getReferenceReservation(),montantTotal);
+
            return convertToResponseDto(resValide);
         }
 
@@ -332,9 +333,26 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 }
 
                 if (ligneModif.getNouvelleQuantite() != null) {
+                   if(ligneModif.getNouvelleQuantite()<ligne.getQuantite()&& !ligne.getInstancesReservees().isEmpty())
+                   {
+
+                       // Prendre les `quantiteARetirer` premières (les plus récentes) de la liste triée
+                       Set<InstanceProduit> instancesARetirer = ligne.getInstancesReservees().stream()
+                               .limit(ligne.getQuantite()-ligneModif.getNouvelleQuantite())
+                               .collect(Collectors.toSet());
+                       // Retirer toutes les instances de la ligne
+                       ligne.getInstancesReservees().removeAll(instancesARetirer);
+
+                       for(InstanceProduit instanceProduit : instancesARetirer){
+                           enregistrerMouvementStockInstance(instanceProduit,TypeMouvement.CORRECTION,
+                                   reservation,"suppression d'Instance(validation Devis admin)",username);
+                       }
+                   }
                     log.info("🔢 Modification quantité: {} -> {}",
                             ligne.getQuantite(), ligneModif.getNouvelleQuantite());
                     ligne.setQuantite(ligneModif.getNouvelleQuantite());
+                    enregistrerMouvementStock(ligne.getProduit(),ligneModif.getNouvelleQuantite(),
+                            TypeMouvement.CORRECTION,reservation,"Modification quantité : validation devis par admin",username);
                 }
 
                 ligneReservationRepo.save(ligne);
@@ -438,20 +456,18 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             throw new CustomException("Impossible d'annuler une réservation déjà livrée");
         }
 
-        Reservation reservationlibere = new Reservation(); ;
+
         // Libérer les instances si c'était confirmé
-        if (reservation.getStatutReservation() == StatutReservation.CONFIRME) {
+        if (reservation.getStatutReservation() == StatutReservation.CONFIRME||
+        reservation.getStatutReservation()==StatutReservation.EN_ATTENTE) {
 
-            reservationlibere = libererStockReservation(reservation);
-
-
+           Reservation reservationlibere = libererStockReservation(reservation);
+            reservationlibere.setStatutReservation(StatutReservation.ANNULE);
+            reservationlibere.setCommentaireClient(motif);
+            reservationlibere.setStockReserve(false);
+            reservationRepo.save(reservationlibere);
+            log.info("✅ Réservation annulée avec succès");
         }
-
-        reservationlibere.setStatutReservation(StatutReservation.ANNULE);
-        reservationlibere.setCommentaireClient(motif);
-        reservationRepo.save(reservationlibere);
-
-        log.info("✅ Réservation annulée avec succès");
     }
 
     @Override
@@ -1070,6 +1086,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         MouvementStock mouvement = new MouvementStock(instance.getProduit(),typeMouvement,1,
                 motif != null ? motif : typeMouvement.toString(),username);
 
+
+
         // Associer l'instance
         mouvement.setCodeInstance(instance.getNumeroSerie());
         mouvement.setIdInstance(instance.getIdInstance());
@@ -1079,6 +1097,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             mouvement.setReferenceReservation(reservation.getReferenceReservation());
             mouvement.setIdReservation(reservation.getIdReservation());
         }
+
 
         // Sauvegarder
         mouvementStockRepo.save(mouvement);
@@ -1257,17 +1276,31 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 ligne.setInstancesReservees(instancesAAffecter);
                 ligneReservationRepo.save(ligne);
 
+                for(InstanceProduit instanceProduit : instancesAAffecter){
+                    enregistrerMouvementStockInstance(instanceProduit,TypeMouvement.RESERVATION,
+                            reservation,"Reservation Instance",reservation.getUtilisateur().getPseudo());
+                }
+
+
                 log.info("{} instances affectées à la ligne {} pour la période {}-{}",
                         ligne.getQuantite(),
                         ligne.getIdLigneReservation(),
                         ligne.getDateDebut(),
                         ligne.getDateFin());
             }else{
-                int quantiteDisponible = ligneReservationRepo.calculateQuantiteReserveeSurPeriode(
+                Integer quantiteReservee = ligneReservationRepo.calculateQuantiteReserveeSurPeriode(
                         ligne.getProduit().getIdProduit(),
                         ligne.getDateDebut(),
                         ligne.getDateFin()
                 );
+
+                if (quantiteReservee == null) {
+                    quantiteReservee = 0;
+                }
+
+                // Calculer la quantité réellement disponible
+                int quantiteDisponible = ligne.getProduit().getQuantiteDisponible() - quantiteReservee;
+
                 if(quantiteDisponible < ligne.getQuantite()){
                     throw new ProduitException(
                             "Stock insuffisant pour " + ligne.getProduit().getNomProduit() +
@@ -1275,6 +1308,9 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     );
                 }
                 ligneReservationRepo.save(ligne);
+                //enregistrer mouvemenet
+                enregistrerMouvementStock(ligne.getProduit(), ligne.getQuantite(), TypeMouvement.RESERVATION,
+                        reservation,"Reservation",reservation.getUtilisateur().getPseudo());
             }
         }
         // Confirmer la réservation
@@ -1323,12 +1359,23 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                         ligne.getIdLigneReservation(),
                         ligne.getDateDebut(),
                         ligne.getDateFin());
+                for(InstanceProduit instanceProduit : instancesAAffecter){
+                    enregistrerMouvementStockInstance(instanceProduit,TypeMouvement.RESERVATION,
+                            reservation,"Reservation temporaire d'Instance(Devis)",reservation.getUtilisateur().getPseudo());
+                }
             }else{
-                int quantiteDisponible = produitRepo.calculerQuantiteDisponibleSurPeriode(
+                Integer quantiteReservee = produitRepo.calculerQuantiteDisponibleSurPeriode(
                         ligne.getProduit().getIdProduit(),
                         ligne.getDateDebut(),
                         ligne.getDateFin()
                 );
+
+                if (quantiteReservee == null) {
+                    quantiteReservee = 0;
+                }
+
+                // Calculer la quantité réellement disponible
+                int quantiteDisponible = ligne.getProduit().getQuantiteDisponible() - quantiteReservee;
                 if(quantiteDisponible < ligne.getQuantite()){
                     throw new ProduitException(
                             "Stock insuffisant pour " + ligne.getProduit().getNomProduit() +
@@ -1336,6 +1383,9 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     );
                 }
                 ligneReservationRepo.save(ligne);
+                //enregistrer mouvemenet
+                enregistrerMouvementStock(ligne.getProduit(), ligne.getQuantite(), TypeMouvement.RESERVATION,
+                        reservation,"Reservation temporaire(Devis) ",reservation.getUtilisateur().getPseudo());
             }
         }
         // Confirmer la réservation
@@ -1446,11 +1496,12 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 );
 
             }
-                reservation.setStockReserve(Boolean.FALSE);
-                reservationRepo.save(reservation);
 
                 log.info("✅ Stock libéré avec succès");
         }
+        reservation.setStockReserve(Boolean.FALSE);
+        reservationRepo.save(reservation);
+
         return reservation;
     }
 

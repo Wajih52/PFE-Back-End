@@ -230,6 +230,21 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             @Param("dateActuelle") Date dateActuelle
     );
 
+    /**
+     * Vérifier si un produit est dans des réservations actives
+     * (Pour vérifier avant suppression)
+     */
+    @Query("SELECT CASE WHEN COUNT(lr) > 0 THEN true ELSE false END " +
+            "FROM LigneReservation lr " +
+            "WHERE lr.produit.idProduit = :idProduit " +
+            "AND lr.dateFin >= :dateActuelle " +
+            "AND lr.reservation.statutReservation IN " +
+            "   (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
+            "    tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)")
+    boolean existsActiveReservationForProduit(
+            @Param("idProduit") Long idProduit,
+            @Param("dateActuelle") LocalDate dateActuelle
+    );
     // ============ RECHERCHE AVANCÉE ============
 
     /**
