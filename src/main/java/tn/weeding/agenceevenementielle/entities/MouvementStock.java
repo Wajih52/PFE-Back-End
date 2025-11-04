@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.*;
@@ -22,6 +23,26 @@ public class MouvementStock implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMouvement;
 
+    public MouvementStock(Produit produit, TypeMouvement typeMouvement,Integer quantite, String motif, String effectuePar) {
+        this.produit = produit;
+        this.typeMouvement = typeMouvement;
+        this.quantite = quantite;
+        this.motif = motif;
+        this.effectuePar = effectuePar;
+    }
+
+    public MouvementStock(Produit produit, TypeMouvement typeMouvement, Integer quantite, Integer quantiteAvant, Integer quantiteApres, String motif, String effectuePar) {
+        this.motif = motif;
+        this.quantiteApres = quantiteApres;
+        this.quantiteAvant = quantiteAvant;
+        this.quantite = quantite;
+        this.effectuePar = effectuePar;
+        this.typeMouvement = typeMouvement;
+        this.produit = produit;
+    }
+
+
+
     @ManyToOne
     @JoinColumn(name = "idProduit")
     private Produit produit;
@@ -29,21 +50,34 @@ public class MouvementStock implements Serializable {
     @Enumerated(EnumType.STRING)
     private TypeMouvement typeMouvement;
 
+
+    // Quantité du mouvement (toujours positif)
     private Integer quantite;
+
+    // Stock avant et après (pour produits EN_QUANTITE)
     private Integer quantiteAvant;
     private Integer quantiteApres;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateMouvement;
+    // Pour produits AVEC_REFERENCE
+    private String codeInstance;
+    private Long idInstance;
 
+    // Informations sur le mouvement
     private String motif;
+
     private String effectuePar;
+
+    // Réservation associée (si applicable)
+    private String referenceReservation;
     private Long idReservation;
 
-    private String codeInstance ;
+    private LocalDateTime dateMouvement;
+
+
+
 
     @PrePersist
     protected void onCreate() {
-        dateMouvement = new Date();
+        dateMouvement = LocalDateTime.now();
     }
 }

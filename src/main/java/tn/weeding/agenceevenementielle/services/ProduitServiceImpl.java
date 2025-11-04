@@ -19,6 +19,7 @@ import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -752,7 +753,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Integer totalEntrees = mouvementStockRepository.getTotalEntrees(id);
         Integer totalSorties = mouvementStockRepository.getTotalSorties(id);
 
-        Date dateDernierMouvement = mouvements.isEmpty() ? null : mouvements.get(0).getDateMouvement();
+        LocalDateTime dateDernierMouvement = mouvements.isEmpty() ? null : mouvements.get(0).getDateMouvement();
 
         StockStatistiquesDto stats = new StockStatistiquesDto(
                 totalEntrees != null ? totalEntrees : 0,

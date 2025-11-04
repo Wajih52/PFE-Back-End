@@ -26,4 +26,6 @@ public class DevisRequestDto {
     // Observations générales du client
     @Size(max = 1000, message = "Les observations ne doivent pas dépasser 1000 caractères")
     private String observationsClient;
+
+    boolean validationAutomatique;
 }

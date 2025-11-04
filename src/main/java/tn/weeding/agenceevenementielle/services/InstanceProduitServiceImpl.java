@@ -513,7 +513,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         mouvement.setQuantiteApres(quantiteApres);
         mouvement.setMotif(motif);
         mouvement.setEffectuePar(username);
-        mouvement.setDateMouvement(new Date());
+        mouvement.setDateMouvement(LocalDateTime.now());
         mouvement.setCodeInstance(codeInstance);
 
         mouvementStockRepo.save(mouvement);

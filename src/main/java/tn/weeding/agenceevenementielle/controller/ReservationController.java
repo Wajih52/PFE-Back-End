@@ -452,6 +452,19 @@ public class ReservationController {
     }
 
     /**
+     * 🔔 Devis expirés (pour relance client)
+     */
+    @GetMapping("/alertes/devis-expires-ajourdhui")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(summary = "Devis expirés aujourd'hui (ADMIN)",
+            description = "Devis déjà expiré")
+    public ResponseEntity<List<ReservationResponseDto>> getDevisExpiresToday() {
+
+        List<ReservationResponseDto> devis = reservationService.getDevisExpiresToday();
+        return ResponseEntity.ok(devis);
+    }
+
+    /**
      * 💰 Réservations avec paiement incomplet
      */
     @GetMapping("/alertes/paiements-incomplets")

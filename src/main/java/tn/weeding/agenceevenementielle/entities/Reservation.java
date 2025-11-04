@@ -26,21 +26,20 @@ public class Reservation implements Serializable {
     @Column(name = "referenceReservation")
     String referenceReservation;
 
-
     LocalDateTime dateCreation;
-
-
     LocalDateTime dateModification;
 
-
     LocalDate dateDebut;
-    @Temporal(TemporalType.DATE)
     LocalDate dateFin;
+
     @Enumerated(EnumType.STRING)
     StatutReservation statutReservation;
+
     Double montantTotal;
     Double montantPaye;
+
     ModePaiement modePaiementRes;
+
     @Enumerated(EnumType.STRING)
     StatutLivraison statutLivraisonRes;
 
@@ -49,6 +48,12 @@ public class Reservation implements Serializable {
 
     @Column(length = 2000)
     String commentaireClient;
+
+    boolean validationAutomatique=false;
+
+    private LocalDateTime dateExpirationDevis;
+
+    private Boolean stockReserve = false ;
 
     //Reservation 0..* ----------- 1 Utilisateur
     @ManyToOne

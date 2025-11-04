@@ -8,6 +8,7 @@ import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      * Trouver les réservations d'un utilisateur triées par date (plus récentes en premier)
      */
     List<Reservation> findByUtilisateur_IdUtilisateurOrderByDateDebutDesc(Long idUtilisateur);
+
+    List<Reservation> findByDateExpirationDevis (LocalDateTime dateExpirationDevis);
 
     // ============ FILTRAGE PAR STATUT ============
 
@@ -150,6 +153,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      */
     long countByUtilisateur_IdUtilisateur(Long idUtilisateur);
 
+
+
+
     // ============ RECHERCHE MULTICRITÈRES ============
 
     /**
@@ -200,4 +206,19 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(value = "SELECT r FROM Reservation r WHERE r.statutReservation = 'EN_ATTENTE' " +
             "AND DATEDIFF(CURRENT_DATE, r.dateCreation) > :nbreJours")
     List<Reservation> findDevisExpires(@Param("nbreJours") int nbreJours);
+
+    /**
+     * Trouver les devis (réservations EN_ATTENTE) expirés
+     *
+     * @param statut Statut de la réservation (EN_ATTENTE)
+     * @param dateExpiration Date limite d'expiration
+     * @return Liste des devis expirés
+     */
+    List<Reservation> findByStatutReservationAndDateExpirationDevisBefore(
+            StatutReservation statut,
+            LocalDateTime dateExpiration
+    );
+
+
+
 }

@@ -3,6 +3,7 @@ package tn.weeding.agenceevenementielle.services;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -168,8 +169,8 @@ public interface ReservationServiceInterface {
      */
     ReservationResponseDto modifierDatesReservation(
             Long idReservation,
-            Date nouvelleDateDebut,
-            Date nouvelleDateFin,
+            LocalDate nouvelleDateDebut,
+            LocalDate nouvelleDateFin,
             String username
     );
 
@@ -209,6 +210,8 @@ public interface ReservationServiceInterface {
      * (pour relance client)
      */
     List<ReservationResponseDto> getDevisExpires(int nbreJours);
+
+    List<ReservationResponseDto> getDevisExpiresToday();
 
     /**
      * Récupérer les réservations avec paiement incomplet

@@ -73,12 +73,13 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
 
     /**
      * Compter le nombre d'instances réservées pour un produit avec référence sur une période
-     * (pour produits avec référence: projecteurs, caméras, etc.)
+     * (pour produits avec référence : projecteurs, caméras, etc.)
      */
     @Query("SELECT COUNT(DISTINCT ip.idInstance) FROM LigneReservation lr " +
             "JOIN lr.instancesReservees ip " +
             "WHERE lr.produit.idProduit = :idProduit " +
-            "AND lr.reservation.statutReservation = 'CONFIRME' " +
+            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME," +
+            "tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE) " +
             "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
     Long countInstancesReserveesSurPeriode(
             @Param("idProduit") Long idProduit,
@@ -111,7 +112,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      * Trouver les lignes dont la livraison est en attente
      */
     @Query("SELECT lr FROM LigneReservation lr " +
-            "WHERE lr.reservation.statutReservation = 'confirme' " +
+            "WHERE lr.reservation.statutReservation = 'CONFIRME' " +
             "AND lr.statutLivraisonLigne = 'EN_ATTENTE' " +
             "AND lr.dateDebut <= :dateLimit " +
             "ORDER BY lr.dateDebut ASC")
@@ -366,4 +367,55 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "AND l.dateDebut <= :dateLimite " +
             "ORDER BY l.dateDebut ASC")
     List<LigneReservation> findLignesNecessitantLivraisonAvant(@Param("dateLimite") Date dateLimite);
+
+
+    /**
+     * Trouver la quantité réservée d'un produit sur une période
+     * EN EXCLUANT une réservation spécifique (pour permettre la modification)
+     *
+     * @param idProduit ID du produit
+     * @param dateDebut Date de début de la période
+     * @param dateFin Date de fin de la période
+     * @param reservationExclue ID de la réservation à exclure du calcul
+     * @return Quantité totale réservée
+     */
+    @Query("SELECT COALESCE(SUM(lr.quantite), 0) " +
+            "FROM LigneReservation lr " +
+            "WHERE lr.produit.idProduit = :idProduit " +
+            "AND lr.reservation.idReservation != :reservationExclue " +
+            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME" +
+            ", tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE) " +
+            "AND ((lr.dateDebut <= :dateFin) AND (lr.dateFin >= :dateDebut))")
+    int findQuantiteReserveeForProduitInPeriodExcludingReservation(
+            @Param("idProduit") Long idProduit,
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin,
+            @Param("reservationExclue") Long reservationExclue
+    );
+
+    /**
+     * Compter le nombre de réservations d'une instance sur une période
+     * EN EXCLUANT une réservation spécifique
+     *
+     * @param idInstance ID de l'instance
+     * @param dateDebut Date de début de la période
+     * @param dateFin Date de fin de la période
+     * @param reservationExclue ID de la réservation à exclure
+     * @return Nombre de réservations actives pour cette instance
+     */
+    @Query("SELECT COUNT(lr) " +
+            "FROM LigneReservation lr " +
+            "JOIN lr.instancesReservees inst " +
+            "WHERE inst.idInstance = :idInstance " +
+            "AND lr.reservation.idReservation != :reservationExclue " +
+            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME" +
+            ", tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME) " +
+            "AND ((lr.dateDebut <= :dateFin) AND (lr.dateFin >= :dateDebut))")
+    long countReservationsForInstanceInPeriodExcludingReservation(
+            @Param("idInstance") Long idInstance,
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin,
+            @Param("reservationExclue") Long reservationExclue
+    );
+
 }

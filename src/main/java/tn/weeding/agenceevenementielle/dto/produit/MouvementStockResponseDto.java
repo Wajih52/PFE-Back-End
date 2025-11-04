@@ -4,6 +4,7 @@ import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -17,7 +18,7 @@ public class MouvementStockResponseDto {
     private Integer quantite;
     private Integer quantiteAvant;
     private Integer quantiteApres;
-    private Date dateMouvement;
+    private LocalDateTime dateMouvement;
     private String motif;
     private String effectuePar;
     private Long idReservation;

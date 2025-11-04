@@ -31,12 +31,7 @@ public interface MouvementStockRepository extends JpaRepository<MouvementStock, 
     @Query("SELECT m FROM MouvementStock m WHERE m.produit.idProduit = :idProduit ORDER BY m.dateMouvement DESC")
     List<MouvementStock> findByProduit_IdProduitOrderByDateMouvementDesc(@Param("idProduit") Long idProduit);
 
-    /**
-     * Alias pour compatibilité avec l'ancien code
-     */
-    @Query("SELECT m FROM MouvementStock m WHERE m.produit.idProduit = :idProduit ORDER BY m.dateMouvement DESC")
-    List<MouvementStock> findByProduitIdOrderByDateMouvementDesc(@Param("idProduit") Long idProduit);
-
+    
     // ============================================
     // RECHERCHE PAR TYPE DE MOUVEMENT
     // ============================================

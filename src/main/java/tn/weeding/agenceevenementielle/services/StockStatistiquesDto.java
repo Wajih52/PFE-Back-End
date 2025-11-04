@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -51,7 +52,7 @@ public class StockStatistiquesDto {
      * Date du dernier mouvement effectué
      * Permet de voir si le produit est actif ou dormant
      */
-    private Date dateDernierMouvement;
+    private LocalDateTime dateDernierMouvement;
 
     // ============================================
     // MÉTHODES CALCULÉES (optionnelles)
@@ -98,22 +99,6 @@ public class StockStatistiquesDto {
         return (sorties / totalEntrees) * 100.0;
     }
 
-    /**
-     * Vérifie si le produit est actif (au moins un mouvement récent)
-     * Considère un produit actif s'il a eu un mouvement dans les 30 derniers jours
-     *
-     * @return true si le produit est actif, false sinon
-     */
-    public Boolean isActif() {
-        if (dateDernierMouvement == null) {
-            return false;
-        }
-
-        long diffEnMillis = new Date().getTime() - dateDernierMouvement.getTime();
-        long diffEnJours = diffEnMillis / (1000 * 60 * 60 * 24);
-
-        return diffEnJours <= 30;
-    }
 
     /**
      * Obtient un résumé textuel des statistiques
