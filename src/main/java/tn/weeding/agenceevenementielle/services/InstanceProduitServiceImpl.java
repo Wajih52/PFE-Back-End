@@ -140,7 +140,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
 
         boolean estReservee = ligneReservationRepo.existsActiveReservationForInstance(
                 instance.getIdInstance(),
-                new Date()
+                LocalDate.now()
         );
 
         if (estReservee) {
@@ -251,7 +251,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
 
         boolean estReservee = ligneReservationRepo.existsActiveReservationForInstance(
                 instance.getIdInstance(),
-                new Date()
+                LocalDate.now()
         );
 
         if (estReservee) {
@@ -269,6 +269,18 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                     TypeMouvement.PRODUIT_ENDOMMAGE,
                     -1,
                     "Instance : "+nouveauStatut,
+                    username,
+                    instance
+            );
+        }
+
+        if (ancienStatut.equals(StatutInstance.HORS_SERVICE)&&nouveauStatut==StatutInstance.DISPONIBLE ||
+                ancienStatut.equals(StatutInstance.PERDU)&&nouveauStatut==StatutInstance.DISPONIBLE) {
+            enregistrerMouvement(
+                    instance.getProduit(),
+                    TypeMouvement.REACTIVATION,
+                    1,
+                    "Instance: "+instance.getNumeroSerie()+" DE "+ancienStatut+" ==> "+nouveauStatut,
                     username,
                     instance
             );
@@ -298,7 +310,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         // Vérifier que l'instance n'est pas réservée
         boolean estReservee = ligneReservationRepo.existsActiveReservationForInstance(
                 instance.getIdInstance(),
-                new Date()
+              LocalDate.now()
         );
 
         if (estReservee) {

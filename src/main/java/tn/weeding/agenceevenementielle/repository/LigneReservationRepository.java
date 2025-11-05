@@ -218,16 +218,21 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             @Param("dateFin") Date dateFin
     );
 
+    /**
+     * Vérifier si une instance est dans des réservations actives
+     * (utilise l'ID de l'instance)
+     */
     @Query("SELECT CASE WHEN COUNT(lr) > 0 THEN true ELSE false END " +
             "FROM LigneReservation lr " +
-            "WHERE :instance MEMBER OF lr.instancesReservees " +
+            "JOIN lr.instancesReservees ip " +
+            "WHERE ip.idInstance = :idInstance " +
             "AND lr.dateFin >= :dateActuelle " +
             "AND lr.reservation.statutReservation IN " +
             "   (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)")
     boolean existsActiveReservationForInstance(
-            @Param("instance") Long idInstance,
-            @Param("dateActuelle") Date dateActuelle
+            @Param("idInstance") Long idInstance,
+            @Param("dateActuelle") LocalDate dateActuelle
     );
 
     /**
