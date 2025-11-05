@@ -51,8 +51,8 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
     List<LigneReservation> findReservationsConfirmeesChevauchantes(
             @Param("idProduit") Long idProduit,
-            @Param("dateDebut") Date dateDebut,
-            @Param("dateFin") Date dateFin
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
     );
 
     /**
@@ -61,9 +61,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
      */
     @Query("SELECT COALESCE(SUM(lr.quantite), 0) FROM LigneReservation lr " +
             "WHERE lr.produit.idProduit = :idProduit " +
-            "      AND lr.reservation.statutReservation IN " +
-            "         (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "          tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME) " +
+            "AND lr.reservation.statutReservation = 'CONFIRME' " +
             "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
     Integer calculateQuantiteReserveeSurPeriode(
             @Param("idProduit") Long idProduit,
@@ -116,10 +114,51 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "AND lr.statutLivraisonLigne = 'EN_ATTENTE' " +
             "AND lr.dateDebut <= :dateLimit " +
             "ORDER BY lr.dateDebut ASC")
-    List<LigneReservation> findLivraisonsEnAttente(@Param("dateLimit") Date dateLimit);
+    List<LigneReservation> findLivraisonsEnAttente(@Param("dateLimit") LocalDate dateLimit);
 
     // ============ STATISTIQUES PAR PRODUIT ============
 
+    /**
+     * Calculer la quantité totale réservée pour un produit (tous statuts)
+     */
+    @Query("SELECT COALESCE(SUM(lr.quantite), 0) FROM LigneReservation lr " +
+            "WHERE lr.produit.idProduit = :idProduit")
+    Integer calculateQuantiteTotaleReservee(@Param("idProduit") Long idProduit);
+
+
+    /**
+     * Trouver les lignes en retard de retour (date de fin passée mais pas encore retournées)
+     */
+    @Query("SELECT lr FROM LigneReservation lr " +
+            "WHERE lr.dateFin < CURRENT_DATE " +
+            "AND lr.statutLivraisonLigne NOT IN (tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.RETOUR," +
+            "tn.weeding.agenceevenementielle.entities.enums.StatutLivraison.RETOUR_PARTIEL) " +
+            "AND lr.reservation.statutReservation = 'CONFIRME'")
+    List<LigneReservation> findLignesEnRetardRetour();
+
+    /**
+     * Compter les lignes de réservation par produit et statut
+     */
+    @Query("SELECT COUNT(lr) FROM LigneReservation lr " +
+            "WHERE lr.produit.idProduit = :idProduit " +
+            "AND lr.reservation.statutReservation = :statut")
+    long countByProduitAndStatut(
+            @Param("idProduit") Long idProduit,
+            @Param("statut") String statut
+    );
+
+    /**
+     * Trouver les lignes de réservation d'un produit sur une période donnée
+     * (pour tous les statuts - utile pour l'historique)
+     */
+    @Query("SELECT lr FROM LigneReservation lr " +
+            "WHERE lr.produit.idProduit = :idProduit " +
+            "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
+    List<LigneReservation> findByProduitAndPeriode(
+            @Param("idProduit") Long idProduit,
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
+    );
     /**
      * Compter le nombre total de réservations d'un produit
      */

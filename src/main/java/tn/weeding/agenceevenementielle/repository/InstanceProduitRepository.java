@@ -51,11 +51,9 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "AND NOT EXISTS (" +
             "    SELECT lr FROM LigneReservation lr " +
             "    WHERE i MEMBER OF lr.instancesReservees " +
-            "    AND lr.dateDebut <= :dateFin " +      // Chevauche si début < fin demandée
-            "    AND lr.dateFin >= :dateDebut " +       // ET fin > début demandé
-            "    AND lr.reservation.statutReservation IN " +
-            "        (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "         tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)" +
+            "    AND lr.dateDebut <= :dateFin " +
+            "    AND lr.dateFin >= :dateDebut " +
+            "    AND lr.reservation.statutReservation = 'CONFIRME'" +  // ✅ UNIQUEMENT CONFIRME
             ") " +
             "ORDER BY i.numeroSerie")
     List<InstanceProduit> findInstancesDisponiblesSurPeriode(
@@ -91,9 +89,7 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "    WHERE i MEMBER OF lr.instancesReservees " +
             "    AND lr.dateDebut <= :dateFin " +
             "    AND lr.dateFin >= :dateDebut " +
-            "    AND lr.reservation.statutReservation IN " +
-            "        (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "         tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)" +
+            "    AND lr.reservation.statutReservation = 'CONFIRME'" +  // ✅ UNIQUEMENT CONFIRME
             ")")
     int countInstancesDisponiblesSurPeriode(
             @Param("idProduit") Long idProduit,

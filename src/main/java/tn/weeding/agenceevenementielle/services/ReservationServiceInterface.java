@@ -1,5 +1,6 @@
 package tn.weeding.agenceevenementielle.services;
 
+import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
@@ -217,6 +218,12 @@ public interface ReservationServiceInterface {
      * Récupérer les réservations avec paiement incomplet
      */
     List<ReservationResponseDto> getReservationsAvecPaiementIncomplet();
+
+    /**
+     * Obtenir les contraintes de dates pour l'affichage au client
+     * (Utile pour le frontend)
+     */
+    DateConstraintesDto getContraintesDates();
 }
 
 

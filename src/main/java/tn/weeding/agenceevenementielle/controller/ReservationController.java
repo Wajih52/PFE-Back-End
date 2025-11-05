@@ -11,8 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
+import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
+import tn.weeding.agenceevenementielle.dto.DatePeriodeDto;
+import tn.weeding.agenceevenementielle.dto.DateValidationResponseDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
+import tn.weeding.agenceevenementielle.exceptions.DateValidationException;
+import tn.weeding.agenceevenementielle.services.DateReservationValidator;
 import tn.weeding.agenceevenementielle.services.ReservationServiceInterface;
 
 import java.util.Date;
@@ -41,6 +46,7 @@ public class ReservationController {
 
     private final ReservationServiceInterface reservationService;
     private final AuthenticationFacade authenticationFacade;
+    private final DateReservationValidator dateReservationValidator;
 
     // ============================================
     // PARTIE 1: CRÉATION DE DEVIS (CLIENT)
@@ -119,7 +125,7 @@ public class ReservationController {
         log.info("🔧 Modification du devis ID: {} par l'admin", id);
 
         String username = authenticationFacade.getAuthentication().getName();
-        modificationDto.setIdReservation(id);  // S'assurer que l'ID est bien défini
+        modificationDto.setIdReservation(id);
 
         ReservationResponseDto devisModifie = reservationService.modifierDevisParAdmin(modificationDto, username);
 
@@ -476,4 +482,83 @@ public class ReservationController {
                 reservationService.getReservationsAvecPaiementIncomplet();
         return ResponseEntity.ok(reservations);
     }
+
+    /**
+     * 📅 Obtenir les contraintes de dates pour les réservations
+     *
+     * Endpoint utilisé par le frontend pour:
+     * - Configurer les datepickers
+     * - Afficher les règles au client
+     * - Validation côté client
+     *
+     * Exemple d'utilisation Angular:
+     * ```typescript
+     * ngOnInit() {
+     *   this.reservationService.getDateConstraints().subscribe(constraints => {
+     *     this.minDate = new Date(constraints.dateMinimale);
+     *     this.maxDate = new Date(constraints.dateMaximale);
+     *     this.maxDuration = constraints.dureeMaxJours;
+     *   });
+     * }
+     * ```
+     */
+    @GetMapping("/contraintes-dates")
+    @Operation(summary = "Obtenir les contraintes de dates",
+            description = "Retourne les règles de dates pour les réservations " +
+                    "(dates min/max, durée min/max, etc.)")
+    public ResponseEntity<DateConstraintesDto> getContraintesDates() {
+        log.debug("📅 Récupération des contraintes de dates");
+
+        DateConstraintesDto contraintes = reservationService.getContraintesDates();
+
+        return ResponseEntity.ok(contraintes);
+    }
+
+    /**
+     * 📅 Valider une période de dates
+     *
+     * Endpoint pour valider une période AVANT de créer le devis
+     * Permet au frontend d'afficher des erreurs en temps réel
+     */
+    @PostMapping("/valider-periode")
+    @Operation(summary = "Valider une période de dates",
+            description = "Vérifie si une période est valide selon les règles métier")
+    public ResponseEntity<DateValidationResponseDto> validerPeriode(
+            @RequestBody @Valid DatePeriodeDto periodeDto) {
+
+        log.debug("📅 Validation période: {} -> {}",
+                periodeDto.getDateDebut(), periodeDto.getDateFin());
+
+        try {
+            dateReservationValidator.validerPeriodeReservation(
+                    periodeDto.getDateDebut(),
+                    periodeDto.getDateFin()
+            );
+
+            long nbJours = dateReservationValidator.calculerNombreJours(
+                    periodeDto.getDateDebut(),
+                    periodeDto.getDateFin()
+            );
+
+            return ResponseEntity.ok(DateValidationResponseDto.builder()
+                    .valide(true)
+                    .message("Période valide - " + nbJours + " jour(s)")
+                    .nombreJours(nbJours)
+                    .build());
+
+        } catch (DateValidationException e) {
+            return ResponseEntity.ok(DateValidationResponseDto.builder()
+                    .valide(false)
+                    .message(e.getMessage())
+                    .nombreJours(0L)
+                    .build());
+        }
+    }
+
+
+
+
+
+
+
 }

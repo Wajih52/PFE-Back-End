@@ -5,14 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
+import tn.weeding.agenceevenementielle.exceptions.DateValidationException;
 import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
 import tn.weeding.agenceevenementielle.repository.*;
-
+import  tn.weeding.agenceevenementielle.exceptions.ReservationException.StockIndisponibleException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,6 +41,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     private final InstanceProduitRepository instanceProduitRepo;
     private final MouvementStockRepository mouvementStockRepo;
     private final InstanceProduitServiceInterface instanceProduitService;
+    private final DateReservationValidator dateValidator;
 
     // ============ CRÉATION DE DEVIS PAR LE CLIENT ============
 
@@ -55,11 +58,42 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             throw new CustomException("Le devis doit contenir au moins un produit");
         }
 
-        // 3. Vérifier la disponibilité de TOUS les produits AVANT de créer le devis
-        log.info("📦 Vérification de la disponibilité de {} produits", devisRequest.getLignesReservation().size());
-        List<DisponibiliteResponseDto> disponibilites = new ArrayList<>();
+        // VALIDER LES DATES DE CHAQUE LIGNE
+        log.info("📅 Validation des dates pour {} lignes", devisRequest.getLignesReservation().size());
 
         for (LigneReservationRequestDto ligneDto : devisRequest.getLignesReservation()) {
+            try {
+                dateValidator.validerPeriodeReservation(
+                        ligneDto.getDateDebut(),
+                        ligneDto.getDateFin(),
+                        "devis - produit ID " + ligneDto.getIdProduit()
+                );
+
+                long nbJours = dateValidator.calculerNombreJours(
+                        ligneDto.getDateDebut(),
+                        ligneDto.getDateFin()
+                );
+
+                log.debug("✅ Dates valides pour produit {} - Durée: {} jours",
+                        ligneDto.getIdProduit(), nbJours);
+
+            } catch (DateValidationException e) {
+                log.error("❌ Dates invalides pour produit {}: {}",
+                        ligneDto.getIdProduit(), e.getMessage());
+               // throw e; // Propager l'exception au controller
+            }
+        }
+
+        log.info("✅ Toutes les dates sont valides");
+
+
+        // 3. Vérifier la disponibilité de TOUS les produits AVANT de créer le devis
+        log.info("📦 Vérification de la disponibilité de {} produits", devisRequest.getLignesReservation().size());
+
+
+        for (LigneReservationRequestDto ligneDto : devisRequest.getLignesReservation()) {
+
+
             VerificationDisponibiliteDto verif = VerificationDisponibiliteDto.builder()
                     .idProduit(ligneDto.getIdProduit())
                     .quantite(ligneDto.getQuantite())
@@ -68,7 +102,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     .build();
 
             DisponibiliteResponseDto dispo = verifierDisponibilite(verif);
-            disponibilites.add(dispo);
+
 
             if (!dispo.getDisponible()) {
                 log.warn("❌ Produit {} non disponible", dispo.getNomProduit());
@@ -131,13 +165,13 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
             ligne.setObservations(ligneDto.getObservations());
 
-
-            double sousTotal = ligne.getQuantite() * ligne.getPrixUnitaire();
+            long nbJours = ChronoUnit.DAYS.between(ligneDto.getDateDebut(), ligneDto.getDateFin()) + 1;
+            double sousTotal = ligne.getQuantite() * ligne.getPrixUnitaire() * nbJours;
             montantTotal += sousTotal;
 
             lignes.add(ligne);
-            log.info("📝 Ligne ajoutée: {} x {} = {} TND",
-                    produit.getNomProduit(), ligne.getQuantite(), sousTotal);
+            log.info("📝 Ligne ajoutée: {} x {} = {} TND pour {} jours",
+                    produit.getNomProduit(), ligne.getQuantite(), sousTotal,nbJours);
         }
 
         reservation.setLigneReservations(lignes);
@@ -145,29 +179,37 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         reservation.setStatutReservation(StatutReservation.EN_ATTENTE);
 
 
-        // 6. Sauvegarder
-        Reservation devisCree = reservationRepo.save(reservation);
+
+
         log.info("✅ Devis créé avec succès: {} - Montant: {} TND",
-                devisCree.getReferenceReservation(), montantTotal);
+                reservation.getReferenceReservation(), montantTotal);
 
         //  VALIDATION AUTOMATIQUE si client Valide directement sans Review Admin
         if(devisRequest.isValidationAutomatique()){
-           Reservation resValide = reserverStockPourReservation(devisCree );
+            log.info("🚀 Mode validation automatique → Réservation immédiate du stock");
+            reservation.setValidationAutomatique(true);
+            Reservation devisSaved = reservationRepo.save(reservation);
+            // Réserver le stock immédiatement
+           Reservation resValidee = reserverStockPourReservation(devisSaved );
+
             log.info("✅ Devis validé automatiquement {} - montant {} TND - Réservation confirmée",
-                    devisCree.getReferenceReservation(),montantTotal);
+                    resValidee.getReferenceReservation(),montantTotal);
 
-           return convertToResponseDto(resValide);
+           return convertToResponseDto(resValidee);
+        }else{
+            // 📋 MODE CLASSIQUE : Attente review admin
+            log.info("⏳ Mode classique → Stock NON réservé, en attente de validation");
+            reservation.setValidationAutomatique(false);
+            reservation.setStockReserve(false);
+            // Définir date d'expiration
+            reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(2));
+
+            Reservation devisSaved = reservationRepo.save(reservation);
+            log.info("✅ Devis créé {} - Montant: {} TND (stock NON réservé)",
+                    devisSaved.getReferenceReservation(), montantTotal);
+
+            return convertToResponseDto(devisSaved);
         }
-
-
-        // 📋 MODE CLASSIQUE : Attente review admin
-        reservation.setValidationAutomatique(false);
-        // Définir date d'expiration
-        reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(2));
-
-        Reservation devis = reserverTemporaireStockPourReservation(reservation);
-
-        return convertToResponseDto(devis);
     }
 
     // ============ VÉRIFICATION DE DISPONIBILITÉ ============
@@ -178,8 +220,28 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 verificationDto.getIdProduit(), verificationDto.getQuantite(),
                 verificationDto.getDateDebut(), verificationDto.getDateFin());
 
+        // 1. VALIDATION DES DATES EN PREMIER
+        try {
+            dateValidator.validerPeriodeReservation(
+                    verificationDto.getDateDebut(),
+                    verificationDto.getDateFin(),
+                    "vérification disponibilité"
+            );
+        } catch (DateValidationException e) {
+            log.error("❌ Dates invalides: {}", e.getMessage());
+
+            // Retourner une réponse avec les informations d'erreur
+            return DisponibiliteResponseDto.builder()
+                    .idProduit(verificationDto.getIdProduit())
+                    .quantiteDemandee(verificationDto.getQuantite())
+                    .disponible(false)
+                    .message("Dates invalides: " + e.getMessage())
+                    .build();
+        }
+
         Produit produit = produitRepo.findById(verificationDto.getIdProduit())
                 .orElseThrow(() -> new CustomException("Produit introuvable"));
+
 
         DisponibiliteResponseDto response = DisponibiliteResponseDto.builder()
                 .idProduit(produit.getIdProduit())
@@ -333,26 +395,10 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 }
 
                 if (ligneModif.getNouvelleQuantite() != null) {
-                   if(ligneModif.getNouvelleQuantite()<ligne.getQuantite()&& !ligne.getInstancesReservees().isEmpty())
-                   {
 
-                       // Prendre les `quantiteARetirer` premières (les plus récentes) de la liste triée
-                       Set<InstanceProduit> instancesARetirer = ligne.getInstancesReservees().stream()
-                               .limit(ligne.getQuantite()-ligneModif.getNouvelleQuantite())
-                               .collect(Collectors.toSet());
-                       // Retirer toutes les instances de la ligne
-                       ligne.getInstancesReservees().removeAll(instancesARetirer);
-
-                       for(InstanceProduit instanceProduit : instancesARetirer){
-                           enregistrerMouvementStockInstance(instanceProduit,TypeMouvement.CORRECTION,
-                                   reservation,"suppression d'Instance(validation Devis admin)",username);
-                       }
-                   }
                     log.info("🔢 Modification quantité: {} -> {}",
                             ligne.getQuantite(), ligneModif.getNouvelleQuantite());
                     ligne.setQuantite(ligneModif.getNouvelleQuantite());
-                    enregistrerMouvementStock(ligne.getProduit(),ligneModif.getNouvelleQuantite(),
-                            TypeMouvement.CORRECTION,reservation,"Modification quantité : validation devis par admin",username);
                 }
 
                 ligneReservationRepo.save(ligne);
@@ -361,7 +407,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         // 2. Recalculer le montant original
         double montantOriginal2 = reservation.getLigneReservations().stream()
-                .mapToDouble(ligne -> ligne.getQuantite() * ligne.getPrixUnitaire())
+                .mapToDouble(ligne -> ligne.getQuantite() * ligne.getPrixUnitaire()*
+                        (ChronoUnit.DAYS.between(ligne.getDateDebut(), ligne.getDateFin()) + 1))
                 .sum();
 
         // 3. Appliquer les remises
@@ -385,7 +432,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         reservation.setMontantTotal(montantFinal);
         reservation.setCommentaireAdmin(modificationDto.getCommentaireAdmin());
-        reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(3));
+        reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(2));
         reservation.setValidationAutomatique(true);
 
 
@@ -405,8 +452,10 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public ReservationResponseDto validerDevisParClient(ValidationDevisDto validationDto, String username) {
-        log.info("🎯 Validation du devis ID: {} par le client {} - Accepté: {}",
-                validationDto.getIdReservation(), username, validationDto.getAccepter());
+        log.info("🎯 ✅ Client {} {} le devis ID: {}",
+                username,
+                validationDto.getAccepter() ? "ACCEPTE" : "REFUSE",
+                validationDto.getIdReservation());
 
         Reservation reservation = reservationRepo.findById(validationDto.getIdReservation())
                 .orElseThrow(() -> new CustomException("Réservation introuvable"));
@@ -415,9 +464,11 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             throw new CustomException("Veuillez patienter la validation Administration");
         }
 
+        // Client refuse le devis
         if (!validationDto.getAccepter()) {
-            // Client refuse le devis
+            log.warn("❌ Client refuse le devis {}", reservation.getReferenceReservation());
             reservation.setStatutReservation(StatutReservation.ANNULE);
+            reservation.setCommentaireClient(validationDto.getCommentaireClient());
             reservationRepo.save(reservation);
             return convertToResponseDto(reservation);
         }
@@ -428,13 +479,37 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             throw new CustomException("Seuls les devis en attente peuvent être validés");
         }
 
+        // VÉRIFIER LA DISPONIBILITÉ AVANT DE CONFIRMER
+        log.info("🔍 Vérification de la disponibilité AVANT validation...");
+        try {
+            verifierDisponibiliteAvantValidation(reservation);
+            log.info("✅ Disponibilité confirmée, réservation du stock...");
+        } catch (ReservationException.StockIndisponibleException e) {
+            // ❌ Le stock n'est plus disponible
+            log.error("❌ Stock devenu indisponible: {}", e.getMessage());
 
+            // Informer le client et lui proposer des alternatives
+            reservation.setStatutReservation(StatutReservation.ANNULE);
+            reservation.setCommentaireAdmin(
+                    "Désolé, certains produits ne sont plus disponibles. " + e.getMessage() +
+                            " Veuillez créer un nouveau devis."
+            );
+            reservationRepo.save(reservation);
+
+            throw new CustomException(
+                    "Impossible de valider le devis car certains produits ne sont plus disponibles. " +
+                            e.getMessage()
+            );
+        }
+
+        // ✅ Le stock est disponible → On peut réserver
         reservation.setDateExpirationDevis(null);
-        Reservation resValideCLient = reserverStockPourReservation(reservation);
+        Reservation resValidee = reserverStockPourReservation(reservation);
 
+        log.info("🎉 Réservation {} confirmée par le client et stock réservé avec succès",
+                resValidee.getReferenceReservation());
 
-
-        return convertToResponseDto(resValideCLient);
+        return convertToResponseDto(resValidee);
     }
 
     // ============ ANNULATION ============
@@ -458,15 +533,21 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
 
         // Libérer les instances si c'était confirmé
-        if (reservation.getStatutReservation() == StatutReservation.CONFIRME||
-        reservation.getStatutReservation()==StatutReservation.EN_ATTENTE) {
-
+        if (reservation.getStatutReservation() == StatutReservation.CONFIRME) {
+            log.info("🔓 Libération du stock pour réservation CONFIRMÉE");
            Reservation reservationlibere = libererStockReservation(reservation);
             reservationlibere.setStatutReservation(StatutReservation.ANNULE);
             reservationlibere.setCommentaireClient(motif);
             reservationlibere.setStockReserve(false);
             reservationRepo.save(reservationlibere);
-            log.info("✅ Réservation annulée avec succès");
+            log.info("✅ Réservation annulée avec libération du stock");
+        }else if (reservation.getStatutReservation() == StatutReservation.EN_ATTENTE) {
+            // Simple annulation, pas de stock à libérer
+            log.info("✅ Annulation devis EN_ATTENTE (pas de stock réservé)");
+            reservation.setStatutReservation(StatutReservation.ANNULE);
+            reservation.setCommentaireClient(motif);
+            reservationRepo.save(reservation);
+            log.info("✅ Devis annulé (aucune libération de stock nécessaire)");
         }
     }
 
@@ -599,16 +680,17 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .orElseThrow(() -> new ReservationException.ReservationNotFoundException(
                         "Réservation avec ID " + idReservation + " introuvable"));
 
-        // 2️⃣ VÉRIFICATIONS DES RÈGLES MÉTIER
 
-        // Vérifier que les nouvelles dates sont cohérentes
-        if (nouvelleDateDebut.isAfter(nouvelleDateFin)) {
-            throw new ReservationException("La date de début ne peut pas être après la date de fin");
-        }
-
-        // Vérifier que la date de début n'est pas dans le passé
-        if (nouvelleDateDebut.isBefore(LocalDate.now())) {
-            throw new ReservationException("La date de début ne peut pas être dans le passé");
+        // 2. VALIDER LES NOUVELLES DATES
+        try {
+            dateValidator.validerPeriodeReservation(
+                    nouvelleDateDebut,
+                    nouvelleDateFin,
+                    "modification réservation " + reservation.getReferenceReservation()
+            );
+        } catch (DateValidationException e) {
+            log.error("❌ Dates invalides pour modification: {}", e.getMessage());
+            throw e;
         }
 
         // Vérifier que la réservation peut encore être modifiée
@@ -752,6 +834,50 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 );
 
         return count == 0;  // Disponible si aucune autre réservation
+    }
+
+    /**
+     *
+     * Vérifier la disponibilité RÉELLE avant de valider un devis
+     *
+     * Cette méthode est appelée juste avant de confirmer la réservation
+     * pour s'assurer que le stock n'a pas été réservé entre-temps
+     *
+     * @throws StockIndisponibleException si un produit n'est plus disponible
+     */
+    private void verifierDisponibiliteAvantValidation(Reservation reservation)
+            throws StockIndisponibleException {
+
+        log.debug("🔍 Vérification disponibilité pour réservation {}",
+                reservation.getReferenceReservation());
+
+        for (LigneReservation ligne : reservation.getLigneReservations()) {
+            Produit produit = ligne.getProduit();
+
+            DisponibiliteResponseDto dispo = verifierDisponibilite(
+                    VerificationDisponibiliteDto.builder()
+                            .idProduit(produit.getIdProduit())
+                            .quantite(ligne.getQuantite())
+                            .dateDebut(ligne.getDateDebut())
+                            .dateFin(ligne.getDateFin())
+                            .build()
+            );
+
+            if (!dispo.getDisponible()) {
+                String message = String.format(
+                        "Le produit '%s' n'est plus disponible pour la période demandée. " +
+                                "Quantité demandée: %d, Quantité disponible: %d",
+                        produit.getNomProduit(),
+                        ligne.getQuantite(),
+                        dispo.getQuantiteDisponible()
+                );
+
+                log.error("❌ {}", message);
+                throw new StockIndisponibleException(message);
+            }
+        }
+
+        log.debug("✅ Tous les produits sont disponibles");
     }
 
     // ============ STATISTIQUES ============
@@ -1139,6 +1265,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .prenomClient(client.getPrenom())
                 .emailClient(client.getEmail())
                 .telephoneClient(client.getTelephone())
+                .dateCreation(reservation.getDateCreation())
                 .dateDebut(reservation.getDateDebut())
                 .dateFin(reservation.getDateFin())
                 .statutReservation(reservation.getStatutReservation())
@@ -1324,80 +1451,6 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         return reservation ;
     }
 
-    /**
-     * Méthode utilitaire pour reserver le stock une fois le client valide le devis
-     */
-    public Reservation reserverTemporaireStockPourReservation(Reservation reservation){
-        // Client accepte → Affecter les instances
-        for (LigneReservation ligne : reservation.getLigneReservations()) {
-            if (ligne.isProduitAvecReference()) {
-
-                // ✅ Vérifier la disponibilité sur la période
-                List<InstanceProduit> instancesDisponibles = instanceProduitRepo.findInstancesDisponiblesSurPeriode(
-                        ligne.getProduit().getIdProduit(),
-                        ligne.getDateDebut(),
-                        ligne.getDateFin()
-                );
-
-                if (instancesDisponibles.size() < ligne.getQuantite()) {
-                    throw new ProduitException(
-                            "Stock insuffisant pour " + ligne.getProduit().getNomProduit() +
-                                    " du " + ligne.getDateDebut() + " au " + ligne.getDateFin()
-                    );
-                }
-
-                // ✅ Affecter les instances à la ligne (ManyToMany)
-                Set<InstanceProduit> instancesAAffecter = instancesDisponibles.stream()
-                        .limit(ligne.getQuantite())
-                        .collect(Collectors.toSet());
-
-                ligne.setInstancesReservees(instancesAAffecter);
-                ligneReservationRepo.save(ligne);
-
-                log.info("{} instances affectées Temporairement à la ligne {} pour la période {}-{}",
-                        ligne.getQuantite(),
-                        ligne.getIdLigneReservation(),
-                        ligne.getDateDebut(),
-                        ligne.getDateFin());
-                for(InstanceProduit instanceProduit : instancesAAffecter){
-                    enregistrerMouvementStockInstance(instanceProduit,TypeMouvement.RESERVATION,
-                            reservation,"Reservation temporaire d'Instance(Devis)",reservation.getUtilisateur().getPseudo());
-                }
-            }else{
-                Integer quantiteReservee = produitRepo.calculerQuantiteDisponibleSurPeriode(
-                        ligne.getProduit().getIdProduit(),
-                        ligne.getDateDebut(),
-                        ligne.getDateFin()
-                );
-
-                if (quantiteReservee == null) {
-                    quantiteReservee = 0;
-                }
-
-                // Calculer la quantité réellement disponible
-                int quantiteDisponible = ligne.getProduit().getQuantiteDisponible() - quantiteReservee;
-                if(quantiteDisponible < ligne.getQuantite()){
-                    throw new ProduitException(
-                            "Stock insuffisant pour " + ligne.getProduit().getNomProduit() +
-                                    " du " + ligne.getDateDebut() + " au " + ligne.getDateFin()
-                    );
-                }
-                ligneReservationRepo.save(ligne);
-                //enregistrer mouvemenet
-                enregistrerMouvementStock(ligne.getProduit(), ligne.getQuantite(), TypeMouvement.RESERVATION,
-                        reservation,"Reservation temporaire(Devis) ",reservation.getUtilisateur().getPseudo());
-            }
-        }
-        // Confirmer la réservation
-        reservation.setStatutReservation(StatutReservation.EN_ATTENTE);
-
-        reservation.setStockReserve(Boolean.TRUE);
-
-        log.info("🎉 Réservation Temporaire Crée avec succès: {}", reservation.getReferenceReservation());
-
-        reservationRepo.save(reservation);
-        return reservation ;
-    }
 
     /**
      * Tâche planifiée : Annuler automatiquement les devis expirés
@@ -1424,16 +1477,16 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 log.warn("❌ Annulation du devis expiré: {}",
                         devis.getReferenceReservation());
 
-                // Libérer le stock
-                libererStockReservation(devis);
-
-                // Changer le statut
+                // ✅ SOFT BOOKING: Pas de stock à libérer (jamais réservé)
                 devis.setStatutReservation(StatutReservation.ANNULE);
                 devis.setCommentaireAdmin(
                         "Devis annulé automatiquement après expiration (" +
                                 devis.getDateExpirationDevis().toLocalDate() + ")"
                 );
                 reservationRepo.save(devis);
+
+                log.info("✅ Devis {} annulé (pas de stock à libérer)",
+                        devis.getReferenceReservation());
 
                 // TODO: Envoyer notification email au client
                 // notificationService.envoyerNotificationDevisExpire(devis);
@@ -1477,31 +1530,23 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                         ligne.getIdLigneReservation());
 
 
-            }
-
-            if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE
-                        && ligne.getStatutLivraisonLigne() != StatutLivraison.NOT_TODAY) {
-                    // Remettre la quantité disponible
-                    int nouvelleQte = produit.getQuantiteDisponible() + ligne.getQuantite();
-                    produit.setQuantiteDisponible(nouvelleQte);
-                    produitRepo.save(produit);
-
+            }else {
+                // Enregistrer mouvement pour produit en quantité
                 enregistrerMouvementStock(
                         produit,
                         ligne.getQuantite(),
                         TypeMouvement.ANNULATION_RESERVATION,
                         reservation,
-                        "Libération du stock - Annulation/Expiration",
-                        "SYSTEM"
+                        "Libération suite annulation",
+                        reservation.getUtilisateur().getPseudo()
                 );
-
             }
 
-                log.info("✅ Stock libéré avec succès");
+
         }
         reservation.setStockReserve(Boolean.FALSE);
         reservationRepo.save(reservation);
-
+        log.info("✅ Stock libéré pour {}", reservation.getReferenceReservation());
         return reservation;
     }
 
@@ -1522,5 +1567,21 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate();
         }
+    }
+
+    // ============ MÉTHODE UTILITAIRE POUR OBTENIR LES CONTRAINTES ============
+
+    /**
+     * Obtenir les contraintes de dates pour l'affichage au client
+     * (Utile pour le frontend)
+     */
+    public DateConstraintesDto getContraintesDates() {
+        return DateConstraintesDto.builder()
+                .dateMinimale(dateValidator.getDateMinimaleReservation())
+                .dateMaximale(dateValidator.getDateMaximaleReservation())
+                .dureeMinJours(dateValidator.getDureeMinLocation())
+                .dureeMaxJours(dateValidator.getDureeMaxLocation())
+                .reservationAujourdhuiAutorisee(dateValidator.getDateMinimaleReservation().equals(LocalDate.now()))
+                .build();
     }
 }

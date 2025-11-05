@@ -84,15 +84,13 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
      */
     @Query("SELECT (p.quantiteDisponible - COALESCE(SUM(lr.quantite), 0)) " +
             "FROM Produit p " +
-            "LEFT JOIN p.ligneReservationProduit lr " +
+            "LEFT JOIN LigneReservation lr ON lr.produit.idProduit = p.idProduit " +
             "WHERE p.idProduit = :idProduit " +
             "AND p.typeProduit = tn.weeding.agenceevenementielle.entities.enums.TypeProduit.EN_QUANTITE " +
             "AND (lr IS NULL OR " +
-            "     (lr.dateDebut <= :dateFin " +              // Chevauchement si début ligne < fin demandée
-            "      AND lr.dateFin >= :dateDebut " +          // ET fin ligne > début demandé
-            "      AND lr.reservation.statutReservation IN " +
-            "         (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "          tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME))) " +
+            "     (lr.dateDebut <= :dateFin " +
+            "      AND lr.dateFin >= :dateDebut " +
+            "      AND lr.reservation.statutReservation = 'CONFIRME')) " +  // ✅ UNIQUEMENT CONFIRME
             "GROUP BY p.idProduit, p.quantiteDisponible")
     Integer calculerQuantiteDisponibleSurPeriode(
             @Param("idProduit") Long idProduit,
@@ -111,18 +109,17 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
      * @param dateFin Date de fin
      * @return true si la quantité est disponible, false sinon
      */
-    @Query("SELECT CASE WHEN (p.quantiteDisponible - COALESCE(SUM(lr.quantite), 0)) >= :quantiteDemandee " +
+    @Query("SELECT CASE WHEN " +
+            "(p.quantiteDisponible - COALESCE(SUM(lr.quantite), 0)) >= :quantiteDemandee " +
             "THEN true ELSE false END " +
             "FROM Produit p " +
-            "LEFT JOIN p.ligneReservationProduit lr " +
+            "LEFT JOIN LigneReservation lr ON lr.produit.idProduit = p.idProduit " +
             "WHERE p.idProduit = :idProduit " +
             "AND p.typeProduit = tn.weeding.agenceevenementielle.entities.enums.TypeProduit.EN_QUANTITE " +
             "AND (lr IS NULL OR " +
             "     (lr.dateDebut <= :dateFin " +
             "      AND lr.dateFin >= :dateDebut " +
-            "      AND lr.reservation.statutReservation IN " +
-            "         (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "          tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME))) " +
+            "      AND lr.reservation.statutReservation = 'CONFIRME')) " +  // ✅ UNIQUEMENT CONFIRME
             "GROUP BY p.idProduit, p.quantiteDisponible")
     Boolean estDisponibleSurPeriode(
             @Param("idProduit") Long idProduit,
@@ -148,9 +145,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "               WHERE lr2.produit.idProduit = p.idProduit " +
             "               AND lr2.dateDebut <= :dateFin " +
             "               AND lr2.dateFin >= :dateDebut " +
-            "               AND lr2.reservation.statutReservation IN " +
-            "                  (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "                   tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)), 0)) > 0")
+            "               AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) > 0")  // ✅ UNIQUEMENT CONFIRME
     List<Produit> findProduitsDisponiblesSurPeriode(
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin
@@ -173,9 +168,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "               WHERE lr2.produit.idProduit = p.idProduit " +
             "               AND lr2.dateDebut <= :dateFin " +
             "               AND lr2.dateFin >= :dateDebut " +
-            "               AND lr2.reservation.statutReservation IN " +
-            "                  (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "                   tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)), 0)) >= :quantiteMin")
+            "               AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) >= :quantiteMin")  // ✅ UNIQUEMENT CONFIRME
     List<Produit> findProduitsAvecQuantiteMinSurPeriode(
             @Param("quantiteMin") Integer quantiteMin,
             @Param("dateDebut") LocalDate dateDebut,
@@ -200,10 +193,13 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "               WHERE lr2.produit.idProduit = p.idProduit " +
             "               AND lr2.dateDebut <= :dateFin " +
             "               AND lr2.dateFin >= :dateDebut " +
-            "               AND lr2.reservation.statutReservation IN " +
-            "                  (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "                   tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)), 0)) " +
-            "BETWEEN 1 AND :seuil")
+            "               AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) <= :seuil " +  // ✅ UNIQUEMENT CONFIRME
+            "AND (p.quantiteDisponible - " +
+            "     COALESCE((SELECT SUM(lr3.quantite) FROM LigneReservation lr3 " +
+            "               WHERE lr3.produit.idProduit = p.idProduit " +
+            "               AND lr3.dateDebut <= :dateFin " +
+            "               AND lr3.dateFin >= :dateDebut " +
+            "               AND lr3.reservation.statutReservation = 'CONFIRME'), 0)) > 0")
     List<Produit> findProduitsStockCritiqueSurPeriode(
             @Param("seuil") Integer seuil,
             @Param("dateDebut") LocalDate dateDebut,
@@ -239,20 +235,19 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
      * Permet de filtrer les produits disponibles selon plusieurs critères
      * ET une période de disponibilité
      */
-    @Query("SELECT DISTINCT p FROM Produit p WHERE " +
-            "(:categorie IS NULL OR p.categorieProduit = :categorie) AND " +
-            "(:typeProduit IS NULL OR p.typeProduit = :typeProduit) AND " +
-            "(:minPrix IS NULL OR p.prixUnitaire >= :minPrix) AND " +
-            "(:maxPrix IS NULL OR p.prixUnitaire <= :maxPrix) AND " +
-            "(:dateDebut IS NULL OR :dateFin IS NULL OR " +
-            " (p.quantiteDisponible - " +
-            "  COALESCE((SELECT SUM(lr2.quantite) FROM LigneReservation lr2 " +
-            "            WHERE lr2.produit.idProduit = p.idProduit " +
-            "            AND lr2.dateDebut <= :dateFin " +
-            "            AND lr2.dateFin >= :dateDebut " +
-            "            AND lr2.reservation.statutReservation IN " +
-            "               (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "                tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)), 0)) > 0)")
+    @Query("SELECT DISTINCT p FROM Produit p " +
+            "LEFT JOIN LigneReservation lr ON lr.produit.idProduit = p.idProduit " +
+            "WHERE (:categorie IS NULL OR p.categorieProduit = :categorie) " +
+            "AND (:typeProduit IS NULL OR p.typeProduit = :typeProduit) " +
+            "AND (:minPrix IS NULL OR p.prixUnitaire >= :minPrix) " +
+            "AND (:maxPrix IS NULL OR p.prixUnitaire <= :maxPrix) " +
+            "AND (p.typeProduit = 'AVEC_REFERENCE' OR " +
+            "     (p.quantiteDisponible - " +
+            "      COALESCE((SELECT SUM(lr2.quantite) FROM LigneReservation lr2 " +
+            "                WHERE lr2.produit.idProduit = p.idProduit " +
+            "                AND lr2.dateDebut <= :dateFin " +
+            "                AND lr2.dateFin >= :dateDebut " +
+            "                AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) > 0)")  // ✅ UNIQUEMENT CONFIRME
     List<Produit> searchProduitsAvecPeriode(
             @Param("categorie") Categorie categorie,
             @Param("typeProduit") TypeProduit typeProduit,
@@ -302,8 +297,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "     (lr.dateDebut <= :dateFin " +
             "      AND lr.dateFin >= :dateDebut " +
             "      AND lr.reservation.statutReservation IN " +
-            "         (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_ATTENTE, " +
-            "          tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME))) " +
+            "         (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME))) " +
             "GROUP BY p.idProduit, p.nomProduit, p.quantiteDisponible " +
             "ORDER BY CASE WHEN p.quantiteDisponible > 0 " +
             "          THEN (COALESCE(SUM(lr.quantite), 0) * 100.0 / p.quantiteDisponible) " +
