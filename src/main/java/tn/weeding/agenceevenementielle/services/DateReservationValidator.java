@@ -144,7 +144,7 @@ public class DateReservationValidator {
      * Vérifier que la date de fin est après la date de début
      */
     private void validerDateFinApresDebut(LocalDate dateDebut, LocalDate dateFin, String contexte) {
-        if (dateFin.isBefore(dateDebut) || dateFin.isEqual(dateDebut)) {
+        if (dateFin.isBefore(dateDebut)) {
             String message = String.format(
                     "La date de fin (%s) doit être après la date de début (%s) pour %s",
                     dateFin, dateDebut, contexte

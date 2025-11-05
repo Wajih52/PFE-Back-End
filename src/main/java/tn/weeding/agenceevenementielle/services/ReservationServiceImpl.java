@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
 import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
+import tn.weeding.agenceevenementielle.dto.DatePeriodeDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.*;
@@ -42,6 +44,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     private final MouvementStockRepository mouvementStockRepo;
     private final InstanceProduitServiceInterface instanceProduitService;
     private final DateReservationValidator dateValidator;
+    private final AuthenticationFacade authenticationFacade;
 
     // ============ CRÉATION DE DEVIS PAR LE CLIENT ============
 
@@ -680,6 +683,17 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .orElseThrow(() -> new ReservationException.ReservationNotFoundException(
                         "Réservation avec ID " + idReservation + " introuvable"));
 
+        // Vérifier les permissions
+        Long currentUserId = authenticationFacade.getCurrentUserId();
+        boolean isOwner = reservation.getUtilisateur().getIdUtilisateur().equals(currentUserId);
+        boolean isAdminOrEmployee = authenticationFacade.getAuthentication().getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN") ||
+                        auth.getAuthority().equals("ROLE_EMPLOYE"));
+
+        if (!isOwner && !isAdminOrEmployee) {
+            throw new CustomException("Vous n'avez pas la permission de modifier cette réservation");
+        }
+
 
         // 2. VALIDER LES NOUVELLES DATES
         try {
@@ -878,6 +892,71 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
 
         log.debug("✅ Tous les produits sont disponibles");
+    }
+
+    public VerificationModificationDatesDto verifAvantModifDateReservation (Long idReservation, DatePeriodeDto nouvellesDates){
+        Reservation reservation = reservationRepo.findById(idReservation)
+                .orElseThrow(() -> new CustomException("Réservation introuvable"));
+        // Vérifier la disponibilité pour chaque ligne
+        boolean toutDisponible = true;
+        StringBuilder message = new StringBuilder();
+
+        for (LigneReservation ligne : reservation.getLigneReservations()) {
+            Produit produit = ligne.getProduit();
+
+            if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
+                // Vérifier disponibilité pour produits quantitatifs
+                int quantiteDisponible = verifierDisponibiliteQuantitative(
+                        produit.getIdProduit(),
+                        nouvellesDates.getDateDebut(),
+                        nouvellesDates.getDateFin(),
+                        idReservation  // Exclure cette réservation du calcul
+                );
+
+                if (quantiteDisponible < ligne.getQuantite()) {
+                    toutDisponible = false;
+                            message.append(String.format("Le produit '%s' n'est pas disponible en quantité suffisante " +
+                                            "pour les nouvelles dates. Disponible: %d, Demandé: %d\n",
+                                    produit.getNomProduit(), quantiteDisponible, ligne.getQuantite()));
+                }
+
+            } else if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
+                // Vérifier disponibilité pour produits avec référence
+                for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                    boolean estDisponible = verifierDisponibiliteInstance(
+                            instance.getIdInstance(),
+                            nouvellesDates.getDateDebut(),
+                            nouvellesDates.getDateFin(),
+                            idReservation
+                    );
+
+                    if (!estDisponible) {
+                        toutDisponible = false;
+                        message.append(String.format("L'instance '%s' du produit '%s' n'est pas disponible " +
+                                        "pour les nouvelles dates\n",
+                                instance.getNumeroSerie(), produit.getNomProduit()));
+                    }
+                }
+            }
+        }
+
+        if (toutDisponible) {
+            long nbJours = dateValidator.calculerNombreJours(
+                    nouvellesDates.getDateDebut(),
+                    nouvellesDates.getDateFin()
+            );
+
+            return VerificationModificationDatesDto.builder()
+                    .possible(true)
+                    .message("Tous les produits sont disponibles pour les nouvelles dates (" + nbJours + " jours)")
+                    .nombreJours(nbJours)
+                    .build();
+        } else {
+            return VerificationModificationDatesDto.builder()
+                    .possible(false)
+                    .message("Certains produits ne sont pas disponibles:\n" + message.toString())
+                    .build();
+        }
     }
 
     // ============ STATISTIQUES ============
@@ -1548,25 +1627,6 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         reservationRepo.save(reservation);
         log.info("✅ Stock libéré pour {}", reservation.getReferenceReservation());
         return reservation;
-    }
-
-    /**
-     * Méthode utilitaire pour convertir java.sql.Date en LocalDate de manière sécurisée
-     */
-    private LocalDate convertToLocalDate(Date date) {
-        if (date == null) {
-            return null;
-        }
-
-        if (date instanceof java.sql.Date) {
-            // Conversion directe pour java.sql.Date
-            return ((java.sql.Date) date).toLocalDate();
-        } else {
-            // Conversion pour java.util.Date
-            return date.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-        }
     }
 
     // ============ MÉTHODE UTILITAIRE POUR OBTENIR LES CONTRAINTES ============

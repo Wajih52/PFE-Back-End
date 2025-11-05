@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.services;
 
 import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
+import tn.weeding.agenceevenementielle.dto.DatePeriodeDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
@@ -174,6 +175,14 @@ public interface ReservationServiceInterface {
             LocalDate nouvelleDateFin,
             String username
     );
+
+    /**
+     * 📅 Vérifier si des nouvelles dates sont disponibles pour une réservation
+     *
+     * Permet au client de vérifier AVANT de modifier
+     * Ne modifie rien, juste vérifie
+     */
+    VerificationModificationDatesDto verifAvantModifDateReservation (Long idReservation, DatePeriodeDto nouvellesDates);
 
     // ============ STATISTIQUES ============
 

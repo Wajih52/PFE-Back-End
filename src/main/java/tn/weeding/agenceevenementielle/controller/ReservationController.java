@@ -15,7 +15,9 @@ import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
 import tn.weeding.agenceevenementielle.dto.DatePeriodeDto;
 import tn.weeding.agenceevenementielle.dto.DateValidationResponseDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
+import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
+import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.DateValidationException;
 import tn.weeding.agenceevenementielle.services.DateReservationValidator;
 import tn.weeding.agenceevenementielle.services.ReservationServiceInterface;
@@ -274,6 +276,52 @@ public class ReservationController {
         List<ReservationResponseDto> reservations = reservationService.getReservationsByStatut(statut);
         return ResponseEntity.ok(reservations);
     }
+
+
+    /**
+     * 📅 Modifier les dates d'une réservation
+     *
+     * Permet au client ou à l'admin de changer la période d'une réservation
+     *
+     * VALIDATIONS EFFECTUÉES:
+     * 1. Validation des nouvelles dates (cohérence, règles métier)
+     * 2. Vérification de disponibilité pour les nouvelles dates
+     * 3. Vérification que la réservation peut être modifiée (pas annulée, pas livrée)
+     *
+     * Accessible par:
+     * - Le client propriétaire de la réservation
+     * - L'admin/employé
+     */
+    @PutMapping("/{idReservation}/modifier-dates")
+    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
+    @Operation(summary = "Modifier les dates d'une réservation",
+            description = "Change la période d'une réservation existante. " +
+                    "Vérifie la disponibilité pour les nouvelles dates.")
+    public ResponseEntity<ReservationResponseDto> modifierDatesReservation(
+            @PathVariable Long idReservation,
+            @RequestBody @Valid ModifierDatesReservationDto modificationDto) {
+
+        log.info("📅 Demande de modification dates pour réservation ID: {}", idReservation);
+
+        String username = authenticationFacade.getAuthentication().getName();
+        // Vérifier que l'ID dans le path correspond à l'ID dans le body
+        if (!idReservation.equals(modificationDto.getIdReservation())) {
+            throw new CustomException("L'ID de la réservation ne correspond pas");
+        }
+        // Modifier les dates
+        ReservationResponseDto response = reservationService.modifierDatesReservation(
+                idReservation,
+                modificationDto.getNouvelleDateDebut(),
+                modificationDto.getNouvelleDateFin(),
+                username
+        );
+
+        log.info("✅ Dates modifiées avec succès pour réservation {}",
+                response.getReferenceReservation());
+
+        return ResponseEntity.ok(response);
+    }
+
 
     // ============================================
     // PARTIE 5: RECHERCHE AVANCÉE
@@ -555,10 +603,38 @@ public class ReservationController {
         }
     }
 
+    /**
+     * 📅 Vérifier si des nouvelles dates sont disponibles pour une réservation
+     *
+     * Permet au client de vérifier AVANT de modifier
+     * Ne modifie rien, juste vérifie
+     */
+    @PostMapping("/{idReservation}/verifier-nouvelles-dates")
+    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
+    @Operation(summary = "Vérifier disponibilité pour nouvelles dates",
+            description = "Vérifie si une réservation peut être déplacée à de nouvelles dates")
+    public ResponseEntity<VerificationModificationDatesDto> verifierNouvellesDates(
+            @PathVariable Long idReservation,
+            @RequestBody @Valid DatePeriodeDto nouvellesDates) {
+
+        log.debug("🔍 Vérification nouvelles dates pour réservation {}", idReservation);
+
+        // Valider les nouvelles dates
+        try {
+            dateReservationValidator.validerPeriodeReservation(
+                    nouvellesDates.getDateDebut(),
+                    nouvellesDates.getDateFin(),
+                    "vérification modification"
+            );
+        } catch (DateValidationException e) {
+            return ResponseEntity.ok(VerificationModificationDatesDto.builder()
+                    .possible(false)
+                    .message("Dates invalides: " + e.getMessage())
+                    .build());
+        }
+        return ResponseEntity.ok(reservationService.verifAvantModifDateReservation(idReservation, nouvellesDates));
 
 
-
-
-
+    }
 
 }
