@@ -1,4 +1,4 @@
-package tn.weeding.agenceevenementielle.services;
+package tn.weeding.agenceevenementielle.services.Reservation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,8 +6,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
-import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
-import tn.weeding.agenceevenementielle.dto.DatePeriodeDto;
+import tn.weeding.agenceevenementielle.dto.modifDateReservation.DateConstraintesDto;
+import tn.weeding.agenceevenementielle.dto.modifDateReservation.DatePeriodeDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.*;
@@ -17,9 +17,9 @@ import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
 import tn.weeding.agenceevenementielle.repository.*;
 import  tn.weeding.agenceevenementielle.exceptions.ReservationException.StockIndisponibleException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -664,142 +664,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     }
 
     // ============ MODIFICATION ============
-    /**
-     * Modifier les dates d'une réservation existante
-     * ⚠️ RÈGLES MÉTIER :
-     * - Vérifier que la réservation n'est pas déjà livrée
-     * - Vérifier la disponibilité des produits pour les nouvelles dates
-     * - Mettre à jour toutes les lignes de réservation
-     * - Enregistrer l'historique
-     */
-    @Override
-    public ReservationResponseDto modifierDatesReservation(
-            Long idReservation, LocalDate nouvelleDateDebut, LocalDate nouvelleDateFin, String username) {
 
-        log.info("📅 Modification des dates pour la réservation ID: {} par {}", idReservation, username);
-
-        // 1️⃣ VALIDATION - Récupérer la réservation
-        Reservation reservation = reservationRepo.findById(idReservation)
-                .orElseThrow(() -> new ReservationException.ReservationNotFoundException(
-                        "Réservation avec ID " + idReservation + " introuvable"));
-
-        // Vérifier les permissions
-        Long currentUserId = authenticationFacade.getCurrentUserId();
-        boolean isOwner = reservation.getUtilisateur().getIdUtilisateur().equals(currentUserId);
-        boolean isAdminOrEmployee = authenticationFacade.getAuthentication().getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN") ||
-                        auth.getAuthority().equals("ROLE_EMPLOYE"));
-
-        if (!isOwner && !isAdminOrEmployee) {
-            throw new CustomException("Vous n'avez pas la permission de modifier cette réservation");
-        }
-
-
-        // 2. VALIDER LES NOUVELLES DATES
-        try {
-            dateValidator.validerPeriodeReservation(
-                    nouvelleDateDebut,
-                    nouvelleDateFin,
-                    "modification réservation " + reservation.getReferenceReservation()
-            );
-        } catch (DateValidationException e) {
-            log.error("❌ Dates invalides pour modification: {}", e.getMessage());
-            throw e;
-        }
-
-        // Vérifier que la réservation peut encore être modifiée
-        if (reservation.getStatutReservation() == StatutReservation.ANNULE) {
-            throw new ReservationException("Impossible de modifier une réservation annulée");
-        }
-
-        if (reservation.getStatutLivraisonRes() == StatutLivraison.LIVREE) {
-            throw new ReservationException("Impossible de modifier une réservation déjà livrée");
-        }
-
-        // 3️⃣ VÉRIFIER LA DISPONIBILITÉ POUR LES NOUVELLES DATES
-        log.info("🔍 Vérification de la disponibilité pour les nouvelles dates...");
-
-        for (LigneReservation ligne : reservation.getLigneReservations()) {
-            Produit produit = ligne.getProduit();
-
-            if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
-                // Vérifier disponibilité pour produits quantitatifs
-                int quantiteDisponible = verifierDisponibiliteQuantitative(
-                        produit.getIdProduit(),
-                        nouvelleDateDebut,
-                        nouvelleDateFin,
-                        idReservation  // Exclure cette réservation du calcul
-                );
-
-                if (quantiteDisponible < ligne.getQuantite()) {
-                    throw new ReservationException(
-                            String.format("Le produit '%s' n'est pas disponible en quantité suffisante " +
-                                            "pour les nouvelles dates. Disponible: %d, Demandé: %d",
-                                    produit.getNomProduit(), quantiteDisponible, ligne.getQuantite()));
-                }
-
-            } else if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
-                // Vérifier disponibilité pour produits avec référence
-                for (InstanceProduit instance : ligne.getInstancesReservees()) {
-                    boolean estDisponible = verifierDisponibiliteInstance(
-                            instance.getIdInstance(),
-                            nouvelleDateDebut,
-                            nouvelleDateFin,
-                            idReservation
-                    );
-
-                    if (!estDisponible) {
-                        throw new ReservationException(
-                                String.format("L'instance '%s' du produit '%s' n'est pas disponible " +
-                                                "pour les nouvelles dates",
-                                        instance.getNumeroSerie(), produit.getNomProduit()));
-                    }
-                }
-            }
-        }
-
-        // 4️⃣ SAUVEGARDER LES ANCIENNES DATES (pour historique)
-        LocalDate ancienneDateDebut = reservation.getDateDebut();
-        LocalDate ancienneDateFin = reservation.getDateFin();
-
-        // 5️⃣ METTRE À JOUR LES DATES DE LA RÉSERVATION
-        reservation.setDateDebut(nouvelleDateDebut);
-        reservation.setDateFin(nouvelleDateFin);
-
-        // Mettre à jour toutes les lignes de réservation
-        for (LigneReservation ligne : reservation.getLigneReservations()) {
-            ligne.setDateDebut(nouvelleDateDebut);
-            ligne.setDateFin(nouvelleDateFin);
-            ligneReservationRepo.save(ligne);
-        }
-
-        // 6️⃣ ENREGISTRER LA MODIFICATION
-        reservationRepo.save(reservation);
-
-        // 7️⃣ AJOUTER UN COMMENTAIRE D'HISTORIQUE
-        String commentaire = String.format(
-                "Dates modifiées par %s - Anciennes dates: %s au %s - Nouvelles dates: %s au %s",
-                username,
-                ancienneDateDebut,
-                ancienneDateFin,
-                nouvelleDateDebut,
-                nouvelleDateFin
-        );
-
-        reservation.setCommentaireAdmin(
-                (reservation.getCommentaireAdmin() != null ? reservation.getCommentaireAdmin() + "\n" : "")
-                        + commentaire
-        );
-
-        reservationRepo.save(reservation);
-
-        log.info("✅ Dates modifiées avec succès pour la réservation {}", reservation.getReferenceReservation());
-        log.info("   Anciennes dates: {} au {}", ancienneDateDebut, ancienneDateFin);
-        log.info("   Nouvelles dates: {} au {}", nouvelleDateDebut, nouvelleDateFin);
-
-        // 8️⃣ RETOURNER LA RÉSERVATION MISE À JOUR
-        return convertToResponseDto(reservation);
-    }
 
     /**
      * Méthode auxiliaire : Vérifier disponibilité quantitative en excluant une réservation

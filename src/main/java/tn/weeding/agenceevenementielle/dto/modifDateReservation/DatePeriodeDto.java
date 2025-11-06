@@ -1,4 +1,4 @@
-package tn.weeding.agenceevenementielle.dto;
+package tn.weeding.agenceevenementielle.dto.modifDateReservation;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

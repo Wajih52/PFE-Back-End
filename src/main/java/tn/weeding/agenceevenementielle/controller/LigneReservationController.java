@@ -15,7 +15,7 @@ import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationRequestDt
 import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationResponseDto;
 
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
-import tn.weeding.agenceevenementielle.services.LigneReservationServiceInterface;
+import tn.weeding.agenceevenementielle.services.Reservation.LigneReservationServiceInterface;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package tn.weeding.agenceevenementielle.dto;
+package tn.weeding.agenceevenementielle.dto.modifDateReservation;
 
 
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 /**
  * DTO pour la réponse de validation de dates
  */

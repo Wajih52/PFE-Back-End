@@ -1,4 +1,4 @@
-package tn.weeding.agenceevenementielle.services;
+package tn.weeding.agenceevenementielle.services.Reservation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +17,11 @@ import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
 import tn.weeding.agenceevenementielle.repository.LigneReservationRepository;
 import tn.weeding.agenceevenementielle.repository.MouvementStockRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
+import tn.weeding.agenceevenementielle.services.CodeGeneratorServiceProduit;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

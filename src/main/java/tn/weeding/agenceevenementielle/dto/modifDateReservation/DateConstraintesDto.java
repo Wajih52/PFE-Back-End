@@ -1,4 +1,4 @@
-package tn.weeding.agenceevenementielle.dto;
+package tn.weeding.agenceevenementielle.dto.modifDateReservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

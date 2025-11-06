@@ -16,7 +16,8 @@ import java.util.List;
  * Sprint 4 - Gestion des réservations (incluant devis)
  */
 @Repository
-public interface LigneReservationRepository extends JpaRepository<LigneReservation, Long> {
+public interface LigneReservationRepository extends JpaRepository<LigneReservation, Long>
+{
 
     // ============ RECHERCHES DE BASE ============
 
@@ -468,10 +469,40 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "WHERE inst.idInstance = :idInstance " +
             "AND lr.reservation.idReservation != :reservationExclue " +
             "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME" +
-            ", tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME) " +
+            ", tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS) " +
             "AND ((lr.dateDebut <= :dateFin) AND (lr.dateFin >= :dateDebut))")
     long countReservationsForInstanceInPeriodExcludingReservation(
             @Param("idInstance") Long idInstance,
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin,
+            @Param("reservationExclue") Long reservationExclue
+    );
+
+
+    /**
+     * Vérifier si TOUTES les instances d'une ligne sont disponibles
+     * sur une nouvelle période (méthode auxiliaire)
+     *
+     * @param idLigne ID de la ligne de réservation
+     * @param dateDebut Nouvelle date de début
+     * @param dateFin Nouvelle date de fin
+     * @param reservationExclue Réservation à exclure
+     * @return true si toutes les instances sont disponibles, false sinon
+     */
+    @Query("SELECT CASE WHEN COUNT(lr) = 0 THEN true ELSE false END " +
+            "FROM LigneReservation lr " +
+            "JOIN lr.instancesReservees inst " +
+            "WHERE inst.idInstance IN (" +
+            "   SELECT ir.idInstance FROM LigneReservation l " +
+            "   JOIN l.instancesReservees ir " +
+            "   WHERE l.idLigneReservation = :idLigne" +
+            ") " +
+            "AND lr.reservation.idReservation != :reservationExclue " +
+            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME," +
+            " tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS) " +
+            "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
+    Boolean areAllInstancesAvailableForModification(
+            @Param("idLigne") Long idLigne,
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin,
             @Param("reservationExclue") Long reservationExclue

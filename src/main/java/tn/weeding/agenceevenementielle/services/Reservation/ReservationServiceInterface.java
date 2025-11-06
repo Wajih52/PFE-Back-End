@@ -1,7 +1,7 @@
-package tn.weeding.agenceevenementielle.services;
+package tn.weeding.agenceevenementielle.services.Reservation;
 
-import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
-import tn.weeding.agenceevenementielle.dto.DatePeriodeDto;
+import tn.weeding.agenceevenementielle.dto.modifDateReservation.DateConstraintesDto;
+import tn.weeding.agenceevenementielle.dto.modifDateReservation.DatePeriodeDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
@@ -165,16 +165,7 @@ public interface ReservationServiceInterface {
      */
     void annulerReservationParClient(Long idReservation, String motif, String username);
 
-    /**
-     * Modifier les dates d'une réservation (si possible)
-     * Vérifie la disponibilité pour les nouvelles dates
-     */
-    ReservationResponseDto modifierDatesReservation(
-            Long idReservation,
-            LocalDate nouvelleDateDebut,
-            LocalDate nouvelleDateFin,
-            String username
-    );
+
 
     /**
      * 📅 Vérifier si des nouvelles dates sont disponibles pour une réservation

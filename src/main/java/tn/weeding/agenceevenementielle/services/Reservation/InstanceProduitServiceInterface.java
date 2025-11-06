@@ -1,14 +1,11 @@
-package tn.weeding.agenceevenementielle.services;
+package tn.weeding.agenceevenementielle.services.Reservation;
 
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
-import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Interface du service pour la gestion des instances de produits

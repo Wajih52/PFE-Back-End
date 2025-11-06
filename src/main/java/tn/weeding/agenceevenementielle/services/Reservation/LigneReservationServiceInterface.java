@@ -1,4 +1,4 @@
-package tn.weeding.agenceevenementielle.services;
+package tn.weeding.agenceevenementielle.services.Reservation;
 
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationRequestDto;

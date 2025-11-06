@@ -11,16 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
-import tn.weeding.agenceevenementielle.dto.DateConstraintesDto;
-import tn.weeding.agenceevenementielle.dto.DatePeriodeDto;
-import tn.weeding.agenceevenementielle.dto.DateValidationResponseDto;
+import tn.weeding.agenceevenementielle.dto.modifDateReservation.*;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
-import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.DateValidationException;
-import tn.weeding.agenceevenementielle.services.DateReservationValidator;
-import tn.weeding.agenceevenementielle.services.ReservationServiceInterface;
+import tn.weeding.agenceevenementielle.services.Reservation.DateReservationValidator;
+import tn.weeding.agenceevenementielle.services.Reservation.LigneReservationModificationDatesService;
+import tn.weeding.agenceevenementielle.services.Reservation.ReservationServiceInterface;
 
 import java.util.Date;
 import java.util.List;
@@ -49,6 +47,7 @@ public class ReservationController {
     private final ReservationServiceInterface reservationService;
     private final AuthenticationFacade authenticationFacade;
     private final DateReservationValidator dateReservationValidator;
+    private final LigneReservationModificationDatesService modificationDatesService;
 
     // ============================================
     // PARTIE 1: CRÉATION DE DEVIS (CLIENT)
@@ -275,51 +274,6 @@ public class ReservationController {
 
         List<ReservationResponseDto> reservations = reservationService.getReservationsByStatut(statut);
         return ResponseEntity.ok(reservations);
-    }
-
-
-    /**
-     * 📅 Modifier les dates d'une réservation
-     *
-     * Permet au client ou à l'admin de changer la période d'une réservation
-     *
-     * VALIDATIONS EFFECTUÉES:
-     * 1. Validation des nouvelles dates (cohérence, règles métier)
-     * 2. Vérification de disponibilité pour les nouvelles dates
-     * 3. Vérification que la réservation peut être modifiée (pas annulée, pas livrée)
-     *
-     * Accessible par:
-     * - Le client propriétaire de la réservation
-     * - L'admin/employé
-     */
-    @PutMapping("/{idReservation}/modifier-dates")
-    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
-    @Operation(summary = "Modifier les dates d'une réservation",
-            description = "Change la période d'une réservation existante. " +
-                    "Vérifie la disponibilité pour les nouvelles dates.")
-    public ResponseEntity<ReservationResponseDto> modifierDatesReservation(
-            @PathVariable Long idReservation,
-            @RequestBody @Valid ModifierDatesReservationDto modificationDto) {
-
-        log.info("📅 Demande de modification dates pour réservation ID: {}", idReservation);
-
-        String username = authenticationFacade.getAuthentication().getName();
-        // Vérifier que l'ID dans le path correspond à l'ID dans le body
-        if (!idReservation.equals(modificationDto.getIdReservation())) {
-            throw new CustomException("L'ID de la réservation ne correspond pas");
-        }
-        // Modifier les dates
-        ReservationResponseDto response = reservationService.modifierDatesReservation(
-                idReservation,
-                modificationDto.getNouvelleDateDebut(),
-                modificationDto.getNouvelleDateFin(),
-                username
-        );
-
-        log.info("✅ Dates modifiées avec succès pour réservation {}",
-                response.getReferenceReservation());
-
-        return ResponseEntity.ok(response);
     }
 
 
@@ -635,6 +589,178 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.verifAvantModifDateReservation(idReservation, nouvellesDates));
 
 
+    }
+
+    // ============================================
+    // FONCTIONNALITÉ 1 : MODIFIER UNE SEULE LIGNE
+    // ============================================
+
+    /**
+     * 🎯 Modifier les dates d'une seule ligne de réservation
+     *
+     * IMPORTANT : Seul l'admin, le manager ou le client propriétaire peuvent modifier
+     *
+     * @param idRes ID de la réservation
+     * @param idLigne ID de la ligne à modifier
+     * @param request Nouvelles dates
+     * @return Réservation mise à jour avec détails des modifications
+     */
+    @PutMapping("/{idRes}/lignes/{idLigne}/dates")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CLIENT')")
+    @Operation(
+            summary = "Modifier UNE ligne de réservation",
+            description = """
+                    Permet de modifier les dates d'une seule ligne (un produit) sans toucher aux autres.
+                    
+                    **Cas d'usage :**
+                    - Client veut garder les chaises 2 jours de plus
+                    - Ajuster juste l'éclairage car montage plus tôt
+                    
+                    **Comportement :**
+                    - ✅ Vérification automatique de disponibilité
+                    - ✅ Recalcul des dates de la réservation (min/max des lignes)
+                    - ✅ Validation des instances pour produits avec référence
+                    - ✅ Ajout dans l'historique (commentaireAdmin)
+                    """
+    )
+    public ResponseEntity<ModificationDatesResponseDto> modifierUneLigne(
+            @PathVariable Long idRes,
+            @PathVariable Long idLigne,
+            @Valid @RequestBody ModifierUneLigneRequestDto request) {
+
+        log.info("🔧 API - Modification d'une ligne - Réservation: {}, Ligne: {}", idRes, idLigne);
+
+        String username = authenticationFacade.getAuthentication().getName();
+
+        ModificationDatesResponseDto response = modificationDatesService.modifierUneLigne(
+                idRes, idLigne, request, username
+        );
+
+        log.info("✅ Ligne {} modifiée avec succès", idLigne);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ============================================
+    // FONCTIONNALITÉ 2 : DÉCALER TOUTES LES LIGNES
+    // ============================================
+
+    /**
+     * 🎯 Décaler toutes les lignes d'une réservation
+     *
+     * IMPORTANT : Seul l'admin ou le manager peuvent effectuer un décalage global
+     *
+     * @param idRes ID de la réservation
+     * @param request Nombre de jours de décalage (+/-) et motif
+     * @return Réservation mise à jour avec détails des modifications
+     */
+    @PutMapping("/{idRes}/decaler")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(
+            summary = "Décaler TOUTES les lignes d'une réservation",
+            description = """
+                    Permet de décaler toutes les lignes d'un même nombre de jours.
+                    
+                    **Cas d'usage :**
+                    - Événement reporté d'une semaine (COVID, météo, etc.)
+                    - Client veut avancer/reculer tout l'événement
+                    
+                    **Paramètres :**
+                    - `nombreJours` : +7 pour avancer de 7 jours, -7 pour reculer
+                    - `motif` : Raison du décalage (obligatoire)
+                    
+                    **Comportement :**
+                    - ✅ Décalage de TOUTES les lignes
+                    - ✅ Vérification automatique de disponibilité pour chaque ligne
+                    - ✅ Recalcul des dates de la réservation
+                    - ✅ Ajout dans l'historique avec le motif
+                    """
+    )
+    public ResponseEntity<ModificationDatesResponseDto> decalerToutesLesLignes(
+            @PathVariable Long idRes,
+            @Valid @RequestBody DecalerToutesLignesRequestDto request) {
+
+        log.info("🔧 API - Décalage de toutes les lignes - Réservation: {}, Décalage: {} jours",
+                idRes, request.getNombreJours());
+
+        String username = authenticationFacade.getAuthentication().getName();
+
+        ModificationDatesResponseDto response = modificationDatesService.decalerToutesLesLignes(
+                idRes, request, username
+        );
+
+        log.info("✅ Toutes les lignes décalées de {} jours avec succès", request.getNombreJours());
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ============================================
+    // FONCTIONNALITÉ 3 : MODIFIER PLUSIEURS LIGNES SPÉCIFIQUES
+    // ============================================
+
+    /**
+     * 🎯 Modifier plusieurs lignes spécifiques en une seule requête
+     *
+     * IMPORTANT : Seul l'admin ou le manager peuvent modifier plusieurs lignes à la fois
+     *
+     * @param idRes ID de la réservation
+     * @param request Liste des modifications à effectuer
+     * @return Réservation mise à jour avec détails des modifications
+     */
+    @PutMapping("/{idRes}/lignes-multiples")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(
+            summary = "Modifier plusieurs lignes spécifiques",
+            description = """
+                    Permet de modifier les dates de plusieurs lignes différentes en une seule requête.
+                    
+                    **Cas d'usage :**
+                    - Réorganisation complète de la logistique
+                    - Ajustement fin de plusieurs produits
+                    - Modifier certaines lignes sans toucher aux autres
+                    
+                    **Format de la requête :**
+                    ```json
+                    {
+                      "modifications": [
+                        {
+                          "idLigne": 1,
+                          "nouvelleDateDebut": "2025-11-10",
+                          "nouvelleDateFin": "2025-11-11"
+                        },
+                        {
+                          "idLigne": 2,
+                          "nouvelleDateDebut": "2025-11-12",
+                          "nouvelleDateFin": "2025-11-13"
+                        }
+                      ],
+                      "motif": "Réorganisation logistique"
+                    }
+                    ```
+                    
+                    **Comportement :**
+                    - ✅ Mise à jour batch (toutes les lignes en une transaction)
+                    - ✅ Vérification de disponibilité pour chaque ligne
+                    - ✅ Recalcul des dates de la réservation
+                    - ✅ Ajout dans l'historique
+                    """
+    )
+    public ResponseEntity<ModificationDatesResponseDto> modifierPlusieurLignes(
+            @PathVariable Long idRes,
+            @Valid @RequestBody ModifierPlusieurLignesRequestDto request) {
+
+        log.info("🔧 API - Modification de plusieurs lignes - Réservation: {}, Nombre: {}",
+                idRes, request.getModifications().size());
+
+        String username = authenticationFacade.getAuthentication().getName();
+
+        ModificationDatesResponseDto response = modificationDatesService.modifierPlusieurLignes(
+                idRes, request, username
+        );
+
+        log.info("✅ {} lignes modifiées avec succès", request.getModifications().size());
+
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -14,10 +14,9 @@ import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
-import tn.weeding.agenceevenementielle.services.InstanceProduitServiceInterface;
+import tn.weeding.agenceevenementielle.services.Reservation.InstanceProduitServiceInterface;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 /**
