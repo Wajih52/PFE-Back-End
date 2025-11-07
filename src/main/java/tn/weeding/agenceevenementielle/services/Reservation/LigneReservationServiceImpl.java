@@ -10,6 +10,7 @@ import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationResponseD
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
+import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
@@ -48,6 +49,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     private final InstanceProduitRepository instanceProduitRepo;
     private final InstanceProduitServiceInterface instanceProduitService;
     private final InstanceProduitServiceImpl instanceProduitServiceImpl;
+    private final MontantReservationCalculService montantCalculService ;
 
     // ============================================
     // CRÉATION ET AJOUT DE LIGNES
@@ -223,10 +225,26 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                 .orElseThrow(() -> new ReservationException.ReservationNotFoundException(
                         "Ligne de réservation avec ID " + id + " introuvable"));
 
+
+        Reservation reservation = ligne.getReservation();
         Produit produit = ligne.getProduit();
+
+
         Integer ancienneQuantite = ligne.getQuantite();
         Integer nouvelleQuantite = dto.getQuantite();
 
+
+
+        // 🎯 VÉRIFICATION CRITIQUE : La réservation a-t-elle déjà commencé ?
+        boolean reservationCommencee = ligne.getDateDebut().isBefore(LocalDate.now())
+                || ligne.getDateDebut().isEqual(LocalDate.now());
+
+        if (reservation.getStatutReservation() == StatutReservation.EN_COURS) {
+            throw new CustomException(
+                    "Impossible de supprimer une ligne d'une réservation en cours. " +
+                            "Veuillez d'abord annuler la réservation."
+            );
+        }
         // Si la quantité change, gérer le stock
         if (!ancienneQuantite.equals(nouvelleQuantite)) {
             log.info("🔄 Changement de quantité: {} -> {}", ancienneQuantite, nouvelleQuantite);
@@ -241,10 +259,15 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                 if (difference > 0) {
                     // Augmentation: vérifier la disponibilité
                     verifierDisponibilite(produit, difference, dto.getDateDebut(), dto.getDateFin());
-                    produit.setQuantiteDisponible(produit.getQuantiteDisponible() - difference);
+                    if(reservationCommencee) {
+                        produit.setQuantiteDisponible(produit.getQuantiteDisponible() - difference);
+                    }
                 } else {
-                    // Diminution: libérer le stock
-                    produit.setQuantiteDisponible(produit.getQuantiteDisponible() + Math.abs(difference));
+
+                    if(reservationCommencee) {
+                        // Diminution: libérer le stock
+                        produit.setQuantiteDisponible(produit.getQuantiteDisponible() + Math.abs(difference));
+                    }
                 }
                 produitRepo.save(produit);
             }
@@ -344,9 +367,89 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         LigneReservation ligne = ligneReservationRepo.findById(id)
                 .orElseThrow(() -> new ReservationException.ReservationNotFoundException(
                         "Ligne de réservation avec ID " + id + " introuvable"));
+        Reservation reservation = ligne.getReservation();
+        Produit produit = ligne.getProduit();
+        LocalDate dateActuelle = LocalDate.now();
+
+        // 🎯 VÉRIFICATION CRITIQUE : La réservation a-t-elle déjà commencé ?
+        boolean reservationCommencee = ligne.getDateDebut().isBefore(dateActuelle)
+                || ligne.getDateDebut().isEqual(dateActuelle);
+
+        if (reservation.getStatutReservation() == StatutReservation.EN_COURS) {
+            throw new CustomException(
+                    "Impossible de supprimer une ligne d'une réservation en cours. " +
+                            "Veuillez d'abord annuler la réservation."
+            );
+        }
+
+        if (reservationCommencee) {
+            log.warn("⚠️ Suppression d'une ligne ACTIVE (dateDebut: {}, aujourd'hui: {})",
+                    ligne.getDateDebut(), dateActuelle);
+
+            // 1️⃣ Libérer le stock/instances CAR ils sont déjà décrémentés
+            if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
+                // Libérer le stock
+                produit.setQuantiteDisponible(produit.getQuantiteDisponible() + ligne.getQuantite());
+                produitRepo.save(produit);
+                log.info("📦 Stock libéré: +{} pour {} (nouveau stock: {})",
+                        ligne.getQuantite(),
+                        produit.getNomProduit(),
+                        produit.getQuantiteDisponible());
+            } else {
+                // Libérer les instances
+                if (ligne.getInstancesReservees() != null && !ligne.getInstancesReservees().isEmpty()) {
+                    for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                        instance.setStatut(StatutInstance.DISPONIBLE);
+                        instanceProduitRepo.save(instance);
+                    }
+                    log.info("🔓 {} instances libérées", ligne.getInstancesReservees().size());
+                }
+            }
+        } else {
+            log.info("ℹ️ Suppression d'une ligne FUTURE (dateDebut: {}, aujourd'hui: {})",
+                    ligne.getDateDebut(), dateActuelle);
+            log.info("✅ Stock/instances PAS touchés car la réservation n'a pas encore commencé");
+            // Pas de libération car le stock n'a jamais été décrémenté
+        }
+
+
+
         // Supprimer la ligne
         ligneReservationRepo.delete(ligne);
         log.info("✅ Ligne supprimée avec succès");
+
+        // 3️⃣ Recalculer les dates de la réservation
+        List<LigneReservation> lignesRestantes = ligneReservationRepo
+                .findByReservation_IdReservation(reservation.getIdReservation());
+
+        if (!lignesRestantes.isEmpty()) {
+            LocalDate minDebut = lignesRestantes.stream()
+                    .map(LigneReservation::getDateDebut)
+                    .min(Comparator.naturalOrder())
+                    .orElse(reservation.getDateDebut());
+
+            LocalDate maxFin = lignesRestantes.stream()
+                    .map(LigneReservation::getDateFin)
+                    .max(Comparator.naturalOrder())
+                    .orElse(reservation.getDateFin());
+
+            reservation.setDateDebut(minDebut);
+            reservation.setDateFin(maxFin);
+            log.info("📅 Dates réservation recalculées: {} → {}", minDebut, maxFin);
+        } else {
+            log.warn("⚠️ Plus aucune ligne dans la réservation {}",
+                    reservation.getReferenceReservation());
+        }
+
+        // 4️⃣ Recalculer le montant total
+        double ancienMontant = reservation.getMontantTotal() != null ? reservation.getMontantTotal() : 0.0;
+        double nouveauMontant = montantCalculService.recalculerEtMettreAJourMontantTotal(reservation);
+        reservationRepo.save(reservation);
+
+        log.info("💰 Montant recalculé: {}DT → {}DT (différence: {}DT)",
+                ancienMontant, nouveauMontant, nouveauMontant - ancienMontant);
+
+        log.info("✅ Ligne supprimée avec succès (Stock libéré: {})", reservationCommencee);
     }
 
     // ============================================
