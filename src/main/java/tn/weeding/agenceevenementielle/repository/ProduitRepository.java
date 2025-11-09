@@ -139,8 +139,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
      * @return Liste des produits disponibles
      */
     @Query("SELECT p FROM Produit p " +
-            "WHERE p.typeProduit = tn.weeding.agenceevenementielle.entities.enums.TypeProduit.EN_QUANTITE " +
-            "AND (p.quantiteDisponible - " +
+            "WHERE(p.quantiteDisponible - " +
             "     COALESCE((SELECT SUM(lr2.quantite) FROM LigneReservation lr2 " +
             "               WHERE lr2.produit.idProduit = p.idProduit " +
             "               AND lr2.dateDebut <= :dateFin " +

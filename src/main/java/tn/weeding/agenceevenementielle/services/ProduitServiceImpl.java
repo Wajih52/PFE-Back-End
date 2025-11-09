@@ -397,21 +397,26 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new CustomException(
                         "Produit avec ID " + idProduit + " introuvable"));
+        Integer quantiteDispo = null ;
 
         // Vérifier que c'est un produit de quantité
-        if (produit.getTypeProduit() != TypeProduit.EN_QUANTITE) {
-            throw new CustomException(
-                    "Cette méthode est réservée aux produits de type EN_QUANTITE. " +
-                            "Pour les produits avec référence, utilisez InstanceProduitService.");
+        if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
+
+            quantiteDispo = instanceProduitRepository.countInstancesDisponiblesSurPeriode(
+                    idProduit,
+                    dateDebut,
+                    dateFin
+            );
+
+        }else {
+
+            // Vérification quantité disponible sur une période donnée
+             quantiteDispo = produitRepository.calculerQuantiteDisponibleSurPeriode(
+                    idProduit,
+                    dateDebut,
+                    dateFin
+            );
         }
-
-        // Vérification quantité disponible sur une période donnée
-        Integer quantiteDispo = produitRepository.calculerQuantiteDisponibleSurPeriode(
-                idProduit,
-                dateDebut,
-                dateFin
-        );
-
         // Gérer le cas où il n'y a aucune réservation
         if (quantiteDispo == null) {
             quantiteDispo = produit.getQuantiteDisponible();
@@ -441,8 +446,14 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         // Vérifier que c'est un produit de quantité
         if (produit.getTypeProduit() != TypeProduit.EN_QUANTITE) {
-            throw new CustomException(
-                    "Cette méthode est réservée aux produits de type EN_QUANTITE");
+
+           int qteInstanceDispo = instanceProduitRepository.countInstancesDisponiblesSurPeriode(
+                    idProduit,
+                    dateDebut,
+                    dateFin
+            );
+
+            return qteInstanceDispo >= quantiteDemandee;
         }
 
         // vérifie la disponibilité du produit dans une période donnée

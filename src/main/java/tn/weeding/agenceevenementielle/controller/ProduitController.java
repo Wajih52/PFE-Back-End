@@ -250,8 +250,8 @@ public class ProduitController {
                     id, dateDebut, dateFin);
             response.put("quantiteDisponible", quantiteDispo);
             response.put("message", String.format(
-                    "Stock insuffisant : %d unités disponibles (demandé: %d)",
-                    quantiteDispo, quantite));
+                    "Stock insuffisant : %d unités disponibles",
+                    quantiteDispo));
         } else {
             response.put("message", "Produit disponible pour la période demandée");
         }

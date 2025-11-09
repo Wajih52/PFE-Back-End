@@ -1,64 +1,18 @@
-2025-11-07 09:06:08 [HikariPool-21:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-21 - Thread starvation or clock leap detected (housekeeper delta=10h44m56s927ms569µs400ns).
-2025-11-07 09:06:44 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /swagger-ui/index.html
-2025-11-07 09:06:44 [http-nio-8080-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:44 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /swagger-ui/index.html
-2025-11-07 09:06:45 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /swagger-ui/swagger-ui.css
-2025-11-07 09:06:45 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:45 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /swagger-ui/swagger-ui.css
-2025-11-07 09:06:45 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /swagger-ui/index.css
-2025-11-07 09:06:45 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:45 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /swagger-ui/index.css
-2025-11-07 09:06:45 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /swagger-ui/swagger-ui-bundle.js
-2025-11-07 09:06:45 [http-nio-8080-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:45 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /swagger-ui/swagger-ui-bundle.js
-2025-11-07 09:06:45 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /swagger-ui/swagger-initializer.js
-2025-11-07 09:06:45 [http-nio-8080-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:45 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /swagger-ui/swagger-initializer.js
-2025-11-07 09:06:45 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /swagger-ui/swagger-ui-standalone-preset.js
-2025-11-07 09:06:45 [http-nio-8080-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:45 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /swagger-ui/swagger-ui-standalone-preset.js
-2025-11-07 09:06:46 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /v3/api-docs/swagger-config
-2025-11-07 09:06:46 [http-nio-8080-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:46 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /v3/api-docs/swagger-config
-2025-11-07 09:06:46 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /swagger-ui/favicon-32x32.png
-2025-11-07 09:06:46 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:46 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /swagger-ui/favicon-32x32.png
-2025-11-07 09:06:47 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /v3/api-docs
-2025-11-07 09:06:47 [http-nio-8080-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:06:47 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /v3/api-docs
-2025-11-07 09:07:09 [http-nio-8080-exec-3] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 21771 ms
-2025-11-07 09:07:29 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /auth/login
-2025-11-07 09:07:29 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing POST /auth/login
-2025-11-07 09:07:29 [http-nio-8080-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-07 09:07:29 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured POST /auth/login
-2025-11-07 09:07:30 [http-nio-8080-exec-8] INFO  t.w.a.c.a.AuthController - 🔐 Tentative de connexion pour l'utilisateur: client@hive.tn
-2025-11-07 09:07:30 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: client@hive.tn
-2025-11-07 09:07:30 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
-2025-11-07 09:07:30 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
-2025-11-07 09:07:30 [http-nio-8080-exec-8] DEBUG o.s.s.a.d.DaoAuthenticationProvider - Authenticated user
-2025-11-07 09:07:30 [http-nio-8080-exec-8] INFO  t.w.a.c.a.AuthController - ✅ Connexion réussie pour l'utilisateur: ClientTest
-2025-11-07 09:07:31 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /utilisateurs/me
-2025-11-07 09:07:31 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/me
-2025-11-07 09:07:31 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
-2025-11-07 09:07:31 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
-2025-11-07 09:07:31 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
-2025-11-07 09:07:31 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
-2025-11-07 09:07:31 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/me
-2025-11-07 09:07:31 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
-2025-11-07 09:07:31 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
-2025-11-07 09:07:31 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
-2025-11-07 09:07:31 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
-2025-11-07 09:07:31 [http-nio-8080-exec-10] INFO  t.w.a.c.UtilisateurController - 📋 Récupération des infos pour l'utilisateur : ClientTest
-2025-11-07 09:07:31 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /utilisateurs/3
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/3
-2025-11-07 09:07:31 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
-2025-11-07 09:07:31 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/3
-2025-11-07 09:07:31 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
-2025-11-07 09:07:31 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficher(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
-2025-11-07 09:07:31 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficher(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-09 10:38:55 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13h19m25s950ms567µs400ns).
+2025-11-09 10:39:22 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
+2025-11-09 10:39:22 [http-nio-8080-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-09 10:39:22 [http-nio-8080-exec-10] ERROR t.w.a.config.AuthEntryPointJwt - Réponse non autorisée: Full authentication is required to access this resource
+2025-11-09 10:39:33 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
+2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
+2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
+2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-09 10:39:35 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-09 10:39:35 [http-nio-8080-exec-4] INFO  t.w.a.controller.ProduitController - 📋 Catalogue disponible du 2025-11-10 au 2025-11-11
+2025-11-09 10:39:36 [http-nio-8080-exec-4] INFO  t.w.a.services.ProduitServiceImpl - 📋 Récupération catalogue disponible du 2025-11-10 au 2025-11-11
+2025-11-09 10:39:36 [http-nio-8080-exec-4] INFO  t.w.a.services.ProduitServiceImpl - ✅ 2 produits disponibles trouvés

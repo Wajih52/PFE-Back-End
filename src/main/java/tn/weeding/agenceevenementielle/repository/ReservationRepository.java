@@ -84,8 +84,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      */
     @Query("SELECT r FROM Reservation r WHERE r.dateDebut >= :dateDebut AND r.dateFin <= :dateFin")
     List<Reservation> findReservationsBetweenDates(
-            @Param("dateDebut") Date dateDebut,
-            @Param("dateFin") Date dateFin
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
     );
 
     /**

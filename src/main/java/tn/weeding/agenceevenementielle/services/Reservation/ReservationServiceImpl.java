@@ -632,7 +632,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     }
 
     @Override
-    public List<ReservationResponseDto> getReservationsByPeriode(Date dateDebut, Date dateFin) {
+    public List<ReservationResponseDto> getReservationsByPeriode(LocalDate dateDebut, LocalDate dateFin) {
         return reservationRepo.findReservationsBetweenDates(dateDebut, dateFin)
                 .stream()
                 .map(this::convertToResponseDto)

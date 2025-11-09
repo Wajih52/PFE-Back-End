@@ -140,7 +140,7 @@ public interface ReservationServiceInterface {
     /**
      * Récupérer les réservations dans une période
      */
-    List<ReservationResponseDto> getReservationsByPeriode(Date dateDebut, Date dateFin);
+    List<ReservationResponseDto> getReservationsByPeriode(LocalDate dateDebut, LocalDate dateFin);
 
     /**
      * Récupérer les réservations confirmées à venir

@@ -20,6 +20,7 @@ import tn.weeding.agenceevenementielle.services.Reservation.DateReservationValid
 import tn.weeding.agenceevenementielle.services.Reservation.LigneReservationModificationDatesService;
 import tn.weeding.agenceevenementielle.services.Reservation.ReservationServiceInterface;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -303,8 +304,8 @@ public class ReservationController {
     @Operation(summary = "Réservations sur une période (ADMIN)",
             description = "Récupérer les réservations entre deux dates")
     public ResponseEntity<List<ReservationResponseDto>> getReservationsByPeriode(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateDebut,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFin) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateDebut,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateFin) {
 
         List<ReservationResponseDto> reservations =
                 reservationService.getReservationsByPeriode(dateDebut, dateFin);
