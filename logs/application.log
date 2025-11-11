@@ -1,18 +1,1 @@
-2025-11-09 10:38:55 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13h19m25s950ms567µs400ns).
-2025-11-09 10:39:22 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
-2025-11-09 10:39:22 [http-nio-8080-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
-2025-11-09 10:39:22 [http-nio-8080-exec-10] ERROR t.w.a.config.AuthEntryPointJwt - Réponse non autorisée: Full authentication is required to access this resource
-2025-11-09 10:39:33 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
-2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
-2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
-2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
-2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
-2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
-2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/catalogue-disponible?dateDebut=2025-11-10&dateFin=2025-11-11
-2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
-2025-11-09 10:39:34 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
-2025-11-09 10:39:34 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
-2025-11-09 10:39:35 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
-2025-11-09 10:39:35 [http-nio-8080-exec-4] INFO  t.w.a.controller.ProduitController - 📋 Catalogue disponible du 2025-11-10 au 2025-11-11
-2025-11-09 10:39:36 [http-nio-8080-exec-4] INFO  t.w.a.services.ProduitServiceImpl - 📋 Récupération catalogue disponible du 2025-11-10 au 2025-11-11
-2025-11-09 10:39:36 [http-nio-8080-exec-4] INFO  t.w.a.services.ProduitServiceImpl - ✅ 2 produits disponibles trouvés
+2025-11-11 07:53:26 [HikariPool-3:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=9h48m59s942ms603µs300ns).

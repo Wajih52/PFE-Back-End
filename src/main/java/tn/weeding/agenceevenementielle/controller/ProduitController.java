@@ -244,11 +244,12 @@ public class ProduitController {
         response.put("dateDebut", dateDebut);
         response.put("dateFin", dateFin);
         response.put("disponible", disponible);
+        Integer quantiteDispo = produitService.calculerQuantiteDisponibleSurPeriode(
+                id, dateDebut, dateFin);
+        response.put("quantiteDisponible", quantiteDispo);
 
         if (!disponible) {
-            Integer quantiteDispo = produitService.calculerQuantiteDisponibleSurPeriode(
-                    id, dateDebut, dateFin);
-            response.put("quantiteDisponible", quantiteDispo);
+
             response.put("message", String.format(
                     "Stock insuffisant : %d unités disponibles",
                     quantiteDispo));
