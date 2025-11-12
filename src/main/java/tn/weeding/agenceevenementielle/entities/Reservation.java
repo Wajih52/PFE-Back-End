@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.entities;
 
 import java.io.Serializable;
+
 import jakarta.persistence.*;
 import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.ModePaiement;
@@ -35,7 +36,11 @@ public class Reservation implements Serializable {
     @Enumerated(EnumType.STRING)
     StatutReservation statutReservation;
 
+    Double montantOriginal;
+    Double remisePourcentage;
+    Double remiseMontant;
     Double montantTotal;
+
     Double montantPaye;
 
     ModePaiement modePaiementRes;
@@ -49,32 +54,33 @@ public class Reservation implements Serializable {
     @Column(length = 2000)
     String commentaireClient;
 
-    boolean validationAutomatique=false;
+    boolean validationAutomatique = false;
 
     private LocalDateTime dateExpirationDevis;
 
-    private Boolean stockReserve = false ;
+    private Boolean stockReserve = false;
 
     //Reservation 0..* ----------- 1 Utilisateur
     @ManyToOne
     Utilisateur utilisateur;
 
     //Reservation 1 ------- 1..* Paiement
-    @OneToMany (mappedBy = "reservation")
+    @OneToMany(mappedBy = "reservation")
     Set<Paiement> paiements;
 
-     //Reservation 1----------- 1..* LigneReservation
-    @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL,orphanRemoval = true)
+    //Reservation 1----------- 1..* LigneReservation
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<LigneReservation> ligneReservations;
 
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         dateCreation = LocalDateTime.now();
         dateModification = LocalDateTime.now();
     }
+
     @PreUpdate
-    public void preUpdate(){
+    public void preUpdate() {
         dateModification = LocalDateTime.now();
     }
 

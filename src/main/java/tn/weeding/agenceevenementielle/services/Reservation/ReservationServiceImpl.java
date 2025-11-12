@@ -179,8 +179,11 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         reservation.setLigneReservations(lignes);
         reservation.setMontantTotal(montantTotal);
+        reservation.setMontantOriginal(montantTotal);
+        reservation.setRemisePourcentage(0.0);
+        reservation.setRemiseMontant(0.0);
         reservation.setStatutReservation(StatutReservation.EN_ATTENTE);
-
+        reservation.setCommentaireClient(devisRequest.getObservationsClient());
 
 
 
@@ -384,7 +387,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         if (reservation.getStatutReservation() != StatutReservation.EN_ATTENTE) {
             throw new CustomException("Seuls les devis en attente peuvent être modifiés");
         }
-        double montantOriginal1 = reservation.getMontantTotal();
+
         // 1. Modifier les lignes individuelles (prix unitaire, quantité)
         if (modificationDto.getLignesModifiees() != null) {
             for (LigneModificationDto ligneModif : modificationDto.getLignesModifiees()) {
@@ -421,11 +424,13 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             double remise = montantOriginal2 * (modificationDto.getRemisePourcentage() / 100.0);
             montantFinal -= remise;
             log.info("💸 Remise de {}%: -{} TND", modificationDto.getRemisePourcentage(), remise);
+            reservation.setRemisePourcentage(modificationDto.getRemisePourcentage());
         }
 
         if (modificationDto.getRemiseMontant() != null && modificationDto.getRemiseMontant() > 0) {
             montantFinal -= modificationDto.getRemiseMontant();
             log.info("💸 Remise fixe: -{} TND", modificationDto.getRemiseMontant());
+            reservation.setRemiseMontant(modificationDto.getRemiseMontant());
         }
 
         // S'assurer que le montant ne soit pas négatif
@@ -433,22 +438,22 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             montantFinal = 0.0;
         }
 
+
         reservation.setMontantTotal(montantFinal);
+
+
+
         reservation.setCommentaireAdmin(modificationDto.getCommentaireAdmin());
         reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(2));
-        reservation.setValidationAutomatique(true);
+        reservation.setValidationAutomatique(false);
 
 
         reservationRepo.save(reservation);
 
         log.info("✅ Devis modifié - Montant original: {} TND, Montant final: {} TND",
-                montantOriginal1, montantFinal);
+                reservation.getMontantOriginal(), montantFinal);
 
-
-        return buildToResponseDto(reservation,montantOriginal1,modificationDto.getRemiseMontant(),
-                modificationDto.getRemisePourcentage());
-
-
+        return convertToResponseDto(reservation);
     }
 
     // ============ VALIDATION DU DEVIS PAR LE CLIENT ============
@@ -463,9 +468,9 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         Reservation reservation = reservationRepo.findById(validationDto.getIdReservation())
                 .orElseThrow(() -> new CustomException("Réservation introuvable"));
 
-        if(!reservation.isValidationAutomatique()){
-            throw new CustomException("Veuillez patienter la validation Administration");
-        }
+//        if(!reservation.isValidationAutomatique()){
+//            throw new CustomException("Veuillez patienter la validation Administration");
+//        }
 
         // Client refuse le devis
         if (!validationDto.getAccepter()) {
@@ -556,8 +561,40 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public void annulerDevisParAdmin(Long idReservation, String motif, String username) {
-        // Même logique que l'annulation par le client
-        annulerReservationParClient(idReservation, motif, username);
+        // Même logique que l'annulation par le client (différence commentaire)
+        log.info("❌ Annulation de la réservation ID: {} par l'admin {} - Motif: {}",
+                idReservation, username, motif);
+
+        Reservation reservation = reservationRepo.findById(idReservation)
+                .orElseThrow(() -> new CustomException("Réservation introuvable"));
+
+        // Vérifier que la réservation peut être annulée
+        if (reservation.getStatutReservation() == StatutReservation.ANNULE) {
+            throw new CustomException("Cette réservation est déjà annulée");
+        }
+
+        if (reservation.getStatutLivraisonRes() == StatutLivraison.LIVREE) {
+            throw new CustomException("Impossible d'annuler une réservation déjà livrée");
+        }
+
+
+        // Libérer les instances si c'était confirmé
+        if (reservation.getStatutReservation() == StatutReservation.CONFIRME) {
+            log.info("🔓 Libération du stock pour réservation CONFIRMÉE : Par {}",username);
+            Reservation reservationlibere = libererStockReservation(reservation);
+            reservationlibere.setStatutReservation(StatutReservation.ANNULE);
+            reservationlibere.setCommentaireAdmin(motif);
+            reservationlibere.setStockReserve(false);
+            reservationRepo.save(reservationlibere);
+            log.info("✅ Réservation annulée avec libération du stock:  Par {}",username);
+        }else if (reservation.getStatutReservation() == StatutReservation.EN_ATTENTE) {
+            // Simple annulation, pas de stock à libérer
+            log.info("✅ Annulation devis EN_ATTENTE (pas de stock réservé) :  Par {}",username);
+            reservation.setStatutReservation(StatutReservation.ANNULE);
+            reservation.setCommentaireAdmin(motif);
+            reservationRepo.save(reservation);
+            log.info("✅ Devis annulé (aucune libération de stock nécessaire) :  Par {}",username);
+        }
     }
 
     // ============ CONSULTATION ============
@@ -1214,7 +1251,10 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .dateFin(reservation.getDateFin())
                 .statutReservation(reservation.getStatutReservation())
                 .statutLivraisonRes(reservation.getStatutLivraisonRes())
+                .montantOriginal(reservation.getMontantOriginal())
                 .montantTotal(reservation.getMontantTotal())
+                .remiseMontant(reservation.getRemiseMontant())
+                .remisePourcentage(reservation.getRemisePourcentage())
                 .montantPaye(reservation.getMontantPaye())
                 .montantRestant(montantRestant)
                 .modePaiementRes(reservation.getModePaiementRes())
