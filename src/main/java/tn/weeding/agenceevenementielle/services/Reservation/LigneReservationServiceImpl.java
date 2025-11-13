@@ -73,6 +73,10 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                 .orElseThrow(() -> new CustomException(
                         "Produit avec ID " + dto.getIdProduit() + " introuvable"));
 
+        if(reservation.getStatutReservation().equals(StatutReservation.EN_COURS)){
+            throw new CustomException("Reservation Déjà en cours de Préparation , veuillez contacter l'administration");
+        }
+
         // Vérifier la disponibilité
         verifierDisponibilite(produit, dto.getQuantite(), dto.getDateDebut(), dto.getDateFin());
 
@@ -85,7 +89,12 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         ligne.setDateDebut(dto.getDateDebut());
         ligne.setDateFin(dto.getDateFin());
         ligne.setObservations(dto.getObservations());
-        ligne.setStatutLivraisonLigne(StatutLivraison.EN_ATTENTE);
+
+        if(dto.getDateDebut().isEqual(LocalDate.now())) {
+            ligne.setStatutLivraisonLigne(StatutLivraison.EN_ATTENTE);
+        }else{
+            ligne.setStatutLivraisonLigne(StatutLivraison.NOT_TODAY);
+        }
 
         // Sauvegarder la ligne
         ligne = ligneReservationRepo.save(ligne);
@@ -95,7 +104,9 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
             // Affecter automatiquement les instances disponibles
             affecterInstancesAutomatiquement(ligne, produit, dto.getQuantite(), username);
-        } else {
+
+            // decrement le stock que lorsque la réservation est aujourd'hui
+        } else if(reservation.getStatutReservation().equals(StatutReservation.EN_ATTENTE)){
             // Décrémenter le stock pour les produits quantitatifs
             produit.setQuantiteDisponible(produit.getQuantiteDisponible() - dto.getQuantite());
             produitRepo.save(produit);
@@ -235,14 +246,14 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
 
 
-        // 🎯 VÉRIFICATION CRITIQUE : La réservation a-t-elle déjà commencé ?
+        // 🎯 La réservation a-t-elle déjà commencé ?
         boolean reservationCommencee = ligne.getDateDebut().isBefore(LocalDate.now())
                 || ligne.getDateDebut().isEqual(LocalDate.now());
 
         if (reservation.getStatutReservation() == StatutReservation.EN_COURS) {
             throw new CustomException(
-                    "Impossible de supprimer une ligne d'une réservation en cours. " +
-                            "Veuillez d'abord annuler la réservation."
+                    "Impossible de modifier une ligne d'une réservation en cours. " +
+                            "Veuillez contacter l'administration."
             );
         }
         // Si la quantité change, gérer le stock
@@ -281,7 +292,13 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
         ligne = ligneReservationRepo.save(ligne);
         log.info("✅ Ligne modifiée avec succès");
+        //  Recalculer le montant total
+        double ancienMontant = reservation.getMontantTotal() != null ? reservation.getMontantTotal() : 0.0;
+        double nouveauMontant = montantCalculService.recalculerEtMettreAJourMontantTotal(reservation);
+        reservationRepo.save(reservation);
 
+        log.info("💰 Montant recalculé aprés modification: {}DT → {}DT (différence: {}DT)",
+                ancienMontant, nouveauMontant, nouveauMontant - ancienMontant);
         return toDto(ligne);
     }
 
@@ -377,12 +394,11 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
         if (reservation.getStatutReservation() == StatutReservation.EN_COURS) {
             throw new CustomException(
-                    "Impossible de supprimer une ligne d'une réservation en cours. " +
-                            "Veuillez d'abord annuler la réservation."
+                    "Impossible de supprimer une ligne d'une réservation en cours. "
             );
         }
 
-        if (reservationCommencee) {
+        if (reservation.getStatutReservation() == StatutReservation.EN_ATTENTE) {
             log.warn("⚠️ Suppression d'une ligne ACTIVE (dateDebut: {}, aujourd'hui: {})",
                     ligne.getDateDebut(), dateActuelle);
 
@@ -401,15 +417,17 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                     for (InstanceProduit instance : ligne.getInstancesReservees()) {
                         instance.setStatut(StatutInstance.DISPONIBLE);
                         instanceProduitRepo.save(instance);
+                        produit.setQuantiteDisponible(produit.getQuantiteDisponible()-1);
                     }
                     log.info("🔓 {} instances libérées", ligne.getInstancesReservees().size());
+                    produitRepo.save(produit);
                 }
             }
         } else {
             log.info("ℹ️ Suppression d'une ligne FUTURE (dateDebut: {}, aujourd'hui: {})",
                     ligne.getDateDebut(), dateActuelle);
             log.info("✅ Stock/instances PAS touchés car la réservation n'a pas encore commencé");
-            // Pas de libération car le stock n'a jamais été décrémenté
+            // Pas de libération, car le stock n'a jamais été décrémenté
         }
 
 

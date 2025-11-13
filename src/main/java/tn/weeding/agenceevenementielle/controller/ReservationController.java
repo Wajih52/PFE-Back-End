@@ -353,7 +353,7 @@ public class ReservationController {
     // ============================================
 
     /**
-     * ❌ Le client annule sa réservation
+     * ❌ Le client annule sa réservation ou l'admin
      */
     @DeleteMapping("/{id}/annuler")
     @PreAuthorize("hasAnyRole('CLIENT','ADMIN')")
