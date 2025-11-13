@@ -121,15 +121,16 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
 
         // 7️⃣ Ajouter un commentaire d'historique
         String commentaire = String.format(
-                "[%s] Modification ligne #%d (%s): Dates changées de %s→%s vers %s→%s. Motif: %s",
-                LocalDate.now(),
+                "[%s] Modification ligne #%d (%s):%n Dates changées de %s→%s vers %s→%s.%n Motif: %s.%n Responsable: %s%n",
+                LocalDateTime.now(),
                 idLigne,
                 ligne.getProduit().getNomProduit(),
                 ancienneDateDebut,
                 ancienneDateFin,
                 request.getNouvelleDateDebut(),
                 request.getNouvelleDateFin(),
-                request.getMotif() != null ? request.getMotif() : "Non spécifié"
+                request.getMotif() != null ? request.getMotif() : "Non spécifié",
+                username
         );
         ajouterCommentaireHistorique(reservation, commentaire);
 
@@ -145,7 +146,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
                         request.getNouvelleDateDebut(),
                         request.getNouvelleDateFin()
                 )),
-                String.format("Ligne #%d modifiée avec succès. Montant : %.2fDT → %.2fDT",
+                String.format("Ligne #%d modifiée avec succès.%n Montant : %.2fDT → %.2fDT%n",
                         idLigne, ancienMontantTotal, nouveauMontantTotal),
                 ancienMontantTotal,
                 nouveauMontantTotal
@@ -184,10 +185,15 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         for (LigneReservation ligne : lignes) {
             LocalDate ancienneDateDebut = ligne.getDateDebut();
             LocalDate ancienneDateFin = ligne.getDateFin();
-
-            LocalDate nouvelleDateDebut = ancienneDateDebut.plusDays(request.getNombreJours());
-            LocalDate nouvelleDateFin = ancienneDateFin.plusDays(request.getNombreJours());
-
+            LocalDate nouvelleDateDebut;
+            LocalDate nouvelleDateFin;
+            if(request.getNombreJours()<0){
+                 nouvelleDateDebut = ancienneDateDebut.minusDays(Math.abs(request.getNombreJours()));
+                 nouvelleDateFin = ancienneDateFin.minusDays(Math.abs(request.getNombreJours()));
+            }else {
+                 nouvelleDateDebut = ancienneDateDebut.plusDays(request.getNombreJours());
+                 nouvelleDateFin = ancienneDateFin.plusDays(request.getNombreJours());
+            }
             // Valider les nouvelles dates
             dateValidator.validerPeriodeReservation(
                     nouvelleDateDebut,
@@ -219,13 +225,14 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
 
         // 4️⃣ Ajouter un commentaire d'historique
         String commentaire = String.format(
-                "[%s] Décalage global de %+d jours pour toutes les lignes (%d produits). " +
-                        "Montant inchangé: %.2fDT. Motif: %s",
-                LocalDate.now(),
+                "[%s] Décalage global de %+d jours pour toutes les lignes (%d produits).%n " +
+                        "Montant inchangé: %.2fDT.%n Motif: %s.%n responsable : %s%n",
+                LocalDateTime.now(),
                 request.getNombreJours(),
                 lignes.size(),
                 montantTotal,
-                request.getMotif()
+                request.getMotif(),
+                username
         );
         ajouterCommentaireHistorique(reservation, commentaire);
 
@@ -235,7 +242,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
                 ancienneDateDebutRes,
                 ancienneDateFinRes,
                 detailsLignes,
-                String.format("Toutes les lignes (%d) décalées de %+d jours. Montant inchangé: %.2fDT",
+                String.format("Toutes les lignes (%d) décalées de %+d jours.%n Montant inchangé: %.2fDT.%n",
                         lignes.size(), request.getNombreJours(), montantTotal),
                 montantTotal,
                 montantTotal  // Montant identique
@@ -317,7 +324,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
 
         // 5️⃣ Ajouter un commentaire d'historique AVEC changement de montant
         String commentaire = String.format(
-                "[%s] Modification de %d lignes spécifiques. Montant : %.2fDT → %.2fDT (différence: %+.2fDT). Motif: %s",
+                "[%s] Modification de %d lignes spécifiques.%n Montant : %.2fDT → %.2fDT (différence: %+.2fDT).%n Motif: %s.%n",
                 LocalDateTime.now(),
                 request.getModifications().size(),
                 ancienMontantTotal,
@@ -333,7 +340,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
                 ancienneDateDebutRes,
                 ancienneDateFinRes,
                 detailsLignes,
-                String.format("%d lignes modifiées. Montant : %.2fDT → %.2fDT",
+                String.format("%d lignes modifiées.%n Montant : %.2fDT → %.2fDT%n",
                         request.getModifications().size(), ancienMontantTotal, nouveauMontantTotal),
                 ancienMontantTotal,
                 nouveauMontantTotal

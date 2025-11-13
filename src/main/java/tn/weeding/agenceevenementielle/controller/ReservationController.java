@@ -356,7 +356,7 @@ public class ReservationController {
      * ❌ Le client annule sa réservation
      */
     @DeleteMapping("/{id}/annuler")
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAnyRole('CLIENT','ADMIN')")
     @Operation(summary = "Annuler une réservation (CLIENT)",
             description = "Le client annule sa réservation (si pas encore livrée)")
     public ResponseEntity<Map<String, String>> annulerReservationParClient(

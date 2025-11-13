@@ -425,12 +425,14 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             montantFinal -= remise;
             log.info("💸 Remise de {}%: -{} TND", modificationDto.getRemisePourcentage(), remise);
             reservation.setRemisePourcentage(modificationDto.getRemisePourcentage());
+            reservation.setRemiseMontant(0.0);
         }
 
         if (modificationDto.getRemiseMontant() != null && modificationDto.getRemiseMontant() > 0) {
             montantFinal -= modificationDto.getRemiseMontant();
             log.info("💸 Remise fixe: -{} TND", modificationDto.getRemiseMontant());
             reservation.setRemiseMontant(modificationDto.getRemiseMontant());
+            reservation.setRemisePourcentage(0.0);
         }
 
         // S'assurer que le montant ne soit pas négatif
