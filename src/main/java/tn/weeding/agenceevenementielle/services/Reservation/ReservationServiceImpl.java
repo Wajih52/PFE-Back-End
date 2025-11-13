@@ -419,6 +419,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         // 3. Appliquer les remises
         double montantFinal = montantOriginal2;
+        reservation.setRemisePourcentage(0.0);
+        reservation.setRemiseMontant(0.0);
 
         if (modificationDto.getRemisePourcentage() != null && modificationDto.getRemisePourcentage() > 0) {
             double remise = montantOriginal2 * (modificationDto.getRemisePourcentage() / 100.0);
