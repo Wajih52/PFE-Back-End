@@ -9,15 +9,11 @@ import tn.weeding.agenceevenementielle.dto.modifDateReservation.ModificationDate
 import tn.weeding.agenceevenementielle.dto.modifDateReservation.ModifierPlusieurLignesRequestDto;
 import tn.weeding.agenceevenementielle.dto.modifDateReservation.ModifierUneLigneRequestDto;
 import tn.weeding.agenceevenementielle.dto.reservation.ReservationResponseDto;
-import tn.weeding.agenceevenementielle.entities.LigneReservation;
-import tn.weeding.agenceevenementielle.entities.Produit;
-import tn.weeding.agenceevenementielle.entities.Reservation;
+import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
-import tn.weeding.agenceevenementielle.repository.LigneReservationRepository;
-import tn.weeding.agenceevenementielle.repository.ReservationRepository;
-import tn.weeding.agenceevenementielle.repository.ProduitRepository;
+import tn.weeding.agenceevenementielle.repository.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -51,6 +47,8 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
     private final ReservationServiceInterface reservationService;
     private final ProduitRepository produitRepo;
     private final MontantReservationCalculService montantCalculService;
+    private final UtilisateurRepository utilisateurRepo;
+    private final UtilisateurRoleRepository utilisateurRoleRepo;
 
     // ============================================
     // FONCTIONNALITÉ 1 : MODIFIER UNE SEULE LIGNE
@@ -70,8 +68,27 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         Reservation reservation = getReservationOrThrow(idReservation);
         LigneReservation ligne = getLigneReservationOrThrow(idLigne);
 
-        if (username != null && !username.equals(reservation.getUtilisateur().getPseudo())) {
-            throw new CustomException("Vous ne pouvez modifier que vos propres réservations");
+
+        if (username != null) {
+            // Récupérer l'utilisateur connecté
+            Utilisateur currentUser = utilisateurRepo.findByPseudo(username)
+                    .orElseThrow(() -> new CustomException("Utilisateur non trouvé"));
+
+            // Récupérer les rôles via le repository (évite lazy loading)
+            List<UtilisateurRole> utilisateurRoles =
+                    utilisateurRoleRepo.findByUtilisateurIdUtilisateur(currentUser.getIdUtilisateur());
+
+            // Vérifier si l'utilisateur a le rôle ADMIN ou MANAGER
+            boolean isAdmin = utilisateurRoles.stream()
+                    .anyMatch(ur -> {
+                        String roleName = ur.getRole().getNom();
+                        return "ADMIN".equals(roleName) || "MANAGER".equals(roleName);
+                    });
+
+            // Si ce n'est pas un admin, vérifier que c'est bien sa réservation
+            if (!isAdmin && !username.equals(reservation.getUtilisateur().getPseudo())) {
+                throw new CustomException("Vous ne pouvez modifier que vos propres réservations");
+            }
         }
 
         // Vérifier que la ligne appartient bien à cette réservation
