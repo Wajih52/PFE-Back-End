@@ -137,16 +137,29 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
             );
 
             // Récupérer les entités pour les associer à la ligne
-            Set<InstanceProduit> instances = instancesReservees.stream()
-                    .map(dto -> instanceProduitRepo.findById(dto.getIdInstance())
-                            .orElseThrow(() -> new CustomException("Instance introuvable")))
-                    .collect(Collectors.toSet());
+            List<Long> instanceIds = instancesReservees.stream()
+                    .map(InstanceProduitResponseDto::getIdInstance)
+                    .toList();
+            List<InstanceProduit> instancesTrouvees = instanceProduitRepo.findAllById(instanceIds);
 
-            ligne.setInstancesReservees(instances);
+            if (instancesTrouvees.size() != instanceIds.size()) {
+                throw new CustomException("Certaines instances réservées sont introuvables en base");
+            }
+
+            // Ajouter aux instances existantes (ne pas écraser)
+            Set<InstanceProduit> instancesExistantes = ligne.getInstancesReservees();
+            if (instancesExistantes == null) {
+                instancesExistantes = new HashSet<>();
+            }
+            instancesExistantes.addAll(instancesTrouvees);
+            ligne.setInstancesReservees(instancesExistantes);
+
             ligneReservationRepo.save(ligne);
 
-            log.info("✅ {} instances affectées avec succès à la ligne {}",
-                    instancesReservees.size(), ligne.getIdLigneReservation());
+            log.info("✅ {} instances affectées avec succès à la ligne {} (total: {})",
+                    instancesTrouvees.size(),
+                    ligne.getIdLigneReservation(),
+                    instancesExistantes.size());
 
         } catch (Exception e) {
             log.error("❌ Erreur lors de l'affectation des instances: {}", e.getMessage());
@@ -247,7 +260,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
 
         // 🎯 La réservation a-t-elle déjà commencé ?
-        boolean reservationCommencee = ligne.getDateDebut().isBefore(LocalDate.now())
+        boolean reservationCommencee = ligne.getStatutLivraisonLigne().equals(StatutLivraison.EN_ATTENTE)
                 || ligne.getDateDebut().isEqual(LocalDate.now());
 
         if (reservation.getStatutReservation() == StatutReservation.EN_COURS) {
@@ -320,15 +333,16 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
             List<InstanceProduit> instancesActuelles = new ArrayList<>(ligne.getInstancesReservees());
 
-            //pour trier la liste suivant la date de prochaine maintenance (libérer qui ont une date de maintenance plus proche)
-            List<InstanceProduit> instancesTries = instancesActuelles.stream()
-                    .sorted(Comparator.comparing(InstanceProduit::getDateProchaineMaintenance).reversed())
+            // Libérer en priorité les instances nécessitant une maintenance prochaine
+            List<InstanceProduit> instancesALiberer = instancesActuelles.stream()
+                    .sorted(Comparator.comparing(
+                            InstanceProduit::getDateProchaineMaintenance,
+                            Comparator.nullsLast(Comparator.naturalOrder())
+                    ))
+                    .limit(nombreALiberer)
                     .toList();
-            List<InstanceProduit> instancesALiberer = instancesTries.subList(0, Math.min(nombreALiberer, instancesActuelles.size()));
 
-
-
-            // Mettre à jour la liste des instances
+            // Retirer les instances libérées
             instancesActuelles.removeAll(instancesALiberer);
             ligne.setInstancesReservees(new HashSet<>(instancesActuelles));
         }
@@ -536,7 +550,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     // ============================================
 
     /**
-     * ✅ Vérifier la disponibilité d'un produit
+     *  Vérifier la disponibilité d'un produit
      */
     private void verifierDisponibilite(Produit produit, Integer quantiteDemandee, LocalDate dateDebut, LocalDate dateFin) {
         log.info("🔍 Vérification de disponibilité pour {} unités de {}", quantiteDemandee, produit.getNomProduit());
@@ -548,14 +562,14 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
             if (instancesDisponibles < quantiteDemandee) {
                 throw new CustomException(String.format(
-                        "❌ Instances insuffisantes pour %s. Demandé: %d, Disponible: %d instances",
+                        " Instances insuffisantes pour %s. Demandé: %d de plus , Disponible: %d instances",
                         produit.getNomProduit(), quantiteDemandee, instancesDisponibles));
             }
         } else {
             // Pour les produits quantitatifs, vérifier le stock
             if (produitRepo.calculerQuantiteDisponibleSurPeriode(produit.getIdProduit(),dateDebut,dateFin) < quantiteDemandee) {
                 throw new CustomException(String.format(
-                        "❌ Stock insuffisant pour %s. Demandé: %d, Disponible: %d",
+                        " Stock insuffisant pour %s. Demandé: %d de plus , Disponible: %d",
                         produit.getNomProduit(), quantiteDemandee, produit.getQuantiteDisponible()));
             }
         }

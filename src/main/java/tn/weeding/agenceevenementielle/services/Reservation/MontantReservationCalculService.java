@@ -15,13 +15,13 @@ import java.util.Set;
  * SERVICE DE CALCUL DES MONTANTS DE RÉSERVATION
  * Sprint 4 - Gestion des réservations
  * ==========================================
- *
+
  * 🎯 RESPONSABILITÉS :
  * - Calculer le nombre de jours de location
  * - Calculer le sous-total d'une ligne
  * - Recalculer le montant total d'une réservation
  * - Gérer les remises
- *
+
  * 📝 FORMULES :
  * - Nombre de jours = (dateFin - dateDebut) + 1
  * - Sous-total ligne = quantité × prixUnitaire × nombreDeJours
@@ -39,7 +39,7 @@ public class MontantReservationCalculService {
      * @param dateDebut Date de début
      * @param dateFin Date de fin
      * @return Nombre de jours (minimum 1)
-     *
+
      * Exemple :
      * - 08/11 → 10/11 = 3 jours (08, 09, 10)
      * - 08/11 → 08/11 = 1 jour
@@ -67,11 +67,11 @@ public class MontantReservationCalculService {
      *
      * @param ligne Ligne de réservation
      * @return Sous-total (quantité × prixUnitaire × nombreDeJours)
-     *
+
      * IMPORTANT :
      * - prixUnitaire = prix PAR JOUR PAR UNITÉ
      * - Formule : quantité × prixParJour × nombreDeJours
-     *
+
      * Exemple :
      * - 50 chaises × 10DT/jour × 3 jours = 1500DT
      */
@@ -100,7 +100,7 @@ public class MontantReservationCalculService {
      *
      * @param reservation Réservation à recalculer
      * @return Nouveau montant total (somme de tous les sous-totaux)
-     *
+
      * IMPORTANT :
      * - Recalcule TOUTES les lignes
      * - Ne prend PAS en compte les remises (à gérer séparément)
@@ -137,7 +137,7 @@ public class MontantReservationCalculService {
      *
      * @param reservation Réservation à mettre à jour
      * @return Ancien montant total (pour comparaison)
-     *
+
      * Cette méthode :
      * 1. Sauvegarde l'ancien montant
      * 2. Calcule le nouveau montant
@@ -149,8 +149,19 @@ public class MontantReservationCalculService {
                 reservation.getMontantTotal() : 0.0;
 
         double nouveauMontant = recalculerMontantTotal(reservation);
-        reservation.setMontantTotal(nouveauMontant);
 
+        if(nouveauMontant > ancienMontant ) {
+            if (reservation.getRemisePourcentage() != null && reservation.getRemisePourcentage() > 0) {
+                double remise = nouveauMontant * (reservation.getRemisePourcentage() / 100.0);
+                nouveauMontant -= remise;
+            }
+            if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
+                nouveauMontant -= reservation.getRemiseMontant();
+            }
+            reservation.setMontantTotal(nouveauMontant);
+        }else {
+            reservation.setMontantTotal(nouveauMontant);
+        }
         if (Math.abs(ancienMontant - nouveauMontant) > 0.01) {
             log.info("💰 Montant total modifié : {}DT → {}DT (différence: {}DT)",
                     ancienMontant,
@@ -158,7 +169,7 @@ public class MontantReservationCalculService {
                     nouveauMontant - ancienMontant);
         }
 
-        return ancienMontant;
+        return nouveauMontant;
     }
 
     /**
@@ -168,7 +179,7 @@ public class MontantReservationCalculService {
      * @param remisePourcentage Remise en pourcentage (ex: 10 pour 10%)
      * @param remiseMontant Remise en montant fixe (ex: 100 pour 100DT)
      * @return Montant final après remise
-     *
+
      * Règle de priorité :
      * 1. Si remiseMontant > 0 : montantTotal - remiseMontant
      * 2. Sinon si remisePourcentage > 0 : montantTotal × (1 - remisePourcentage/100)
@@ -209,10 +220,10 @@ public class MontantReservationCalculService {
     public DetailMontantsDto calculerDetailMontants(Reservation reservation) {
         double montantBrut = recalculerMontantTotal(reservation);
 
-        // Ici vous pouvez ajouter la logique pour récupérer les remises
+        // Ici, vous pouvez ajouter la logique pour récupérer les remises
         // depuis votre système (si stockées ailleurs)
-        Double remisePourcentage = 0.0; // À adapter selon votre modèle
-        Double remiseMontant = 0.0;     // À adapter selon votre modèle
+        Double remisePourcentage = reservation.getRemisePourcentage(); // À adapter selon votre modèle
+        Double remiseMontant = reservation.getRemiseMontant();     // À adapter selon votre modèle
 
         double montantRemise = 0.0;
         if (remiseMontant != null && remiseMontant > 0) {
