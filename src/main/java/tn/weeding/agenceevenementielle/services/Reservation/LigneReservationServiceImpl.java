@@ -18,6 +18,7 @@ import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
 import tn.weeding.agenceevenementielle.repository.LigneReservationRepository;
 import tn.weeding.agenceevenementielle.repository.ProduitRepository;
 import tn.weeding.agenceevenementielle.repository.ReservationRepository;
+import tn.weeding.agenceevenementielle.services.ProduitServiceInterface;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -50,6 +51,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     private final InstanceProduitServiceInterface instanceProduitService;
     private final InstanceProduitServiceImpl instanceProduitServiceImpl;
     private final MontantReservationCalculService montantCalculService ;
+    private final ProduitServiceInterface produitService;
 
     // ============================================
     // CRÉATION ET AJOUT DE LIGNES
@@ -99,6 +101,14 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         // Sauvegarder la ligne
         ligne = ligneReservationRepo.save(ligne);
         log.info("✅ Ligne créée avec ID: {}", ligne.getIdLigneReservation());
+        //  Recalculer le montant total
+        double ancienMontant = reservation.getMontantTotal() != null ? reservation.getMontantTotal() : 0.0;
+        double nouveauMontant = montantCalculService.recalculerEtMettreAJourMontantTotal(reservation);
+        reservationRepo.save(reservation);
+
+        log.info("💰 Montant recalculé aprés Ajout nouvelle ligne: {}DT → {}DT (différence: {}DT)",
+                ancienMontant, nouveauMontant, nouveauMontant - ancienMontant);
+
 
         // Gérer le stock selon le type de produit
         if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
@@ -566,11 +576,17 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                         produit.getNomProduit(), quantiteDemandee, instancesDisponibles));
             }
         } else {
-            // Pour les produits quantitatifs, vérifier le stock
-            if (produitRepo.calculerQuantiteDisponibleSurPeriode(produit.getIdProduit(),dateDebut,dateFin) < quantiteDemandee) {
+            // Pour les produits quantitatifs, vérifier le stock via le service
+            Integer quantiteDisponible = produitService.calculerQuantiteDisponibleSurPeriode(
+                    produit.getIdProduit(),
+                    dateDebut,
+                    dateFin
+            );
+
+            if (quantiteDisponible < quantiteDemandee) {
                 throw new CustomException(String.format(
                         " Stock insuffisant pour %s. Demandé: %d de plus , Disponible: %d",
-                        produit.getNomProduit(), quantiteDemandee, produit.getQuantiteDisponible()));
+                        produit.getNomProduit(), quantiteDemandee, quantiteDisponible));
             }
         }
 
