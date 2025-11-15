@@ -4,9 +4,7 @@ import java.io.Serializable;
 
 import jakarta.persistence.*;
 import lombok.*;
-import tn.weeding.agenceevenementielle.entities.enums.ModePaiement;
-import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
-import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
+import tn.weeding.agenceevenementielle.entities.enums.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +22,7 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idReservation;
+
     @Column(name = "referenceReservation")
     String referenceReservation;
 
@@ -43,7 +42,12 @@ public class Reservation implements Serializable {
 
     Double montantPaye;
 
+    @Enumerated(EnumType.STRING)
     ModePaiement modePaiementRes;
+
+    @Enumerated(EnumType.STRING)
+    StatutPaiementRes statutPaiement;
+
 
     @Enumerated(EnumType.STRING)
     StatutLivraison statutLivraisonRes;

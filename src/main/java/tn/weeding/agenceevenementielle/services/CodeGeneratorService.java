@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tn.weeding.agenceevenementielle.repository.PaiementRepository;
 import tn.weeding.agenceevenementielle.repository.UtilisateurRepository;
 
+import java.time.Year;
 import java.util.Optional;
 
 @Service
@@ -14,6 +16,9 @@ import java.util.Optional;
 public class CodeGeneratorService {
 
     private final UtilisateurRepository utilisateurRepository;
+    private final PaiementRepository paiementRepository;
+    private static final String PAIEMENT_PREFIX = "PAY";
+
 
 
     @Transactional(readOnly = true)
@@ -79,16 +84,33 @@ public class CodeGeneratorService {
     }
 
     /**
-     * Génère un code avec un préfixe spécifique (pour les cas particuliers)
-     */
-    public String generateCodeWithPrefix(String prefix) {
-        Optional<String> lastCode = utilisateurRepository.findLastCodeByPrefix(prefix);
+     *Génerateur de code prefixe pour les paiements
+     * **/
+
+    @Transactional(readOnly = true)
+    public synchronized String generatePaiementCode() {
+        int currentYear = Year.now().getValue();
+        String yearPrefix = PAIEMENT_PREFIX + "-" + currentYear + "-";
+
+        Optional<String> lastCode = paiementRepository.findLastCodePaiementByYear(yearPrefix);
 
         if (lastCode.isPresent()) {
-            int number = extractNumber(lastCode.get(), prefix);
-            return String.format("%s%03d", prefix, number + 1);
+            String lastCodeValue = lastCode.get();
+            String numberPart = lastCodeValue.substring(yearPrefix.length());
+            int lastNumber = Integer.parseInt(numberPart);
+            int newNumber = lastNumber + 1;
+            String newCode = yearPrefix + String.format("%04d", newNumber);
+            log.info("✅ Code paiement généré: {}", newCode);
+            return newCode;
         } else {
-            return prefix + "001";
+            String newCode = yearPrefix + "0001";
+            log.info("✅ Premier code paiement: {}", newCode);
+            return newCode;
         }
+    }
+
+    @Transactional(readOnly = true)
+    public boolean codeExists(String code) {
+        return paiementRepository.existsByCodePaiement(code);
     }
 }

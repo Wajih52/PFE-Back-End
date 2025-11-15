@@ -1,11 +1,6 @@
 package tn.weeding.agenceevenementielle.entities.enums;
 
 public enum StatutReservation {
-    /**
-     * État initial - Devis créé mais pas encore validé
-     */
-    @Deprecated
-    DEVIS,
 
     /**
      * Devis validé par l'admin et transformé en réservation confirmée
@@ -27,21 +22,9 @@ public enum StatutReservation {
      */
     ANNULE,
 
-    /**
-     * Devis rejeté par l'admin
-     */
-    @Deprecated
-    REJETE,
 
     /**
-     * En attente de paiement
+     * Réservation En attente
      */
-    EN_ATTENTE_PAIEMENT,
-
-    /**
-     * Partiellement payé (acompte versé)
-     */
-    PARTIELLEMENT_PAYE,
-
     EN_ATTENTE,
 }

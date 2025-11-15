@@ -4,30 +4,57 @@ import java.io.Serializable;
 import jakarta.persistence.*;
 import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.ModePaiement;
+import tn.weeding.agenceevenementielle.entities.enums.StatutPaiement;
+import java.time.LocalDateTime;
 
-
-import java.util.Date;
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class Paiement implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long idPaiement;
-    String codePaiement;
-    @Temporal(TemporalType.DATE)
-    Date datePaiement;
+    private Long idPaiement;
+
+    @Column(unique = true, nullable = false)
+    private String codePaiement;
+
+    @Column(nullable = false)
+    private LocalDateTime datePaiement;
+
+    @Column(nullable = false)
+    private Double montantPaiement;
+
     @Enumerated(EnumType.STRING)
-    ModePaiement modePaiement;
-    String descriptionPaiement;
+    @Column(nullable = false)
+    private ModePaiement modePaiement;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatutPaiement statutPaiement;
 
-    // Paiement 1..* -------------- 1 Reservation
+    @Column(length = 1000)
+    private String descriptionPaiement;
+
+    private String referenceExterne;
+    private String validePar;
+    private LocalDateTime dateValidation;
+
     @ManyToOne
-    Reservation reservation;
+    @JoinColumn(nullable = false)
+    private Reservation reservation;
 
-
+    @PrePersist
+    public void prePersist() {
+        if (datePaiement == null) {
+            datePaiement = LocalDateTime.now();
+        }
+        if (statutPaiement == null) {
+            statutPaiement = StatutPaiement.EN_ATTENTE;
+        }
+    }
 }
