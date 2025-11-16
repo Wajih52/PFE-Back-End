@@ -38,7 +38,7 @@ public interface PaiementRepository extends JpaRepository<Paiement, Long> {
     @Query("SELECT COUNT(p) FROM Paiement p WHERE p.statutPaiement = 'EN_ATTENTE'")
     Long countPaiementsEnAttente();
 
-    @Query(value = "SELECT code_paiement FROM paiement WHERE code_paiement LIKE CONCAT(:yearPrefix, '%') ORDER BY code_paiement DESC LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT codePaiement FROM paiement WHERE codePaiement LIKE CONCAT(:yearPrefix, '%') ORDER BY codePaiement DESC LIMIT 1", nativeQuery = true)
     Optional<String> findLastCodePaiementByYear(@Param("yearPrefix") String yearPrefix);
 
 }

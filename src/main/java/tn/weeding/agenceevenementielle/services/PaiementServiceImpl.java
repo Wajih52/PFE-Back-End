@@ -114,10 +114,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
         paiement.setStatutPaiement(StatutPaiement.REFUSE);
         paiement.setValidePar(username);
         paiement.setDateValidation(LocalDateTime.now());
-        paiement.setDescriptionPaiement(
-                (paiement.getDescriptionPaiement() != null ? paiement.getDescriptionPaiement() + " | " : "") +
-                        "Motif refus: " + motifRefus
-        );
+        paiement.setMotifRefus(motifRefus);
 
         Paiement savedPaiement = paiementRepository.save(paiement);
 
@@ -168,7 +165,15 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
         List<Paiement> paiements = paiementRepository.findByReservationIdReservationOrderByDatePaiementDesc(idReservation);
 
         return paiements.stream()
-                .map(p -> convertToResponseDto(p, 0.0))
+                .map(p -> {
+                    Double montantDejaPayeAvant = calculerMontantPaye(p.getReservation().getIdReservation());
+
+                    if (p.getStatutPaiement() == StatutPaiement.VALIDE) {
+                        montantDejaPayeAvant -= p.getMontantPaiement();
+                    }
+
+                    return convertToResponseDto(p, montantDejaPayeAvant);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -176,35 +181,85 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
     @Transactional(readOnly = true)
     public List<PaiementResponseDto> getPaiementsByClient(Long idClient) {
         List<Paiement> paiements = paiementRepository.findByClientIdOrderByDatePaiementDesc(idClient);
-        return paiements.stream().map(p -> convertToResponseDto(p, 0.0)).collect(Collectors.toList());
+        return paiements.stream()
+                .map(p -> {
+                    Double montantDejaPayeAvant = calculerMontantPaye(p.getReservation().getIdReservation());
+
+                    if (p.getStatutPaiement() == StatutPaiement.VALIDE) {
+                        montantDejaPayeAvant -= p.getMontantPaiement();
+                    }
+
+                    return convertToResponseDto(p, montantDejaPayeAvant);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PaiementResponseDto> getAllPaiements() {
         List<Paiement> paiements = paiementRepository.findAll();
-        return paiements.stream().map(p -> convertToResponseDto(p, 0.0)).collect(Collectors.toList());
+        return paiements.stream()
+                .map(p -> {
+                    Double montantDejaPayeAvant = calculerMontantPaye(p.getReservation().getIdReservation());
+
+                    if (p.getStatutPaiement() == StatutPaiement.VALIDE) {
+                        montantDejaPayeAvant -= p.getMontantPaiement();
+                    }
+
+                    return convertToResponseDto(p, montantDejaPayeAvant);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PaiementResponseDto> getPaiementsByStatut(StatutPaiement statut) {
         List<Paiement> paiements = paiementRepository.findByStatutPaiementOrderByDatePaiementDesc(statut);
-        return paiements.stream().map(p -> convertToResponseDto(p, 0.0)).collect(Collectors.toList());
+        return paiements.stream()
+                .map(p -> {
+                    Double montantDejaPayeAvant = calculerMontantPaye(p.getReservation().getIdReservation());
+
+                    if (p.getStatutPaiement() == StatutPaiement.VALIDE) {
+                        montantDejaPayeAvant -= p.getMontantPaiement();
+                    }
+
+                    return convertToResponseDto(p, montantDejaPayeAvant);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PaiementResponseDto> getPaiementsEnAttente() {
         List<Paiement> paiements = paiementRepository.findPaiementsEnAttente();
-        return paiements.stream().map(p -> convertToResponseDto(p, 0.0)).collect(Collectors.toList());
+        return paiements.stream()
+                .map(p -> {
+                    Double montantDejaPayeAvant = calculerMontantPaye(p.getReservation().getIdReservation());
+
+                    if (p.getStatutPaiement() == StatutPaiement.VALIDE) {
+                        montantDejaPayeAvant -= p.getMontantPaiement();
+                    }
+
+                    return convertToResponseDto(p, montantDejaPayeAvant);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PaiementResponseDto> getPaiementsByPeriode(LocalDateTime dateDebut, LocalDateTime dateFin) {
         List<Paiement> paiements = paiementRepository.findPaiementsByPeriode(dateDebut, dateFin);
-        return paiements.stream().map(p -> convertToResponseDto(p, 0.0)).collect(Collectors.toList());
+        return paiements.stream()
+                .map(p -> {
+                    Double montantDejaPayeAvant = calculerMontantPaye(p.getReservation().getIdReservation());
+
+                    if (p.getStatutPaiement() == StatutPaiement.VALIDE) {
+                        montantDejaPayeAvant -= p.getMontantPaiement();
+                    }
+
+                    return convertToResponseDto(p, montantDejaPayeAvant);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -300,6 +355,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                 .datePaiement(paiement.getDatePaiement())
                 .dateValidation(paiement.getDateValidation())
                 .descriptionPaiement(paiement.getDescriptionPaiement())
+                .motifRefus(paiement.getMotifRefus())
                 .referenceExterne(paiement.getReferenceExterne())
                 .validePar(paiement.getValidePar())
                 .nomClient(client.getNom())

@@ -40,9 +40,13 @@ public class Paiement implements Serializable {
     @Column(length = 1000)
     private String descriptionPaiement;
 
+    @Column(length = 1000)
+    private String motifRefus;
+
     private String referenceExterne;
     private String validePar;
     private LocalDateTime dateValidation;
+
 
     @ManyToOne
     @JoinColumn(nullable = false)

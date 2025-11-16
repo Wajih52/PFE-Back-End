@@ -20,6 +20,7 @@ public class PaiementResponseDto {
     private LocalDateTime datePaiement;
     private LocalDateTime dateValidation;
     private String descriptionPaiement;
+    private String motifRefus;
     private String referenceExterne;
     private String validePar;
     private String nomClient;
