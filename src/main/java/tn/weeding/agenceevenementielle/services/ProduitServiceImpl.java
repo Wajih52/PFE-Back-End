@@ -10,6 +10,7 @@ import tn.weeding.agenceevenementielle.dto.produit.ProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.InstanceProduit;
 import tn.weeding.agenceevenementielle.entities.MouvementStock;
 import tn.weeding.agenceevenementielle.entities.Produit;
+import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ProduitException;
@@ -958,6 +959,19 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         mouvement.setEffectuePar(effectuePar);
         mouvement.setIdReservation(idReservation);
         mouvement.setCodeInstance(produit.getCodeProduit());
+        // Si c'est une réservation, récupérer les dates
+        if (idReservation != null && typeMouvement == TypeMouvement.RESERVATION) {
+            try {
+                Reservation reservation = reservationRepository.findById(idReservation)
+                        .orElse(null);
+                if (reservation != null) {
+                    mouvement.setDateDebut(reservation.getDateDebut());
+                    mouvement.setDateFin(reservation.getDateFin());
+                }
+            } catch (Exception e) {
+                log.warn("⚠️ Impossible de récupérer les dates de la réservation {}", idReservation);
+            }
+        }
 
         mouvementStockRepository.save(mouvement);
 
@@ -1009,6 +1023,9 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setMaintenanceRequise(produit.getMaintenanceRequise());
         dto.setAlerteStockCritique(produit.getQuantiteDisponible()<produit.getSeuilCritique());
         dto.setEnStock(produit.getQuantiteDisponible()>0);
+        dto.setDateCreation(produit.getDateCreation());
+        dto.setDateDerniereModification(produit.getDateModification());
+        dto.setSeuilCritique(produit.getSeuilCritique());
 
         // Calcul du taux d'occupation moyen (basé sur les stats)
         if (produit.getQuantiteInitial() != null && produit.getQuantiteInitial() > 0) {
@@ -1038,6 +1055,8 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setDateMouvement(mouvement.getDateMouvement());
         dto.setIdReservation(mouvement.getIdReservation());
         dto.setCodeInstance(mouvement.getCodeInstance());
+        dto.setDateDebut(mouvement.getDateDebut());
+        dto.setDateFin(mouvement.getDateFin());
 
         return dto;
     }

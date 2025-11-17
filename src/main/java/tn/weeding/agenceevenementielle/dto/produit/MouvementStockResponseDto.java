@@ -21,7 +21,11 @@ public class MouvementStockResponseDto {
     private LocalDateTime dateMouvement;
     private String motif;
     private String effectuePar;
+
+    // Pour les réservations
     private Long idReservation;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 
     private Long idProduit;
     private String nomProduit;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 import tn.weeding.agenceevenementielle.services.Reservation.InstanceProduitServiceInterface;
 
@@ -205,5 +206,19 @@ public class InstanceProduitController {
         log.info("Récupération des instances nécessitant une maintenance");
         List<InstanceProduitResponseDto> instances = instanceService.getInstancesNecessitantMaintenance();
         return ResponseEntity.ok(instances);
+    }
+
+    @GetMapping("/historique-instance/{numeroSerie}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
+    @Operation(summary = "Obtenir l'historique des mouvements d'une instance",
+            description = "Récupère tous les mouvements liés à une instance spécifique")
+    public ResponseEntity<List<MouvementStockResponseDto>> getHistoriqueMouvementsInstance(
+            @PathVariable String numeroSerie) {
+        log.info("📜 Requête historique mouvements pour instance: {}", numeroSerie);
+
+        List<MouvementStockResponseDto> mouvements = instanceService
+                .getHistoriqueMouvementsInstance(numeroSerie);
+
+        return ResponseEntity.ok(mouvements);
     }
 }

@@ -2,6 +2,7 @@ package tn.weeding.agenceevenementielle.services.Reservation;
 
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 
 import java.time.LocalDate;
@@ -106,5 +107,9 @@ public interface InstanceProduitServiceInterface {
      */
     List<InstanceProduitResponseDto> creerInstancesEnLot(Long idProduit, int quantite, String prefixeNumeroSerie, String username);
 
+    /**
+     * Obtenir l'historique des mouvements d'une instance spécifique
+     */
+    List<MouvementStockResponseDto> getHistoriqueMouvementsInstance(String numeroSerie);
 
 }

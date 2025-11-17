@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -71,7 +72,13 @@ public class MouvementStock implements Serializable {
     private String referenceReservation;
     private Long idReservation;
 
+    // Pour les réservations, ajouter les dates de période
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+
     private LocalDateTime dateMouvement;
+
+
 
 
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.InstanceProduitResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.EtatPhysique;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
@@ -516,6 +517,28 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<MouvementStockResponseDto> getHistoriqueMouvementsInstance(String numeroSerie) {
+        log.info("📜 Récupération historique mouvements pour instance: {}", numeroSerie);
+
+        // Vérifier que l'instance existe
+        InstanceProduit instance = instanceRepo.findByNumeroSerie(numeroSerie)
+                .orElseThrow(() -> new CustomException(
+                        "Instance avec numéro de série " + numeroSerie + " introuvable"));
+
+        // Récupérer les mouvements de cette instance
+        List<MouvementStock> mouvements = mouvementStockRepo
+                .findByCodeInstanceOrderByDateMouvementDesc(numeroSerie);
+
+        log.info("📜 {} mouvements trouvés pour l'instance {}", mouvements.size(), numeroSerie);
+
+        // Convertir en DTO
+        return mouvements.stream()
+                .map(this::convertMouvementToDto)
+                .collect(Collectors.toList());
+    }
+
     // ============ MÉTHODES UTILITAIRES ============
 
     /**
@@ -590,5 +613,21 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         }
 
         return dto;
+    }
+
+    // Méthode de conversion (si elle n'existe pas déjà)
+    private MouvementStockResponseDto convertMouvementToDto(MouvementStock mouvement) {
+        return MouvementStockResponseDto.builder()
+                .idMouvement(mouvement.getIdMouvement())
+                .typeMouvement(mouvement.getTypeMouvement())
+                .quantite(mouvement.getQuantite())
+                .quantiteAvant(mouvement.getQuantiteAvant())
+                .quantiteApres(mouvement.getQuantiteApres())
+                .motif(mouvement.getMotif())
+                .effectuePar(mouvement.getEffectuePar())
+                .dateMouvement(mouvement.getDateMouvement())
+                .idReservation(mouvement.getIdReservation())
+                .numeroSerie(mouvement.getCodeInstance())
+                .build();
     }
 }

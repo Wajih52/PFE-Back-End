@@ -18,6 +18,7 @@ import tn.weeding.agenceevenementielle.entities.enums.Categorie;
 import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
 import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
+import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.services.ProduitServiceInterface;
 import tn.weeding.agenceevenementielle.services.StockStatistiquesDto;
 
@@ -80,6 +81,27 @@ public class ProduitController {
         String username = authenticationFacade.getAuthentication().getName();
         produitService.supprimerProduit(id, username);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/supprimer-definitivement")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Supprimer définitivement un produit de la base de données",
+            description = "⚠️ DANGER: Suppression permanente (hard delete)")
+    public ResponseEntity<Map<String, String>> supprimerProduitDefinitivement(@PathVariable Long id) {
+        log.info("🗑️💥 Requête de suppression DÉFINITIVE du produit ID : {}", id);
+        String username = authenticationFacade.getAuthentication().getName();
+
+        try {
+            produitService.supprimerProduitDeBase(id, username);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Produit supprimé définitivement de la base de données",
+                    "id", id.toString()
+            ));
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", e.getMessage()
+            ));
+        }
     }
 
     @PostMapping("/{id}/reactiver")

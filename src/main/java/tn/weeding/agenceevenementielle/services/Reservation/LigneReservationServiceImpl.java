@@ -886,6 +886,8 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         if (reservation != null) {
             mouvement.setReferenceReservation(reservation.getReferenceReservation());
             mouvement.setIdReservation(reservation.getIdReservation());
+            mouvement.setDateDebut(reservation.getDateDebut());
+            mouvement.setDateFin(reservation.getDateFin());
         }
 
         mouvementStockRepo.save(mouvement);
