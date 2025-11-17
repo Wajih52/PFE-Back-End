@@ -115,7 +115,7 @@ public interface LigneReservationServiceInterface {
      * @return DTO de la ligne mise à jour
      * @throws ReservationException si la ligne n'existe pas
      */
-    LigneReservationResponseDto updateStatutLivraison(Long id, StatutLivraison nouveauStatut);
+    LigneReservationResponseDto updateStatutLivraison(Long id, StatutLivraison nouveauStatut,String username);
 
     // ============================================
     // SUPPRESSION

@@ -179,8 +179,9 @@ public class LigneReservationController {
             @RequestParam StatutLivraison nouveauStatut) {
 
         log.info("🔄 Changement de statut pour la ligne ID: {} -> {}", id, nouveauStatut);
+        String username = authenticationFacade.getAuthentication().getName();
 
-        LigneReservationResponseDto ligne = ligneReservationService.updateStatutLivraison(id, nouveauStatut);
+        LigneReservationResponseDto ligne = ligneReservationService.updateStatutLivraison(id, nouveauStatut,username);
 
         return ResponseEntity.ok(ligne);
     }

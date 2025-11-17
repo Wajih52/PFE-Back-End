@@ -125,8 +125,35 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         // Mettre à jour la quantité disponible du produit
         mettreAJourQuantiteDisponible(instance.getProduit());
 
+        //Enregistrer Mouvement
+        StringBuilder modifications = new StringBuilder();
+
+        if (!instance.getNumeroSerie().equals(dto.getNumeroSerie())) {
+            modifications.append(String.format("N°Série: '%s'→'%s'; ",
+                    instance.getNumeroSerie(), dto.getNumeroSerie()));
+        }
+
+        if (!instance.getEtatPhysique().equals(dto.getEtatPhysique())) {
+            modifications.append(String.format("État: %s→%s; ",
+                    instance.getEtatPhysique(), dto.getEtatPhysique()));
+        }
+
+        // Si modifications importantes, créer mouvement
+        if (!modifications.isEmpty()) {
+            enregistrerMouvement(
+                    instance.getProduit(),
+                    TypeMouvement.CORRECTION,
+                    0,
+                    "Modification instance " + instance.getNumeroSerie() + ": " +
+                            modifications.toString().trim(),
+                    username,
+                    instance
+            );
+        }
+
         log.info("Instance {} modifiée avec succès", instance.getNumeroSerie());
         return toDto(instance);
+
     }
 
     @Override

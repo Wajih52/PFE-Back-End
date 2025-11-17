@@ -116,6 +116,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                         "Produit avec ID " + id + " introuvable"));
 
         // Mise à jour des champs modifiables
+        produit.setSeuilCritique(produitDto.getSeuilCritique());
         produit.setNomProduit(produitDto.getNomProduit());
         produit.setDescriptionProduit(produitDto.getDescriptionProduit());
         produit.setCategorieProduit(produitDto.getCategorieProduit());
@@ -220,6 +221,40 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         }
 
         produitRepository.delete(produit);
+
+        // ✅  Créer mouvement AVANT suppression
+        if(produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE){
+            List<InstanceProduit> instanceProduits =
+                    instanceProduitRepository.findByProduit_IdProduit(id);
+
+            log.info("Suppression définitive: {} instances trouvées", instanceProduits.size());
+
+            for(InstanceProduit instanceProduit : instanceProduits){
+                enregistrerMouvementInstance(
+                        instanceProduit.getProduit(),
+                        TypeMouvement.SUPPRESSION_INSTANCE,
+                        -1,
+                        "Suppression DÉFINITIVE instance " + instanceProduit.getNumeroSerie() +
+                                " (produit " + produit.getCodeProduit() + " supprimé de la BDD)",
+                        username,
+                        instanceProduit
+                );
+            }
+        } else {
+            enregistrerMouvement(
+                    produit,
+                    TypeMouvement.DESACTIVATION,
+                    produit.getQuantiteDisponible(),
+                    produit.getQuantiteDisponible(),
+                    0,
+                    "Suppression DÉFINITIVE produit " + produit.getCodeProduit() +
+                            " de la BDD (stock: " + produit.getQuantiteDisponible() + ")",
+                    username,
+                    null
+            );
+        }
+
+        log.info("⚠️ Historique conservé malgré suppression produit");
 
     }
 
@@ -972,6 +1007,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setQuantiteInitial(produit.getQuantiteInitial());
         dto.setQuantiteDisponible(produit.getQuantiteDisponible());
         dto.setMaintenanceRequise(produit.getMaintenanceRequise());
+        dto.setAlerteStockCritique(produit.getQuantiteDisponible()<produit.getSeuilCritique());
 
         // Calcul du taux d'occupation moyen (basé sur les stats)
         if (produit.getQuantiteInitial() != null && produit.getQuantiteInitial() > 0) {

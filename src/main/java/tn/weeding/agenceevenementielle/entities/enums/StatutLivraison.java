@@ -7,5 +7,6 @@ public enum StatutLivraison {
     LIVREE,
     RETOUR,
     RETOUR_PARTIEL,
+    RETOURNEE,
     ANNULER
 }
