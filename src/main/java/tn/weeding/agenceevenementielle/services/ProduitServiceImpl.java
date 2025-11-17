@@ -789,7 +789,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 .orElseThrow(() -> new CustomException(
                         "Produit avec ID " + id + " introuvable"));
 
-        boolean critique = produit.getQuantiteDisponible() <= SEUIL_CRITIQUE_DEFAUT &&
+        boolean critique = produit.getQuantiteDisponible() <= produit.getSeuilCritique() &&
                 produit.getQuantiteDisponible() > 0;
 
         if (critique) {
@@ -1008,6 +1008,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setQuantiteDisponible(produit.getQuantiteDisponible());
         dto.setMaintenanceRequise(produit.getMaintenanceRequise());
         dto.setAlerteStockCritique(produit.getQuantiteDisponible()<produit.getSeuilCritique());
+        dto.setEnStock(produit.getQuantiteDisponible()>0);
 
         // Calcul du taux d'occupation moyen (basé sur les stats)
         if (produit.getQuantiteInitial() != null && produit.getQuantiteInitial() > 0) {
