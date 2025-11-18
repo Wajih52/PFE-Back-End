@@ -107,15 +107,16 @@ public class CodeGeneratorServiceProduit {
         Map<String, String> reglesSpeciales = Map.ofEntries(
                 Map.entry("FRIGO", "FR"),
                 Map.entry("PROJECTEUR", "PR"),
-                Map.entry("CHAISE", "CH"),
+                Map.entry("CHAISEPLASTIQUE", "CH"),
+                Map.entry("CHAISENAPOLEON", "CHN"),
                 Map.entry("TANTE", "TT"),
                 Map.entry("TABLE", "TA"),
-                Map.entry("TABLE BASSE", "TB"),
+                Map.entry("TABLEBASSE", "TB"),
                 Map.entry("LAMPE", "LP"),
                 Map.entry("LUMINAIRE", "LU"),
-                Map.entry("TAPIS ROUGE", "TPR"),
-                Map.entry("RIDEAU BLANC", "RDB"),
-                Map.entry("COUVERTURE BLANC", "CVB")
+                Map.entry("TAPISROUGE", "TPR"),
+                Map.entry("RIDEAUBLANC", "RDB"),
+                Map.entry("COUVERTUREBLANC", "CVB")
         );
 
         // Vérifier d'abord les règles spéciales

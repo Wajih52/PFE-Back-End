@@ -76,6 +76,9 @@ public class Reservation implements Serializable {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<LigneReservation> ligneReservations;
 
+    //Reservation 1 ---------- 1..* Facture
+    @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL)
+    Set<Facture> factures ;
 
     @PrePersist
     public void prePersist() {

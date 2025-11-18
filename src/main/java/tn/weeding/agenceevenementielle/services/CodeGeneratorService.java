@@ -4,10 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tn.weeding.agenceevenementielle.entities.enums.TypeFacture;
+import tn.weeding.agenceevenementielle.repository.FactureRepository;
 import tn.weeding.agenceevenementielle.repository.PaiementRepository;
 import tn.weeding.agenceevenementielle.repository.UtilisateurRepository;
 
+import java.time.LocalDate;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -18,6 +22,7 @@ public class CodeGeneratorService {
     private final UtilisateurRepository utilisateurRepository;
     private final PaiementRepository paiementRepository;
     private static final String PAIEMENT_PREFIX = "PAY";
+    private final FactureRepository factureRepository;
 
 
 
@@ -109,8 +114,45 @@ public class CodeGeneratorService {
         }
     }
 
+
+    /**
+     * Génère un numéro de facture unique
+     * Format :
+     * - Devis : DEV-YYYY-MM-XXXX
+     * - Pro-forma : PRO-YYYY-MM-XXXX
+     * - Finale : FAC-YYYY-MM-XXXX
+     */
     @Transactional(readOnly = true)
-    public boolean codeExists(String code) {
-        return paiementRepository.existsByCodePaiement(code);
+    public String genererNumeroFacture(TypeFacture typeFacture) {
+        String prefixe;
+
+        switch (typeFacture) {
+            case DEVIS:
+                prefixe = "DEV";
+                break;
+            case PRO_FORMA:
+                prefixe = "PRO";
+                break;
+            case FINALE:
+                prefixe = "FAC";
+                break;
+            default:
+                prefixe = "DOC";
+        }
+
+        LocalDate now = LocalDate.now();
+        String datePart = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // Chercher le dernier numéro du mois
+        String pattern = prefixe + "-" + datePart + "-%";
+        long count = factureRepository.findAll().stream()
+                .filter(f -> f.getNumeroFacture() != null && f.getNumeroFacture().startsWith(prefixe + "-" + datePart))
+                .count();
+
+        int numero = (int) count + 1;
+        String numeroFacture = String.format("%s-%s-%04d", prefixe, datePart, numero);
+
+        log.info("📄 Numéro de facture généré : {}", numeroFacture);
+        return numeroFacture;
     }
 }
