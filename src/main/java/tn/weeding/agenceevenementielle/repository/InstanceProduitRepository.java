@@ -120,4 +120,6 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
     @Query("SELECT i FROM InstanceProduit i WHERE i.statut IN (tn.weeding.agenceevenementielle.entities.enums.StatutInstance.HORS_SERVICE," +
             " tn.weeding.agenceevenementielle.entities.enums.StatutInstance.PERDU)")
     List<InstanceProduit> findInstancesHorsService();
+
+    Long  countByProduit_IdProduit (Long idProduit);
 }

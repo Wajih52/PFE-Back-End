@@ -48,6 +48,11 @@ public class MouvementStock implements Serializable {
     @JoinColumn(name = "idProduit")
     private Produit produit;
 
+    // Champs pour garder l'info même si produit supprimé
+    private String nomProduitArchive;
+    private String codeProduitArchive;
+    private Long idProduitArchive;
+
     @Enumerated(EnumType.STRING)
     private TypeMouvement typeMouvement;
 

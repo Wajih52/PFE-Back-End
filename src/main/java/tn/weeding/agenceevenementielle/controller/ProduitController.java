@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.ProduitDisponibiliteDto;
 import tn.weeding.agenceevenementielle.dto.produit.ProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.ProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.Categorie;
@@ -317,6 +318,23 @@ public class ProduitController {
 
         List<ProduitResponseDto> produits = produitService.searchProduitsAvecPeriode(
                 categorie, type, minPrix, maxPrix, dateDebut, dateFin);
+        return ResponseEntity.ok(produits);
+    }
+
+    /**
+     * Obtenir les produits avec disponibilité pour une période
+     */
+    @GetMapping("/disponibilite-periode")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
+    public ResponseEntity<List<ProduitDisponibiliteDto>> getProduitsAvecDisponibilite(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
+
+        log.info("📅 Récupération disponibilité pour période: {} à {}", dateDebut, dateFin);
+
+        List<ProduitDisponibiliteDto> produits = produitService
+                .getProduitsAvecDisponibilitePourPeriode(dateDebut, dateFin);
+
         return ResponseEntity.ok(produits);
     }
 

@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.services;
 
 import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.ProduitDisponibiliteDto;
 import tn.weeding.agenceevenementielle.dto.produit.ProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.ProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.Categorie;
@@ -226,6 +227,8 @@ public interface ProduitServiceInterface {
      */
     List<Map<String, Object>> getTauxOccupationSurPeriode(LocalDate dateDebut, LocalDate dateFin);
 
+    public List<ProduitDisponibiliteDto> getProduitsAvecDisponibilitePourPeriode(
+            LocalDate dateDebut, LocalDate dateFin) ;
     // ============================================
     // GESTION DU STOCK (PRODUITS EN_QUANTITE)
     // ============================================

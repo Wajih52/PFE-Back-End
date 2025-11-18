@@ -508,4 +508,63 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             @Param("reservationExclue") Long reservationExclue
     );
 
+    /**
+     * Trouve la quantité maximale réservée pour un produit à une date donnée
+     * @param idProduit ID du produit
+     * @param dateReference Date de référence (généralement aujourd'hui)
+     * @return La quantité maximale réservée
+     */
+    @Query("""
+    SELECT MAX(lr.quantite)
+    FROM LigneReservation lr
+    WHERE lr.produit.idProduit = :idProduit
+    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME,
+     tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS)
+    AND lr.dateDebut <= :dateReference
+    AND lr.dateFin >= :dateReference
+    """)
+    Integer findMaxQuantiteReserveeForProduit(
+            @Param("idProduit") Long idProduit,
+            @Param("dateReference") LocalDate dateReference
+    );
+
+    /**
+     * Calculer la quantité réservée pour un produit sur une période donnée
+     */
+    @Query("""
+    SELECT COALESCE(MAX(lr.quantite), 0)
+    FROM LigneReservation lr
+    WHERE lr.produit.idProduit = :idProduit
+    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME,
+     tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS)
+    AND (
+        (lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut)
+    )
+    """)
+    Integer calculerQuantiteReserveePourPeriode(
+            @Param("idProduit") Long idProduit,
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
+    );
+
+    /**
+     * Compter les instances réservées pour un produit sur une période
+     */
+    @Query("""
+    SELECT COUNT(DISTINCT i.idInstance)
+    FROM LigneReservation lr
+    JOIN lr.instancesReservees i
+    WHERE lr.produit.idProduit = :idProduit
+    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME,
+    tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS)
+    AND (
+        (lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut)
+    )
+    """)
+    Long countInstancesReserveesPourPeriode(
+            @Param("idProduit") Long idProduit,
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
+    );
+
 }

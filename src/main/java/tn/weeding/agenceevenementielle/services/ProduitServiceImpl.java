@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.dto.produit.MouvementStockResponseDto;
+import tn.weeding.agenceevenementielle.dto.produit.ProduitDisponibiliteDto;
 import tn.weeding.agenceevenementielle.dto.produit.ProduitRequestDto;
 import tn.weeding.agenceevenementielle.dto.produit.ProduitResponseDto;
 import tn.weeding.agenceevenementielle.entities.InstanceProduit;
@@ -205,58 +206,86 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     }
 
     @Override
+    @Transactional
     public void supprimerProduitDeBase(Long id, String username) {
-        log.info("🗑️ Suppression totale du produit ID: {} par {}", id, username);
+        log.info("🗑️ Suppression DÉFINITIVE du produit ID: {} par {}", id, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
                         "Produit avec ID " + id + " introuvable"));
 
+        // Vérifier les réservations actives
         boolean exist = ligneReservationRepository.existsActiveReservationForProduit(
                 id,
                 LocalDate.now()
         );
 
-        if(exist){
-            throw new CustomException("Tu ne peux pas supprimer un produit qui est déjà reservé");
+        if(exist) {
+            throw new CustomException("Impossible de supprimer un produit qui est actuellement réservé");
         }
 
+        // ✅ NOUVEAU: Détacher les mouvements de stock AVANT suppression
+        List<MouvementStock> mouvements = mouvementStockRepository.findByProduit_IdProduit(id);
+
+        log.info("📦 {} mouvements de stock trouvés pour ce produit", mouvements.size());
+
+        // Détacher chaque mouvement du produit
+        for (MouvementStock mouvement : mouvements) {
+            mouvement.setProduit(null);  // ✅ Détacher la relation
+            mouvement.setNomProduitArchive(produit.getNomProduit());
+            mouvement.setCodeProduitArchive(produit.getCodeProduit());
+            mouvement.setIdProduitArchive(produit.getIdProduit());
+            mouvementStockRepository.save(mouvement);
+        }
+
+        // Si produit avec référence, gérer les instances
+        if(produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
+            List<InstanceProduit> instances = instanceProduitRepository.findByProduit_IdProduit(id);
+            log.info("🔖 {} instances trouvées", instances.size());
+
+            // Supprimer chaque instance (les mouvements d'instance seront orphelins aussi)
+            for(InstanceProduit instance : instances) {
+                List<MouvementStock> mouvementsInstance = mouvementStockRepository
+                        .findByIdInstance(instance.getIdInstance());
+
+                for(MouvementStock mvt : mouvementsInstance) {
+                    mvt.setProduit(null);
+                    mouvementStockRepository.save(mvt);
+                }
+
+                instanceProduitRepository.delete(instance);
+            }
+        }
+
+        // ✅ NOUVEAU: Créer un mouvement final AVANT suppression
+        MouvementStock mouvementFinal = new MouvementStock();
+        mouvementFinal.setTypeMouvement(TypeMouvement.DESACTIVATION);
+        mouvementFinal.setQuantite(produit.getQuantiteDisponible());
+        mouvementFinal.setQuantiteApres(0);
+        mouvementFinal.setQuantiteAvant(produit.getQuantiteDisponible());
+        mouvementFinal.setMotif(String.format(
+                "Suppression DÉFINITIVE produit %s de la BDD (stock: %d)",
+                produit.getCodeProduit(),
+                produit.getQuantiteDisponible()
+        ));
+        mouvementFinal.setEffectuePar(username);
+        mouvementFinal.setDateMouvement(LocalDateTime.now());
+        // On associe pas au produit qui va être supprimé
+        mouvementFinal.setProduit(null);
+        // Mais On garde les informations du produit
+        mouvementFinal.setNomProduitArchive(produit.getNomProduit());
+        mouvementFinal.setCodeProduitArchive(produit.getCodeProduit());
+        mouvementFinal.setIdProduitArchive(produit.getIdProduit());
+
+        mouvementStockRepository.save(mouvementFinal);
+
+        log.debug("📝 Mouvement final enregistré sans référence au produit");
+
+        // Maintenant on peut supprimer le produit en toute sécurité
         produitRepository.delete(produit);
 
-        // ✅  Créer mouvement AVANT suppression
-        if(produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE){
-            List<InstanceProduit> instanceProduits =
-                    instanceProduitRepository.findByProduit_IdProduit(id);
-
-            log.info("Suppression définitive: {} instances trouvées", instanceProduits.size());
-
-            for(InstanceProduit instanceProduit : instanceProduits){
-                enregistrerMouvementInstance(
-                        instanceProduit.getProduit(),
-                        TypeMouvement.SUPPRESSION_INSTANCE,
-                        -1,
-                        "Suppression DÉFINITIVE instance " + instanceProduit.getNumeroSerie() +
-                                " (produit " + produit.getCodeProduit() + " supprimé de la BDD)",
-                        username,
-                        instanceProduit
-                );
-            }
-        } else {
-            enregistrerMouvement(
-                    produit,
-                    TypeMouvement.DESACTIVATION,
-                    produit.getQuantiteDisponible(),
-                    produit.getQuantiteDisponible(),
-                    0,
-                    "Suppression DÉFINITIVE produit " + produit.getCodeProduit() +
-                            " de la BDD (stock: " + produit.getQuantiteDisponible() + ")",
-                    username,
-                    null
-            );
-        }
-
         log.info("⚠️ Historique conservé malgré suppression produit");
-
+        log.info("✅ Produit supprimé définitivement: Code={}", produit.getCodeProduit());
     }
 
     @Override
@@ -655,7 +684,62 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         return stats;
     }
 
+    @Override
+    public List<ProduitDisponibiliteDto> getProduitsAvecDisponibilitePourPeriode(
+            LocalDate dateDebut, LocalDate dateFin) {
 
+        log.info("🔍 Calcul disponibilité produits du {} au {}", dateDebut, dateFin);
+
+        List<Produit> tousProduits = produitRepository.findAll();
+        List<ProduitDisponibiliteDto> resultat = new ArrayList<>();
+
+        for (Produit produit : tousProduits) {
+            ProduitDisponibiliteDto dto = new ProduitDisponibiliteDto();
+            dto.setIdProduit(produit.getIdProduit());
+            dto.setCodeProduit(produit.getCodeProduit());
+            dto.setNomProduit(produit.getNomProduit());
+            dto.setTypeProduit(produit.getTypeProduit());
+            dto.setQuantiteTotale(produit.getQuantiteDisponible());
+
+            if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
+                // Calculer quantité réservée sur la période
+                Integer quantiteReservee = ligneReservationRepository
+                        .calculerQuantiteReserveePourPeriode(
+                                produit.getIdProduit(),
+                                dateDebut,
+                                dateFin
+                        );
+
+                if (quantiteReservee == null) quantiteReservee = 0;
+
+                dto.setQuantiteReservee(quantiteReservee);
+                dto.setQuantiteDisponible(produit.getQuantiteDisponible() - quantiteReservee);
+
+            } else {
+                // Pour produits AVEC_REFERENCE
+                Long totalInstances = instanceProduitRepository
+                        .countByProduit_IdProduit(produit.getIdProduit());
+
+                Long instancesReservees = ligneReservationRepository
+                        .countInstancesReserveesPourPeriode(
+                                produit.getIdProduit(),
+                                dateDebut,
+                                dateFin
+                        );
+
+                if (instancesReservees == null) instancesReservees = 0L;
+
+                dto.setQuantiteTotale(totalInstances.intValue());
+                dto.setQuantiteReservee(instancesReservees.intValue());
+                dto.setQuantiteDisponible(totalInstances.intValue() - instancesReservees.intValue());
+            }
+
+            resultat.add(dto);
+        }
+
+        log.info("✅ {} produits avec disponibilité calculée", resultat.size());
+        return resultat;
+    }
     // ============================================
     // GESTION DU STOCK (PRODUITS EN_QUANTITE)
     // ============================================
@@ -754,6 +838,23 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         if (produit.getTypeProduit() != TypeProduit.EN_QUANTITE) {
             throw new CustomException(
                     "L'ajustement de stock n'est possible que pour les produits de type EN_QUANTITE");
+        }
+
+        // ✅  Vérifier la quantité maximale réservée
+        Integer quantiteMaxReservee = ligneReservationRepository
+                .findMaxQuantiteReserveeForProduit(id, LocalDate.now());
+
+        if (quantiteMaxReservee == null) {
+            quantiteMaxReservee = 0;
+        }
+
+        if (nouvelleQuantite < quantiteMaxReservee) {
+            throw new CustomException(
+                    String.format("Impossible d'ajuster le stock à %d. " +
+                                    "Il y a actuellement %d unités réservées pour ce produit. " +
+                                    "Le stock minimum doit être de %d unités.",
+                            nouvelleQuantite, quantiteMaxReservee, quantiteMaxReservee)
+            );
         }
 
         int quantiteAvant = produit.getQuantiteDisponible();

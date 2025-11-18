@@ -20,8 +20,18 @@ import java.util.List;
 public interface MouvementStockRepository extends JpaRepository<MouvementStock, Long> {
 
     // ============================================
-    // RECHERCHE PAR PRODUIT
+    // RECHERCHE PAR PRODUIT ou par instance
     // ============================================
+
+    /**
+     * Trouve tous les mouvements pour un produit
+     */
+    List<MouvementStock> findByProduit_IdProduit(Long idProduit);
+
+    /**
+     * Trouve tous les mouvements pour une instance
+     */
+    List<MouvementStock> findByIdInstance(Long idInstance);
 
     /**
      * Récupérer tous les mouvements d'un produit, triés par date décroissante
