@@ -36,6 +36,11 @@ public interface FactureServiceInterface {
      */
     FactureResponseDto regenererPdfFacture(Long idFacture, String username);
 
+    /**
+     * Génère une nouvelle facture ou met à jour l'existante
+     * Évite les doublons en vérifiant l'existence d'une facture du même type
+     */
+    FactureResponseDto genererOuMettreAJourFacture(Long idReservation, TypeFacture typeFacture, String username);
 
-
+    void mettreAJourFactureDevisSafe(Long idReservation);
 }

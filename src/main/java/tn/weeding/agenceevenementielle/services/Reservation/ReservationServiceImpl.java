@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
 import tn.weeding.agenceevenementielle.dto.modifDateReservation.DateConstraintesDto;
@@ -17,6 +18,7 @@ import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
 import tn.weeding.agenceevenementielle.repository.*;
 import  tn.weeding.agenceevenementielle.exceptions.ReservationException.StockIndisponibleException;
+import tn.weeding.agenceevenementielle.services.FactureServiceInterface;
 import tn.weeding.agenceevenementielle.services.PdfGeneratorService;
 
 import java.time.LocalDate;
@@ -48,6 +50,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     private final AuthenticationFacade authenticationFacade;
     private final PdfGeneratorService pdfGeneratorService;
     private FactureRepository factureRepository ;
+
+    private final FactureServiceInterface factureService;
 
     // ============ CRÉATION DE DEVIS PAR LE CLIENT ============
 
@@ -527,6 +531,20 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         log.info("🎉 Réservation {} confirmée par le client et stock réservé avec succès",
                 resValidee.getReferenceReservation());
+
+        // 🆕 GÉNÉRATION AUTOMATIQUE DE LA FACTURE PRO_FORMA
+        try {
+            log.info("📄 Génération automatique de la facture PRO_FORMA...");
+            factureService.genererOuMettreAJourFacture(
+                    resValidee.getIdReservation(),
+                    TypeFacture.PRO_FORMA,
+                    username
+            );
+            log.info("✅ Facture PRO_FORMA générée/mise à jour avec succès");
+        } catch (Exception e) {
+            log.error("❌ Erreur génération facture PRO_FORMA : {}", e.getMessage());
+            // Ne pas bloquer la validation si la facture échoue
+        }
 
         return convertToResponseDto(resValidee);
     }
@@ -1594,31 +1612,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         return facture;
     }
 
-    private void mettreAJourFactureDevis(Reservation reservation) {
-        try {
-            Optional<Facture> factureDevis = factureRepository
-                    .findByReservation_IdReservationAndTypeFacture(
-                            reservation.getIdReservation(),
-                            TypeFacture.DEVIS
-                    )
-                    .stream()
-                    .findFirst();
-
-            if (factureDevis.isPresent()) {
-                Facture facture = factureDevis.get();
-                facture = mettreAJourMontantsFacture(facture, reservation);
-
-                String cheminPDF = pdfGeneratorService.genererPdfFacture(facture);
-                facture.setCheminPDF(cheminPDF);
-
-                factureRepository.save(facture);
-
-                log.info("✅ Facture DEVIS mise à jour automatiquement : {}",
-                        facture.getNumeroFacture());
-            }
-        } catch (Exception e) {
-            log.error("❌ Erreur mise à jour facture : {}", e.getMessage());
-            // Ne pas propager l'exception pour ne pas interrompre le processus principal
-        }
+    protected void mettreAJourFactureDevis(Reservation reservation) {
+        factureService.mettreAJourFactureDevisSafe(reservation.getIdReservation());
     }
 }

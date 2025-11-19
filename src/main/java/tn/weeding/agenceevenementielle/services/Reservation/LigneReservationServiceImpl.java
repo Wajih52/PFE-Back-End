@@ -12,6 +12,7 @@ import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
 import tn.weeding.agenceevenementielle.repository.*;
+import tn.weeding.agenceevenementielle.services.FactureServiceInterface;
 import tn.weeding.agenceevenementielle.services.ProduitServiceInterface;
 
 import java.time.LocalDate;
@@ -48,6 +49,8 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     private final MontantReservationCalculService montantCalculService ;
     private final ProduitServiceInterface produitService;
     private final MouvementStockRepository mouvementStockRepo;
+    private final FactureRepository factureRepository;
+    private final FactureServiceInterface factureService;
 
     // ============================================
     // CRÉATION ET AJOUT DE LIGNES
@@ -344,6 +347,9 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
         log.info("💰 Montant recalculé aprés modification: {}DT → {}DT (différence: {}DT)",
                 ancienMontant, nouveauMontant, nouveauMontant - ancienMontant);
+
+        mettreAJourFactureSiNecessaire(reservation, username);
+
         return toDto(ligne);
     }
 
@@ -674,6 +680,9 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
         log.info("✅ Ligne supprimée avec succès (Stock libéré: {})", reservationCommencee);
 
+        //  MISE À JOUR AUTOMATIQUE DE LA FACTURE
+        mettreAJourFactureSiNecessaire(reservation, username);
+
         // ✅ AJOUT: Enregistrer mouvement avant suppression
         if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
             enregistrerMouvementStock(
@@ -761,6 +770,30 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                         ligne -> ligne.getProduit().getCategorieProduit().toString(),
                         Collectors.summingInt(LigneReservation::getQuantite)
                 ));
+    }
+
+    private void mettreAJourFactureSiNecessaire(Reservation reservation, String username) {
+        try {
+            TypeFacture typeFacture = switch (reservation.getStatutReservation()) {
+                case EN_ATTENTE -> TypeFacture.DEVIS;
+                case CONFIRME, EN_COURS -> TypeFacture.PRO_FORMA;
+                case TERMINE -> TypeFacture.FINALE;
+                default -> null;
+            };
+
+            if (typeFacture != null) {
+                log.info("🔄 Mise à jour automatique de la facture {}...", typeFacture);
+                factureService.genererOuMettreAJourFacture(
+                        reservation.getIdReservation(),
+                        typeFacture,
+                        username
+                );
+                log.info("✅ Facture {} mise à jour avec succès", typeFacture);
+            }
+        } catch (Exception e) {
+            log.error("❌ Erreur mise à jour facture : {}", e.getMessage());
+            // Ne pas bloquer l'opération si la facture échoue
+        }
     }
 
     // ============================================

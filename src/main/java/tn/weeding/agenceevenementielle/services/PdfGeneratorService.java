@@ -243,7 +243,7 @@ public class PdfGeneratorService {
         }
 
         cellGauche.addElement(new Paragraph("ELEGANT HIVE", HEADER_FONT));
-        cellGauche.addElement(new Paragraph("Agence d'événementiel", NORMAL_FONT));
+        cellGauche.addElement(new Paragraph("Agence événementiel", NORMAL_FONT));
         cellGauche.addElement(new Paragraph("Adresse : Mahdia, Tunisie", SMALL_FONT));
         cellGauche.addElement(new Paragraph("Tél : +216 98 661 402", SMALL_FONT));
         cellGauche.addElement(new Paragraph("Email : contact@eleganthive.tn", SMALL_FONT));
@@ -330,7 +330,7 @@ public class PdfGeneratorService {
     }
 
     /**
-     * 🆕 CORRECTION MAJEURE : Ajouter les totaux CORRECTS
+     *  Ajouter les totaux
      *
      * Logique :
      * 1. Calculer le montant total SANS remise (somme des lignes)
@@ -355,10 +355,17 @@ public class PdfGeneratorService {
         // 2️⃣ Calculer le HT depuis le total TTC AVANT remise
         double montantHT_SansRemise = montantTotalSansRemise / (1 + TVA_TAUX);
 
-        // Afficher le sous-total HT
+        // 1- Afficher montantHT_SansRemise
         ajouterLigneTotaux(table, "Sous-total HT :", String.format("%.2f DT", montantHT_SansRemise));
 
-        // 3️⃣ Afficher la remise (montant OU pourcentage)
+        // 2- Calculer et afficher montantTVA (TVA sur le montant sans remise)
+        double montantTVA = montantHT_SansRemise * TVA_TAUX;
+        ajouterLigneTotaux(table, String.format("TVA (%.0f%%) :", TVA_TAUX * 100), String.format("%.2f DT", montantTVA));
+
+        // 3- Afficher montantTotalSansRemise
+        ajouterLigneTotaux(table, "Total TTC (sans remise) :", String.format("%.2f DT", montantTotalSansRemise));
+
+        // 4- Calculer et afficher montantRemise
         double montantRemise = 0.0;
 
         if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
@@ -374,19 +381,9 @@ public class PdfGeneratorService {
                     String.format("-%.2f DT", montantRemise));
         }
 
-        // 4️⃣ Calculer le total APRÈS remise
+        // 5- Calculer et afficher montantTotalApresRemise
         double montantTotalApresRemise = montantTotalSansRemise - montantRemise;
 
-        // Si une remise a été appliquée, afficher le total TTC sans remise
-        if (montantRemise > 0) {
-            ajouterLigneTotaux(table, "Total TTC (sans remise) :", String.format("%.2f DT", montantTotalSansRemise));
-        }
-
-        // 5️⃣ Calculer et afficher la TVA
-        double montantTVA = montantTotalApresRemise - (montantTotalApresRemise / (1 + TVA_TAUX));
-        ajouterLigneTotaux(table, "TVA (19%) :", String.format("%.2f DT", montantTVA));
-
-        // 6️⃣ TOTAL FINAL TTC (après remise)
         PdfPCell cell1 = new PdfPCell(new Phrase("TOTAL TTC :", HEADER_FONT));
         cell1.setBorder(Rectangle.NO_BORDER);
         cell1.setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -401,7 +398,6 @@ public class PdfGeneratorService {
         document.add(table);
         document.add(Chunk.NEWLINE);
     }
-
     /**
      * Ajoute les informations de paiement
      */
