@@ -78,7 +78,7 @@ public class FactureController {
     }
 
     @GetMapping("/client/{idClient}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE','CLIENT')")
     @Operation(summary = "Obtenir toutes les factures d'un client")
     public ResponseEntity<List<FactureResponseDto>> getFacturesByClient(@PathVariable Long idClient) {
         return ResponseEntity.ok(factureService.getFacturesByClient(idClient));

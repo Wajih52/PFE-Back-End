@@ -188,7 +188,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
         String numeroFacture = codeGeneratorService.genererNumeroFacture(typeFacture);
 
         // Calculer les montants
-        Double montantHT = reservation.getMontantTotal() / (1 + TVA_TAUX);
+        Double montantHT = (reservation.getMontantTotal() +reservation.getRemiseMontant()+reservation.getRemisePourcentage())/ (1 + TVA_TAUX);
         Double montantTVA = reservation.getMontantTotal() - montantHT;
         Double montantRemise = reservation.getRemiseMontant();
 

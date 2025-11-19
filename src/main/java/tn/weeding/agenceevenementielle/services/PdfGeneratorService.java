@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -190,8 +192,8 @@ public class PdfGeneratorService {
         cell.setBorder(Rectangle.NO_BORDER);
         cell.addElement(new Paragraph("ELEGANT HIVE", HEADER_FONT));
         cell.addElement(new Paragraph("Agence d'événementiel", NORMAL_FONT));
-        cell.addElement(new Paragraph("Adresse : Tunis, Tunisie", SMALL_FONT));
-        cell.addElement(new Paragraph("Tél : +216 XX XXX XXX", SMALL_FONT));
+        cell.addElement(new Paragraph("Adresse : Mahdia, Tunisie", SMALL_FONT));
+        cell.addElement(new Paragraph("Tél : +216 98 661 402", SMALL_FONT));
         cell.addElement(new Paragraph("Email : contact@eleganthive.tn", SMALL_FONT));
 
         table.addCell(cell);
@@ -236,6 +238,7 @@ public class PdfGeneratorService {
         ajouterCelluleEntete(table, "Produit");
         ajouterCelluleEntete(table, "Quantité");
         ajouterCelluleEntete(table, "Prix Unitaire");
+        ajouterCelluleEntete(table, "Période");
         ajouterCelluleEntete(table, "Sous-total");
 
         // Lignes de produits
@@ -243,7 +246,12 @@ public class PdfGeneratorService {
             ajouterCellule(table, ligne.getProduit().getNomProduit());
             ajouterCellule(table, String.valueOf(ligne.getQuantite()));
             ajouterCellule(table, String.format("%.2f TND", ligne.getPrixUnitaire()));
-            ajouterCellule(table, String.format("%.2f TND", ligne.getQuantite() * ligne.getPrixUnitaire()));
+
+            //calculer nombre jours
+            Long nbrJours = calculerNombreJours(ligne.getDateDebut(),ligne.getDateFin());
+
+            ajouterCellule(table, String.format("%s -> %s : %s", ligne.getDateDebut(),ligne.getDateFin(),nbrJours));
+            ajouterCellule(table, String.format("%.2f TND", ligne.getQuantite() * ligne.getPrixUnitaire()*nbrJours));
         }
 
         document.add(table);
@@ -341,5 +349,11 @@ public class PdfGeneratorService {
         cell2.setBorder(Rectangle.NO_BORDER);
         cell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(cell2);
+    }
+
+    private long calculerNombreJours (LocalDate dateDebut,LocalDate dateFin){
+        long joursLocation = 0;
+            return ChronoUnit.DAYS.between(dateDebut,dateFin) + 1;  // +1 pour inclure le dernier jour
+
     }
 }
