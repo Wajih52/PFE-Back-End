@@ -30,6 +30,12 @@ public interface FactureServiceInterface {
     // Mise à jour statut
     FactureResponseDto updateStatutFacture(Long idFacture, StatutFacture nouveauStatut, String username);
 
-    // Régénération
+    /**
+     * Mettre à jour une facture existante en régénérant le PDF
+     * Utilisé quand la réservation change (modification du devis, ajout de produits)
+     */
     FactureResponseDto regenererPdfFacture(Long idFacture, String username);
+
+
+
 }

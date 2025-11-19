@@ -9,6 +9,7 @@ import tn.weeding.agenceevenementielle.dto.facture.FactureResponseDto;
 import tn.weeding.agenceevenementielle.dto.facture.GenererFactureRequestDto;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutFacture;
+import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 import tn.weeding.agenceevenementielle.entities.enums.TypeFacture;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.repository.FactureRepository;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -165,19 +168,40 @@ public class FactureServiceImpl implements FactureServiceInterface {
 
     @Override
     public FactureResponseDto regenererPdfFacture(Long idFacture, String username) {
+        log.info("🔄 Mise à jour de la facture ID: {}", idFacture);
+
         Facture facture = factureRepository.findById(idFacture)
                 .orElseThrow(() -> new CustomException("Facture introuvable"));
 
+        // Vérifier que la facture peut être mise à jour
+        if (facture.getStatutFacture() == StatutFacture.PAYEE) {
+            throw new CustomException("Impossible de modifier une facture payée");
+        }
+
+        if (facture.getStatutFacture() == StatutFacture.ANNULEE) {
+            throw new CustomException("Impossible de modifier une facture annulée");
+        }
+
+        // Vérifier que c'est un DEVIS ou PRO_FORMA
+        if (facture.getTypeFacture() == TypeFacture.FINALE &&
+                facture.getReservation().getStatutLivraisonRes() == StatutLivraison.LIVREE) {
+            throw new CustomException("Impossible de modifier une facture finale après livraison");
+        }
+
+        // Mettre à jour les montants
+        facture = mettreAJourMontantsFacture(facture, facture.getReservation());
+
+        // Régénérer le PDF
         try {
             String cheminPDF = pdfGeneratorService.genererPdfFacture(facture);
             facture.setCheminPDF(cheminPDF);
             facture = factureRepository.save(facture);
 
-            log.info("✅ PDF régénéré pour facture : {}", facture.getNumeroFacture());
+            log.info("✅ Facture mise à jour : {}", facture.getNumeroFacture());
             return convertToDto(facture);
         } catch (DocumentException | IOException e) {
-            log.error("❌ Erreur régénération PDF : {}", e.getMessage());
-            throw new CustomException("Erreur lors de la régénération du PDF");
+            log.error("❌ Erreur mise à jour PDF : {}", e.getMessage());
+            throw new CustomException("Erreur lors de la mise à jour du PDF");
         }
     }
 
@@ -187,44 +211,76 @@ public class FactureServiceImpl implements FactureServiceInterface {
         // Générer le numéro
         String numeroFacture = codeGeneratorService.genererNumeroFacture(typeFacture);
 
-        // Calculer les montants
-        Double montantHT = (reservation.getMontantTotal() +reservation.getRemiseMontant()+reservation.getRemisePourcentage())/ (1 + TVA_TAUX);
-        Double montantTVA = reservation.getMontantTotal() - montantHT;
-        Double montantRemise = reservation.getRemiseMontant();
+        // 1️⃣ Calculer le montant total AVANT remise (montant brut des lignes)
+        double montantTotalSansRemise = 0.0;
+        for (LigneReservation ligne : reservation.getLigneReservations()) {
+            // Calculer le nombre de jours
+            long nbrJours = java.time.temporal.ChronoUnit.DAYS.between(
+                    ligne.getDateDebut(),
+                    ligne.getDateFin()
+            ) + 1;
 
-        // Déterminer le statut initial
+            montantTotalSansRemise += ligne.getQuantite() * ligne.getPrixUnitaire() * nbrJours;
+        }
+
+        // 2️⃣ Calculer le montant de la remise
+        double montantRemise = 0.0;
+
+        if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
+            // Remise en MONTANT FIXE
+            montantRemise = reservation.getRemiseMontant();
+        }
+        else if (reservation.getRemisePourcentage() != null && reservation.getRemisePourcentage() > 0) {
+            // Remise en POURCENTAGE
+            montantRemise = montantTotalSansRemise * (reservation.getRemisePourcentage() / 100.0);
+        }
+
+        // 3️⃣ Calculer le montant APRÈS remise (c'est le montantTotal de la réservation)
+        double montantTotalApresRemise = montantTotalSansRemise - montantRemise;
+
+        // Vérification : le montantTotal de la réservation devrait correspondre
+        // (on utilise quand même celui de la réservation pour la cohérence)
+        double montantTTC = reservation.getMontantTotal();
+
+        // 4️⃣ Calculer le HT et la TVA depuis le montant TTC (après remise)
+        double montantHT = montantTTC / (1 + TVA_TAUX);
+        double montantTVA = montantTTC - montantHT;
+
+        // 5️⃣ Déterminer le statut initial
         StatutFacture statut = determinerStatutInitial(typeFacture);
 
-        // Calculer la date d'échéance (30 jours par défaut pour facture finale)
+        // 6️⃣ Calculer la date d'échéance (30 jours par défaut pour facture finale)
         LocalDate dateEcheance = typeFacture == TypeFacture.FINALE
                 ? LocalDate.now().plusDays(30)
                 : null;
 
-        return Facture.builder()
-                .numeroFacture(numeroFacture)
-                .typeFacture(typeFacture)
-                .statutFacture(statut)
-                .montantHT(montantHT)
-                .montantTVA(montantTVA)
-                .montantTTC(reservation.getMontantTotal())
-                .montantRemise(montantRemise)
-                .dateEcheance(dateEcheance)
-                .reservation(reservation)
-                .generePar(username)
-                .build();
+        // 7️⃣ Créer la facture
+        Facture facture = new Facture();
+        facture.setReservation(reservation);
+        facture.setNumeroFacture(numeroFacture);
+        facture.setTypeFacture(typeFacture);
+        facture.setStatutFacture(statut);
+        facture.setDateCreation(LocalDateTime.now());
+        facture.setDateEcheance(dateEcheance);
+
+        // Montants
+        facture.setMontantHT(montantHT);
+        facture.setMontantTVA(montantTVA);
+        facture.setMontantRemise(montantRemise);
+        facture.setMontantTTC(montantTTC);
+
+        log.info("💰 Calculs facture : Total sans remise={}DT, Remise={}DT, HT={}DT, TVA={}DT, TTC={}DT",
+                montantTotalSansRemise, montantRemise, montantHT, montantTVA, montantTTC);
+
+        return facture;
     }
 
     private StatutFacture determinerStatutInitial(TypeFacture typeFacture) {
-        switch (typeFacture) {
-            case DEVIS:
-                return StatutFacture.EN_ATTENTE_VALIDATION_CLIENT;
-            case PRO_FORMA:
-                return StatutFacture.EN_ATTENTE_LIVRAISON;
-            case FINALE:
-                return StatutFacture.A_REGLER;
-            default:
-                return StatutFacture.EN_ATTENTE_VALIDATION_CLIENT;
-        }
+        return switch (typeFacture) {
+            case PRO_FORMA -> StatutFacture.EN_ATTENTE_LIVRAISON;
+            case FINALE -> StatutFacture.A_REGLER;
+            default -> StatutFacture.EN_ATTENTE_VALIDATION_CLIENT;
+        };
     }
 
     private FactureResponseDto convertToDto(Facture facture) {
@@ -253,5 +309,38 @@ public class FactureServiceImpl implements FactureServiceInterface {
                 .telephoneClient(client.getTelephone().toString())
                 .generePar(facture.getGenerePar())
                 .build();
+    }
+
+    /**
+     * 🆕 Méthode helper pour mettre à jour les montants d'une facture
+     */
+    private Facture mettreAJourMontantsFacture(Facture facture, Reservation reservation) {
+        // Recalculer les montants (même logique que dans creerFacture)
+        double montantTotalSansRemise = 0.0;
+        for (LigneReservation ligne : reservation.getLigneReservations()) {
+            long nbrJours = ChronoUnit.DAYS.between(
+                    ligne.getDateDebut(),
+                    ligne.getDateFin()
+            ) + 1;
+            montantTotalSansRemise += ligne.getQuantite() * ligne.getPrixUnitaire() * nbrJours;
+        }
+
+        double montantRemise = 0.0;
+        if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
+            montantRemise = reservation.getRemiseMontant();
+        } else if (reservation.getRemisePourcentage() != null && reservation.getRemisePourcentage() > 0) {
+            montantRemise = montantTotalSansRemise * (reservation.getRemisePourcentage() / 100.0);
+        }
+
+        double montantTTC = reservation.getMontantTotal();
+        double montantHT = montantTTC / 1.19;
+        double montantTVA = montantTTC - montantHT;
+
+        facture.setMontantHT(montantHT);
+        facture.setMontantTVA(montantTVA);
+        facture.setMontantRemise(montantRemise);
+        facture.setMontantTTC(montantTTC);
+
+        return facture;
     }
 }

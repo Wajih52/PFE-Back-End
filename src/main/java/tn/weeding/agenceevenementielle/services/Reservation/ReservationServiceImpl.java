@@ -17,6 +17,7 @@ import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
 import tn.weeding.agenceevenementielle.repository.*;
 import  tn.weeding.agenceevenementielle.exceptions.ReservationException.StockIndisponibleException;
+import tn.weeding.agenceevenementielle.services.PdfGeneratorService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,6 +46,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     private final InstanceProduitServiceInterface instanceProduitService;
     private final DateReservationValidator dateValidator;
     private final AuthenticationFacade authenticationFacade;
+    private final PdfGeneratorService pdfGeneratorService;
+    private FactureRepository factureRepository ;
 
     // ============ CRÉATION DE DEVIS PAR LE CLIENT ============
 
@@ -456,6 +459,10 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         log.info("✅ Devis modifié - Montant original: {} TND, Montant final: {} TND",
                 reservation.getMontantOriginal(), montantFinal);
+
+        // Mettre à jour la facture DEVIS si elle existe
+        mettreAJourFactureDevis(reservation);
+
 
         return convertToResponseDto(reservation);
     }
@@ -1552,5 +1559,66 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .dureeMaxJours(dateValidator.getDureeMaxLocation())
                 .reservationAujourdhuiAutorisee(dateValidator.getDateMinimaleReservation().equals(LocalDate.now()))
                 .build();
+    }
+
+    /**
+     * 🆕 Méthode helper pour mettre à jour les montants d'une facture
+     */
+    private Facture mettreAJourMontantsFacture(Facture facture, Reservation reservation) {
+        // Recalculer les montants (même logique que dans creerFacture)
+        double montantTotalSansRemise = 0.0;
+        for (LigneReservation ligne : reservation.getLigneReservations()) {
+            long nbrJours = ChronoUnit.DAYS.between(
+                    ligne.getDateDebut(),
+                    ligne.getDateFin()
+            ) + 1;
+            montantTotalSansRemise += ligne.getQuantite() * ligne.getPrixUnitaire() * nbrJours;
+        }
+
+        double montantRemise = 0.0;
+        if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
+            montantRemise = reservation.getRemiseMontant();
+        } else if (reservation.getRemisePourcentage() != null && reservation.getRemisePourcentage() > 0) {
+            montantRemise = montantTotalSansRemise * (reservation.getRemisePourcentage() / 100.0);
+        }
+
+        double montantTTC = reservation.getMontantTotal();
+        double montantHT = montantTTC / 1.19;
+        double montantTVA = montantTTC - montantHT;
+
+        facture.setMontantHT(montantHT);
+        facture.setMontantTVA(montantTVA);
+        facture.setMontantRemise(montantRemise);
+        facture.setMontantTTC(montantTTC);
+
+        return facture;
+    }
+
+    private void mettreAJourFactureDevis(Reservation reservation) {
+        try {
+            Optional<Facture> factureDevis = factureRepository
+                    .findByReservation_IdReservationAndTypeFacture(
+                            reservation.getIdReservation(),
+                            TypeFacture.DEVIS
+                    )
+                    .stream()
+                    .findFirst();
+
+            if (factureDevis.isPresent()) {
+                Facture facture = factureDevis.get();
+                facture = mettreAJourMontantsFacture(facture, reservation);
+
+                String cheminPDF = pdfGeneratorService.genererPdfFacture(facture);
+                facture.setCheminPDF(cheminPDF);
+
+                factureRepository.save(facture);
+
+                log.info("✅ Facture DEVIS mise à jour automatiquement : {}",
+                        facture.getNumeroFacture());
+            }
+        } catch (Exception e) {
+            log.error("❌ Erreur mise à jour facture : {}", e.getMessage());
+            // Ne pas propager l'exception pour ne pas interrompre le processus principal
+        }
     }
 }
