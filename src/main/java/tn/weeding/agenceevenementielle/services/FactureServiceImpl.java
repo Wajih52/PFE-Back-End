@@ -46,10 +46,10 @@ public class FactureServiceImpl implements FactureServiceInterface {
                 .orElseThrow(() -> new CustomException("Réservation introuvable"));
 
         // Vérifier qu'une facture du même type n'existe pas déjà
-        if (factureRepository.existsByReservation_IdReservationAndTypeFacture(
-                request.getIdReservation(), request.getTypeFacture())) {
-            throw new CustomException("Une facture de type " + request.getTypeFacture() + " existe déjà pour cette réservation");
-        }
+//        if (factureRepository.existsByReservation_IdReservationAndTypeFacture(
+//                request.getIdReservation(), request.getTypeFacture())) {
+//            throw new CustomException("Une facture de type " + request.getTypeFacture() + " existe déjà pour cette réservation");
+//        }
 
         // Créer la facture
         Facture facture = creerFacture(reservation, request.getTypeFacture(), username);

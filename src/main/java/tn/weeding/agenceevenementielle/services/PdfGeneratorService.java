@@ -43,30 +43,70 @@ public class PdfGeneratorService {
         // Nom du fichier PDF
         String fileName = facture.getNumeroFacture().replace("/", "-") + ".pdf";
         String filePath = PDF_DIRECTORY + fileName;
+        Path path = Paths.get(filePath);
 
         // Créer le document
-        Document document = new Document(PageSize.A4, 50, 50, 50, 50);
-        PdfWriter.getInstance(document, new FileOutputStream(filePath));
+        Document document = null;
+        FileOutputStream fos = null;
+        PdfWriter writer = null;
 
-        document.open();
+        try {
+            fos = new FileOutputStream(filePath);
+            document = new Document(PageSize.A4, 50, 50, 50, 50);
+            writer = PdfWriter.getInstance(document, fos);
 
-        // Contenu selon le type de facture
-        switch (facture.getTypeFacture()) {
-            case DEVIS:
-                ajouterContenuDevis(document, facture);
-                break;
-            case PRO_FORMA:
-                ajouterContenuProForma(document, facture);
-                break;
-            case FINALE:
-                ajouterContenuFinale(document, facture);
-                break;
+            document.open();
+
+            // Contenu selon le type de facture
+            switch (facture.getTypeFacture()) {
+                case DEVIS:
+                    ajouterContenuDevis(document, facture);
+                    break;
+                case PRO_FORMA:
+                    ajouterContenuProForma(document, facture);
+                    break;
+                case FINALE:
+                    ajouterContenuFinale(document, facture);
+                    break;
+            }
+
+            //  Fermer dans le bon ordre
+            document.close();
+            writer.close();
+            fos.close();
+
+            log.info("📄 PDF généré avec succès : {}", filePath);
+            return filePath;
+
+        } catch (Exception e) {
+            log.error("❌ Erreur génération PDF : {}", e.getMessage());
+
+            // Nettoyer en cas d'erreur
+            if (document != null && document.isOpen()) {
+                document.close();
+            }
+            if (writer != null) {
+                writer.close();
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException ex) {
+                    log.error("Erreur fermeture stream");
+                }
+            }
+
+            // Supprimer le fichier corrompu
+            try {
+                if (Files.exists(path)) {
+                    Files.delete(path);
+                }
+            } catch (IOException ex) {
+                // Ignore
+            }
+
+            throw new RuntimeException("Erreur génération PDF : " + e.getMessage(), e);
         }
-
-        document.close();
-
-        log.info("📄 PDF généré : {}", filePath);
-        return filePath;
     }
 
     /**

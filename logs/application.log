@@ -5378,3 +5378,841 @@ Consider defining a bean of type 'tn.weeding.agenceevenementielle.services.Reser
 2025-11-19 16:34:32 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-11-19 16:34:32 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
 2025-11-19 16:34:32 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2025-11-19 16:34:52 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 6872 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-19 16:34:52 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-19 16:34:52 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-19 16:34:52 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-19 16:34:52 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-19 16:34:54 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 16:34:54 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 513 ms. Found 15 JPA repository interfaces.
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:34:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 39 ms. Found 0 Redis repository interfaces.
+2025-11-19 16:34:56 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-19 16:34:56 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-19 16:34:56 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-19 16:34:56 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-19 16:34:56 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 4396 ms
+2025-11-19 16:34:56 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-19 16:34:56 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-11-19 16:34:57 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-19 16:34:57 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-19 16:34:57 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-11-19 16:34:58 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@41ca5773
+2025-11-19 16:34:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-11-19 16:34:58 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-19 16:34:58 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-19 16:34:58 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-19 16:35:00 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-19 16:35:00 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 16:35:01 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-19 16:35:02 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-19 16:35:04 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-19 16:35:04 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-19 16:35:04 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-19 16:35:15 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-19 16:35:17 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ Configuration CORS activée pour http://localhost:4200
+2025-11-19 16:35:17 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ OAuth2LoginSuccessHandler bean créé avec succès
+2025-11-19 16:35:17 [restartedMain] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, AuthTokenFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-11-19 16:35:18 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-11-19 16:35:18 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-11-19 16:35:18 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Started AgenceEvenementielleApplication in 27.831 seconds (process running for 29.669)
+2025-11-19 16:35:58 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-19 16:35:58 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-11-19 16:35:58 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 10 ms
+2025-11-19 16:35:58 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations/devis-en-attente
+2025-11-19 16:35:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:35:59 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:35:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:35:59 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:35:59 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations/devis-en-attente
+2025-11-19 16:35:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:35:59 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:35:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:35:59 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:35:59 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:35:59 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing PUT /api/reservations/devis/2/modifier
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured PUT /api/reservations/devis/2/modifier
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.modifierDevisParAdmin(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.DevisModificationDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:07 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.modifierDevisParAdmin(java.lang.Long,tn.weeding.agenceevenementielle.dto.reservation.DevisModificationDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.c.ReservationController - 🔧 Modification du devis ID: 2 par l'admin
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.s.R.ReservationServiceImpl - 🔧 Modification du devis ID: 2 par l'admin WajihAdmin
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.s.R.ReservationServiceImpl - 💸 Remise fixe: -81.5 TND
+2025-11-19 16:36:07 [http-nio-8080-exec-3] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Devis modifié - Montant original: 131.5 TND, Montant final: 50.0 TND
+2025-11-19 16:36:07 [http-nio-8080-exec-3] ERROR t.w.a.s.R.ReservationServiceImpl - ❌ Erreur mise à jour facture : Cannot invoke "tn.weeding.agenceevenementielle.repository.FactureRepository.findByReservation_IdReservationAndTypeFacture(java.lang.Long, tn.weeding.agenceevenementielle.entities.enums.TypeFacture)" because "this.factureRepository" is null
+2025-11-19 16:36:07 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations/devis-en-attente
+2025-11-19 16:36:08 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:08 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:08 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:08 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:08 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations/devis-en-attente
+2025-11-19 16:36:08 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:08 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:08 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:08 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:08 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:08 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /factures/toutes
+2025-11-19 16:36:15 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:15 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /factures/toutes
+2025-11-19 16:36:15 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:15 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.getAllFactures(); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:36:15 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.getAllFactures(); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations
+2025-11-19 16:36:25 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:25 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations
+2025-11-19 16:36:25 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:25 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:25 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations/devis-en-attente
+2025-11-19 16:36:26 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:26 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations/devis-en-attente
+2025-11-19 16:36:26 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:36:26 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:26 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:35 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/reservations/mes-devis-en-attente
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations/mes-devis-en-attente
+2025-11-19 16:36:35 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-19 16:36:35 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations/mes-devis-en-attente
+2025-11-19 16:36:35 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-19 16:36:35 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getMesDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:35 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getMesDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 16:36:39 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /factures/reservation/2
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /factures/reservation/2
+2025-11-19 16:36:39 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-19 16:36:39 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /factures/reservation/2
+2025-11-19 16:36:39 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: ClientTest
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-19 16:36:39 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'ClientTest' chargé avec 1 rôle(s)
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'ClientTest' authentifié avec 1 rôles
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.getFacturesByReservation(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:36:39 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.getFacturesByReservation(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:37:06 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /factures/generer-auto/2/DEVIS
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:37:06 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:37:06 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:37:06 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:37:06 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:37:06 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:37:06 [http-nio-8080-exec-8] INFO  t.w.a.services.FactureServiceImpl - 📄 Génération de facture DEVIS pour réservation 2
+2025-11-19 16:37:06 [http-nio-8080-exec-8] INFO  t.w.a.services.CodeGeneratorService - 📄 Numéro de facture généré : DEV-2025-11-0001
+2025-11-19 16:37:06 [http-nio-8080-exec-8] INFO  t.w.a.services.FactureServiceImpl - 💰 Calculs facture : Total sans remise=131.5DT, Remise=81.5DT, HT=42.016806722689076DT, TVA=7.983193277310924DT, TTC=50.0DT
+2025-11-19 16:37:06 [http-nio-8080-exec-8] ERROR t.w.a.services.FactureServiceImpl - ❌ Erreur génération PDF : factures\DEV-2025-11-0001.pdf (Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus)
+2025-11-19 16:37:06 [http-nio-8080-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [tn.weeding.agenceevenementielle.exceptions.CustomException: Erreur lors de la génération du PDF : factures\DEV-2025-11-0001.pdf (Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus)]
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:41:55 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:41:55 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:41:55 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:41:55 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:41:55 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:41:55 [http-nio-8080-exec-9] INFO  t.w.a.services.FactureServiceImpl - 📄 Génération de facture DEVIS pour réservation 2
+2025-11-19 16:41:55 [http-nio-8080-exec-9] INFO  t.w.a.services.CodeGeneratorService - 📄 Numéro de facture généré : DEV-2025-11-0001
+2025-11-19 16:41:55 [http-nio-8080-exec-9] INFO  t.w.a.services.FactureServiceImpl - 💰 Calculs facture : Total sans remise=131.5DT, Remise=81.5DT, HT=42.016806722689076DT, TVA=7.983193277310924DT, TTC=50.0DT
+2025-11-19 16:41:56 [http-nio-8080-exec-9] INFO  t.w.a.services.PdfGeneratorService - 📄 PDF généré : factures/DEV-2025-11-0001.pdf
+2025-11-19 16:41:56 [http-nio-8080-exec-9] INFO  t.w.a.services.FactureServiceImpl - ✅ Facture générée : DEV-2025-11-0001
+2025-11-19 16:41:56 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /factures/10/telecharger
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /factures/10/telecharger
+2025-11-19 16:41:56 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:41:56 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /factures/10/telecharger
+2025-11-19 16:41:56 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:41:56 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:41:56 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /factures/10/telecharger
+2025-11-19 16:41:57 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:41:57 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /factures/10/telecharger
+2025-11-19 16:41:57 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:41:57 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:41:57 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:43:59 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:43:59 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:43:59 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:43:59 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:43:59 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:43:59 [http-nio-8080-exec-6] INFO  t.w.a.services.FactureServiceImpl - 📄 Génération de facture DEVIS pour réservation 2
+2025-11-19 16:43:59 [http-nio-8080-exec-6] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [tn.weeding.agenceevenementielle.exceptions.CustomException: Une facture de type DEVIS existe déjà pour cette réservation]
+2025-11-19 16:53:26 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 2 deletions, 0 modifications)
+2025-11-19 16:53:26 [Thread-5] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-19 16:53:27 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-11-19 16:53:28 [Thread-5] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 16:53:28 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-11-19 16:53:28 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-11-19 16:53:29 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 6872 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-19 16:53:29 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-19 16:53:29 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-19 16:53:30 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 16:53:30 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 244 ms. Found 15 JPA repository interfaces.
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 56 ms. Found 0 Redis repository interfaces.
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-19 16:53:31 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-19 16:53:31 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-19 16:53:31 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2190 ms
+2025-11-19 16:53:31 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-19 16:53:31 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-19 16:53:31 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-19 16:53:31 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2025-11-19 16:53:32 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4acbd9fa
+2025-11-19 16:53:32 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2025-11-19 16:53:32 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-19 16:53:32 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-19 16:53:32 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-19 16:53:32 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-19 16:53:33 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 16:53:33 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-19 16:53:33 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-19 16:53:33 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-19 16:53:35 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-19 16:53:35 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factureController' defined in file [C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes\tn\weeding\agenceevenementielle\controller\FactureController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'factureServiceImpl': Resolution of declared constructors on bean Class [tn.weeding.agenceevenementielle.services.FactureServiceImpl] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@4bcb5a58] failed
+2025-11-19 16:53:36 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 16:53:36 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2025-11-19 16:53:36 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2025-11-19 16:53:36 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-11-19 16:53:36 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-11-19 16:53:36 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factureController' defined in file [C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes\tn\weeding\agenceevenementielle\controller\FactureController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'factureServiceImpl': Resolution of declared constructors on bean Class [tn.weeding.agenceevenementielle.services.FactureServiceImpl] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@4bcb5a58] failed
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1221) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1187) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1123) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.11.jar:6.2.11]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.11.jar:6.2.11]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.6.jar:3.5.6]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.6.jar:3.5.6]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.6.jar:3.5.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.6.jar:3.5.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.6.jar:3.5.6]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.6.jar:3.5.6]
+	at tn.weeding.agenceevenementielle.AgenceEvenementielleApplication.main(AgenceEvenementielleApplication.java:21) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.6.jar:3.5.6]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'factureServiceImpl': Resolution of declared constructors on bean Class [tn.weeding.agenceevenementielle.services.FactureServiceImpl] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@4bcb5a58] failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:384) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1334) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1229) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1760) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1643) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913) ~[spring-beans-6.2.11.jar:6.2.11]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791) ~[spring-beans-6.2.11.jar:6.2.11]
+	... 26 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: tn/weeding/agenceevenementielle/services/PdfGeneratorService
+	at java.base/java.lang.Class.getDeclaredConstructors0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.privateGetDeclaredConstructors(Class.java:3373) ~[na:na]
+	at java.base/java.lang.Class.getDeclaredConstructors(Class.java:2555) ~[na:na]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:379) ~[spring-beans-6.2.11.jar:6.2.11]
+	... 39 common frames omitted
+Caused by: java.lang.ClassNotFoundException: tn.weeding.agenceevenementielle.services.PdfGeneratorService
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121) ~[spring-boot-devtools-3.5.6.jar:3.5.6]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520) ~[na:na]
+	... 43 common frames omitted
+2025-11-19 16:56:19 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 6872 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-19 16:56:19 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-19 16:56:19 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-19 16:56:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 16:56:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 175 ms. Found 15 JPA repository interfaces.
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 39 ms. Found 0 Redis repository interfaces.
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-19 16:56:21 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-19 16:56:21 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-19 16:56:21 [restartedMain] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1746 ms
+2025-11-19 16:56:21 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-19 16:56:21 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-19 16:56:21 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-19 16:56:21 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2025-11-19 16:56:21 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@73fdd5a7
+2025-11-19 16:56:21 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2025-11-19 16:56:21 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-19 16:56:21 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-19 16:56:21 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-19 16:56:22 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-19 16:56:22 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 16:56:23 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-19 16:56:23 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-19 16:56:23 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-19 16:56:23 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-19 16:56:24 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-19 16:56:25 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ Configuration CORS activée pour http://localhost:4200
+2025-11-19 16:56:25 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ OAuth2LoginSuccessHandler bean créé avec succès
+2025-11-19 16:56:25 [restartedMain] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, AuthTokenFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-11-19 16:56:25 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-11-19 16:56:25 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-11-19 16:56:25 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Started AgenceEvenementielleApplication in 5.886 seconds (process running for 1296.504)
+2025-11-19 16:56:25 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-11-19 16:57:36 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-19 16:57:36 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-11-19 16:57:36 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 6 ms
+2025-11-19 16:57:36 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:57:36 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:57:37 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:57:37 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:57:37 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:57:37 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:57:37 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:57:37 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:57:37 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:57:37 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:57:37 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:57:37 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:57:37 [http-nio-8080-exec-2] INFO  t.w.a.services.FactureServiceImpl - 📄 Génération de facture DEVIS pour réservation 2
+2025-11-19 16:57:37 [http-nio-8080-exec-2] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [tn.weeding.agenceevenementielle.exceptions.CustomException: Une facture de type DEVIS existe déjà pour cette réservation]
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:59:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:59:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured POST /factures/generer-auto/2/DEVIS
+2025-11-19 16:59:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 16:59:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:59:24 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 16:59:24 [http-nio-8080-exec-1] INFO  t.w.a.services.FactureServiceImpl - 📄 Génération de facture DEVIS pour réservation 2
+2025-11-19 16:59:24 [http-nio-8080-exec-1] INFO  t.w.a.services.CodeGeneratorService - 📄 Numéro de facture généré : DEV-2025-11-0001
+2025-11-19 16:59:24 [http-nio-8080-exec-1] INFO  t.w.a.services.FactureServiceImpl - 💰 Calculs facture : Total sans remise=131.5DT, Remise=81.5DT, HT=42.016806722689076DT, TVA=7.983193277310924DT, TTC=50.0DT
+2025-11-19 16:59:24 [http-nio-8080-exec-1] ERROR t.w.a.services.PdfGeneratorService - ❌ Erreur génération PDF : factures\DEV-2025-11-0001.pdf (Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus)
+2025-11-19 16:59:24 [http-nio-8080-exec-1] ERROR t.w.a.e.GlobalExceptionHandler -  🚨 Erreur interne du serveur : 
+java.lang.RuntimeException: Erreur génération PDF : factures\DEV-2025-11-0001.pdf (Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus)
+	at tn.weeding.agenceevenementielle.services.PdfGeneratorService.genererPdfFacture(PdfGeneratorService.java:108) ~[classes/:na]
+	at tn.weeding.agenceevenementielle.services.FactureServiceImpl.genererFacture(FactureServiceImpl.java:64) ~[classes/:na]
+	at tn.weeding.agenceevenementielle.services.FactureServiceImpl.genererFactureAutomatique(FactureServiceImpl.java:83) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380) ~[spring-tx-6.2.11.jar:6.2.11]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-6.2.11.jar:6.2.11]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.11.jar:6.2.11]
+	at tn.weeding.agenceevenementielle.services.FactureServiceImpl$$SpringCGLIB$$0.genererFactureAutomatique(<generated>) ~[classes/:na]
+	at tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(FactureController.java:53) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.proceed(AuthorizationManagerBeforeMethodInterceptor.java:268) ~[spring-security-core-6.5.5.jar:6.5.5]
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.attemptAuthorization(AuthorizationManagerBeforeMethodInterceptor.java:263) ~[spring-security-core-6.5.5.jar:6.5.5]
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.invoke(AuthorizationManagerBeforeMethodInterceptor.java:196) ~[spring-security-core-6.5.5.jar:6.5.5]
+	at org.springframework.security.config.annotation.method.configuration.DeferringMethodInterceptor.invoke(DeferringMethodInterceptor.java:44) ~[spring-security-config-6.5.5.jar:6.5.5]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.11.jar:6.2.11]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.11.jar:6.2.11]
+	at tn.weeding.agenceevenementielle.controller.FactureController$$SpringCGLIB$$0.genererFactureAutomatique(<generated>) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.46.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.46.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at tn.weeding.agenceevenementielle.config.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:76) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at tn.weeding.agenceevenementielle.config.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:76) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:235) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:229) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter.doFilterInternal(OAuth2AuthorizationRequestRedirectFilter.java:198) ~[spring-security-oauth2-client-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319) ~[spring-security-config-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267) ~[spring-webmvc-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240) ~[spring-security-config-6.5.5.jar:6.5.5]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.11.jar:6.2.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1776) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:975) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:493) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.46.jar:10.1.46]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+Caused by: java.io.FileNotFoundException: factures\DEV-2025-11-0001.pdf (Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus)
+	at java.base/java.io.FileOutputStream.open0(Native Method) ~[na:na]
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:293) ~[na:na]
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:235) ~[na:na]
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:123) ~[na:na]
+	at tn.weeding.agenceevenementielle.services.PdfGeneratorService.genererPdfFacture(PdfGeneratorService.java:54) ~[classes/:na]
+	... 148 common frames omitted
+2025-11-19 16:59:24 [http-nio-8080-exec-1] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.RuntimeException: Erreur génération PDF : factures\DEV-2025-11-0001.pdf (Le processus ne peut pas accéder au fichier car ce fichier est utilisé par un autre processus)]
+2025-11-19 17:00:52 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 2 deletions, 0 modifications)
+2025-11-19 17:00:52 [Thread-7] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-19 17:00:53 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-11-19 17:00:53 [Thread-7] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 17:00:53 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+2025-11-19 17:00:53 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2025-11-19 17:00:54 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 6872 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-19 17:00:54 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-19 17:00:54 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 215 ms. Found 15 JPA repository interfaces.
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:00:55 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 44 ms. Found 0 Redis repository interfaces.
+2025-11-19 17:00:56 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-19 17:00:56 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-19 17:00:56 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-19 17:00:56 [restartedMain] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-19 17:00:56 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2133 ms
+2025-11-19 17:00:56 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-19 17:00:56 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-19 17:00:56 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-19 17:00:56 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+2025-11-19 17:00:56 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6d7e2554
+2025-11-19 17:00:56 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
+2025-11-19 17:00:56 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-19 17:00:56 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-19 17:00:56 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-19 17:00:57 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-19 17:00:57 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 17:00:58 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-19 17:00:58 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-19 17:00:58 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-19 17:00:58 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-19 17:00:58 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factureController' defined in file [C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes\tn\weeding\agenceevenementielle\controller\FactureController.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'tn.weeding.agenceevenementielle.services.FactureServiceInterface' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2025-11-19 17:00:58 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 17:00:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
+2025-11-19 17:00:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
+2025-11-19 17:00:58 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-11-19 17:00:58 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-11-19 17:00:58 [restartedMain] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in tn.weeding.agenceevenementielle.controller.FactureController required a bean of type 'tn.weeding.agenceevenementielle.services.FactureServiceInterface' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'tn.weeding.agenceevenementielle.services.FactureServiceInterface' in your configuration.
+
+2025-11-19 17:01:00 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 6872 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-19 17:01:00 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-19 17:01:00 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-19 17:01:03 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 17:01:03 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 231 ms. Found 15 JPA repository interfaces.
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 0 Redis repository interfaces.
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-19 17:01:04 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-19 17:01:04 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-19 17:01:04 [restartedMain] INFO  o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3902 ms
+2025-11-19 17:01:04 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-19 17:01:04 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-19 17:01:04 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-19 17:01:04 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
+2025-11-19 17:01:05 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@8b0aec6
+2025-11-19 17:01:05 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
+2025-11-19 17:01:05 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-19 17:01:05 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-19 17:01:05 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-19 17:01:10 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-19 17:01:10 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-19 17:01:11 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-19 17:01:12 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-19 17:01:12 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-19 17:01:12 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-19 17:01:15 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-19 17:01:16 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ Configuration CORS activée pour http://localhost:4200
+2025-11-19 17:01:17 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ OAuth2LoginSuccessHandler bean créé avec succès
+2025-11-19 17:01:17 [restartedMain] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, AuthTokenFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-11-19 17:01:19 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-11-19 17:01:19 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-11-19 17:01:19 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Started AgenceEvenementielleApplication in 18.914 seconds (process running for 1590.549)
+2025-11-19 17:01:19 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-11-19 17:01:24 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-19 17:01:24 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-11-19 17:01:24 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /factures/toutes
+2025-11-19 17:01:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /factures/toutes
+2025-11-19 17:01:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:24 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.getAllFactures(); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 17:01:24 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.getAllFactures(); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations
+2025-11-19 17:01:25 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:25 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations
+2025-11-19 17:01:25 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:25 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 17:01:25 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations/devis-en-attente
+2025-11-19 17:01:30 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:30 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations/devis-en-attente
+2025-11-19 17:01:30 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:30 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 17:01:30 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllDevisEnAttente(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing POST /factures/generer-auto/2/DEVIS
+2025-11-19 17:01:34 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:34 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured POST /factures/generer-auto/2/DEVIS
+2025-11-19 17:01:34 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:34 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 17:01:34 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.genererFactureAutomatique(java.lang.Long,tn.weeding.agenceevenementielle.entities.enums.TypeFacture,org.springframework.security.core.Authentication); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 17:01:34 [http-nio-8080-exec-6] INFO  t.w.a.services.FactureServiceImpl - 📄 Génération de facture DEVIS pour réservation 2
+2025-11-19 17:01:34 [http-nio-8080-exec-6] INFO  t.w.a.services.CodeGeneratorService - 📄 Numéro de facture généré : DEV-2025-11-0001
+2025-11-19 17:01:34 [http-nio-8080-exec-6] INFO  t.w.a.services.FactureServiceImpl - 💰 Calculs facture : Total sans remise=131.5DT, Remise=81.5DT, HT=42.016806722689076DT, TVA=7.983193277310924DT, TTC=50.0DT
+2025-11-19 17:01:35 [http-nio-8080-exec-6] INFO  t.w.a.services.PdfGeneratorService - 📄 PDF généré avec succès : factures/DEV-2025-11-0001.pdf
+2025-11-19 17:01:35 [http-nio-8080-exec-6] INFO  t.w.a.services.FactureServiceImpl - ✅ Facture générée : DEV-2025-11-0001
+2025-11-19 17:01:35 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /factures/12/telecharger
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /factures/12/telecharger
+2025-11-19 17:01:35 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:35 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /factures/12/telecharger
+2025-11-19 17:01:35 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:35 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 17:01:35 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /factures/12/telecharger
+2025-11-19 17:01:35 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:35 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /factures/12/telecharger
+2025-11-19 17:01:35 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-19 17:01:35 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
+2025-11-19 17:01:35 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.FactureController.telechargerPdfFacture(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.FactureController]
