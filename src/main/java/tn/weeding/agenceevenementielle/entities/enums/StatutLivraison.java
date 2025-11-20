@@ -8,5 +8,5 @@ public enum StatutLivraison {
     RETOUR,
     RETOUR_PARTIEL,
     RETOURNEE,
-    ANNULER
+    ANNULEE
 }

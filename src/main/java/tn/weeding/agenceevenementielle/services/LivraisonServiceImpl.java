@@ -366,10 +366,9 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         AffectationLivraison affectation = new AffectationLivraison();
         affectation.setLivraison(livraison);
         affectation.setUtilisateur(employe);
-        affectation.setDateAffectationLivraison(Date.from(dto.getDateAffectation()
-                .atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        affectation.setHeureDebut(Time.valueOf(dto.getHeureDebut()));
-        affectation.setHeureFin(Time.valueOf(dto.getHeureFin()));
+        affectation.setDateAffectationLivraison(dto.getDateAffectation());
+        affectation.setHeureDebut(dto.getHeureDebut());
+        affectation.setHeureFin(dto.getHeureFin());
 
         affectation = affectationRepo.save(affectation);
 
@@ -633,10 +632,9 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         AffectationLivraisonDto dto = new AffectationLivraisonDto();
         dto.setIdAffectation(affectation.getIdAffectationLivraison());
 
-        dto.setDateAffectation(affectation.getDateAffectationLivraison().toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate());
-        dto.setHeureDebut(affectation.getHeureDebut().toLocalTime());
-        dto.setHeureFin(affectation.getHeureFin().toLocalTime());
+        dto.setDateAffectation(affectation.getDateAffectationLivraison());
+        dto.setHeureDebut(affectation.getHeureDebut());
+        dto.setHeureFin(affectation.getHeureFin());
 
         // Infos employé
         dto.setIdEmploye(affectation.getUtilisateur().getIdUtilisateur());

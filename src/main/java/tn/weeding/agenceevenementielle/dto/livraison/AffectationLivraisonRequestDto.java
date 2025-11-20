@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.dto.livraison;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,9 +29,11 @@ public class AffectationLivraisonRequestDto {
     private LocalDate dateAffectation;
 
     @NotNull(message = "L'heure de début est obligatoire")
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime heureDebut;
 
     @NotNull(message = "L'heure de fin est obligatoire")
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime heureFin;
 
     /**

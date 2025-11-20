@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 @Entity
 @Getter
@@ -17,12 +19,15 @@ public class AffectationLivraison implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idAffectationLivraison;
-    @Temporal(TemporalType.DATE)
-    Date dateAffectationLivraison;
-    @Temporal(TemporalType.TIME)
-    Time heureDebut;
-    @Temporal(TemporalType.TIME)
-    Time heureFin;
+
+
+    LocalDate dateAffectationLivraison;
+
+    LocalTime heureDebut;
+
+    LocalTime heureFin;
+
+    String notes;
 
     //AffectationLivraison 1..* --------------- 1 Livraison
     @ManyToOne
