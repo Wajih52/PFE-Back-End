@@ -5,6 +5,8 @@ import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -21,10 +23,10 @@ public class Livraison implements Serializable {
     Long idLivraison;
     String titreLivraison;
     String adresserLivraison;
-    @Temporal(TemporalType.DATE)
-    Date dateLivraison;
-    @Temporal(TemporalType.TIME)
-    Time heureLivraison;
+
+    LocalDate dateLivraison;
+    LocalTime heureLivraison;
+
     @Enumerated(EnumType.STRING)
     StatutLivraison statutLivraison;
 
