@@ -245,7 +245,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
         // Générer le numéro
         String numeroFacture = codeGeneratorService.genererNumeroFacture(typeFacture);
 
-        // 1️⃣ Calculer le montant total AVANT remise (montant brut des lignes)
+        // 1- Calculer le montant total AVANT remise (montant brut des lignes)
         double montantTotalSansRemise = 0.0;
         for (LigneReservation ligne : reservation.getLigneReservations()) {
             // Calculer le nombre de jours
@@ -257,7 +257,13 @@ public class FactureServiceImpl implements FactureServiceInterface {
             montantTotalSansRemise += ligne.getQuantite() * ligne.getPrixUnitaire() * nbrJours;
         }
 
-        // 2️⃣ Calculer le montant de la remise
+        // 2- Calculer le HT depuis le total TTC AVANT remise
+        double montantHT_SansRemise = montantTotalSansRemise / (1 + TVA_TAUX);
+
+        // 3- Calculer  montantTVA (TVA sur le montant sans remise)
+        double montantTVA = montantHT_SansRemise * TVA_TAUX;
+
+        // 4 Calculer le montant de la remise
         double montantRemise = 0.0;
 
         if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
@@ -269,26 +275,19 @@ public class FactureServiceImpl implements FactureServiceInterface {
             montantRemise = montantTotalSansRemise * (reservation.getRemisePourcentage() / 100.0);
         }
 
-        // 3️⃣ Calculer le montant APRÈS remise (c'est le montantTotal de la réservation)
+        // 5- Calculer  montantTotalApresRemise
         double montantTotalApresRemise = montantTotalSansRemise - montantRemise;
 
-        // Vérification : le montantTotal de la réservation devrait correspondre
-        // (on utilise quand même celui de la réservation pour la cohérence)
-        double montantTTC = reservation.getMontantTotal();
 
-        // 4️⃣ Calculer le HT et la TVA depuis le montant TTC (après remise)
-        double montantHT = montantTTC / (1 + TVA_TAUX);
-        double montantTVA = montantTTC - montantHT;
-
-        // 5️⃣ Déterminer le statut initial
+        // 6 Déterminer le statut initial
         StatutFacture statut = determinerStatutInitial(typeFacture);
 
-        // 6️⃣ Calculer la date d'échéance (30 jours par défaut pour facture finale)
+        // 7 Calculer la date d'échéance (30 jours par défaut pour facture finale)
         LocalDate dateEcheance = typeFacture == TypeFacture.FINALE
                 ? LocalDate.now().plusDays(30)
                 : null;
 
-        // 7️⃣ Créer la facture
+        // 8 Créer la facture
         Facture facture = new Facture();
         facture.setReservation(reservation);
         facture.setNumeroFacture(numeroFacture);
@@ -298,13 +297,13 @@ public class FactureServiceImpl implements FactureServiceInterface {
         facture.setDateEcheance(dateEcheance);
 
         // Montants
-        facture.setMontantHT(montantHT);
+        facture.setMontantHT(montantHT_SansRemise);
         facture.setMontantTVA(montantTVA);
         facture.setMontantRemise(montantRemise);
-        facture.setMontantTTC(montantTTC);
+        facture.setMontantTTC(montantTotalSansRemise);
 
         log.info("💰 Calculs facture : Total sans remise={}DT, Remise={}DT, HT={}DT, TVA={}DT, TTC={}DT",
-                montantTotalSansRemise, montantRemise, montantHT, montantTVA, montantTTC);
+                montantTotalSansRemise, montantRemise, montantHT_SansRemise, montantTVA, montantTotalApresRemise);
 
         return facture;
     }

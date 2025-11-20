@@ -355,17 +355,17 @@ public class PdfGeneratorService {
         // 2️⃣ Calculer le HT depuis le total TTC AVANT remise
         double montantHT_SansRemise = montantTotalSansRemise / (1 + TVA_TAUX);
 
-        // 1- Afficher montantHT_SansRemise
+        // 3- Afficher montantHT_SansRemise
         ajouterLigneTotaux(table, "Sous-total HT :", String.format("%.2f DT", montantHT_SansRemise));
 
-        // 2- Calculer et afficher montantTVA (TVA sur le montant sans remise)
+        // 4- Calculer et afficher montantTVA (TVA sur le montant sans remise)
         double montantTVA = montantHT_SansRemise * TVA_TAUX;
         ajouterLigneTotaux(table, String.format("TVA (%.0f%%) :", TVA_TAUX * 100), String.format("%.2f DT", montantTVA));
 
-        // 3- Afficher montantTotalSansRemise
+        // 5- Afficher montantTotalSansRemise
         ajouterLigneTotaux(table, "Total TTC (sans remise) :", String.format("%.2f DT", montantTotalSansRemise));
 
-        // 4- Calculer et afficher montantRemise
+        // 6- Calculer et afficher montantRemise
         double montantRemise = 0.0;
 
         if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
@@ -381,7 +381,7 @@ public class PdfGeneratorService {
                     String.format("-%.2f DT", montantRemise));
         }
 
-        // 5- Calculer et afficher montantTotalApresRemise
+        // 7- Calculer et afficher montantTotalApresRemise
         double montantTotalApresRemise = montantTotalSansRemise - montantRemise;
 
         PdfPCell cell1 = new PdfPCell(new Phrase("TOTAL TTC :", HEADER_FONT));
