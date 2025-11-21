@@ -3890,3 +3890,1084 @@ org.springframework.web.servlet.resource.NoResourceFoundException: No static res
 2025-11-21 18:00:57 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-11-21 18:00:57 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown initiated...
 2025-11-21 18:00:57 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown completed.
+2025-11-21 18:10:34 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 24272 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-21 18:10:34 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-21 18:10:34 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-21 18:10:34 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-21 18:10:34 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-21 18:10:38 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 18:10:38 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 692 ms. Found 15 JPA repository interfaces.
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 18:10:39 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 42 ms. Found 0 Redis repository interfaces.
+2025-11-21 18:10:40 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-21 18:10:40 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-21 18:10:40 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-21 18:10:40 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-21 18:10:40 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5984 ms
+2025-11-21 18:10:41 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-21 18:10:41 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-11-21 18:10:41 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-21 18:10:41 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-21 18:10:41 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-11-21 18:10:42 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ac68153
+2025-11-21 18:10:42 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-11-21 18:10:42 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-21 18:10:42 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-21 18:10:42 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-21 18:10:45 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-21 18:10:45 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-21 18:10:46 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-21 18:10:47 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-21 18:10:49 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-21 18:10:49 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-21 18:10:49 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-21 18:11:03 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-21 18:11:04 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ Configuration CORS activée pour http://localhost:4200
+2025-11-21 18:11:04 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ OAuth2LoginSuccessHandler bean créé avec succès
+2025-11-21 18:11:04 [restartedMain] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, AuthTokenFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-11-21 18:11:05 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-11-21 18:11:05 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-11-21 18:11:05 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Started AgenceEvenementielleApplication in 32.235 seconds (process running for 33.97)
+2025-11-21 18:12:58 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-21 18:12:58 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-11-21 18:12:58 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2025-11-21 18:12:58 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/livraisons
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 18:12:59 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 18:12:59 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 18:12:59 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/livraisons
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 18:12:59 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 18:12:59 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 18:12:59 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.creerLivraison(tn.weeding.agenceevenementielle.dto.livraison.LivraisonRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 18:12:59 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.creerLivraison(tn.weeding.agenceevenementielle.dto.livraison.LivraisonRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.controller.LivraisonController - 🚚 Création d'une nouvelle livraison
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.services.LivraisonServiceImpl - 🚚 Création d'une nouvelle livraison: khedma henna
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.services.LivraisonServiceImpl - ✅ Livraison créée avec ID: 3
+2025-11-21 18:12:59 [http-nio-8080-exec-1] INFO  t.w.a.services.LivraisonServiceImpl - 📦 4 lignes de réservation associées à la livraison
+2025-11-21 18:21:19 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits
+2025-11-21 18:21:19 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 18:21:20 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 18:21:20 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 18:21:20 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 18:21:20 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits
+2025-11-21 18:21:20 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 18:21:20 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 18:21:20 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 18:21:20 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 18:21:20 [http-nio-8080-exec-3] INFO  t.w.a.controller.ProduitController - 📋 Requête de récupération de tous les produits
+2025-11-21 18:21:20 [http-nio-8080-exec-3] DEBUG t.w.a.services.ProduitServiceImpl - 📋 Récupération de tous les produits
+2025-11-21 18:21:20 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 18:21:20 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 18:21:20 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 18:21:20 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 18:21:20 [http-nio-8080-exec-5] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 18:21:20 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 18:21:20 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 18:21:20 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 18:21:20 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 19:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - 🔍 Vérification des retours en retard...
+2025-11-21 19:00:01 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - ✅ Aucun retour en retard détecté
+2025-11-21 19:35:33 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons
+2025-11-21 19:35:33 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 19:35:33 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:35:34 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:35:34 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:35:34 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:35:34 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 19:35:34 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:35:34 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:35:34 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:35:34 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:35:34 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:35:34 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:35:34 [http-nio-8080-exec-2] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 19:35:34 [http-nio-8080-exec-2] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 19:35:52 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /utilisateurs/all
+2025-11-21 19:35:52 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons/3
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/all
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/3
+2025-11-21 19:35:52 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:35:52 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:35:52 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/all
+2025-11-21 19:35:52 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:35:52 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/3
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:35:52 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:35:52 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:35:52 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 19:35:52 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:35:52 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:35:52 [http-nio-8080-exec-10] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de la livraison ID: 3
+2025-11-21 19:35:52 [http-nio-8080-exec-10] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de la livraison ID: 3
+2025-11-21 19:36:35 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 19:36:35 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:36:35 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:36:35 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:36:35 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:36:35 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 19:36:35 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:36:36 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:36:36 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:36:36 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:36:36 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:36:36 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:36:36 [http-nio-8080-exec-9] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 19:36:36 [http-nio-8080-exec-9] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 19:36:53 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons/2
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing DELETE /api/livraisons/2
+2025-11-21 19:36:53 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:36:53 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured DELETE /api/livraisons/2
+2025-11-21 19:36:53 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:36:53 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.supprimerLivraison(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:36:53 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.supprimerLivraison(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:36:53 [http-nio-8080-exec-3] INFO  t.w.a.controller.LivraisonController - 🗑️ Suppression de la livraison ID: 2
+2025-11-21 19:36:53 [http-nio-8080-exec-3] INFO  t.w.a.services.LivraisonServiceImpl - 🗑️ Suppression de la livraison ID: 2
+2025-11-21 19:36:53 [http-nio-8080-exec-3] INFO  t.w.a.services.LivraisonServiceImpl - ✅ Livraison supprimée avec succès
+2025-11-21 19:36:53 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 19:36:53 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:36:54 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:36:54 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:36:54 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:36:54 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 19:36:54 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:36:54 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:36:54 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:36:54 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:36:54 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:36:54 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:36:54 [http-nio-8080-exec-4] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 19:36:54 [http-nio-8080-exec-4] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 19:37:15 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons/aujourd-hui
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/aujourd-hui
+2025-11-21 19:37:15 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:37:15 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/aujourd-hui
+2025-11-21 19:37:15 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:37:15 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonsAujourdhui(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:37:15 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonsAujourdhui(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:37:15 [http-nio-8080-exec-5] INFO  t.w.a.controller.LivraisonController - 📋 Récupération des livraisons d'aujourd'hui
+2025-11-21 19:37:15 [http-nio-8080-exec-5] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération des livraisons d'aujourd'hui
+2025-11-21 19:37:38 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/reservations
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations
+2025-11-21 19:37:38 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:37:38 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations
+2025-11-21 19:37:38 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:37:38 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 19:37:38 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 19:38:34 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:38:34 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 19:38:34 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 19:38:34 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:38:34 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 19:38:34 [http-nio-8080-exec-2] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 19:38:34 [http-nio-8080-exec-2] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 20:00:01 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - 🔍 Vérification des retours en retard...
+2025-11-21 20:00:01 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - ✅ Aucun retour en retard détecté
+2025-11-21 20:06:09 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons
+2025-11-21 20:06:09 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 20:06:10 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:06:10 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:06:10 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:06:11 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:06:11 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 20:06:11 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:06:11 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:06:11 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:06:11 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:06:11 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:06:11 [http-nio-8080-exec-6] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:06:11 [http-nio-8080-exec-6] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 20:06:11 [http-nio-8080-exec-6] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations
+2025-11-21 20:06:34 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:06:34 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations
+2025-11-21 20:06:34 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:06:34 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:06:34 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 20:06:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:06:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 20:06:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:06:48 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:06:48 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:06:48 [http-nio-8080-exec-7] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 20:06:48 [http-nio-8080-exec-7] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/all
+2025-11-21 20:07:03 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons/1
+2025-11-21 20:07:03 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/1
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:07:03 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/all
+2025-11-21 20:07:03 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:07:03 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:07:03 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/1
+2025-11-21 20:07:03 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:07:03 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:07:03 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 20:07:03 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:07:03 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:07:03 [http-nio-8080-exec-1] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de la livraison ID: 1
+2025-11-21 20:07:03 [http-nio-8080-exec-1] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de la livraison ID: 1
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 20:07:58 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:07:58 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 20:07:58 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:07:58 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:07:58 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:07:58 [http-nio-8080-exec-2] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 20:07:58 [http-nio-8080-exec-2] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/aujourd-hui
+2025-11-21 20:08:00 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:08:00 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/aujourd-hui
+2025-11-21 20:08:00 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:08:00 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonsAujourdhui(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:08:00 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonsAujourdhui(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:08:00 [http-nio-8080-exec-3] INFO  t.w.a.controller.LivraisonController - 📋 Récupération des livraisons d'aujourd'hui
+2025-11-21 20:08:00 [http-nio-8080-exec-3] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération des livraisons d'aujourd'hui
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/aujourd-hui
+2025-11-21 20:08:01 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:08:01 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/aujourd-hui
+2025-11-21 20:08:01 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:08:01 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonsAujourdhui(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:08:01 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonsAujourdhui(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:08:01 [http-nio-8080-exec-4] INFO  t.w.a.controller.LivraisonController - 📋 Récupération des livraisons d'aujourd'hui
+2025-11-21 20:08:01 [http-nio-8080-exec-4] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération des livraisons d'aujourd'hui
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations
+2025-11-21 20:10:18 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:10:18 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations
+2025-11-21 20:10:18 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:10:18 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:10:18 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:10:54 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/reservations/mes-reservations
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations/mes-reservations
+2025-11-21 20:10:54 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:54 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations/mes-reservations
+2025-11-21 20:10:54 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:54 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getMesReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:10:54 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getMesReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:10:54 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/rejebwajih_1763743688364.jpg
+2025-11-21 20:10:54 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:10:54 [http-nio-8080-exec-1] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:10:54 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/rejebwajih_1763743688364.jpg
+2025-11-21 20:10:58 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/catalogue-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:58 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/catalogue-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:58 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:58 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:58 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:58 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:58 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/catalogue-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:58 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:58 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:58 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:58 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:58 [http-nio-8080-exec-3] INFO  t.w.a.controller.ProduitController - 📋 Catalogue disponible du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:58 [http-nio-8080-exec-3] INFO  t.w.a.services.ProduitServiceImpl - 📋 Récupération catalogue disponible du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-3] INFO  t.w.a.services.ProduitServiceImpl - ✅ 3 produits disponibles trouvés
+2025-11-21 20:10:59 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/2/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/3/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/1/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/1/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/2/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/3/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:10:59 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:10:59 [http-nio-8080-exec-1] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:10:59 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:10:59 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:59 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:59 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:59 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:59 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:59 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/3/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:59 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/1/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:59 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:59 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:59 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:59 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:59 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:59 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:59 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:59 [http-nio-8080-exec-7] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:10:59 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:10:59 [http-nio-8080-exec-4] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:10:59 [http-nio-8080-exec-9] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-9] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:10:59 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:59 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:10:59 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:10:59 [http-nio-8080-exec-2] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:10:59 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:10:59 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:59 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:59 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:59 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/2/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:10:59 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:10:59 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:10:59 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:10:59 [http-nio-8080-exec-8] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-8] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-21 au 2025-11-22
+2025-11-21 20:10:59 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 7 (stock total: 10)
+2025-11-21 20:10:59 [http-nio-8080-exec-9] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 8 (stock total: 10)
+2025-11-21 20:10:59 [http-nio-8080-exec-8] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 150 (stock total: 250)
+2025-11-21 20:11:00 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:00 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:00 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:00 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:00 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:00 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-21 -> 2025-11-22
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-21 -> 2025-11-22
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:00 [http-nio-8080-exec-5] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 8 (stock total: 10)
+2025-11-21 20:11:02 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:02 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:02 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:02 [http-nio-8080-exec-6] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:02 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:02 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:02 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:02 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:02 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:02 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-21 -> 2025-11-22
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-21 -> 2025-11-22
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:02 [http-nio-8080-exec-10] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 8 (stock total: 10)
+2025-11-21 20:11:05 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/catalogue-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/catalogue-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-3] INFO  t.w.a.controller.ProduitController - 📋 Catalogue disponible du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-3] INFO  t.w.a.services.ProduitServiceImpl - 📋 Récupération catalogue disponible du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-3] INFO  t.w.a.services.ProduitServiceImpl - ✅ 3 produits disponibles trouvés
+2025-11-21 20:11:05 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/1/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/2/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/1/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/2/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-5] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-5] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-5] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 8 (stock total: 10)
+2025-11-21 20:11:05 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-6] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-6] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:05 [http-nio-8080-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:05 [http-nio-8080-exec-6] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 150 (stock total: 250)
+2025-11-21 20:11:05 [http-nio-8080-exec-10] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:05 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:05 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:11:05 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/3/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:05 [http-nio-8080-exec-4] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:05 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:11:05 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:11:05 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:05 [http-nio-8080-exec-8] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:05 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:11:05 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/3/quantite-disponible?dateDebut=2025-11-21&dateFin=2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:05 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:05 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:05 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:05 [http-nio-8080-exec-9] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-9] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-21 au 2025-11-22
+2025-11-21 20:11:05 [http-nio-8080-exec-9] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 7 (stock total: 10)
+2025-11-21 20:11:10 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/catalogue-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/catalogue-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/catalogue-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-4] INFO  t.w.a.controller.ProduitController - 📋 Catalogue disponible du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-4] INFO  t.w.a.services.ProduitServiceImpl - 📋 Récupération catalogue disponible du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-4] INFO  t.w.a.services.ProduitServiceImpl - ✅ 3 produits disponibles trouvés
+2025-11-21 20:11:10 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/2/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/1/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/3/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:10 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:11:10 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:11:10 [http-nio-8080-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:10 [http-nio-8080-exec-3] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:10 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:10 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:10 [http-nio-8080-exec-2] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:10 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:10 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:11:10 [http-nio-8080-exec-1] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:10 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:11:10 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/2/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/1/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/3/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/1/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/3/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-6] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-6] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/2/quantite-disponible?dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-6] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-6] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:10 [http-nio-8080-exec-6] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-10] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-10] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-6] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 10 (stock total: 10)
+2025-11-21 20:11:10 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:10 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:10 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:10 [http-nio-8080-exec-5] INFO  t.w.a.controller.ProduitController - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-5] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:10 [http-nio-8080-exec-10] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 9 (stock total: 10)
+2025-11-21 20:11:10 [http-nio-8080-exec-5] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 250 (stock total: 250)
+2025-11-21 20:11:11 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:11 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:11 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:11 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:11 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:11 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:11 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:11 [http-nio-8080-exec-9] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 10 (stock total: 10)
+2025-11-21 20:11:12 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/2/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:12 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/2/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:12 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:12 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:12 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/2/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:12 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:12 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 2, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 2, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - ✅ Disponible: 1 unités demandées
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:12 [http-nio-8080-exec-7] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 250 (stock total: 250)
+2025-11-21 20:11:13 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/produits/3/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:13 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/3/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:13 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:13 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:13 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/3/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:13 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:13 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 3, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 3, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:13 [http-nio-8080-exec-1] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 9 (stock total: 10)
+2025-11-21 20:11:14 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/3/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:14 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:11:14 [http-nio-8080-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:14 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:14 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/produits/2/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:14 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:14 [http-nio-8080-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:14 [http-nio-8080-exec-7] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:14 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-PR_1763659493086.jpg
+2025-11-21 20:11:14 [http-nio-8080-exec-3] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:14 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-FR_1763659551915.jpg
+2025-11-21 20:11:14 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:11:14 [http-nio-8080-exec-6] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-11-21 20:11:14 [http-nio-8080-exec-6] DEBUG o.s.s.w.s.SessionManagementFilter - Request requested invalid session id 6E102DC74EC7AB05B4751532F9A9C3D5
+2025-11-21 20:11:14 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/PRD-2025-CH_1763659529634.jpg
+2025-11-21 20:11:14 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:14 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:14 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:14 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:14 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/2/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:15 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:15 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:15 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:14 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:15 [http-nio-8080-exec-8] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 2, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-8] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 2, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:15 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:15 [http-nio-8080-exec-8] INFO  t.w.a.services.ProduitServiceImpl - ✅ Disponible: 1 unités demandées
+2025-11-21 20:11:15 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:15 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/3/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-8] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 2 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:15 [http-nio-8080-exec-8] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 250 (stock total: 250)
+2025-11-21 20:11:15 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:15 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:15 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:15 [http-nio-8080-exec-1] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 3, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-1] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 3, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-1] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 3 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-1] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 9 (stock total: 10)
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:15 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:15 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:15 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/produits/1/disponibilite-periode?quantite=1&dateDebut=2025-11-27&dateFin=2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:15 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:15 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.controller.ProduitController - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Vérification disponibilité produit ID: 1, quantité: 1, période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.services.ProduitServiceImpl - 🔍 Calcul quantité disponible produit ID: 1 du 2025-11-27 au 2025-11-27
+2025-11-21 20:11:15 [http-nio-8080-exec-2] INFO  t.w.a.services.ProduitServiceImpl - ✅ Quantité disponible calculée: 10 (stock total: 10)
+2025-11-21 20:11:19 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/reservations/devis
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/reservations/devis
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/reservations/devis
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.creerDevis(tn.weeding.agenceevenementielle.dto.reservation.DevisRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.creerDevis(tn.weeding.agenceevenementielle.dto.reservation.DevisRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.c.ReservationController - 📝 Nouvelle demande de devis reçue
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 🎯 Création d'un devis par le client ID: 5 (rejebwajih)
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📅 Validation des dates pour 3 lignes
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - 🔍 Validation période réservation - Contexte: devis - produit ID 1, Dates: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - ✅ Validation période réussie - 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - ✅ Dates valides pour produit 1 - Durée: 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - 🔍 Validation période réservation - Contexte: devis - produit ID 2, Dates: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - ✅ Validation période réussie - 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - ✅ Dates valides pour produit 2 - Durée: 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - 🔍 Validation période réservation - Contexte: devis - produit ID 3, Dates: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - ✅ Validation période réussie - 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - ✅ Dates valides pour produit 3 - Durée: 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Toutes les dates sont valides
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📦 Vérification de la disponibilité de 3 produits
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 1, Quantité: 1, Période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - 🔍 Validation période réservation - Contexte: vérification disponibilité, Dates: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - ✅ Validation période réussie - 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-27 - 2025-11-27]: 10
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 📊 Instances - Demandées: 1, Réservées: 0, Disponibles: 10
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 2, Quantité: 100, Période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - 🔍 Validation période réservation - Contexte: vérification disponibilité, Dates: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - ✅ Validation période réussie - 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 📊 Quantité - Demandée: 100, Réservée: 0, Disponible: 250
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 🔍 Vérification disponibilité - Produit: 3, Quantité: 1, Période: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - 🔍 Validation période réservation - Contexte: vérification disponibilité, Dates: 2025-11-27 -> 2025-11-27
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.DateReservationValidator - ✅ Validation période réussie - 1 jours
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 📊 Instances disponibles sur période [2025-11-27 - 2025-11-27]: 9
+2025-11-21 20:11:19 [http-nio-8080-exec-8] DEBUG t.w.a.s.R.ReservationServiceImpl - 📊 Instances - Demandées: 1, Réservées: 0, Disponibles: 9
+2025-11-21 20:11:19 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Tous les produits sont disponibles
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📝 Ligne ajoutée: Projecteur Led x 1 = 25.0 TND pour 1 jours
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📝 Ligne ajoutée: Chaise Plastique x 100 = 40.0 TND pour 1 jours
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📝 Ligne ajoutée: Frigo x 1 = 50.0 TND pour 1 jours
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Devis créé avec succès: RES-2025-0003 - Montant: 115.0 TND
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 🚀 Mode validation automatique → Réservation immédiate du stock
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📦 Enregistrement mouvement pour instance: PRD-2025-FR-0001 - RESERVATION
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Mouvement instance enregistré: RESERVATION - Instance: PRD-2025-FR-0001
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 1 instances affectées à la ligne 6 pour la période 2025-11-27-2025-11-27
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📦 Enregistrement mouvement stock: 100 RESERVATION pour produit 'Chaise Plastique'
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Mouvement stock enregistré:
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl -    - Produit: Chaise Plastique (ID: 2)
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl -    - Type: RESERVATION
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl -    - Quantité: 100
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl -    - Stock: 250 → 150
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl -    - Réservation: RES-2025-0003
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl -    - Par: rejebwajih
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl -    - Motif: Reservation
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 📦 Enregistrement mouvement pour instance: PRD-2025-PR-0001 - RESERVATION
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Mouvement instance enregistré: RESERVATION - Instance: PRD-2025-PR-0001
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 1 instances affectées à la ligne 8 pour la période 2025-11-27-2025-11-27
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - 🎉 Réservation confirmée avec succès: RES-2025-0003
+2025-11-21 20:11:20 [http-nio-8080-exec-8] INFO  t.w.a.s.R.ReservationServiceImpl - ✅ Devis validé automatiquement RES-2025-0003 - montant 115.0 TND - Réservation confirmée
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations/mes-reservations
+2025-11-21 20:11:20 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:20 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations/mes-reservations
+2025-11-21 20:11:20 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: rejebwajih
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_CLIENT
+2025-11-21 20:11:20 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'rejebwajih' chargé avec 1 rôle(s)
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'rejebwajih' authentifié avec 1 rôles
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getMesReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:11:20 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getMesReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 20:11:45 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:11:45 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 20:11:45 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:11:45 [http-nio-8080-exec-10] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:11:45 [http-nio-8080-exec-10] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:11:45 [http-nio-8080-exec-10] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 20:11:45 [http-nio-8080-exec-10] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/reservations
+2025-11-21 20:11:49 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:11:49 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/reservations
+2025-11-21 20:11:49 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:11:49 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:11:49 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.ReservationController.getAllReservations(); target is of class [tn.weeding.agenceevenementielle.controller.ReservationController]
+2025-11-21 20:12:53 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/livraisons
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/livraisons
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.creerLivraison(tn.weeding.agenceevenementielle.dto.livraison.LivraisonRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:12:53 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.creerLivraison(tn.weeding.agenceevenementielle.dto.livraison.LivraisonRequestDto); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.controller.LivraisonController - 🚚 Création d'une nouvelle livraison
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.services.LivraisonServiceImpl - 🚚 Création d'une nouvelle livraison: tazdira
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.services.LivraisonServiceImpl - ✅ Livraison créée avec ID: 4
+2025-11-21 20:12:53 [http-nio-8080-exec-5] INFO  t.w.a.services.LivraisonServiceImpl - 📦 1 lignes de réservation associées à la livraison
+2025-11-21 20:12:54 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons/4
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/all
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/4
+2025-11-21 20:12:54 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:12:54 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:12:54 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/all
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:12:54 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/4
+2025-11-21 20:12:54 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:12:54 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:12:54 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:12:54 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:12:54 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:12:54 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:12:54 [http-nio-8080-exec-1] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de la livraison ID: 4
+2025-11-21 20:12:54 [http-nio-8080-exec-1] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de la livraison ID: 4
+2025-11-21 20:14:05 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/livraisons/4/bon-livraison
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/4/bon-livraison
+2025-11-21 20:14:05 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:05 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/4/bon-livraison
+2025-11-21 20:14:05 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:05 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.genererBonLivraison(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:14:05 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.genererBonLivraison(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:14:05 [http-nio-8080-exec-7] INFO  t.w.a.controller.LivraisonController - 📄 Génération du bon de livraison ID: 4
+2025-11-21 20:14:05 [http-nio-8080-exec-7] INFO  t.w.a.services.LivraisonServiceImpl - 📄 Génération du bon de livraison ID: 4
+2025-11-21 20:14:06 [http-nio-8080-exec-7] INFO  t.w.a.services.LivraisonServiceImpl - ✅ Bon de livraison généré avec succès
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons
+2025-11-21 20:14:38 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:38 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons
+2025-11-21 20:14:38 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:38 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:14:38 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getAllLivraisons(); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:14:38 [http-nio-8080-exec-5] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de toutes les livraisons
+2025-11-21 20:14:38 [http-nio-8080-exec-5] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de toutes les livraisons
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/livraisons/4
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /utilisateurs/all
+2025-11-21 20:14:46 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:46 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:46 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:46 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /utilisateurs/all
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/livraisons/4
+2025-11-21 20:14:46 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:46 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - 🔍 Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:46 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2025-11-21 20:14:46 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficherTous(); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2025-11-21 20:14:46 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - ✅ Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter - ✅ Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:14:46 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.LivraisonController.getLivraisonById(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.LivraisonController]
+2025-11-21 20:14:46 [http-nio-8080-exec-3] INFO  t.w.a.controller.LivraisonController - 📋 Récupération de la livraison ID: 4
+2025-11-21 20:14:46 [http-nio-8080-exec-3] INFO  t.w.a.services.LivraisonServiceImpl - 📋 Récupération de la livraison ID: 4
+2025-11-21 21:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - 🔍 Vérification des retours en retard...
+2025-11-21 21:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - ✅ Aucun retour en retard détecté
+2025-11-21 21:29:03 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 2 deletions, 0 modifications)
+2025-11-21 21:29:03 [Thread-5] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-21 21:29:05 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-11-21 21:29:05 [Thread-5] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-21 21:29:06 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-11-21 21:29:06 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-11-21 21:29:09 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 24272 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-21 21:29:09 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-21 21:29:09 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-21 21:29:11 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 21:29:11 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 351 ms. Found 15 JPA repository interfaces.
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 63 ms. Found 0 Redis repository interfaces.
+2025-11-21 21:29:13 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-21 21:29:13 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-21 21:29:13 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-21 21:29:13 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-21 21:29:13 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3276 ms
+2025-11-21 21:29:13 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-21 21:29:13 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-21 21:29:13 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-21 21:29:13 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2025-11-21 21:29:13 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7a37e783
+2025-11-21 21:29:13 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2025-11-21 21:29:13 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-21 21:29:13 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-21 21:29:13 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-21 21:29:14 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-21 21:29:15 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-21 21:29:15 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-21 21:29:15 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-21 21:29:15 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-21 21:29:15 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-21 21:29:17 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reservationController' defined in file [C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes\tn\weeding\agenceevenementielle\controller\ReservationController.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'tn.weeding.agenceevenementielle.services.Reservation.ReservationServiceInterface' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2025-11-21 21:29:17 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-21 21:29:17 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2025-11-21 21:29:17 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2025-11-21 21:29:17 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-11-21 21:29:17 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-11-21 21:29:17 [restartedMain] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in tn.weeding.agenceevenementielle.controller.ReservationController required a bean of type 'tn.weeding.agenceevenementielle.services.Reservation.ReservationServiceInterface' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'tn.weeding.agenceevenementielle.services.Reservation.ReservationServiceInterface' in your configuration.
+
+2025-11-21 21:29:19 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 24272 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-21 21:29:19 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-21 21:29:19 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 214 ms. Found 15 JPA repository interfaces.
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 39 ms. Found 0 Redis repository interfaces.
+2025-11-21 21:29:20 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-11-21 21:29:20 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-21 21:29:20 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-21 21:29:21 [restartedMain] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-21 21:29:21 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1835 ms
+2025-11-21 21:29:21 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-21 21:29:21 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-21 21:29:21 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-21 21:29:21 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2025-11-21 21:29:21 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@587b9acb
+2025-11-21 21:29:21 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2025-11-21 21:29:21 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-21 21:29:21 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-11-21 21:29:21 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-21 21:29:21 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-21 21:29:22 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-21 21:29:22 [restartedMain] INFO  t.w.a.config.TokenBlacklistService - ✅ Redis détecté et connecté - Mode REDIS activé
+2025-11-21 21:29:22 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authTokenFilter' configured for use
+2025-11-21 21:29:22 [restartedMain] DEBUG t.w.a.config.AuthTokenFilter - Filter 'authenticationJwtTokenFilter' configured for use
+2025-11-21 21:29:22 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-11-21 21:29:23 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-21 21:29:23 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ Configuration CORS activée pour http://localhost:4200
+2025-11-21 21:29:23 [restartedMain] INFO  t.w.a.config.SecurityConfig - ✅ OAuth2LoginSuccessHandler bean créé avec succès
+2025-11-21 21:29:24 [restartedMain] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter, AuthTokenFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-11-21 21:29:24 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-11-21 21:29:24 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-11-21 21:29:24 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Started AgenceEvenementielleApplication in 5.515 seconds (process running for 11931.644)
+2025-11-21 21:29:24 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-11-21 21:33:21 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 2 deletions, 0 modifications)
+2025-11-21 21:33:21 [Thread-7] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-21 21:33:22 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-11-21 21:33:22 [Thread-7] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-21 21:33:22 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+2025-11-21 21:33:22 [Thread-7] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2025-11-21 21:33:23 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - Starting AgenceEvenementielleApplication using Java 17.0.6 with PID 24272 (C:\WeedingPlanner\BackEndPFE\agenceEvenementielle\target\classes started by Wajih in C:\WeedingPlanner\BackEndPFE\agenceEvenementielle)
+2025-11-21 21:33:23 [restartedMain] DEBUG t.w.a.AgenceEvenementielleApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-21 21:33:23 [restartedMain] INFO  t.w.a.AgenceEvenementielleApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 230 ms. Found 15 JPA repository interfaces.
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AffectationLivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.AvisRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.FactureRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.InstanceProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LigneReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.LivraisonRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.MouvementStockRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PaiementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.PointageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ProduitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReclamationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.ReservationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-11-21 21:33:25 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 44 ms. Found 0 Redis repository interfaces.
