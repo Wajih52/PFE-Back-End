@@ -63,5 +63,15 @@ public class LivraisonResponseDto {
         private StatutLivraison statutLivraisonLigne;
         private String typeProduit; // EN_QUANTITE ou AVEC_REFERENCE
         private List<String> instancesReservees; // Pour produits avec référence
+
+        // Infos de la réservation
+        private Long idReservation;
+        private String referenceReservation;
+
+        //  Infos du client
+        private Long idClient;
+        private String nomClient;
+        private String prenomClient;
+        private String emailClient;
     }
 }

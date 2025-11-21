@@ -590,12 +590,24 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 .mapToInt(LigneReservation::getQuantite)
                 .sum());
 
-        // Récupérer les infos client (première ligne)
+        // ✅  Vérifier si toutes les lignes proviennent de la MÊME réservation
         if (!lignes.isEmpty()) {
-            Reservation reservation = lignes.get(0).getReservation();
-            dto.setNomClient(reservation.getUtilisateur().getNom());
-            dto.setPrenomClient(reservation.getUtilisateur().getPrenom());
-            dto.setReferenceReservation(reservation.getReferenceReservation());
+            Set<Long> reservationIds = lignes.stream()
+                    .map(ligne -> ligne.getReservation().getIdReservation())
+                    .collect(Collectors.toSet());
+
+            // Si une seule réservation → on remplit les infos au niveau de la livraison
+            if (reservationIds.size() == 1) {
+                Reservation reservation = lignes.get(0).getReservation();
+                dto.setNomClient(reservation.getUtilisateur().getNom());
+                dto.setPrenomClient(reservation.getUtilisateur().getPrenom());
+                dto.setReferenceReservation(reservation.getReferenceReservation());
+            } else {
+                // Plusieurs réservations → indiquer "Plusieurs clients"
+                dto.setNomClient("Plusieurs clients");
+                dto.setPrenomClient("");
+                dto.setReferenceReservation("Multiples");
+            }
         }
 
         // Récupérer les affectations
@@ -624,6 +636,23 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     .map(InstanceProduit::getNumeroSerie)
                     .collect(Collectors.toList()));
         }
+
+        // Infos de la réservation
+        Reservation reservation = ligne.getReservation();
+        if (reservation != null) {
+            dto.setIdReservation(reservation.getIdReservation());
+            dto.setReferenceReservation(reservation.getReferenceReservation());
+
+            // Infos du client
+            Utilisateur client = reservation.getUtilisateur();
+            if (client != null) {
+                dto.setIdClient(client.getIdUtilisateur());
+                dto.setNomClient(client.getNom());
+                dto.setPrenomClient(client.getPrenom());
+                dto.setEmailClient(client.getEmail());
+            }
+        }
+
 
         return dto;
     }
