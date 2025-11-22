@@ -183,7 +183,7 @@ public class ReservationScheduler {
                             && !ligne.getInstancesReservees().isEmpty()) {
 
                         for (InstanceProduit instance : ligne.getInstancesReservees()) {
-                            // Vérifier que l'instance est bien RESERVE
+                            // Vérifier que l'instance est bien disponible
                             if (instance.getStatut() == StatutInstance.DISPONIBLE) {
                                 instance.setStatut(StatutInstance.EN_ATTENTE);
                                 instanceProduitRepo.save(instance);

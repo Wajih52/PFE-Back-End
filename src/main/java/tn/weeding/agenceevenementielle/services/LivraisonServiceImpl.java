@@ -466,12 +466,10 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     public LivraisonResponseDto marquerLivraisonLivree(Long idLivraison, String username) {
         log.info("✅ Marquage de la livraison ID {} comme LIVREE", idLivraison);
 
-        // Changer le statut de la livraison et des lignes
-        LivraisonResponseDto response = changerStatutLivraison(idLivraison, StatutLivraison.LIVREE, username);
-
         // Mettre à jour le statut de la réservation si toutes les lignes sont livrées
         List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(idLivraison);
 
+        LivraisonResponseDto response ;
         if (!lignes.isEmpty()) {
             Reservation reservation = lignes.get(0).getReservation();
 
@@ -483,15 +481,20 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE);
 
             if (toutesLivrees && reservation.getStatutReservation() == StatutReservation.CONFIRME) {
+                // Changer le statut de la livraison et des lignes
+                 response = changerStatutLivraison(idLivraison, StatutLivraison.LIVREE, username);
                 // Mettre la réservation en EN_COURS
                 reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
                 // Le save sera fait automatiquement par JPA grâce à la cascade
                 log.info("📋 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
                         reservation.getReferenceReservation());
+                return response;
             }
+        }else{
+            log.info("il existe des lignes qui sont pas livrées");
+            throw new CustomException("il existe des lignes qui sont pas livrées");
         }
-
-        return response;
+        return null ;
     }
 
     /**
@@ -557,8 +560,8 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         AffectationLivraison affectation = new AffectationLivraison();
         affectation.setLivraison(livraison);
         affectation.setUtilisateur(employe);
-        affectation.setDateAffectationLivraison(dto.getDateAffectation());
-        affectation.setHeureAffectation(dto.getHeureAffectation());
+        affectation.setDateAffectationLivraison(LocalDate.now());
+        affectation.setHeureAffectation(LocalTime.now());
         affectation.setNotes(dto.getNotes());
 
         affectation = affectationRepo.save(affectation);
@@ -652,9 +655,10 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
             // Informations client
             Paragraph infoClient = new Paragraph();
-            infoClient.add(new Chunk("Client: ", headerFont));
+            infoClient.add(new Chunk("Client: \n", headerFont));
             infoClient.add(new Chunk(reservation.getUtilisateur().getNom() + " " +
-                    reservation.getUtilisateur().getPrenom() + "\n", normalFont));
+                    reservation.getUtilisateur().getPrenom() + "\n"+reservation.getUtilisateur().getEmail()+
+                    "\n"+reservation.getUtilisateur().getTelephone().toString()+" \n", normalFont));
             infoClient.add(new Chunk("Réservation: ", headerFont));
             infoClient.add(new Chunk(reservation.getReferenceReservation() + "\n", normalFont));
             infoClient.setSpacingAfter(20);
