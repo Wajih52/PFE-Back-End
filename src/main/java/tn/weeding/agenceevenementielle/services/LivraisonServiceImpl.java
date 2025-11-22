@@ -302,7 +302,8 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
 
         // Vérifier que la livraison n'est pas déjà livrée
-        if (livraison.getStatutLivraison() == StatutLivraison.LIVREE) {
+        if (livraison.getStatutLivraison() == StatutLivraison.LIVREE||
+                livraison.getStatutLivraison()==StatutLivraison.EN_COURS) {
             throw new CustomException("Impossible de supprimer une livraison déjà livrée");
         }
 
