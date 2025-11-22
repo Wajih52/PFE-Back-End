@@ -15,6 +15,7 @@ import tn.weeding.agenceevenementielle.repository.*;
 import java.io.ByteArrayOutputStream;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -36,6 +37,10 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     private final LigneReservationRepository ligneReservationRepo;
     private final UtilisateurRepository utilisateurRepo;
     private final UtilisateurRoleRepository utilisateurRoleRepo ;
+    private final ReservationRepository reservationRepo;
+    private final InstanceProduitRepository instanceProduitRepo;
+    private final MouvementStockRepository mouvementStockRepo;
+    private final ProduitRepository produitRepo;
 
     // ============================================
     // CRUD LIVRAISONS
@@ -45,23 +50,42 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     public LivraisonResponseDto creerLivraison(LivraisonRequestDto dto, String username) {
         log.info("🚚 Création d'une nouvelle livraison: {}", dto.getTitreLivraison());
 
-        // Vérifier que les lignes de réservation existent et sont confirmées
+        // Vérifier que les lignes de réservation existent
         List<LigneReservation> lignes = ligneReservationRepo.findAllById(dto.getIdLignesReservation());
+
+        if (lignes.isEmpty()) {
+            throw new CustomException("Aucune ligne de réservation trouvée");
+        }
 
         if (lignes.size() != dto.getIdLignesReservation().size()) {
             throw new CustomException("Certaines lignes de réservation sont introuvables");
         }
 
-        // Vérifier que toutes les lignes appartiennent à des réservations confirmées
-        for (LigneReservation ligne : lignes) {
-            if (ligne.getReservation().getStatutReservation() != StatutReservation.CONFIRME) {
-                throw new CustomException(
-                        "La ligne ID " + ligne.getIdLigneReservation() +
-                                " appartient à une réservation non confirmée"
-                );
-            }
+        // ✅ CONTRAINTE: Vérifier que toutes les lignes appartiennent à LA MÊME réservation
+        Reservation reservation = lignes.get(0).getReservation();
+        boolean toutesMemReservation = lignes.stream()
+                .allMatch(ligne -> ligne.getReservation().getIdReservation().equals(reservation.getIdReservation()));
 
-            // Vérifier que la ligne n'est pas déjà affectée à une autre livraison
+        if (!toutesMemReservation) {
+            throw new CustomException(
+                    "Toutes les lignes doivent appartenir à la même réservation. " +
+                            "Une livraison ne peut concerner qu'une seule réservation."
+            );
+        }
+
+        log.info("✅ Validation: Toutes les lignes appartiennent à la réservation {}",
+                reservation.getReferenceReservation());
+
+        // Vérifier que la réservation est confirmée
+        if (reservation.getStatutReservation() != StatutReservation.CONFIRME) {
+            throw new CustomException(
+                    "La réservation " + reservation.getReferenceReservation() +
+                            " n'est pas confirmée (statut: " + reservation.getStatutReservation() + ")"
+            );
+        }
+
+        // Vérifier que les lignes ne sont pas déjà affectées à une autre livraison
+        for (LigneReservation ligne : lignes) {
             if (ligne.getLivraison() != null) {
                 throw new CustomException(
                         "La ligne ID " + ligne.getIdLigneReservation() +
@@ -76,23 +100,56 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         livraison.setAdresserLivraison(dto.getAdresseLivraison());
         livraison.setDateLivraison(dto.getDateLivraison());
         livraison.setHeureLivraison(dto.getHeureLivraison());
-        livraison.setStatutLivraison(StatutLivraison.EN_ATTENTE);
-        livraison.setAffectationLivraisons(new HashSet<>());
+        livraison.setObservations(dto.getObservations());
 
+        // Statut initial selon la date
+        if (dto.getDateLivraison().equals(LocalDate.now())) {
+            livraison.setStatutLivraison(StatutLivraison.EN_ATTENTE);
+            log.info("📅 Date de livraison = aujourd'hui → Statut = EN_ATTENTE");
+        } else {
+            livraison.setStatutLivraison(StatutLivraison.NOT_TODAY);
+            log.info("📅 Date de livraison = {} → Statut = NOT_TODAY", dto.getDateLivraison());
+        }
+
+        livraison.setAffectationLivraisons(new HashSet<>());
         livraison = livraisonRepo.save(livraison);
-        log.info("✅ Livraison créée avec ID: {}", livraison.getIdLivraison());
 
         // Associer les lignes de réservation à la livraison
         for (LigneReservation ligne : lignes) {
             ligne.setLivraison(livraison);
-            // Mettre le statut de la ligne en EN_ATTENTE si elle ne l'est pas déjà
-            if (ligne.getStatutLivraisonLigne() != StatutLivraison.EN_ATTENTE) {
+
+            // Mettre à jour le statut de la ligne selon la date
+            if (dto.getDateLivraison().equals(LocalDate.now())) {
                 ligne.setStatutLivraisonLigne(StatutLivraison.EN_ATTENTE);
+
+                // Si produit avec référence, mettre les instances en EN_ATTENTE
+                if (ligne.getProduit().getTypeProduit() == TypeProduit.AVEC_REFERENCE
+                        && ligne.getInstancesReservees() != null) {
+                    for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                        instance.setStatut(StatutInstance.EN_ATTENTE);
+                        instanceProduitRepo.save(instance);
+                        log.info("📦 Instance {} → EN_ATTENTE", instance.getNumeroSerie());
+                    }
+                }
+            } else {
+                ligne.setStatutLivraisonLigne(StatutLivraison.NOT_TODAY);
             }
+
             ligneReservationRepo.save(ligne);
         }
 
-        log.info("📦 {} lignes de réservation associées à la livraison", lignes.size());
+        // Mettre à jour le statut de la réservation
+        if (dto.getDateLivraison().equals(LocalDate.now())) {
+            reservation.setStatutLivraisonRes(StatutLivraison.EN_ATTENTE);
+        } else {
+            reservation.setStatutLivraisonRes(StatutLivraison.NOT_TODAY);
+        }
+        reservationRepo.save(reservation);
+
+        log.info("✅ Livraison créée avec succès - ID: {}, Réservation: {}, {} ligne(s)",
+                livraison.getIdLivraison(),
+                reservation.getReferenceReservation(),
+                lignes.size());
 
         return toDto(livraison);
     }
@@ -104,16 +161,19 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         Livraison livraison = livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
 
-        // Vérifier que la livraison n'est pas déjà livrée
-        if (livraison.getStatutLivraison() == StatutLivraison.LIVREE) {
-            throw new CustomException("Impossible de modifier une livraison déjà livrée");
+        // Vérifier que la livraison peut être modifiée
+        if (livraison.getStatutLivraison() == StatutLivraison.LIVREE
+                || livraison.getStatutLivraison() == StatutLivraison.RETOURNEE) {
+            throw new CustomException("Impossible de modifier une livraison avec statut " + livraison.getStatutLivraison());
         }
 
-        // Mettre à jour les informations de base
+
+        // Mettre à jour les informations
         livraison.setTitreLivraison(dto.getTitreLivraison());
         livraison.setAdresserLivraison(dto.getAdresseLivraison());
         livraison.setDateLivraison(dto.getDateLivraison());
         livraison.setHeureLivraison(dto.getHeureLivraison());
+        livraison.setObservations(dto.getObservations());
 
         // Si les lignes de réservation ont changé
         if (dto.getIdLignesReservation() != null && !dto.getIdLignesReservation().isEmpty()) {
@@ -269,7 +329,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public LivraisonResponseDto changerStatutLivraison(Long idLivraison, StatutLivraison nouveauStatut, String username) {
-        log.info("🔄 Changement de statut de la livraison ID {} -> {}", idLivraison, nouveauStatut);
+        log.info("🔄 Changement de statut de la livraison ID: {} → {}", idLivraison, nouveauStatut);
 
         Livraison livraison = livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
@@ -277,12 +337,117 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         StatutLivraison ancienStatut = livraison.getStatutLivraison();
         livraison.setStatutLivraison(nouveauStatut);
 
-        // Mettre à jour les statuts des lignes de réservation associées
+        // Récupérer les lignes de cette livraison
         List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(idLivraison);
 
-        for (LigneReservation ligne : lignes) {
-            ligne.setStatutLivraisonLigne(nouveauStatut);
-            ligneReservationRepo.save(ligne);
+        // Récupérer la réservation (toutes les lignes ont la même réservation)
+        Reservation reservation = !lignes.isEmpty() ? lignes.get(0).getReservation() : null;
+
+        // ✅ LOGIQUE MODIFIÉE: Décrémentation lors du passage EN_COURS
+        switch (nouveauStatut) {
+            case EN_COURS:
+                log.info("🚚 Passage EN_COURS: Décrémentation du stock et mise à jour des statuts");
+
+                // Mettre à jour les lignes
+                for (LigneReservation ligne : lignes) {
+                    ligne.setStatutLivraisonLigne(StatutLivraison.EN_COURS);
+
+                    Produit produit = ligne.getProduit();
+
+                    // ✅ DÉCRÉMENTATION DU STOCK (selon le type de produit)
+                    if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
+                        // Produit quantitatif: décrémenter le stock
+                        int quantiteAvant = produit.getQuantiteDisponible();
+                        produit.setQuantiteDisponible(quantiteAvant - ligne.getQuantite());
+                        produitRepo.save(produit);
+
+                        log.info("📉 Stock décrémenté pour {}: {} → {} (- {})",
+                                produit.getNomProduit(),
+                                quantiteAvant,
+                                produit.getQuantiteDisponible(),
+                                ligne.getQuantite());
+
+                        // Enregistrer le mouvement de stock
+                        enregistrerMouvementStock(
+                                produit,
+                                ligne.getQuantite(),
+                                TypeMouvement.LIVRAISON,
+                                reservation,
+                                "Décrémentation stock lors de la livraison EN_COURS - Réservation " +
+                                        reservation.getReferenceReservation(),
+                                username
+                        );
+
+                    } else if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE
+                            && ligne.getInstancesReservees() != null) {
+                        // Produit avec référence: passer les instances en EN_LIVRAISON
+                        for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                            instance.setStatut(StatutInstance.EN_LIVRAISON);
+                            instanceProduitRepo.save(instance);
+
+                            // Décrémenter le stock du produit (1 instance = -1 stock)
+                            int quantiteAvant = produit.getQuantiteDisponible();
+                            produit.setQuantiteDisponible(quantiteAvant - 1);
+                            produitRepo.save(produit);
+
+                            log.info("📦 Instance {} → EN_LIVRAISON (Stock: {} → {})",
+                                    instance.getNumeroSerie(),
+                                    quantiteAvant,
+                                    produit.getQuantiteDisponible());
+
+                            // Enregistrer le mouvement d'instance
+                            enregistrerMouvementInstance(
+                                    instance,
+                                    TypeMouvement.LIVRAISON,
+                                    "Livraison en cours vers client - Réservation " +
+                                            reservation.getReferenceReservation(),
+                                    username,
+                                    reservation
+                            );
+                        }
+
+                        log.info("📦 {} instances passées en EN_LIVRAISON pour ligne {}",
+                                ligne.getInstancesReservees().size(),
+                                ligne.getIdLigneReservation());
+                    }
+
+                    ligneReservationRepo.save(ligne);
+                }
+                break;
+
+            case LIVREE:
+                log.info("✅ Passage LIVREE: Produits livrés chez le client");
+
+                // Mettre à jour les lignes
+                for (LigneReservation ligne : lignes) {
+                    ligne.setStatutLivraisonLigne(StatutLivraison.LIVREE);
+
+                    // Si produit avec référence, passer les instances en EN_UTILISATION
+                    if (ligne.getProduit().getTypeProduit() == TypeProduit.AVEC_REFERENCE
+                            && ligne.getInstancesReservees() != null) {
+                        for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                            instance.setStatut(StatutInstance.EN_UTILISATION);
+                            instanceProduitRepo.save(instance);
+                        }
+                        log.info("📦 {} instances passées en EN_UTILISATION",
+                                ligne.getInstancesReservees().size());
+                    }
+
+                    ligneReservationRepo.save(ligne);
+                }
+
+                // ✅ Vérifier si toutes les lignes de la réservation sont livrées
+                if (reservation != null) {
+                    verifierEtMettreAJourReservationEnCours(reservation.getIdReservation());
+                }
+                break;
+
+            default:
+                // Pour les autres statuts, juste mettre à jour
+                for (LigneReservation ligne : lignes) {
+                    ligne.setStatutLivraisonLigne(nouveauStatut);
+                    ligneReservationRepo.save(ligne);
+                }
         }
 
         livraison = livraisonRepo.save(livraison);
@@ -291,7 +456,6 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         return toDto(livraison);
     }
-
     @Override
     public LivraisonResponseDto marquerLivraisonEnCours(Long idLivraison, String username) {
         log.info("🚚 Marquage de la livraison ID {} comme EN_COURS", idLivraison);
@@ -320,7 +484,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
             if (toutesLivrees && reservation.getStatutReservation() == StatutReservation.CONFIRME) {
                 // Mettre la réservation en EN_COURS
-                reservation.setStatutReservation(StatutReservation.EN_COURS);
+                reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
                 // Le save sera fait automatiquement par JPA grâce à la cascade
                 log.info("📋 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
                         reservation.getReferenceReservation());
@@ -330,6 +494,33 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         return response;
     }
 
+    /**
+     * ✅ MÉTHODE: Vérifier si toutes les lignes d'une réservation sont livrées
+     * Si oui, passer la réservation en EN_COURS
+     */
+    private void verifierEtMettreAJourReservationEnCours(Long idReservation) {
+        Reservation reservation = reservationRepo.findById(idReservation)
+                .orElseThrow(() -> new CustomException("Réservation introuvable"));
+
+        // Récupérer toutes les lignes de la réservation
+        List<LigneReservation> toutesLignes = ligneReservationRepo
+                .findByReservation_IdReservation(idReservation);
+
+        // Vérifier si toutes les lignes sont LIVREE
+        boolean toutesLivrees = toutesLignes.stream()
+                .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE);
+
+        if (toutesLivrees && reservation.getStatutReservation() == StatutReservation.CONFIRME) {
+            reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
+            reservationRepo.save(reservation);
+
+            log.info("🎉 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
+                    reservation.getReferenceReservation());
+        } else {
+            log.info("ℹ️ Réservation {} - Toutes les lignes ne sont pas encore livrées",
+                    reservation.getReferenceReservation());
+        }
+    }
     // ============================================
     // AFFECTATION D'EMPLOYÉS
     // ============================================
@@ -367,8 +558,8 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         affectation.setLivraison(livraison);
         affectation.setUtilisateur(employe);
         affectation.setDateAffectationLivraison(dto.getDateAffectation());
-        affectation.setHeureDebut(dto.getHeureDebut());
-        affectation.setHeureFin(dto.getHeureFin());
+        affectation.setHeureAffectation(dto.getHeureAffectation());
+        affectation.setNotes(dto.getNotes());
 
         affectation = affectationRepo.save(affectation);
 
@@ -514,7 +705,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 for (AffectationLivraison aff : affectations) {
                     Paragraph emp = new Paragraph("- " + aff.getUtilisateur().getNom() + " " +
                             aff.getUtilisateur().getPrenom() + " (" +
-                            aff.getHeureDebut() + " - " + aff.getHeureFin() + ")", normalFont);
+                            aff.getDateAffectationLivraison() + " - " + aff.getHeureAffectation() + ")", normalFont);
                     document.add(emp);
                 }
             }
@@ -550,6 +741,66 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     }
 
     // ============================================
+    // MÉTHODES UTILITAIRES
+    // ============================================
+
+    /**
+     * Enregistrer un mouvement de stock
+     */
+    private void enregistrerMouvementStock(
+            Produit produit,
+            int quantite,
+            TypeMouvement typeMouvement,
+            Reservation reservation,
+            String motif,
+            String username) {
+
+        MouvementStock mouvement = MouvementStock.builder()
+                .produit(produit)
+                .quantite(quantite)
+                .typeMouvement(typeMouvement)
+                .motif(motif)
+                .effectuePar(username)
+                .dateMouvement(LocalDateTime.now())
+                .build();
+
+        if (reservation != null) {
+            mouvement.setIdReservation(reservation.getIdReservation());
+            mouvement.setReferenceReservation(reservation.getReferenceReservation());
+        }
+
+        mouvementStockRepo.save(mouvement);
+    }
+
+    /**
+     * Enregistrer un mouvement d'instance pour traçabilité
+     */
+    private void enregistrerMouvementInstance(
+            InstanceProduit instance,
+            TypeMouvement typeMouvement,
+            String motif,
+            String username,
+            Reservation reservation) {
+
+        MouvementStock mouvement = MouvementStock.builder()
+                .produit(instance.getProduit())
+                .quantite(1)
+                .typeMouvement(typeMouvement)
+                .motif(motif)
+                .codeInstance(instance.getNumeroSerie())
+                .effectuePar(username)
+                .dateMouvement(LocalDateTime.now())
+                .build();
+
+        if (reservation != null) {
+            mouvement.setIdReservation(reservation.getIdReservation());
+            mouvement.setReferenceReservation(reservation.getReferenceReservation());
+        }
+
+        mouvementStockRepo.save(mouvement);
+    }
+
+    // ============================================
     // STATISTIQUES
     // ============================================
 
@@ -568,14 +819,14 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         dto.setIdLivraison(livraison.getIdLivraison());
         dto.setTitreLivraison(livraison.getTitreLivraison());
         dto.setAdresseLivraison(livraison.getAdresserLivraison());
-
-        // Convertir Date en LocalDate
         dto.setDateLivraison(livraison.getDateLivraison());
-
-        // Convertir Time en LocalTime
         dto.setHeureLivraison(livraison.getHeureLivraison());
-
         dto.setStatutLivraison(livraison.getStatutLivraison());
+        dto.setObservations(livraison.getObservations());
+
+
+        dto.setDateCreation(livraison.getDateCreation());
+        dto.setDateModification(livraison.getDateModification());
 
         // Récupérer les lignes associées
         List<LigneReservation> lignes =
@@ -590,24 +841,17 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 .mapToInt(LigneReservation::getQuantite)
                 .sum());
 
-        // ✅  Vérifier si toutes les lignes proviennent de la MÊME réservation
-        if (!lignes.isEmpty()) {
-            Set<Long> reservationIds = lignes.stream()
-                    .map(ligne -> ligne.getReservation().getIdReservation())
-                    .collect(Collectors.toSet());
 
-            // Si une seule réservation → on remplit les infos au niveau de la livraison
-            if (reservationIds.size() == 1) {
+        if (!lignes.isEmpty()) {
+
                 Reservation reservation = lignes.get(0).getReservation();
                 dto.setNomClient(reservation.getUtilisateur().getNom());
                 dto.setPrenomClient(reservation.getUtilisateur().getPrenom());
+                dto.setEmailClient(reservation.getUtilisateur().getEmail());
+                dto.setTelephoneClient(reservation.getUtilisateur().getTelephone());
                 dto.setReferenceReservation(reservation.getReferenceReservation());
-            } else {
-                // Plusieurs réservations → indiquer "Plusieurs clients"
-                dto.setNomClient("Plusieurs clients");
-                dto.setPrenomClient("");
-                dto.setReferenceReservation("Multiples");
-            }
+
+
         }
 
         // Récupérer les affectations
@@ -637,21 +881,6 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     .collect(Collectors.toList()));
         }
 
-        // Infos de la réservation
-        Reservation reservation = ligne.getReservation();
-        if (reservation != null) {
-            dto.setIdReservation(reservation.getIdReservation());
-            dto.setReferenceReservation(reservation.getReferenceReservation());
-
-            // Infos du client
-            Utilisateur client = reservation.getUtilisateur();
-            if (client != null) {
-                dto.setIdClient(client.getIdUtilisateur());
-                dto.setNomClient(client.getNom());
-                dto.setPrenomClient(client.getPrenom());
-                dto.setEmailClient(client.getEmail());
-            }
-        }
 
 
         return dto;
@@ -662,8 +891,8 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         dto.setIdAffectation(affectation.getIdAffectationLivraison());
 
         dto.setDateAffectation(affectation.getDateAffectationLivraison());
-        dto.setHeureDebut(affectation.getHeureDebut());
-        dto.setHeureFin(affectation.getHeureFin());
+        dto.setHeureAffectation(affectation.getHeureAffectation());
+
 
         // Infos employé
         dto.setIdEmploye(affectation.getUtilisateur().getIdUtilisateur());

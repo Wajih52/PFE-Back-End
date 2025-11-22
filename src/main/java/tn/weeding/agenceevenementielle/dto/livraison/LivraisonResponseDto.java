@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -26,6 +27,9 @@ public class LivraisonResponseDto {
     private StatutLivraison statutLivraison;
     private String observations;
 
+    private LocalDateTime dateCreation;
+    private LocalDateTime dateModification;
+
     /**
      * Liste des lignes de réservation associées
      */
@@ -41,6 +45,8 @@ public class LivraisonResponseDto {
      */
     private String nomClient;
     private String prenomClient;
+    private Long telephoneClient;
+    private String emailClient;
     private String referenceReservation;
 
     /**
@@ -64,14 +70,5 @@ public class LivraisonResponseDto {
         private String typeProduit; // EN_QUANTITE ou AVEC_REFERENCE
         private List<String> instancesReservees; // Pour produits avec référence
 
-        // Infos de la réservation
-        private Long idReservation;
-        private String referenceReservation;
-
-        //  Infos du client
-        private Long idClient;
-        private String nomClient;
-        private String prenomClient;
-        private String emailClient;
     }
 }

@@ -2,12 +2,14 @@ package tn.weeding.agenceevenementielle.entities;
 import java.io.Serializable;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 
-import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -16,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
+@EntityListeners(AuditingEntityListener.class)
 public class Livraison implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +31,17 @@ public class Livraison implements Serializable {
 
     @Enumerated(EnumType.STRING)
     StatutLivraison statutLivraison;
+
+    String observations;
+
+    //Audit automatique
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dateCreation;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime dateModification;
 
     //Livraison 0..1 ------------ 1..* LigneReservation
     @OneToMany(mappedBy = "livraison")

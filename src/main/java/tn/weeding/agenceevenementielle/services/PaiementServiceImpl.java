@@ -40,8 +40,8 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                 .orElseThrow(() -> new CustomException("Réservation introuvable avec l'ID: " + dto.getIdReservation()));
 
         if (reservation.getStatutReservation() != StatutReservation.CONFIRME &&
-                reservation.getStatutReservation() != StatutReservation.EN_COURS) {
-            throw new CustomException("Impossible d'ajouter un paiement à une réservation non confirmée");
+                reservation.getStatutReservation() != StatutReservation.TERMINE) {
+            throw new CustomException("Impossible d'ajouter un paiement à une réservation non confirmée ou annulée");
         }
 
         Double montantDejaPayeValide = calculerMontantPaye(dto.getIdReservation());

@@ -28,13 +28,9 @@ public class AffectationLivraisonRequestDto {
     @NotNull(message = "La date d'affectation est obligatoire")
     private LocalDate dateAffectation;
 
-    @NotNull(message = "L'heure de début est obligatoire")
+    @NotNull(message = "L'heure d'affectation est obligatoire")
     @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime heureDebut;
-
-    @NotNull(message = "L'heure de fin est obligatoire")
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime heureFin;
+    private LocalTime heureAffectation;
 
     /**
      * Notes ou instructions spécifiques pour cet employé

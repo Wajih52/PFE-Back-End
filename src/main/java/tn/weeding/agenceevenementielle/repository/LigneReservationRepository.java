@@ -468,8 +468,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "JOIN lr.instancesReservees inst " +
             "WHERE inst.idInstance = :idInstance " +
             "AND lr.reservation.idReservation != :reservationExclue " +
-            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME" +
-            ", tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS) " +
+            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME) " +
             "AND ((lr.dateDebut <= :dateFin) AND (lr.dateFin >= :dateDebut))")
     long countReservationsForInstanceInPeriodExcludingReservation(
             @Param("idInstance") Long idInstance,
@@ -498,8 +497,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "   WHERE l.idLigneReservation = :idLigne" +
             ") " +
             "AND lr.reservation.idReservation != :reservationExclue " +
-            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME," +
-            " tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS) " +
+            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME) " +
             "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
     Boolean areAllInstancesAvailableForModification(
             @Param("idLigne") Long idLigne,
@@ -518,8 +516,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
     SELECT MAX(lr.quantite)
     FROM LigneReservation lr
     WHERE lr.produit.idProduit = :idProduit
-    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME,
-     tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS)
+    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)
     AND lr.dateDebut <= :dateReference
     AND lr.dateFin >= :dateReference
     """)
@@ -535,8 +532,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
     SELECT COALESCE(MAX(lr.quantite), 0)
     FROM LigneReservation lr
     WHERE lr.produit.idProduit = :idProduit
-    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME,
-     tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS)
+    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)
     AND (
         (lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut)
     )
@@ -555,8 +551,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
     FROM LigneReservation lr
     JOIN lr.instancesReservees i
     WHERE lr.produit.idProduit = :idProduit
-    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME,
-    tn.weeding.agenceevenementielle.entities.enums.StatutReservation.EN_COURS)
+    AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME)
     AND (
         (lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut)
     )

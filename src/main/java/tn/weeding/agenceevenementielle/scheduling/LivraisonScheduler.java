@@ -70,7 +70,7 @@ public class LivraisonScheduler {
             for (Reservation reservation : reservations) {
                 try {
                     // Mettre la réservation en EN_COURS
-                    reservation.setStatutReservation(StatutReservation.EN_COURS);
+                    reservation.setStatutLivraisonRes(StatutLivraison.EN_ATTENTE);
                     reservationRepo.save(reservation);
 
                     reservationsMisesAJour++;
@@ -90,8 +90,7 @@ public class LivraisonScheduler {
             // Trouver toutes les lignes de réservation confirmées qui commencent aujourd'hui
             // et qui ne sont pas encore en EN_ATTENTE ou plus
             List<LigneReservation> lignes = ligneReservationRepo.findAll().stream()
-                    .filter(ligne -> ligne.getReservation().getStatutReservation() == StatutReservation.CONFIRME
-                            || ligne.getReservation().getStatutReservation() == StatutReservation.EN_COURS)
+                    .filter(ligne -> ligne.getReservation().getStatutReservation() == StatutReservation.CONFIRME)
                     .filter(ligne -> ligne.getDateDebut().equals(LocalDate.now()))
                     .filter(ligne -> ligne.getStatutLivraisonLigne() == StatutLivraison.NOT_TODAY
                             || ligne.getStatutLivraisonLigne() == null)

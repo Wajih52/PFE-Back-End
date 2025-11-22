@@ -18,6 +18,7 @@ import tn.weeding.agenceevenementielle.entities.enums.TypeMouvement;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class MouvementStock implements Serializable {
 
     @Id

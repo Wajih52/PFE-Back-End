@@ -18,8 +18,7 @@ public class AffectationLivraisonDto {
 
     private Long idAffectation;
     private LocalDate dateAffectation;
-    private LocalTime heureDebut;
-    private LocalTime heureFin;
+    private LocalTime heureAffectation;
     private String notes;
 
     /**

@@ -74,7 +74,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                 .orElseThrow(() -> new CustomException(
                         "Produit avec ID " + dto.getIdProduit() + " introuvable"));
 
-        if(reservation.getStatutReservation().equals(StatutReservation.EN_COURS)){
+        if(reservation.getStatutLivraisonRes().equals(StatutLivraison.EN_COURS)){
             throw new CustomException("Reservation Déjà en cours de Préparation , veuillez contacter l'administration");
         }
 
@@ -298,9 +298,9 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         boolean reservationCommencee = ligne.getStatutLivraisonLigne().equals(StatutLivraison.EN_ATTENTE)
                 || ligne.getDateDebut().isEqual(LocalDate.now());
 
-        if (reservation.getStatutReservation() == StatutReservation.EN_COURS) {
+        if (reservation.getStatutLivraisonRes() == StatutLivraison.LIVREE) {
             throw new CustomException(
-                    "Impossible de modifier une ligne d'une réservation en cours. " +
+                    "Impossible de modifier une ligne d'une réservation Livrée . " +
                             "Veuillez contacter l'administration."
             );
         }
@@ -603,7 +603,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         boolean reservationCommencee = ligne.getDateDebut().isBefore(dateActuelle)
                 || ligne.getDateDebut().isEqual(dateActuelle);
 
-        if (reservation.getStatutReservation() == StatutReservation.EN_COURS) {
+        if (reservation.getStatutLivraisonRes() == StatutLivraison.LIVREE) {
             throw new CustomException(
                     "Impossible de supprimer une ligne d'une réservation en cours. "
             );
@@ -776,7 +776,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         try {
             TypeFacture typeFacture = switch (reservation.getStatutReservation()) {
                 case EN_ATTENTE -> TypeFacture.DEVIS;
-                case CONFIRME, EN_COURS -> TypeFacture.PRO_FORMA;
+                case CONFIRME -> TypeFacture.PRO_FORMA;
                 case TERMINE -> TypeFacture.FINALE;
                 default -> null;
             };

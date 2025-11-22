@@ -33,7 +33,7 @@ public interface AffectationLivraisonRepository extends JpaRepository<Affectatio
     @Query("SELECT af FROM AffectationLivraison af " +
             "WHERE af.utilisateur.idUtilisateur = :idEmploye " +
             "AND af.dateAffectationLivraison = :date " +
-            "ORDER BY af.heureDebut ASC")
+            "ORDER BY af.heureAffectation ASC")
     List<AffectationLivraison> findAffectationsByEmployeAndDate(
             @Param("idEmploye") Long idEmploye,
             @Param("date") LocalDate date
