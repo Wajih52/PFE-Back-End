@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
 import tn.weeding.agenceevenementielle.dto.livraison.*;
+import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationResponseDto;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
 import tn.weeding.agenceevenementielle.services.LivraisonServiceInterface;
 
@@ -273,6 +274,45 @@ public class LivraisonController {
         LivraisonResponseDto livraison = livraisonService.marquerLivraisonLivree(id, username);
 
         return ResponseEntity.ok(livraison);
+    }
+
+    /**
+     * Marquer une ligne de réservation spécifique comme "Livrée"
+     * Utilisé depuis le détail de livraison pour confirmer la livraison ligne par ligne
+     */
+    @PatchMapping("/lignes/{idLigne}/livree")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
+    @Operation(
+            summary = "Marquer une ligne comme livrée",
+            description = "Marquer une ligne de réservation spécifique comme livrée. " +
+                    "Lorsque toutes les lignes d'une livraison sont livrées, " +
+                    "la livraison est automatiquement marquée comme LIVREE."
+    )
+    public ResponseEntity<LigneReservationResponseDto> marquerLigneLivree(@PathVariable Long idLigne) {
+        log.info("📦 Marquage de la ligne de réservation ID {} comme LIVREE", idLigne);
+
+        String username = authenticationFacade.getAuthentication().getName();
+        LigneReservationResponseDto ligne = livraisonService.marquerLigneLivree(idLigne, username);
+
+        return ResponseEntity.ok(ligne);
+    }
+
+    /**
+     * Obtenir toutes les lignes d'une livraison avec leur statut
+     * Utile pour afficher le tableau dans le détail de livraison
+     */
+    @GetMapping("/{idLivraison}/lignes")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE', 'CLIENT')")
+    @Operation(
+            summary = "Obtenir les lignes d'une livraison",
+            description = "Récupérer toutes les lignes de réservation associées à une livraison"
+    )
+    public ResponseEntity<List<LigneReservationResponseDto>> getLignesLivraison(@PathVariable Long idLivraison) {
+        log.info("📋 Récupération des lignes de la livraison ID {}", idLivraison);
+
+        List<LigneReservationResponseDto> lignes = livraisonService.getLignesLivraison(idLivraison);
+
+        return ResponseEntity.ok(lignes);
     }
 
     // ============================================

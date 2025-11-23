@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.dto.livraison.*;
+import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationResponseDto;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
@@ -36,7 +37,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     private final AffectationLivraisonRepository affectationRepo;
     private final LigneReservationRepository ligneReservationRepo;
     private final UtilisateurRepository utilisateurRepo;
-    private final UtilisateurRoleRepository utilisateurRoleRepo ;
+    private final UtilisateurRoleRepository utilisateurRoleRepo;
     private final ReservationRepository reservationRepo;
     private final InstanceProduitRepository instanceProduitRepo;
     private final MouvementStockRepository mouvementStockRepo;
@@ -295,6 +296,25 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     }
 
     @Override
+    public List<LigneReservationResponseDto> getLignesLivraison(Long idLivraison) {
+        log.info("📋 Récupération des lignes de la livraison ID {}", idLivraison);
+
+        // Vérifier que la livraison existe
+        Livraison livraison = livraisonRepo.findById(idLivraison)
+                .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
+
+        // Récupérer les lignes de réservation
+        List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(idLivraison);
+
+        log.info("✅ {} ligne(s) trouvée(s) pour la livraison #{}", lignes.size(), idLivraison);
+
+        // Convertir en DTO
+        return lignes.stream()
+                .map(this::toLigneReservationResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void supprimerLivraison(Long idLivraison, String username) {
         log.info("🗑️ Suppression de la livraison ID: {}", idLivraison);
 
@@ -302,8 +322,8 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
 
         // Vérifier que la livraison n'est pas déjà livrée
-        if (livraison.getStatutLivraison() == StatutLivraison.LIVREE||
-                livraison.getStatutLivraison()==StatutLivraison.EN_COURS) {
+        if (livraison.getStatutLivraison() == StatutLivraison.LIVREE ||
+                livraison.getStatutLivraison() == StatutLivraison.EN_COURS) {
             throw new CustomException("Impossible de supprimer une livraison déjà livrée");
         }
 
@@ -344,7 +364,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         // Récupérer la réservation (toutes les lignes ont la même réservation)
         Reservation reservation = !lignes.isEmpty() ? lignes.get(0).getReservation() : null;
 
-        // ✅ LOGIQUE MODIFIÉE: Décrémentation lors du passage EN_COURS
+        //  Décrémentation lors du passage EN_COURS
         switch (nouveauStatut) {
             case EN_COURS:
                 log.info("🚚 Passage EN_COURS: Décrémentation du stock et mise à jour des statuts");
@@ -375,7 +395,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                                 TypeMouvement.LIVRAISON,
                                 reservation,
                                 "Décrémentation stock lors de la livraison EN_COURS - Réservation " +
-                                        reservation.getReferenceReservation(),
+                                        (reservation != null ? reservation.getReferenceReservation() : null),
                                 username
                         );
 
@@ -401,7 +421,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                                     instance,
                                     TypeMouvement.LIVRAISON,
                                     "Livraison en cours vers client - Réservation " +
-                                            reservation.getReferenceReservation(),
+                                            (reservation != null ? reservation.getReferenceReservation() : null),
                                     username,
                                     reservation
                             );
@@ -418,28 +438,37 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
             case LIVREE:
                 log.info("✅ Passage LIVREE: Produits livrés chez le client");
+                if (!lignes.isEmpty()) {
+                    reservation = lignes.get(0).getReservation();
+                    // Vérifier si toutes les lignes de la réservation sont livrées
+                    List<LigneReservation> toutesLignes =
+                            ligneReservationRepo.findByReservation_IdReservation(reservation.getIdReservation());
+                    boolean toutesLivrees = toutesLignes.stream()
+                            .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE);
+                    if (toutesLivrees && reservation.getStatutReservation() == StatutReservation.CONFIRME) {
+                        // Changer le statut de la livraison et des lignes
+                        for (LigneReservation ligne : lignes) {
+                            ligne.setStatutLivraisonLigne(StatutLivraison.LIVREE);
 
-                // Mettre à jour les lignes
-                for (LigneReservation ligne : lignes) {
-                    ligne.setStatutLivraisonLigne(StatutLivraison.LIVREE);
+                            // Si produit avec référence, passer les instances en EN_UTILISATION
+                            if (ligne.getProduit().getTypeProduit() == TypeProduit.AVEC_REFERENCE
+                                    && ligne.getInstancesReservees() != null) {
+                                for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                                    instance.setStatut(StatutInstance.EN_UTILISATION);
+                                    instanceProduitRepo.save(instance);
+                                }
+                                log.info("📦 {} instances passées en EN_UTILISATION",
+                                        ligne.getInstancesReservees().size());
+                            }
 
-                    // Si produit avec référence, passer les instances en EN_UTILISATION
-                    if (ligne.getProduit().getTypeProduit() == TypeProduit.AVEC_REFERENCE
-                            && ligne.getInstancesReservees() != null) {
-                        for (InstanceProduit instance : ligne.getInstancesReservees()) {
-                            instance.setStatut(StatutInstance.EN_UTILISATION);
-                            instanceProduitRepo.save(instance);
+                            ligneReservationRepo.save(ligne);
                         }
-                        log.info("📦 {} instances passées en EN_UTILISATION",
-                                ligne.getInstancesReservees().size());
+                        // Mettre la réservation en EN_COURS
+                        reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
+                        // Le save sera fait automatiquement par JPA grâce à la cascade
+                        log.info("📋 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
+                                reservation.getReferenceReservation());
                     }
-
-                    ligneReservationRepo.save(ligne);
-                }
-
-                // ✅ Vérifier si toutes les lignes de la réservation sont livrées
-                if (reservation != null) {
-                    verifierEtMettreAJourReservationEnCours(reservation.getIdReservation());
                 }
                 break;
 
@@ -457,6 +486,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         return toDto(livraison);
     }
+
     @Override
     public LivraisonResponseDto marquerLivraisonEnCours(Long idLivraison, String username) {
         log.info("🚚 Marquage de la livraison ID {} comme EN_COURS", idLivraison);
@@ -467,63 +497,155 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     public LivraisonResponseDto marquerLivraisonLivree(Long idLivraison, String username) {
         log.info("✅ Marquage de la livraison ID {} comme LIVREE", idLivraison);
 
-        // Mettre à jour le statut de la réservation si toutes les lignes sont livrées
-        List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(idLivraison);
-
-        LivraisonResponseDto response ;
-        if (!lignes.isEmpty()) {
-            Reservation reservation = lignes.get(0).getReservation();
-
-            // Vérifier si toutes les lignes de la réservation sont livrées
-            List<LigneReservation> toutesLignes =
-                    ligneReservationRepo.findByReservation_IdReservation(reservation.getIdReservation());
-
-            boolean toutesLivrees = toutesLignes.stream()
-                    .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE);
-
-            if (toutesLivrees && reservation.getStatutReservation() == StatutReservation.CONFIRME) {
-                // Changer le statut de la livraison et des lignes
-                 response = changerStatutLivraison(idLivraison, StatutLivraison.LIVREE, username);
-                // Mettre la réservation en EN_COURS
-                reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
-                // Le save sera fait automatiquement par JPA grâce à la cascade
-                log.info("📋 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
-                        reservation.getReferenceReservation());
-                return response;
-            }
-        }else{
-            log.info("il existe des lignes qui sont pas livrées");
-            throw new CustomException("il existe des lignes qui sont pas livrées");
-        }
-        return null ;
+        return changerStatutLivraison(idLivraison, StatutLivraison.LIVREE, username);
     }
 
     /**
-     * ✅ MÉTHODE: Vérifier si toutes les lignes d'une réservation sont livrées
-     * Si oui, passer la réservation en EN_COURS
+     * ✅ Marquer une ligne de réservation spécifique comme LIVREE
+     * Cette méthode est appelée depuis le détail de la livraison
+     * lorsque l'employé confirme la livraison d'une ligne
+     *
+     * @param idLigne ID de la ligne de réservation
+     * @param username Nom d'utilisateur de l'employé qui effectue l'action
+     * @return LigneReservationResponseDto mise à jour
      */
-    private void verifierEtMettreAJourReservationEnCours(Long idReservation) {
-        Reservation reservation = reservationRepo.findById(idReservation)
-                .orElseThrow(() -> new CustomException("Réservation introuvable"));
+    @Override
+    @Transactional
+    public LigneReservationResponseDto marquerLigneLivree(Long idLigne, String username) {
+        log.info("📦 Marquage de la ligne de réservation ID {} comme LIVREE par {}", idLigne, username);
 
-        // Récupérer toutes les lignes de la réservation
-        List<LigneReservation> toutesLignes = ligneReservationRepo
-                .findByReservation_IdReservation(idReservation);
+        // Récupérer la ligne de réservation
+        LigneReservation ligne = ligneReservationRepo.findById(idLigne)
+                .orElseThrow(() -> new CustomException("Ligne de réservation introuvable avec ID: " + idLigne));
 
-        // Vérifier si toutes les lignes sont LIVREE
-        boolean toutesLivrees = toutesLignes.stream()
+        // Vérifications
+        if (ligne.getLivraison() == null) {
+            throw new CustomException("Cette ligne n'est pas associée à une livraison");
+        }
+
+        Livraison livraison = ligne.getLivraison();
+
+        // Vérifier que la livraison est EN_COURS
+        if (livraison.getStatutLivraison() != StatutLivraison.EN_COURS) {
+            throw new CustomException(
+                    "La livraison doit être EN_COURS pour marquer une ligne comme livrée. " +
+                            "Statut actuel: " + livraison.getStatutLivraison()
+            );
+        }
+
+        // Vérifier que la ligne n'est pas déjà livrée
+        if (ligne.getStatutLivraisonLigne() == StatutLivraison.LIVREE) {
+            log.warn("⚠️ La ligne {} est déjà marquée comme LIVREE", idLigne);
+            throw new CustomException("Cette ligne est déjà marquée comme livrée");
+        }
+
+        // ============================================
+        // METTRE À JOUR LE STATUT DE LA LIGNE
+        // ============================================
+
+        StatutLivraison ancienStatut = ligne.getStatutLivraisonLigne();
+        ligne.setStatutLivraisonLigne(StatutLivraison.LIVREE);
+        ligne = ligneReservationRepo.save(ligne);
+
+        log.info("✅ Ligne #{} : {} → LIVREE (Produit: {})",
+                ligne.getIdLigneReservation(),
+                ancienStatut,
+                ligne.getProduit().getNomProduit());
+
+
+        // Si produit avec référence, mettre les instances EN_ATTENTE
+        if (ligne.getProduit().getTypeProduit() == TypeProduit.AVEC_REFERENCE
+                && ligne.getInstancesReservees() != null
+                && !ligne.getInstancesReservees().isEmpty()) {
+
+            for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                // Vérifier que l'instance est bien disponible
+                if (instance.getStatut() == StatutInstance.EN_LIVRAISON) {
+                    instance.setStatut(StatutInstance.EN_UTILISATION);
+                    instanceProduitRepo.save(instance);
+
+                    log.info("📦 Instance {} :  EN_LIVRAISON → EN_UTILISATION ",
+                            instance.getNumeroSerie());
+                }
+            }
+        }
+
+        // ============================================
+        // VÉRIFIER SI TOUTES LES LIGNES SONT LIVRÉES
+        // ============================================
+
+        List<LigneReservation> toutesLignesDeLivraison = ligneReservationRepo
+                .findByLivraison_IdLivraison(livraison.getIdLivraison());
+
+        boolean toutesLignesLivrees = toutesLignesDeLivraison.stream()
                 .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE);
 
-        if (toutesLivrees && reservation.getStatutReservation() == StatutReservation.CONFIRME) {
-            reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
-            reservationRepo.save(reservation);
+        log.info("📊 État de la livraison #{}: {}/{} lignes livrées",
+                livraison.getIdLivraison(),
+                toutesLignesDeLivraison.stream()
+                        .filter(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE)
+                        .count(),
+                toutesLignesDeLivraison.size());
 
-            log.info("🎉 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
-                    reservation.getReferenceReservation());
-        } else {
-            log.info("ℹ️ Réservation {} - Toutes les lignes ne sont pas encore livrées",
-                    reservation.getReferenceReservation());
+        // Si toutes les lignes sont livrées, marquer la livraison comme LIVREE
+        if (toutesLignesLivrees) {
+            livraison.setStatutLivraison(StatutLivraison.LIVREE);
+            livraisonRepo.save(livraison);
+
+            log.info("🎉 TOUTES les lignes de la livraison #{} sont livrées → Livraison marquée LIVREE",
+                    livraison.getIdLivraison());
+
+            // Mettre à jour le statut de livraison de la réservation
+            Reservation reservation = ligne.getReservation();
+
+            // Vérifier si toutes les lignes de la réservation sont livrées
+            List<LigneReservation> toutesLignesReservation = ligneReservationRepo
+                    .findByReservation_IdReservation(reservation.getIdReservation());
+
+            boolean toutesLignesReservationLivrees = toutesLignesReservation.stream()
+                    .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE);
+
+            if (toutesLignesReservationLivrees) {
+                reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
+                reservationRepo.save(reservation);
+
+                log.info("🎉 TOUTES les lignes de la réservation {} sont livrées",
+                        reservation.getReferenceReservation());
+            }
         }
+
+        // Retourner le DTO de la ligne mise à jour
+        return toLigneReservationResponseDto(ligne);
+    }
+
+    /**
+     * Méthode helper pour convertir LigneReservation en DTO
+     */
+    private LigneReservationResponseDto toLigneReservationResponseDto(LigneReservation ligne) {
+        LigneReservationResponseDto dto = new LigneReservationResponseDto();
+        dto.setIdLigneReservation(ligne.getIdLigneReservation());
+        dto.setIdProduit(ligne.getProduit().getIdProduit());
+        dto.setNomProduit(ligne.getProduit().getNomProduit());
+        dto.setQuantite(ligne.getQuantite());
+        dto.setDateDebut(ligne.getDateDebut());
+        dto.setDateFin(ligne.getDateFin());
+        dto.setStatutLivraisonLigne(ligne.getStatutLivraisonLigne());
+        dto.setPrixUnitaire(ligne.getPrixUnitaire());
+        dto.setSousTotal(ligne.getPrixTotal());
+        dto.setNomProduit(ligne.getProduit().getNomProduit());
+        dto.setCodeProduit(ligne.getProduit().getCodeProduit());
+        dto.setQuantite(ligne.getQuantite());
+
+        // Ajouter les instances si produit avec référence
+        if (ligne.getInstancesReservees() != null && !ligne.getInstancesReservees().isEmpty()) {
+            dto.setNumerosSeries(
+                    ligne.getInstancesReservees().stream()
+                            .map(InstanceProduit::getNumeroSerie)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        return dto;
     }
     // ============================================
     // AFFECTATION D'EMPLOYÉS
@@ -658,8 +780,8 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             Paragraph infoClient = new Paragraph();
             infoClient.add(new Chunk("Client: \n", headerFont));
             infoClient.add(new Chunk(reservation.getUtilisateur().getNom() + " " +
-                    reservation.getUtilisateur().getPrenom() + "\n"+reservation.getUtilisateur().getEmail()+
-                    "\n"+reservation.getUtilisateur().getTelephone().toString()+" \n", normalFont));
+                    reservation.getUtilisateur().getPrenom() + "\n" + reservation.getUtilisateur().getEmail() +
+                    "\n" + reservation.getUtilisateur().getTelephone().toString() + " \n", normalFont));
             infoClient.add(new Chunk("Réservation: ", headerFont));
             infoClient.add(new Chunk(reservation.getReferenceReservation() + "\n", normalFont));
             infoClient.setSpacingAfter(20);
@@ -849,12 +971,12 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         if (!lignes.isEmpty()) {
 
-                Reservation reservation = lignes.get(0).getReservation();
-                dto.setNomClient(reservation.getUtilisateur().getNom());
-                dto.setPrenomClient(reservation.getUtilisateur().getPrenom());
-                dto.setEmailClient(reservation.getUtilisateur().getEmail());
-                dto.setTelephoneClient(reservation.getUtilisateur().getTelephone());
-                dto.setReferenceReservation(reservation.getReferenceReservation());
+            Reservation reservation = lignes.get(0).getReservation();
+            dto.setNomClient(reservation.getUtilisateur().getNom());
+            dto.setPrenomClient(reservation.getUtilisateur().getPrenom());
+            dto.setEmailClient(reservation.getUtilisateur().getEmail());
+            dto.setTelephoneClient(reservation.getUtilisateur().getTelephone());
+            dto.setReferenceReservation(reservation.getReferenceReservation());
 
 
         }
@@ -885,7 +1007,6 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     .map(InstanceProduit::getNumeroSerie)
                     .collect(Collectors.toList()));
         }
-
 
 
         return dto;
