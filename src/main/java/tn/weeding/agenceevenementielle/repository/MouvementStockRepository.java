@@ -187,7 +187,6 @@ public interface MouvementStockRepository extends JpaRepository<MouvementStock, 
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.REACTIVATION, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.AJOUT_STOCK, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.ENTREE_STOCK, " +
-            "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETOUR_RESERVATION, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETOUR_MAINTENANCE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.AJOUT_INSTANCE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.ANNULATION_RESERVATION, " +
@@ -207,7 +206,6 @@ public interface MouvementStockRepository extends JpaRepository<MouvementStock, 
             "AND m.typeMouvement IN (" +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.DESACTIVATION, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETRAIT_STOCK, " +
-            "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.SORTIE_RESERVATION, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.MAINTENANCE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.PRODUIT_ENDOMMAGE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.SUPPRESSION_INSTANCE, " +
@@ -230,7 +228,6 @@ public interface MouvementStockRepository extends JpaRepository<MouvementStock, 
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.CREATION, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.AJOUT_STOCK, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.ENTREE_STOCK, " +
-            "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETOUR_RESERVATION, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETOUR_MAINTENANCE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.AJOUT_INSTANCE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETOUR" +
@@ -252,7 +249,6 @@ public interface MouvementStockRepository extends JpaRepository<MouvementStock, 
             "AND m.dateMouvement >= :dateDebut AND m.dateMouvement <= :dateFin " +
             "AND m.typeMouvement IN (" +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.RETRAIT_STOCK, " +
-            "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.SORTIE_RESERVATION, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.MAINTENANCE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.PRODUIT_ENDOMMAGE, " +
             "    tn.weeding.agenceevenementielle.entities.enums.TypeMouvement.SUPPRESSION_INSTANCE, " +

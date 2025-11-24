@@ -356,7 +356,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
 
         StatutLivraison ancienStatut = livraison.getStatutLivraison();
-        livraison.setStatutLivraison(nouveauStatut);
+
 
         // Récupérer les lignes de cette livraison
         List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(idLivraison);
@@ -434,6 +434,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
                     ligneReservationRepo.save(ligne);
                 }
+                livraison.setStatutLivraison(nouveauStatut);
                 break;
 
             case LIVREE:
@@ -468,6 +469,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                         // Le save sera fait automatiquement par JPA grâce à la cascade
                         log.info("📋 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
                                 reservation.getReferenceReservation());
+                        livraison.setStatutLivraison(nouveauStatut);
                     }
                 }
                 break;
@@ -618,35 +620,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         return toLigneReservationResponseDto(ligne);
     }
 
-    /**
-     * Méthode helper pour convertir LigneReservation en DTO
-     */
-    private LigneReservationResponseDto toLigneReservationResponseDto(LigneReservation ligne) {
-        LigneReservationResponseDto dto = new LigneReservationResponseDto();
-        dto.setIdLigneReservation(ligne.getIdLigneReservation());
-        dto.setIdProduit(ligne.getProduit().getIdProduit());
-        dto.setNomProduit(ligne.getProduit().getNomProduit());
-        dto.setQuantite(ligne.getQuantite());
-        dto.setDateDebut(ligne.getDateDebut());
-        dto.setDateFin(ligne.getDateFin());
-        dto.setStatutLivraisonLigne(ligne.getStatutLivraisonLigne());
-        dto.setPrixUnitaire(ligne.getPrixUnitaire());
-        dto.setSousTotal(ligne.getPrixTotal());
-        dto.setNomProduit(ligne.getProduit().getNomProduit());
-        dto.setCodeProduit(ligne.getProduit().getCodeProduit());
-        dto.setQuantite(ligne.getQuantite());
 
-        // Ajouter les instances si produit avec référence
-        if (ligne.getInstancesReservees() != null && !ligne.getInstancesReservees().isEmpty()) {
-            dto.setNumerosSeries(
-                    ligne.getInstancesReservees().stream()
-                            .map(InstanceProduit::getNumeroSerie)
-                            .collect(Collectors.toList())
-            );
-        }
-
-        return dto;
-    }
     // ============================================
     // AFFECTATION D'EMPLOYÉS
     // ============================================
@@ -868,6 +842,332 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     }
 
     // ============================================
+    // GESTION DES RETOURS
+    // ============================================
+
+    /**
+     * 🔙 Marquer une ligne comme "En retour"
+     */
+    @Override
+    @Transactional
+    public LigneReservationResponseDto marquerLigneEnRetour(Long idLigne, String username) {
+        log.info("🔙 Début marquage ligne EN RETOUR - ID: {}", idLigne);
+
+        // ============================================
+        // RÉCUPÉRATION ET VALIDATIONS
+        // ============================================
+
+        LigneReservation ligne = ligneReservationRepo.findById(idLigne)
+                .orElseThrow(() -> new CustomException(
+                        "Ligne de réservation avec ID " + idLigne + " introuvable"));
+
+        Livraison livraison = ligne.getLivraison();
+        if (livraison == null) {
+            throw new CustomException("Cette ligne n'est pas associée à une livraison");
+        }
+
+        // Vérifier que la livraison est dans un état permettant le retour
+        if (livraison.getStatutLivraison() != StatutLivraison.LIVREE &&
+                livraison.getStatutLivraison() != StatutLivraison.RETOUR &&
+                livraison.getStatutLivraison() != StatutLivraison.RETOUR_PARTIEL) {
+            throw new CustomException(
+                    "Impossible de marquer en retour. " +
+                            "La livraison doit être livrée. " +
+                            "Statut actuel: " + livraison.getStatutLivraison()
+            );
+        }
+
+        // Vérifier que la ligne est livrée
+        if (ligne.getStatutLivraisonLigne() != StatutLivraison.LIVREE) {
+            throw new CustomException(
+                    "Cette ligne doit être livrée avant de pouvoir être marquée en retour. " +
+                            "Statut actuel: " + ligne.getStatutLivraisonLigne()
+            );
+        }
+
+        // ============================================
+        // METTRE À JOUR LE STATUT DE LA LIGNE
+        // ============================================
+
+        StatutLivraison ancienStatut = ligne.getStatutLivraisonLigne();
+        ligne.setStatutLivraisonLigne(StatutLivraison.RETOUR);
+        ligne = ligneReservationRepo.save(ligne);
+
+        log.info("✅ Ligne #{} : {} → RETOUR (Produit: {})",
+                ligne.getIdLigneReservation(),
+                ancienStatut,
+                ligne.getProduit().getNomProduit());
+
+        // ============================================
+        // METTRE À JOUR LES INSTANCES (AVEC_REFERENCE)
+        // ============================================
+
+        if (ligne.getProduit().getTypeProduit() == TypeProduit.AVEC_REFERENCE
+                && ligne.getInstancesReservees() != null
+                && !ligne.getInstancesReservees().isEmpty()) {
+
+            for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                if (instance.getStatut() == StatutInstance.EN_UTILISATION) {
+                    instance.setStatut(StatutInstance.EN_RETOUR);
+                    instanceProduitRepo.save(instance);
+
+                    // Enregistrer mouvement
+                    enregistrerMouvementInstance(
+                            instance,
+                            TypeMouvement.RETOUR,
+                            "Début du retour physique - Réservation " +
+                                    ligne.getReservation().getReferenceReservation(),
+                            username,
+                            ligne.getReservation()
+                    );
+
+                    log.info("📦 Instance {} : EN_UTILISATION → EN_RETOUR",
+                            instance.getNumeroSerie());
+                }
+            }
+        }
+
+        // ============================================
+        // METTRE À JOUR LE STATUT DE LA LIVRAISON
+        // ============================================
+
+        List<LigneReservation> toutesLignesDeLivraison = ligneReservationRepo
+                .findByLivraison_IdLivraison(livraison.getIdLivraison());
+
+        // Vérifier si au moins une ligne est en retour
+        boolean auMoinsUneEnRetour = toutesLignesDeLivraison.stream()
+                .anyMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOUR);
+
+        // Vérifier si toutes les lignes sont retournées ou en retour
+        boolean toutesRetourneesOuEnRetour = toutesLignesDeLivraison.stream()
+                .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE ||
+                        l.getStatutLivraisonLigne() == StatutLivraison.RETOUR);
+
+        if (auMoinsUneEnRetour && toutesRetourneesOuEnRetour) {
+            // Vérifier si certaines sont complètement retournées
+            boolean certainesRetournees = toutesLignesDeLivraison.stream()
+                    .anyMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE);
+
+            if (certainesRetournees) {
+                livraison.setStatutLivraison(StatutLivraison.RETOUR_PARTIEL);
+                log.info("📊 Livraison #{}: Passage à RETOUR_PARTIEL", livraison.getIdLivraison());
+            } else {
+                livraison.setStatutLivraison(StatutLivraison.RETOUR);
+                log.info("📊 Livraison #{}: Passage a RETOUR", livraison.getIdLivraison());
+            }
+
+            livraisonRepo.save(livraison);
+        }
+
+        log.info("📊 État de la livraison #{}: {}/{} lignes en retour ou retournées",
+                livraison.getIdLivraison(),
+                toutesLignesDeLivraison.stream()
+                        .filter(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOUR ||
+                                l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE)
+                        .count(),
+                toutesLignesDeLivraison.size());
+
+        // ============================================
+        // RETOURNER LE DTO
+        // ============================================
+
+        return toLigneReservationResponseDto(ligne);
+    }
+
+    /**
+     * ✅ Marquer une ligne comme "Retournée" (finalisée)
+     */
+    @Override
+    @Transactional
+    public LigneReservationResponseDto marquerLigneRetournee(Long idLigne, String username) {
+        log.info("✅ Début marquage ligne RETOURNEE - ID: {}", idLigne);
+
+        // ============================================
+        // RÉCUPÉRATION ET VALIDATIONS
+        // ============================================
+
+        LigneReservation ligne = ligneReservationRepo.findById(idLigne)
+                .orElseThrow(() -> new CustomException(
+                        "Ligne de réservation avec ID " + idLigne + " introuvable"));
+
+        Livraison livraison = ligne.getLivraison();
+        if (livraison == null) {
+            throw new CustomException("Cette ligne n'est pas associée à une livraison");
+        }
+
+        // Vérifier que la ligne n'est pas déjà retournée
+        if (ligne.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE) {
+            log.warn("⚠️ La ligne {} est déjà marquée comme RETOURNEE", idLigne);
+            throw new CustomException("Cette ligne est déjà marquée comme retournée");
+        }
+
+        // Vérifier que la ligne est en retour ou livrée
+        if (ligne.getStatutLivraisonLigne() != StatutLivraison.RETOUR &&
+                ligne.getStatutLivraisonLigne() != StatutLivraison.LIVREE) {
+            throw new CustomException(
+                    "Cette ligne doit être en retour ou livrée. " +
+                            "Statut actuel: " + ligne.getStatutLivraisonLigne()
+            );
+        }
+
+
+        // ============================================
+        // METTRE À JOUR LE STATUT DE LA LIGNE
+        // ============================================
+
+        StatutLivraison ancienStatut = ligne.getStatutLivraisonLigne();
+        ligne.setStatutLivraisonLigne(StatutLivraison.RETOURNEE);
+        ligne = ligneReservationRepo.save(ligne);
+
+        log.info("✅ Ligne #{} : {} → RETOURNEE (Produit: {})",
+                ligne.getIdLigneReservation(),
+                ancienStatut,
+                ligne.getProduit().getNomProduit());
+
+        // ============================================
+        // GÉRER LES INSTANCES ET LE STOCK
+        // ============================================
+
+        if (ligne.getProduit().getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
+            // Produit avec référence : libérer les instances
+            if (ligne.getInstancesReservees() != null && !ligne.getInstancesReservees().isEmpty()) {
+
+                for (InstanceProduit instance : ligne.getInstancesReservees()) {
+                    // Remettre l'instance disponible
+                    instance.setStatut(StatutInstance.DISPONIBLE);
+                    instanceProduitRepo.save(instance);
+
+                    // Produit en quantité : réintégrer le stock
+                    Integer quantiteAvant = ligne.getProduit().getQuantiteDisponible();
+                    ligne.getProduit().setQuantiteDisponible(quantiteAvant+1);
+                    produitRepo.save(ligne.getProduit());
+
+
+                    // Enregistrer mouvement
+                    enregistrerMouvementInstance(
+                            instance,
+                            TypeMouvement.RETOUR,
+                            "Retour validé, instance disponible - Réservation " +
+                                    ligne.getReservation().getReferenceReservation(),
+                            username,
+                            ligne.getReservation()
+                    );
+
+                    log.info("📦 Instance {} : {} → DISPONIBLE",
+                            instance.getNumeroSerie(),
+                            instance.getStatut());
+                }
+
+                // Libérer les instances de la ligne
+                ligne.getInstancesReservees().clear();
+                ligneReservationRepo.save(ligne);
+
+                log.info("✅ {} instances libérées et DISPONIBLES", ligne.getQuantite());
+
+
+
+
+
+
+            }
+
+        } else {
+            // Produit en quantité : réintégrer le stock
+            Integer quantiteAvant = ligne.getProduit().getQuantiteDisponible();
+            Integer quantiteApres = quantiteAvant + ligne.getQuantite();
+
+            ligne.getProduit().setQuantiteDisponible(quantiteApres);
+            produitRepo.save(ligne.getProduit());
+
+            // Enregistrer mouvement stock
+            enregistrerMouvementStock(
+                    ligne.getProduit(),
+                    ligne.getQuantite(),
+                    TypeMouvement.RETOUR,
+                    ligne.getReservation(),
+                    "Retour validé: +" + ligne.getQuantite() + "x " +
+                            ligne.getProduit().getNomProduit() +
+                            " (Quantité disponible: " + quantiteAvant + " → " + quantiteApres + ") - " +
+                            "Réservation " + ligne.getReservation().getReferenceReservation(),
+                    username
+            );
+
+            log.info("📦 Stock réintégré: {} → {} (+{})",
+                    quantiteAvant,
+                    quantiteApres,
+                    ligne.getQuantite());
+        }
+
+        // ============================================
+        // VÉRIFIER SI TOUTES LES LIGNES SONT RETOURNÉES
+        // ============================================
+
+        List<LigneReservation> toutesLignesDeLivraison = ligneReservationRepo
+                .findByLivraison_IdLivraison(livraison.getIdLivraison());
+
+        boolean toutesLignesRetournees = toutesLignesDeLivraison.stream()
+                .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE);
+
+        log.info("📊 État de la livraison #{}: {}/{} lignes retournées",
+                livraison.getIdLivraison(),
+                toutesLignesDeLivraison.stream()
+                        .filter(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE)
+                        .count(),
+                toutesLignesDeLivraison.size());
+
+        if (toutesLignesRetournees) {
+            livraison.setStatutLivraison(StatutLivraison.RETOURNEE);
+            livraisonRepo.save(livraison);
+
+            log.info("🎉 Livraison #{} : TOUTES les lignes sont retournées → Statut RETOURNEE",
+                    livraison.getIdLivraison());
+
+            // ============================================
+            // VÉRIFIER SI LA RÉSERVATION EST TERMINÉE
+            // ============================================
+
+            Reservation reservation = ligne.getReservation();
+            List<LigneReservation> toutesLignesReservation =
+                    ligneReservationRepo.findByReservation_IdReservation(reservation.getIdReservation());
+
+            boolean toutesLignesReservationRetournees = toutesLignesReservation.stream()
+                    .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE);
+
+            if (toutesLignesReservationRetournees &&
+                    reservation.getStatutReservation() == StatutReservation.CONFIRME) {
+
+                reservation.setStatutReservation(StatutReservation.TERMINE);
+                reservation.setStatutLivraisonRes(StatutLivraison.RETOURNEE);
+                reservationRepo.save(reservation);
+
+                log.info("🎉 Réservation {} : TOUTES les lignes retournées → Statut TERMINE",
+                        reservation.getReferenceReservation());
+            }
+        } else {
+            // Certaines lignes sont retournées, d'autres non
+            boolean auMoinsUneEnRetour = toutesLignesDeLivraison.stream()
+                    .anyMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOUR);
+
+            if (auMoinsUneEnRetour) {
+                livraison.setStatutLivraison(StatutLivraison.RETOUR_PARTIEL);
+                log.info("📊 Livraison #{}: Passage à RETOUR_PARTIEL (retour en cours)",
+                        livraison.getIdLivraison());
+            } else {
+                livraison.setStatutLivraison(StatutLivraison.RETOUR);
+                log.info("📊 Livraison #{}: Passage à RETOUR", livraison.getIdLivraison());
+            }
+
+            livraisonRepo.save(livraison);
+        }
+
+        // ============================================
+        // RETOURNER LE DTO
+        // ============================================
+
+        return toLigneReservationResponseDto(ligne);
+    }
+
+    // ============================================
     // MÉTHODES UTILITAIRES
     // ============================================
 
@@ -882,9 +1182,19 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             String motif,
             String username) {
 
+        Integer quantiteAvant = produit.getQuantiteDisponible();
+        Integer quantiteApres = 0 ;
+        if(typeMouvement==TypeMouvement.LIVRAISON) {
+            quantiteApres = quantiteAvant - quantite;
+        }else{
+            quantiteApres = quantiteAvant + quantite;
+        }
+
         MouvementStock mouvement = MouvementStock.builder()
                 .produit(produit)
                 .quantite(quantite)
+                .quantiteAvant(quantiteAvant)
+                .quantiteApres(quantiteApres)
                 .typeMouvement(typeMouvement)
                 .motif(motif)
                 .effectuePar(username)
@@ -909,9 +1219,19 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             String username,
             Reservation reservation) {
 
+        Integer quantiteAvant = instance.getProduit().getQuantiteDisponible();
+        Integer quantiteApres = 0 ;
+        if(typeMouvement==TypeMouvement.LIVRAISON) {
+             quantiteApres = quantiteAvant - 1;
+        }else{
+             quantiteApres = quantiteAvant + 1;
+        }
+
         MouvementStock mouvement = MouvementStock.builder()
                 .produit(instance.getProduit())
                 .quantite(1)
+                .quantiteAvant(quantiteAvant)
+                .quantiteApres(quantiteApres)
                 .typeMouvement(typeMouvement)
                 .motif(motif)
                 .codeInstance(instance.getNumeroSerie())
@@ -1030,6 +1350,36 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         // Infos livraison
         dto.setIdLivraison(affectation.getLivraison().getIdLivraison());
         dto.setTitreLivraison(affectation.getLivraison().getTitreLivraison());
+
+        return dto;
+    }
+
+    /**
+     * Méthode helper pour convertir LigneReservation en DTO
+     */
+    private LigneReservationResponseDto toLigneReservationResponseDto(LigneReservation ligne) {
+        LigneReservationResponseDto dto = new LigneReservationResponseDto();
+        dto.setIdLigneReservation(ligne.getIdLigneReservation());
+        dto.setIdProduit(ligne.getProduit().getIdProduit());
+        dto.setNomProduit(ligne.getProduit().getNomProduit());
+        dto.setQuantite(ligne.getQuantite());
+        dto.setDateDebut(ligne.getDateDebut());
+        dto.setDateFin(ligne.getDateFin());
+        dto.setStatutLivraisonLigne(ligne.getStatutLivraisonLigne());
+        dto.setPrixUnitaire(ligne.getPrixUnitaire());
+        dto.setSousTotal(ligne.getPrixTotal());
+        dto.setNomProduit(ligne.getProduit().getNomProduit());
+        dto.setCodeProduit(ligne.getProduit().getCodeProduit());
+        dto.setQuantite(ligne.getQuantite());
+
+        // Ajouter les instances si produit avec référence
+        if (ligne.getInstancesReservees() != null && !ligne.getInstancesReservees().isEmpty()) {
+            dto.setNumerosSeries(
+                    ligne.getInstancesReservees().stream()
+                            .map(InstanceProduit::getNumeroSerie)
+                            .collect(Collectors.toList())
+            );
+        }
 
         return dto;
     }

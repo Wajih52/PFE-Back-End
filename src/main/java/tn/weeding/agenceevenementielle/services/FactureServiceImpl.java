@@ -52,6 +52,32 @@ public class FactureServiceImpl implements FactureServiceInterface {
             throw new CustomException("Une facture de type " + request.getTypeFacture() + " existe déjà pour cette réservation");
         }
 
+        if(request.getTypeFacture()==TypeFacture.PRO_FORMA){
+            // Chercher si une facture de ce type existe déjà
+            Optional<Facture> factureExistante = factureRepository
+                    .findByReservation_IdReservationAndTypeFacture(request.getIdReservation(), TypeFacture.DEVIS)
+                    .stream()
+                    .findFirst();
+            if(factureExistante.isPresent()){
+                factureExistante.get().setStatutFacture(StatutFacture.ANNULEE);
+                factureRepository.save(factureExistante.get());
+            }
+
+        } else if (request.getTypeFacture()==TypeFacture.FINALE) {
+            // Chercher si une facture de ce type existe déjà
+            List<Facture> factureExistante = factureRepository
+                    .findByReservation_IdReservationAndTypeFacture(request.getIdReservation(), TypeFacture.DEVIS);
+            List<Facture> factureExistanteProForma = factureRepository
+                    .findByReservation_IdReservationAndTypeFacture(request.getIdReservation(), TypeFacture.PRO_FORMA);
+            factureExistante.addAll(factureExistanteProForma);
+            if(!factureExistante.isEmpty()){
+                for (Facture facture : factureExistante){
+                    facture.setStatutFacture(StatutFacture.ANNULEE);
+                    factureRepository.save(facture);
+                }
+            }
+        }
+
         // Créer la facture
         Facture facture = creerFacture(reservation, request.getTypeFacture(), username);
         facture.setNotes(request.getNotes());

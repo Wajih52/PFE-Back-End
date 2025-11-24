@@ -93,6 +93,8 @@ public interface LivraisonServiceInterface {
 
 
 
+
+
     // ============================================
     // GESTION DES STATUTS
     // ============================================
@@ -153,4 +155,18 @@ public interface LivraisonServiceInterface {
      * Compter les livraisons par statut
      */
     Long countByStatut(StatutLivraison statut);
+
+    // ============================================
+    // GESTION DES Retours
+    // ============================================
+
+    /**
+     * Marquer une ligne comme "En retour"
+     */
+    LigneReservationResponseDto marquerLigneEnRetour(Long idLigne, String username);
+
+    /**
+     * Marquer une ligne comme "Retournée" (complète)
+     */
+    LigneReservationResponseDto marquerLigneRetournee(Long idLigne, String username);
 }

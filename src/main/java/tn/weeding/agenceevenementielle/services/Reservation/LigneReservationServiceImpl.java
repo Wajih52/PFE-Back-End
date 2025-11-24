@@ -528,10 +528,10 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                             instance.setStatut(StatutInstance.DISPONIBLE);
                             instanceProduitRepo.save(instance);
 
-                            // ✅ AJOUT: Enregistrer fin du retour
+                            //  Enregistrer fin du retour
                             enregistrerMouvementInstance(
                                     instance,
-                                    TypeMouvement.RETOUR_RESERVATION,
+                                    TypeMouvement.RETOUR,
                                     "Retour validé, instance disponible - Réservation " +
                                             ligne.getReservation().getReferenceReservation(),
                                     username,
@@ -557,7 +557,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                     enregistrerMouvementStock(
                             ligne.getProduit(),
                             ligne.getQuantite(),
-                            TypeMouvement.RETOUR_RESERVATION,
+                            TypeMouvement.RETOUR,
                             ligne.getReservation(),
                             "Retour validé, stock réintégré (" + quantiteAvant + "→" +
                                     quantiteApres + ") - Réservation " +

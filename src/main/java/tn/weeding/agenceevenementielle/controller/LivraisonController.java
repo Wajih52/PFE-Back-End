@@ -433,4 +433,45 @@ public class LivraisonController {
         Long count = livraisonService.countByStatut(statut);
         return ResponseEntity.ok(count);
     }
+
+    /**
+     * Marquer une ligne de réservation comme "En retour"
+     * L'équipement est en cours de retour physique
+     */
+    @PatchMapping("/lignes/{idLigne}/en-retour")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
+    @Operation(
+            summary = "Marquer une ligne en retour",
+            description = "Marquer une ligne de réservation comme étant en cours de retour. " +
+                    "Les instances passent en statut EN_RETOUR."
+    )
+    public ResponseEntity<LigneReservationResponseDto> marquerLigneEnRetour(@PathVariable Long idLigne) {
+        log.info("🔙 Marquage de la ligne de réservation ID {} comme EN RETOUR", idLigne);
+
+        String username = authenticationFacade.getAuthentication().getName();
+        LigneReservationResponseDto ligne = livraisonService.marquerLigneEnRetour(idLigne, username);
+
+        return ResponseEntity.ok(ligne);
+    }
+
+    /**
+     * Marquer une ligne de réservation comme "Retournée" (finalisée)
+     * Le matériel est physiquement revenu et disponible
+     */
+    @PatchMapping("/lignes/{idLigne}/retournee")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
+    @Operation(
+            summary = "Marquer une ligne comme retournée",
+            description = "Marquer une ligne de réservation comme retournée et validée. " +
+                    "Les instances redeviennent DISPONIBLES et le stock est réintégré. " +
+                    "Lorsque toutes les lignes sont retournées, la livraison passe à RETOURNEE."
+    )
+    public ResponseEntity<LigneReservationResponseDto> marquerLigneRetournee(@PathVariable Long idLigne) {
+        log.info("✅ Marquage de la ligne de réservation ID {} comme RETOURNEE", idLigne);
+
+        String username = authenticationFacade.getAuthentication().getName();
+        LigneReservationResponseDto ligne = livraisonService.marquerLigneRetournee(idLigne, username);
+
+        return ResponseEntity.ok(ligne);
+    }
 }

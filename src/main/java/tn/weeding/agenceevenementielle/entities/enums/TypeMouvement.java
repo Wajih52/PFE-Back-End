@@ -40,12 +40,6 @@ public enum TypeMouvement {
     ENTREE_STOCK,
 
     /**
-     * Retour de produit après une réservation
-     * Le stock revient dans l'inventaire disponible
-     */
-    RETOUR_RESERVATION,
-
-    /**
      * Retour de produit après maintenance
      * Le produit redevient disponible
      */
@@ -61,11 +55,7 @@ public enum TypeMouvement {
      */
     RETRAIT_STOCK,
 
-    /**
-     * Sortie pour réservation/événement
-     * Le stock est alloué à une réservation
-     */
-    SORTIE_RESERVATION,
+
 
     /**
      * Envoi en maintenance
@@ -159,7 +149,6 @@ public enum TypeMouvement {
                  REACTIVATION,
                  AJOUT_STOCK,
                  ENTREE_STOCK,
-                 RETOUR_RESERVATION,
                  RETOUR_MAINTENANCE,
                  AJOUT_INSTANCE,
                  ANNULATION_RESERVATION,
@@ -176,7 +165,6 @@ public enum TypeMouvement {
         return switch (this) {
             case DESACTIVATION,
                  RETRAIT_STOCK,
-                 SORTIE_RESERVATION,
                  MAINTENANCE,
                  PRODUIT_ENDOMMAGE,
                  SUPPRESSION_INSTANCE,
@@ -208,8 +196,6 @@ public enum TypeMouvement {
             case AJOUT_STOCK -> "Ajout de stock";
             case ENTREE_STOCK -> "Entrée de stock";
             case RETRAIT_STOCK -> "Retrait de stock";
-            case SORTIE_RESERVATION -> "Sortie pour réservation";
-            case RETOUR_RESERVATION -> "Retour de réservation";
             case MAINTENANCE -> "Envoi en maintenance";
             case RETOUR_MAINTENANCE -> "Retour de maintenance";
             case PRODUIT_ENDOMMAGE -> "Produit endommagé";
@@ -236,8 +222,8 @@ public enum TypeMouvement {
             case DESACTIVATION -> "🗑️";
             case AJOUT_STOCK, ENTREE_STOCK -> "📦";
             case RETRAIT_STOCK -> "📤";
-            case SORTIE_RESERVATION, LIVRAISON -> "🚚";
-            case RETOUR_RESERVATION, RETOUR -> "🔙";
+            case  LIVRAISON -> "🚚";
+            case  RETOUR -> "🔙";
             case MAINTENANCE -> "🔧";
             case RETOUR_MAINTENANCE -> "✅";
             case PRODUIT_ENDOMMAGE -> "💔";
