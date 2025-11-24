@@ -404,8 +404,8 @@ public class FactureServiceImpl implements FactureServiceInterface {
     }
 
     /**
-     * 🔄 Met à jour la facture DEVIS de manière sûre (transaction isolée)
-     * Ne propage pas les exceptions pour ne pas affecter la transaction parente
+     *  Met à jour la facture DEVIS de manière sûre
+     *
      */
     @Transactional(readOnly = true)
     public void mettreAJourFactureDevisSafe(Long idReservation) {
@@ -440,7 +440,6 @@ public class FactureServiceImpl implements FactureServiceInterface {
         } catch (Exception e) {
             log.error("❌ Erreur lors de la mise à jour de la facture DEVIS : {}",
                     e.getMessage(), e);
-            // Ne pas propager l'exception - transaction isolée
         }
     }
 }

@@ -6,18 +6,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.dto.paiement.PaiementRequestDto;
 import tn.weeding.agenceevenementielle.dto.paiement.PaiementResponseDto;
+import tn.weeding.agenceevenementielle.entities.Facture;
 import tn.weeding.agenceevenementielle.entities.Paiement;
 import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
-import tn.weeding.agenceevenementielle.entities.enums.StatutPaiement;
-import tn.weeding.agenceevenementielle.entities.enums.StatutPaiementRes;
-import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
+import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
+import tn.weeding.agenceevenementielle.repository.FactureRepository;
+import tn.weeding.agenceevenementielle.repository.LivraisonRepository;
 import tn.weeding.agenceevenementielle.repository.PaiementRepository;
 import tn.weeding.agenceevenementielle.repository.ReservationRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -30,6 +32,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
     private final PaiementRepository paiementRepository;
     private final ReservationRepository reservationRepository;
     private final CodeGeneratorService codeGeneratorService;
+    private final FactureRepository factureRepository ;
 
 
     @Override
@@ -324,11 +327,22 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
         if (paiementComplet) {
             log.info("✅ Paiement complet pour la réservation: {}", reservation.getReferenceReservation());
 
-            if (reservation.getStatutPaiement() == StatutPaiementRes.EN_ATTENTE_PAIEMENT) {
+            if (reservation.getStatutPaiement() == StatutPaiementRes.EN_ATTENTE_PAIEMENT||
+            reservation.getStatutPaiement()==StatutPaiementRes.PARTIELLEMENT_PAYE) {
                 reservation.setStatutPaiement(StatutPaiementRes.TOTALEMENT_PAYE);
+                Optional<Facture> facture =factureRepository.findByReservation_IdReservationAndTypeFacture(reservation.getIdReservation(), TypeFacture.FINALE)
+                        .stream().findFirst();
+                if (facture.isPresent()){
+                    facture.get().setStatutFacture(StatutFacture.PAYEE);
+                    factureRepository.save(facture.get());
+                }
                 reservationRepository.save(reservation);
+
                 log.info("📝 Statut Paiement réservation mis à jour: EN_ATTENTE_PAIEMENT → CONFIRME");
             }
+        }else{
+            reservation.setStatutPaiement(StatutPaiementRes.PARTIELLEMENT_PAYE);
+            reservationRepository.save(reservation);
         }
     }
 

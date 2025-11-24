@@ -1454,6 +1454,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
         // Confirmer la réservation
         reservation.setStatutReservation(StatutReservation.CONFIRME);
+        reservation.setStatutPaiement(StatutPaiementRes.EN_ATTENTE_PAIEMENT);
 
         reservation.setStockReserve(Boolean.TRUE);
 
