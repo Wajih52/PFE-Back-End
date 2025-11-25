@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -114,9 +115,12 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
 
         // Mettre à jour les champs
         instance.setStatut(dto.getStatut());
-        instance.setEtatPhysique(dto.getEtatPhysique());
+        if (dto.getEtatPhysique() != null) {
+            instance.setEtatPhysique(dto.getEtatPhysique());
+        } else {
+            instance.setEtatPhysique(EtatPhysique.BON_ETAT);
+        }
         instance.setObservation(dto.getObservation());
-       // instance.setDateAcquisition(dto.getDateAcquisition());
         instance.setDateDerniereMaintenance(dto.getDateDerniereMaintenance());
         instance.setDateProchaineMaintenance(dto.getDateProchaineMaintenance());
         instance.setAjoutPar(username);
@@ -134,7 +138,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                     instance.getNumeroSerie(), dto.getNumeroSerie()));
         }
 
-        if (!instance.getEtatPhysique().equals(dto.getEtatPhysique())) {
+        if (!Objects.equals(instance.getEtatPhysique(), dto.getEtatPhysique())) {
             modifications.append(String.format("État: %s→%s; ",
                     instance.getEtatPhysique(), dto.getEtatPhysique()));
         }
@@ -281,7 +285,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 LocalDate.now()
         );
 
-        if (estReservee) {
+        if (estReservee && ancienStatut.equals(StatutInstance.DISPONIBLE)) {
             throw new ProduitException(
                     "Impossible de mettre l'instance " + instance.getNumeroSerie() +
                             "en Etat :"+nouveauStatut+" car elle est actuellement réservée");

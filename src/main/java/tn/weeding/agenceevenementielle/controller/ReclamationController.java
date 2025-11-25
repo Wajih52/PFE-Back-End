@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
 import tn.weeding.agenceevenementielle.dto.reclamation.*;
 import tn.weeding.agenceevenementielle.entities.enums.PrioriteReclamation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReclamation;
@@ -31,12 +32,13 @@ import java.util.Map;
 public class ReclamationController {
 
     private final ReclamationServiceInterface reclamationService;
+    private final AuthenticationFacade authenticationFacade ;
 
     /**
      * Créer une réclamation (public - pour visiteurs ET clients)
      * POST /api/reclamations
      */
-    @PostMapping
+    @PostMapping("create")
     public ResponseEntity<ReclamationResponseDto> creerReclamation(
             @Valid @RequestBody ReclamationRequestDto dto,
             Authentication authentication) {
@@ -93,9 +95,10 @@ public class ReclamationController {
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<ReclamationResponseDto>> getMesReclamations(Authentication authentication) {
         log.info("📋 Récupération des réclamations de l'utilisateur connecté");
-        // TODO: Implémenter la récupération de l'ID utilisateur depuis le token
-        // Pour l'instant, on retourne les réclamations par username (à adapter)
-        return ResponseEntity.ok(List.of());
+        // Récupérer l'ID de l'utilisateur connecté depuis le token
+        Long idUtilisateur = authenticationFacade.getCurrentUserId();
+        List<ReclamationResponseDto> reclamations = reclamationService.getReclamationsByUtilisateur(idUtilisateur);
+        return ResponseEntity.ok(reclamations);
     }
 
     /**

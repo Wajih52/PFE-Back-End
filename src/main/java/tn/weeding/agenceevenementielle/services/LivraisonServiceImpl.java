@@ -434,6 +434,8 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
                     ligneReservationRepo.save(ligne);
                 }
+                Objects.requireNonNull(reservation).setStatutLivraisonRes(StatutLivraison.EN_COURS);
+                reservationRepo.save(reservation);
                 livraison.setStatutLivraison(nouveauStatut);
                 break;
 
@@ -892,6 +894,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         StatutLivraison ancienStatut = ligne.getStatutLivraisonLigne();
         ligne.setStatutLivraisonLigne(StatutLivraison.RETOUR);
         ligne = ligneReservationRepo.save(ligne);
+        ligne.getReservation().setStatutLivraisonRes(StatutLivraison.RETOUR);
 
         log.info("✅ Ligne #{} : {} → RETOUR (Produit: {})",
                 ligne.getIdLigneReservation(),
