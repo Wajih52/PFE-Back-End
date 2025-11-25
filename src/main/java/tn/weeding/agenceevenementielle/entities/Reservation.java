@@ -80,6 +80,10 @@ public class Reservation implements Serializable {
     @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL)
     Set<Facture> factures ;
 
+    //Rservation 1------------------1..* Reclamation
+    @OneToMany(mappedBy = "reservation",cascade = CascadeType.ALL)
+    Set<Reclamation> reclamations;
+
     @PrePersist
     public void prePersist() {
         dateCreation = LocalDateTime.now();
