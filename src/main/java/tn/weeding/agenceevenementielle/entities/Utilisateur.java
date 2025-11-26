@@ -170,6 +170,8 @@ public class Utilisateur implements Serializable {
     @JsonIgnore
     Set<AffectationLivraison> affectationLivraisons;
 
+    @OneToMany(mappedBy = "utilisateur")
+    Set<Notification> notifications=new HashSet<>();
 
     @PrePersist
     public void onCreate (){

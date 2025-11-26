@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
+import tn.weeding.agenceevenementielle.entities.enums.TypeNotification;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class EmailService {
     private JavaMailSenderImpl mailSender;
 
     /**
-     * 🆕 Méthode générique pour envoyer des emails HTML
+     *  Méthode générique pour envoyer des emails HTML
      * Utilisée pour la réinitialisation de mot de passe
      */
     @Async
@@ -333,5 +334,68 @@ public class EmailService {
         </html>
         """, prenom, pseudo, motDePasse, loginUrl);
     }
+
+    /**
+     * Envoyer un email de notification générique
+     */
+    @Async
+    public void envoyerEmailNotification(String destinataire, String prenom,
+                                         TypeNotification type, String titre, String message) {
+        String contenu = construireEmailNotification(prenom, type, titre, message);
+        sendEmail(destinataire, type.getIcone() + " " + titre, contenu);
+    }
+
+    /**
+     * Construire le contenu HTML d'un email de notification
+     */
+    private String construireEmailNotification(String prenom, TypeNotification type,
+                                               String titre, String message) {
+        return String.format("""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+                .container { background-color: white; max-width: 600px; margin: 0 auto; 
+                            padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                .header { text-align: center; border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 30px; }
+                .notification-type { display: inline-block; background-color: #f8f9fa; padding: 10px 20px; 
+                                    border-radius: 5px; margin: 20px 0; font-size: 16px; }
+                .content { color: #333; line-height: 1.8; font-size: 15px; }
+                .message { background-color: #f8f9fa; padding: 20px; border-left: 4px solid #d4af37; 
+                          margin: 20px 0; border-radius: 5px; }
+                .button { display: inline-block; background-color: #d4af37; color: white; 
+                         padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+                .footer { text-align: center; margin-top: 30px; padding-top: 20px; 
+                         border-top: 1px solid #ddd; color: #666; font-size: 12px; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1 style="color: #d4af37; margin: 0;">Elegant Hive</h1>
+                    <p style="color: #666; margin: 10px 0;">Agence Événementielle</p>
+                </div>
+                <div class="content">
+                    <p>Bonjour <strong>%s</strong>,</p>
+                    <div class="message">
+                        %s
+                    </div>
+                    <p>Connectez-vous à votre espace client pour plus de détails.</p>
+                    <a href="http://localhost:4200/profile" class="button">
+                        Accéder à mon espace
+                    </a>
+                </div>
+                <div class="footer">
+                    <p>Elegant Hive - Agence Événementielle</p>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """, prenom, type.getIcone(), titre, message);
+    }
+
     }
 

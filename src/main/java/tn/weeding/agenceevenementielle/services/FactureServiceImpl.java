@@ -365,7 +365,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
                 .nomClient(client.getNom())
                 .prenomClient(client.getPrenom())
                 .emailClient(client.getEmail())
-                .telephoneClient(client.getTelephone().toString())
+                .telephoneClient(client.getTelephone()!=null ?client.getTelephone().toString(): "")
                 .generePar(facture.getGenerePar())
                 .build();
     }

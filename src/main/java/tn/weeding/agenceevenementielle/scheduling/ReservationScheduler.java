@@ -5,16 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import tn.weeding.agenceevenementielle.dto.notification.NotificationRequestDto;
 import tn.weeding.agenceevenementielle.entities.InstanceProduit;
 import tn.weeding.agenceevenementielle.entities.LigneReservation;
 import tn.weeding.agenceevenementielle.entities.Reservation;
-import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
-import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
-import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
-import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
+import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.repository.InstanceProduitRepository;
 import tn.weeding.agenceevenementielle.repository.LigneReservationRepository;
 import tn.weeding.agenceevenementielle.repository.ReservationRepository;
+import tn.weeding.agenceevenementielle.services.NotificationServiceInterface;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +28,7 @@ public class ReservationScheduler {
     private final ReservationRepository reservationRepo;
     private final LigneReservationRepository ligneReservationRepo;
     private final InstanceProduitRepository instanceProduitRepo;
+    private final NotificationServiceInterface notificationService;
 
     /**
      * Tâche planifiée : Annuler automatiquement les devis expirés
@@ -66,8 +66,16 @@ public class ReservationScheduler {
                 log.info("✅ Devis {} annulé (pas de stock à libérer)",
                         devis.getReferenceReservation());
 
-                // TODO: Envoyer notification email au client
-                // notificationService.envoyerNotificationDevisExpire(devis);
+                notificationService.creerNotificationAvecEmail(
+                        NotificationRequestDto.builder()
+                                .typeNotification(TypeNotification.DEVIS_EXPIRE)
+                                .titre("Devis expiré")
+                                .message(String.format("Votre devis %s a expiré. Créez un nouveau devis si vous souhaitez toujours réserver.",
+                                        devis.getReferenceReservation()))
+                                .idUtilisateur(devis.getUtilisateur().getIdUtilisateur())
+                                .idReservation(devis.getIdReservation())
+                                .build()
+                );
 
             } catch (Exception e) {
                 log.error("❌ Erreur lors de l'annulation du devis {}: {}",

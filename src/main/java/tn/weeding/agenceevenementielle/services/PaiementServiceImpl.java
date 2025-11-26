@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tn.weeding.agenceevenementielle.dto.notification.NotificationRequestDto;
 import tn.weeding.agenceevenementielle.dto.paiement.PaiementRequestDto;
 import tn.weeding.agenceevenementielle.dto.paiement.PaiementResponseDto;
 import tn.weeding.agenceevenementielle.entities.Facture;
@@ -12,10 +13,7 @@ import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
 import tn.weeding.agenceevenementielle.entities.enums.*;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
-import tn.weeding.agenceevenementielle.repository.FactureRepository;
-import tn.weeding.agenceevenementielle.repository.LivraisonRepository;
-import tn.weeding.agenceevenementielle.repository.PaiementRepository;
-import tn.weeding.agenceevenementielle.repository.ReservationRepository;
+import tn.weeding.agenceevenementielle.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +31,10 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
     private final ReservationRepository reservationRepository;
     private final CodeGeneratorService codeGeneratorService;
     private final FactureRepository factureRepository ;
+    private final NotificationRepository notificationRepository;
+    private final NotificationServiceInterface notificationService;
+    private final EmailService emailService;
+    private final UtilisateurRepository utilisateurRepository;
 
 
     @Override
@@ -73,6 +75,68 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         log.info("✅ Paiement créé avec succès: {} - Montant: {} TND", codePaiement, dto.getMontantPaiement());
 
+        // ========================================
+        // 🔔 NOTIFICATIONS + EMAILS
+        // ========================================
+
+        Utilisateur client = reservation.getUtilisateur();
+
+        // Déterminer qui a créé le paiement
+        Utilisateur createur = utilisateurRepository.findByPseudoOrEmail(username, username)
+                .orElse(null);
+
+        boolean creeParClient = createur != null &&
+                createur.getIdUtilisateur().equals(client.getIdUtilisateur());
+
+        if (creeParClient) {
+            // ✅ CLIENT crée un paiement → Notifier les ADMINS/MANAGERS
+            log.info("📧 Notification des admins/managers - Nouveau paiement par le client");
+
+            notificationService.creerNotificationPourStaff(
+                    TypeNotification.NOUVEAU_PAIEMENT,
+                    "Nouveau paiement en attente",
+                    String.format("Le client %s %s a effectué un paiement de %.2f TND pour la réservation %s. Mode: %s. En attente de validation.",
+                            client.getPrenom(), client.getNom(),
+                            dto.getMontantPaiement(),
+                            reservation.getReferenceReservation(),
+                            dto.getModePaiement().name()),
+                    reservation.getIdReservation(),
+                    "/admin/paiements/" + savedPaiement.getIdPaiement()
+            );
+
+
+        } else {
+            // ADMIN/MANAGER crée un paiement → Notifier le CLIENT
+            log.info("📧 Notification du client - Paiement enregistré par l'admin");
+
+            NotificationRequestDto notifClient = NotificationRequestDto.builder()
+                    .typeNotification(TypeNotification.PAIEMENT_EN_ATTENTE)
+                    .titre("Paiement enregistré")
+                    .message(String.format("Un paiement de %.2f TND a été enregistré pour votre réservation %s. Mode: %s. Statut: En attente de validation.",
+                            dto.getMontantPaiement(),
+                            reservation.getReferenceReservation(),
+                            dto.getModePaiement().name()))
+                    .idUtilisateur(client.getIdUtilisateur())
+                    .idReservation(reservation.getIdReservation())
+                    .idPaiement(savedPaiement.getIdPaiement())
+                    .urlAction("/client/paiements/" + savedPaiement.getIdPaiement())
+                    .build();
+
+            notificationService.creerNotification(notifClient);
+
+            // Email au client
+            emailService.envoyerEmailNotification(
+                    client.getEmail(),
+                    client.getPrenom(),
+                    TypeNotification.PAIEMENT_EN_ATTENTE,
+                    "Paiement enregistré",
+                    String.format("Un paiement de %.2f TND a été enregistré pour votre réservation %s. Vous serez notifié(e) dès sa validation.",
+                            dto.getMontantPaiement(),
+                            reservation.getReferenceReservation())
+            );
+        }
+
+
         return convertToResponseDto(savedPaiement, montantDejaPayeValide);
     }
 
@@ -98,6 +162,74 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         log.info("✅ Paiement validé: {} - {} TND", paiement.getCodePaiement(), paiement.getMontantPaiement());
 
+
+        // ========================================
+        // 🔔 NOTIFICATION + EMAIL AU CLIENT
+        // ========================================
+
+        Utilisateur client = paiement.getReservation().getUtilisateur();
+        Reservation reservation = paiement.getReservation();
+
+        // Vérifier si le paiement est maintenant complet
+        Boolean paiementComplet = isReservationPayeeCompletement(reservation.getIdReservation());
+
+        String messageNotif;
+        String messageEmail;
+
+        if (paiementComplet) {
+            messageNotif = String.format(
+                    "✅ Votre paiement de %.2f TND a été validé. Votre réservation %s est maintenant entièrement payée !",
+                    paiement.getMontantPaiement(),
+                    reservation.getReferenceReservation()
+            );
+            messageEmail = String.format(
+                    "Excellente nouvelle ! Votre paiement de %.2f TND a été validé avec succès. " +
+                            "Votre réservation %s qui est prévu le (%s) est maintenant entièrement réglée. "
+                           ,
+                    paiement.getMontantPaiement(),
+                    reservation.getReferenceReservation(),
+                    reservation.getDateDebut()
+            );
+        } else {
+            Double montantRestant = reservation.getMontantTotal() - calculerMontantPaye(reservation.getIdReservation());
+            messageNotif = String.format(
+                    "✅ Votre paiement de %.2f TND a été validé. Montant restant: %.2f TND pour la réservation %s.",
+                    paiement.getMontantPaiement(),
+                    montantRestant,
+                    reservation.getReferenceReservation()
+            );
+            messageEmail = String.format(
+                    "Votre paiement de %.2f TND a été validé avec succès pour votre réservation %s. " +
+                            "Il reste %.2f TND à régler .",
+                    paiement.getMontantPaiement(),
+                    reservation.getReferenceReservation(),
+                    montantRestant
+            );
+        }
+
+        // Notification en BD
+        NotificationRequestDto notif = NotificationRequestDto.builder()
+                .typeNotification(TypeNotification.PAIEMENT_RECU)
+                .titre("Paiement validé")
+                .message(messageNotif)
+                .idUtilisateur(client.getIdUtilisateur())
+                .idReservation(reservation.getIdReservation())
+                .idPaiement(paiement.getIdPaiement())
+                .urlAction("/client/reservations-details/" + reservation.getIdReservation())
+                .build();
+
+        notificationService.creerNotification(notif);
+
+        // Email au client
+        emailService.envoyerEmailNotification(
+                client.getEmail(),
+                client.getPrenom(),
+                TypeNotification.PAIEMENT_RECU,
+                "Paiement validé ",
+                messageEmail
+        );
+
+        log.info("📧 Notification + Email envoyés au client {} pour validation paiement", client.getEmail());
         Double montantDejaPayeAvant = calculerMontantPaye(paiement.getReservation().getIdReservation()) - paiement.getMontantPaiement();
 
         return convertToResponseDto(savedPaiement, montantDejaPayeAvant);
@@ -122,6 +254,50 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
         Paiement savedPaiement = paiementRepository.save(paiement);
 
         log.info("❌ Paiement refusé: {}", paiement.getCodePaiement());
+
+        // ========================================
+        // 🔔 NOTIFICATION + EMAIL AU CLIENT
+        // ========================================
+
+        Utilisateur client = paiement.getReservation().getUtilisateur();
+        Reservation reservation = paiement.getReservation();
+
+        // Notification en BD
+        NotificationRequestDto notif = NotificationRequestDto.builder()
+                .typeNotification(TypeNotification.PAIEMENT_REFUSE)
+                .titre("Paiement refusé")
+                .message(String.format(
+                        "❌ Votre paiement de %.2f TND pour la réservation %s a été refusé. Motif: %s. " +
+                                "Veuillez corriger et soumettre un nouveau paiement.",
+                        paiement.getMontantPaiement(),
+                        reservation.getReferenceReservation(),
+                        motifRefus
+                ))
+                .idUtilisateur(client.getIdUtilisateur())
+                .idReservation(reservation.getIdReservation())
+                .idPaiement(paiement.getIdPaiement())
+                .urlAction("reservations/"+reservation.getIdReservation()+"/ajouter-paiement" )
+                .build();
+
+        notificationService.creerNotification(notif);
+
+        // Email au client
+        emailService.envoyerEmailNotification(
+                client.getEmail(),
+                client.getPrenom(),
+                TypeNotification.PAIEMENT_RETARD,
+                "Paiement refusé",
+                String.format(
+                        "Votre paiement de %.2f TND pour la réservation %s a été refusé.\n\n" +
+                                "Motif du refus: %s\n\n" +
+                                "Veuillez soumettre un nouveau paiement dans votre espace client pour régulariser votre réservation.",
+                        paiement.getMontantPaiement(),
+                        reservation.getReferenceReservation(),
+                        motifRefus
+                )
+        );
+
+        log.info("📧 Notification + Email envoyés au client {} pour refus paiement", client.getEmail());
 
         Double montantDejaPayeAvant = calculerMontantPaye(paiement.getReservation().getIdReservation());
 
