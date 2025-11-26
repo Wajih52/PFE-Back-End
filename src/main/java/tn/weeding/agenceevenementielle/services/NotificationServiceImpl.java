@@ -245,6 +245,31 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
         }
     }
 
+    /**
+     * Notifier tous les Manager et admins
+     */
+    public void creerNotificationPour(TypeNotification type, String titre, String message,
+                                           Long idReservation, String urlAction,String recepteur) {
+        List<Utilisateur> staff = utilisateurRepo.findAll().stream()
+                .filter(u -> u.getUtilisateurRoles().stream()
+                        .anyMatch(ur -> ur.getRole().getNom().equals(recepteur) ))
+
+                .toList();
+
+        for (Utilisateur employe : staff) {
+            NotificationRequestDto dto = NotificationRequestDto.builder()
+                    .typeNotification(type)
+                    .titre(titre)
+                    .message(message)
+                    .idUtilisateur(employe.getIdUtilisateur())
+                    .idReservation(idReservation)
+                    .urlAction(urlAction)
+                    .build();
+
+            creerNotification(dto);
+        }
+    }
+
 
 
 

@@ -101,7 +101,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                             reservation.getReferenceReservation(),
                             dto.getModePaiement().name()),
                     reservation.getIdReservation(),
-                    "/admin/paiements/" + savedPaiement.getIdPaiement()
+                    "/admin/paiements" + savedPaiement.getIdPaiement()
             );
 
 
@@ -119,7 +119,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                     .idUtilisateur(client.getIdUtilisateur())
                     .idReservation(reservation.getIdReservation())
                     .idPaiement(savedPaiement.getIdPaiement())
-                    .urlAction("/client/paiements/" + savedPaiement.getIdPaiement())
+                    .urlAction("/client/mes-paiements")
                     .build();
 
             notificationService.creerNotification(notifClient);
@@ -169,8 +169,14 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         Utilisateur client = paiement.getReservation().getUtilisateur();
         Reservation reservation = paiement.getReservation();
+        Utilisateur validateur = utilisateurRepository.findByPseudoOrEmail(username, username)
+                .orElse(null);
 
-        // Vérifier si le paiement est maintenant complet
+
+            // admin ou manager valide un paiement → Notifier les autres ADMINS/MANAGERS
+            log.info("📧 Notification des admins - validation paiement par {}",username);
+
+            // Vérifier si le paiement est maintenant complet
         Boolean paiementComplet = isReservationPayeeCompletement(reservation.getIdReservation());
 
         String messageNotif;
@@ -193,7 +199,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
         } else {
             Double montantRestant = reservation.getMontantTotal() - calculerMontantPaye(reservation.getIdReservation());
             messageNotif = String.format(
-                    "✅ Votre paiement de %.2f TND a été validé. Montant restant: %.2f TND pour la réservation %s.",
+                    " Votre paiement de %.2f TND a été validé. Montant restant: %.2f TND pour la réservation %s.",
                     paiement.getMontantPaiement(),
                     montantRestant,
                     reservation.getReferenceReservation()
@@ -207,7 +213,20 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
             );
         }
 
+
         // Notification en BD
+        notificationService.creerNotificationPourStaff(
+                TypeNotification.PAIEMENT_RECU,
+                " paiement Validé",
+                String.format("le paiement %s de %.2f DT du client %s pour la réservation %s a été validé par %s ",
+                        savedPaiement.getCodePaiement(),
+                        savedPaiement.getMontantPaiement(),client.getNom(),
+                        reservation.getReferenceReservation(),
+                      validateur !=null ? validateur.getNom()+" "+validateur.getPrenom():username),
+                reservation.getIdReservation(),
+                "/admin/paiements" + savedPaiement.getIdPaiement()
+        );
+
         NotificationRequestDto notif = NotificationRequestDto.builder()
                 .typeNotification(TypeNotification.PAIEMENT_RECU)
                 .titre("Paiement validé")
