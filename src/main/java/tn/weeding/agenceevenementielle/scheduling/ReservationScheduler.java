@@ -112,7 +112,7 @@ public class ReservationScheduler {
             int instancesMisesAJour = 0;
 
             // ============================================
-            // PARTIE 1: MISE À JOUR DES RÉSERVATIONS
+            // MISE À JOUR DES RÉSERVATIONS
             // ============================================
 
             log.info("📋 ÉTAPE 1: Recherche des réservations avec statutLivraisonRes = NOT_TODAY...");
@@ -150,7 +150,7 @@ public class ReservationScheduler {
             }
 
             // ============================================
-            // PARTIE 2: MISE À JOUR DES LIGNES DE RÉSERVATION
+            //  MISE À JOUR DES LIGNES DE RÉSERVATION
             // ============================================
 
             log.info("📦 ÉTAPE 2: Recherche des lignes de réservation avec statutLivraisonLigne = NOT_TODAY...");
@@ -182,7 +182,7 @@ public class ReservationScheduler {
                             ancienStatut);
 
                     // ============================================
-                    // PARTIE 3: MISE À JOUR DES INSTANCES
+                    //  MISE À JOUR DES INSTANCES
                     // ============================================
 
                     // Si produit avec référence, mettre les instances EN_ATTENTE
@@ -211,7 +211,7 @@ public class ReservationScheduler {
             }
 
             // ============================================
-            // PARTIE 4: RÉSUMÉ ET LOGS FINAUX
+            // RÉSUMÉ ET LOGS FINAUX
             // ============================================
 
             log.info("📊 ========== RÉSUMÉ DE LA MISE À JOUR ==========");
@@ -226,13 +226,6 @@ public class ReservationScheduler {
         }
     }
 
-    /**
-     * OPTIONNEL: Méthode manuelle pour forcer la mise à jour (pour les tests)
-     * À appeler via un endpoint REST si nécessaire
-     */
-    public void forcerMiseAJourManuelle() {
-        log.info("🔧 Exécution MANUELLE du job de mise à jour des statuts");
-        mettreAJourStatutsQuotidien();
-    }
+
 
 }

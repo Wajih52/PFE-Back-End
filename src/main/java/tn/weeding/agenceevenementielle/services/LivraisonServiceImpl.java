@@ -370,7 +370,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                             reservation.getReferenceReservation(),
                             username),
                     reservation.getIdReservation(),
-                    "/admin/reservations/" + reservation.getIdReservation()
+                    "/admin/livraisons"
             );
         }
 
@@ -521,7 +521,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         log.info("✅ Statut changé de {} à {} pour {} lignes", ancienStatut, nouveauStatut, lignes.size());
 
-        // ✅ AJOUT : Notifications selon le nouveau statut
+        // Notifications selon le nouveau statut
         if (reservation != null && reservation.getUtilisateur() != null) {
 
             // CAS 1 : Livraison EN_COURS → Notifier le client + employés affectés
@@ -538,7 +538,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                         .idUtilisateur(reservation.getUtilisateur().getIdUtilisateur())
                         .idLivraison(idLivraison)
                         .idReservation(reservation.getIdReservation())
-                        .urlAction("/client/mes-reservations/" + reservation.getIdReservation())
+                        .urlAction("/client/reservation-details/" + reservation.getIdReservation())
                         .build();
 
                 notificationService.creerNotificationAvecEmail(notifClient);
@@ -731,7 +731,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             }
         }
 
-        // ✅ AJOUT : Notification au staff et au client (notification seulement, pas d'email)
+        // Notification au staff et au client (notification seulement, pas d'email)
         if (reservation != null) {
             // Notification au staff
             notificationService.creerNotificationPourStaff(
@@ -757,7 +757,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                         .idUtilisateur(reservation.getUtilisateur().getIdUtilisateur())
                         .idLivraison(livraison.getIdLivraison())
                         .idReservation(reservation.getIdReservation())
-                        .urlAction("/client/mes-reservations/" + reservation.getIdReservation())
+                        .urlAction("/client/reservation-details/" + reservation.getIdReservation())
                         .build();
 
                 notificationService.creerNotification(notifClient);
@@ -1385,7 +1385,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             livraisonRepo.save(livraison);
         }
 
-        // ✅ AJOUT : Notification aux employés concernés + staff
+        //Notification aux employés concernés + staff
 
         // Notification au staff
         notificationService.creerNotificationPourStaff(

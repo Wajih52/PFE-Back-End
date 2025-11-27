@@ -1640,61 +1640,6 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     }
 
     /**
-     * Convertir une entité Reservation en DTO de réponse
-     */
-    private ReservationResponseDto buildToResponseDto(Reservation reservation,Double montantOriginal2,
-                                                      Double remiseMontant,Double remisePourcentage) {
-        Utilisateur client = reservation.getUtilisateur();
-
-        List<LigneReservationResponseDto> lignesDto = new ArrayList<>();
-        if (reservation.getLigneReservations() != null) {
-            lignesDto = reservation.getLigneReservations().stream()
-                    .map(this::convertLigneToDto)
-                    .collect(Collectors.toList());
-        }
-
-        // Calculer le montant restant
-        double montantRestant = reservation.getMontantTotal() -
-                (reservation.getMontantPaye() != null ? reservation.getMontantPaye() : 0.0);
-
-        // Calculer la durée
-        long joursLocation = 0;
-        if (reservation.getDateDebut() != null && reservation.getDateFin() != null) {
-            LocalDate debut = reservation.getDateDebut();
-            LocalDate fin = reservation.getDateFin();
-            joursLocation = ChronoUnit.DAYS.between(debut, fin) + 1;  // +1 pour inclure le dernier jour
-        }
-
-        return ReservationResponseDto.builder()
-                .idReservation(reservation.getIdReservation())
-                .referenceReservation(reservation.getReferenceReservation())
-                .idUtilisateur(client.getIdUtilisateur())
-                .nomClient(client.getNom())
-                .prenomClient(client.getPrenom())
-                .emailClient(client.getEmail())
-                .telephoneClient(client.getTelephone())
-                .dateDebut(reservation.getDateDebut())
-                .dateFin(reservation.getDateFin())
-                .statutReservation(reservation.getStatutReservation())
-                .statutLivraisonRes(reservation.getStatutLivraisonRes())
-                .montantTotal(reservation.getMontantTotal())
-                .montantPaye(reservation.getMontantPaye())
-                .montantRestant(montantRestant)
-                .modePaiementRes(reservation.getModePaiementRes())
-                .lignesReservation(lignesDto)
-                .estDevis(reservation.getStatutReservation() == StatutReservation.EN_ATTENTE)
-                .paiementComplet(montantRestant <= 0)
-                .nombreProduits(lignesDto.size())
-                .joursLocation((int) joursLocation)
-                .commentaireAdmin(reservation.getCommentaireAdmin())
-                .observationsClient(reservation.getCommentaireClient())
-                .montantOriginal(montantOriginal2)
-                .remiseMontant(remiseMontant)
-                .remisePourcentage(remisePourcentage)
-                .build();
-    }
-
-    /**
      * Méthode utilitaire pour reserver le stock une fois le client valide le devis
      */
     public Reservation reserverStockPourReservation(Reservation reservation){
@@ -1838,39 +1783,6 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .dureeMaxJours(dateValidator.getDureeMaxLocation())
                 .reservationAujourdhuiAutorisee(dateValidator.getDateMinimaleReservation().equals(LocalDate.now()))
                 .build();
-    }
-
-    /**
-     * 🆕 Méthode helper pour mettre à jour les montants d'une facture
-     */
-    private Facture mettreAJourMontantsFacture(Facture facture, Reservation reservation) {
-        // Recalculer les montants (même logique que dans creerFacture)
-        double montantTotalSansRemise = 0.0;
-        for (LigneReservation ligne : reservation.getLigneReservations()) {
-            long nbrJours = ChronoUnit.DAYS.between(
-                    ligne.getDateDebut(),
-                    ligne.getDateFin()
-            ) + 1;
-            montantTotalSansRemise += ligne.getQuantite() * ligne.getPrixUnitaire() * nbrJours;
-        }
-
-        double montantRemise = 0.0;
-        if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
-            montantRemise = reservation.getRemiseMontant();
-        } else if (reservation.getRemisePourcentage() != null && reservation.getRemisePourcentage() > 0) {
-            montantRemise = montantTotalSansRemise * (reservation.getRemisePourcentage() / 100.0);
-        }
-
-        double montantTTC = reservation.getMontantTotal();
-        double montantHT = montantTTC / 1.19;
-        double montantTVA = montantTTC - montantHT;
-
-        facture.setMontantHT(montantHT);
-        facture.setMontantTVA(montantTVA);
-        facture.setMontantRemise(montantRemise);
-        facture.setMontantTTC(montantTTC);
-
-        return facture;
     }
 
     protected void mettreAJourFactureDevis(Reservation reservation) {
