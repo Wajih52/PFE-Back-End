@@ -8,6 +8,8 @@ public enum TypeNotification {
     RESERVATION_CONFIRMEE("Réservation confirmée", "✅"),
     DEVIS_VALIDE("Devis validé", "📋"),
     DEVIS_EXPIRE("Devis expiré", "⏰"),
+    DEVIS_EN_ATTENTE("Devis en attente", "📋"),
+    DEVIS_PROCHE_EXPIRATION("Devis proche expiration", "⚠️"),
     LIVRAISON_PREVUE("Livraison prévue", "🚚"),
     LIVRAISON_EN_COURS("Livraison en cours", "📦"),
     LIVRAISON_EFFECTUEE("Livraison effectuée", "✅"),

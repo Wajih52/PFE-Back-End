@@ -525,6 +525,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
             if (reservation.getStatutPaiement() == StatutPaiementRes.EN_ATTENTE_PAIEMENT||
             reservation.getStatutPaiement()==StatutPaiementRes.PARTIELLEMENT_PAYE) {
                 reservation.setStatutPaiement(StatutPaiementRes.TOTALEMENT_PAYE);
+                reservation.setDateExpirationDevis(null);
                 Optional<Facture> facture =factureRepository.findByReservation_IdReservationAndTypeFacture(reservation.getIdReservation(), TypeFacture.FINALE)
                         .stream().findFirst();
                 if (facture.isPresent()){
@@ -537,6 +538,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
             }
         }else{
             reservation.setStatutPaiement(StatutPaiementRes.PARTIELLEMENT_PAYE);
+            reservation.setDateExpirationDevis(null);
             reservationRepository.save(reservation);
         }
     }

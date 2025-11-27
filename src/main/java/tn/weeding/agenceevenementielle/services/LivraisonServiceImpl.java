@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.dto.livraison.*;
+import tn.weeding.agenceevenementielle.dto.notification.NotificationRequestDto;
 import tn.weeding.agenceevenementielle.dto.reservation.LigneReservationResponseDto;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.*;
@@ -37,6 +38,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     private final InstanceProduitRepository instanceProduitRepo;
     private final MouvementStockRepository mouvementStockRepo;
     private final ProduitRepository produitRepo;
+    private final NotificationServiceInterface notificationService;
 
     // ============================================
     // CRUD LIVRAISONS
@@ -141,6 +143,24 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             reservation.setStatutLivraisonRes(StatutLivraison.NOT_TODAY);
         }
         reservationRepo.save(reservation);
+
+        log.info("✅ Livraison créée avec succès - ID: {}, Réservation: {}, {} ligne(s)",
+                livraison.getIdLivraison(),
+                reservation.getReferenceReservation(),
+                lignes.size());
+
+        // Notifier tout le staff (ADMIN et MANAGER)
+        notificationService.creerNotificationPourStaff(
+                TypeNotification.LIVRAISON_A_EFFECTUER,
+                "Nouvelle livraison créée",
+                String.format("Une nouvelle livraison '%s' a été créée pour le %s à %s. Réservation: %s",
+                        livraison.getTitreLivraison(),
+                        livraison.getDateLivraison(),
+                        livraison.getHeureLivraison(),
+                        reservation.getReferenceReservation()),
+                reservation.getIdReservation(),
+                "/admin/livraisons/" + livraison.getIdLivraison()
+        );
 
         log.info("✅ Livraison créée avec succès - ID: {}, Réservation: {}, {} ligne(s)",
                 livraison.getIdLivraison(),
@@ -324,6 +344,10 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         // Dissocier les lignes de réservation
         List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(idLivraison);
+        Reservation reservation = !lignes.isEmpty() ? lignes.get(0).getReservation() : null;
+        String titreLivraison = livraison.getTitreLivraison();
+
+
         for (LigneReservation ligne : lignes) {
             ligne.setLivraison(null);
             ligne.setStatutLivraisonLigne(StatutLivraison.EN_ATTENTE);
@@ -335,6 +359,20 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         // Supprimer la livraison
         livraisonRepo.delete(livraison);
+
+        // ✅ AJOUT : Notification pour le staff après suppression
+        if (reservation != null) {
+            notificationService.creerNotificationPourStaff(
+                    TypeNotification.SYSTEME_INFO,
+                    "Livraison supprimée",
+                    String.format("La livraison '%s' (Réservation: %s) a été supprimée par %s.",
+                            titreLivraison,
+                            reservation.getReferenceReservation(),
+                            username),
+                    reservation.getIdReservation(),
+                    "/admin/reservations/" + reservation.getIdReservation()
+            );
+        }
 
         log.info("✅ Livraison supprimée avec succès");
     }
@@ -483,6 +521,84 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         log.info("✅ Statut changé de {} à {} pour {} lignes", ancienStatut, nouveauStatut, lignes.size());
 
+        // ✅ AJOUT : Notifications selon le nouveau statut
+        if (reservation != null && reservation.getUtilisateur() != null) {
+
+            // CAS 1 : Livraison EN_COURS → Notifier le client + employés affectés
+            if (nouveauStatut == StatutLivraison.EN_COURS) {
+                // Notification au client
+                NotificationRequestDto notifClient = NotificationRequestDto.builder()
+                        .typeNotification(TypeNotification.LIVRAISON_EN_COURS)
+                        .titre("Livraison en cours")
+                        .message(String.format("La livraison '%s' est en cours. " +
+                                        "Préparez-vous à recevoir votre matériel le %s à %s.",
+                                livraison.getTitreLivraison(),
+                                livraison.getDateLivraison(),
+                                livraison.getHeureLivraison()))
+                        .idUtilisateur(reservation.getUtilisateur().getIdUtilisateur())
+                        .idLivraison(idLivraison)
+                        .idReservation(reservation.getIdReservation())
+                        .urlAction("/client/mes-reservations/" + reservation.getIdReservation())
+                        .build();
+
+                notificationService.creerNotificationAvecEmail(notifClient);
+
+                // Notification aux employés affectés (s'ils existent)
+                List<AffectationLivraison> affectations =
+                        affectationRepo.findByLivraison_IdLivraison(idLivraison);
+
+                for (AffectationLivraison affectation : affectations) {
+                    NotificationRequestDto notifEmploye = NotificationRequestDto.builder()
+                            .typeNotification(TypeNotification.LIVRAISON_A_EFFECTUER)
+                            .titre("Livraison à effectuer")
+                            .message(String.format("La livraison '%s' est maintenant EN COURS. " +
+                                            "Client: %s %s, Adresse: %s",
+                                    livraison.getTitreLivraison(),
+                                    reservation.getUtilisateur().getNom(),
+                                    reservation.getUtilisateur().getPrenom(),
+                                    livraison.getAdresserLivraison()))
+                            .idUtilisateur(affectation.getUtilisateur().getIdUtilisateur())
+                            .idLivraison(idLivraison)
+                            .urlAction("/admin/livraisons/" + idLivraison)
+                            .build();
+
+                    notificationService.creerNotificationAvecEmail(notifEmploye);
+                }
+            }
+
+            // CAS 2 : Livraison LIVREE → Notifier le staff + employés affectés
+            else if (nouveauStatut == StatutLivraison.LIVREE) {
+                // Notification au staff
+                notificationService.creerNotificationPourStaff(
+                        TypeNotification.LIVRAISON_EFFECTUEE,
+                        "Livraison effectuée",
+                        String.format("La livraison '%s' a été marquée comme livrée. Réservation: %s",
+                                livraison.getTitreLivraison(),
+                                reservation.getReferenceReservation()),
+                        reservation.getIdReservation(),
+                        "/admin/livraisons/" + idLivraison
+                );
+
+                // Notification aux employés affectés
+                List<AffectationLivraison> affectations =
+                        affectationRepo.findByLivraison_IdLivraison(idLivraison);
+
+                for (AffectationLivraison affectation : affectations) {
+                    NotificationRequestDto notifEmploye = NotificationRequestDto.builder()
+                            .typeNotification(TypeNotification.LIVRAISON_EFFECTUEE)
+                            .titre("Livraison terminée")
+                            .message(String.format("La livraison '%s' que vous aviez en charge a été marquée comme livrée.",
+                                    livraison.getTitreLivraison()))
+                            .idUtilisateur(affectation.getUtilisateur().getIdUtilisateur())
+                            .idLivraison(idLivraison)
+                            .urlAction("/admin/livraisons/" + idLivraison)
+                            .build();
+
+                    notificationService.creerNotification(notifEmploye);
+                }
+            }
+        }
+
         return toDto(livraison);
     }
 
@@ -516,6 +632,10 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         // Récupérer la ligne de réservation
         LigneReservation ligne = ligneReservationRepo.findById(idLigne)
                 .orElseThrow(() -> new CustomException("Ligne de réservation introuvable avec ID: " + idLigne));
+
+        // Mettre à jour le statut de livraison de la réservation
+        Reservation reservation = ligne.getReservation();
+
 
         // Vérifications
         if (ligne.getLivraison() == null) {
@@ -594,8 +714,6 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             log.info("🎉 TOUTES les lignes de la livraison #{} sont livrées → Livraison marquée LIVREE",
                     livraison.getIdLivraison());
 
-            // Mettre à jour le statut de livraison de la réservation
-            Reservation reservation = ligne.getReservation();
 
             // Vérifier si toutes les lignes de la réservation sont livrées
             List<LigneReservation> toutesLignesReservation = ligneReservationRepo
@@ -610,6 +728,39 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
                 log.info("🎉 TOUTES les lignes de la réservation {} sont livrées",
                         reservation.getReferenceReservation());
+            }
+        }
+
+        // ✅ AJOUT : Notification au staff et au client (notification seulement, pas d'email)
+        if (reservation != null) {
+            // Notification au staff
+            notificationService.creerNotificationPourStaff(
+                    TypeNotification.SYSTEME_INFO,
+                    "Ligne de livraison marquée",
+                    String.format("Une ligne de la livraison '%s' (Produit: %s, Qté: %d) a été marquée comme livrée.",
+                            livraison.getTitreLivraison(),
+                            ligne.getProduit().getNomProduit(),
+                            ligne.getQuantite()),
+                    reservation.getIdReservation(),
+                    "/admin/livraisons/" + livraison.getIdLivraison()
+            );
+
+            // Notification au client (si le client existe)
+            if (reservation.getUtilisateur() != null) {
+                NotificationRequestDto notifClient = NotificationRequestDto.builder()
+                        .typeNotification(TypeNotification.LIVRAISON_EN_COURS)
+                        .titre("Progression de votre livraison")
+                        .message(String.format("Le produit '%s' (Quantité: %d) de votre réservation %s a été livré.",
+                                ligne.getProduit().getNomProduit(),
+                                ligne.getQuantite(),
+                                reservation.getReferenceReservation()))
+                        .idUtilisateur(reservation.getUtilisateur().getIdUtilisateur())
+                        .idLivraison(livraison.getIdLivraison())
+                        .idReservation(reservation.getIdReservation())
+                        .urlAction("/client/mes-reservations/" + reservation.getIdReservation())
+                        .build();
+
+                notificationService.creerNotification(notifClient);
             }
         }
 
@@ -660,6 +811,46 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         affectation = affectationRepo.save(affectation);
 
+
+        //  Notification à l'employé affecté + staff
+
+        // Récupérer la réservation pour les détails
+        List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(dto.getIdLivraison());
+        Reservation reservation = !lignes.isEmpty() ? lignes.get(0).getReservation() : null;
+
+        // Notification à l'employé affecté
+        NotificationRequestDto notifEmploye = NotificationRequestDto.builder()
+                .typeNotification(TypeNotification.LIVRAISON_A_EFFECTUER)
+                .titre("Nouvelle affectation de livraison")
+                .message(String.format("Vous avez été affecté à la livraison '%s' prévue le %s à %s. " +
+                                "Adresse: %s",
+                        livraison.getTitreLivraison(),
+                        livraison.getDateLivraison(),
+                        livraison.getHeureLivraison(),
+                        livraison.getAdresserLivraison()))
+                .idUtilisateur(employe.getIdUtilisateur())
+                .idLivraison(livraison.getIdLivraison())
+                .idReservation(reservation != null ? reservation.getIdReservation() : null)
+                .urlAction("/admin/livraisons/" + livraison.getIdLivraison())
+                .build();
+
+        notificationService.creerNotificationAvecEmail(notifEmploye);
+
+        // Notification au staff
+        if (reservation != null) {
+            notificationService.creerNotificationPourStaff(
+                    TypeNotification.SYSTEME_INFO,
+                    "Employé affecté à une livraison",
+                    String.format("L'employé %s %s a été affecté à la livraison '%s' (Réservation: %s).",
+                            employe.getPrenom(),
+                            employe.getNom(),
+                            livraison.getTitreLivraison(),
+                            reservation.getReferenceReservation()),
+                    reservation.getIdReservation(),
+                    "/admin/livraisons/" + livraison.getIdLivraison()
+            );
+        }
+
         log.info("✅ Employé {} affecté à la livraison {}", employe.getEmail(), livraison.getTitreLivraison());
 
         return toAffectationDto(affectation);
@@ -672,7 +863,46 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         AffectationLivraison affectation = affectationRepo.findById(idAffectation)
                 .orElseThrow(() -> new CustomException("Affectation introuvable avec ID: " + idAffectation));
 
+        // Récupérer les informations avant suppression pour les notifications
+        Utilisateur employe = affectation.getUtilisateur();
+        Livraison livraison = affectation.getLivraison();
+
+        List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(livraison.getIdLivraison());
+        Reservation reservation = !lignes.isEmpty() ? lignes.get(0).getReservation() : null;
+
+
         affectationRepo.delete(affectation);
+
+        // Notification à l'employé retiré + staff
+
+        // Notification à l'employé retiré
+        NotificationRequestDto notifEmploye = NotificationRequestDto.builder()
+                .typeNotification(TypeNotification.SYSTEME_INFO)
+                .titre("Retrait d'affectation de livraison")
+                .message(String.format("Vous avez été retiré de la livraison '%s' prévue le %s.",
+                        livraison.getTitreLivraison(),
+                        livraison.getDateLivraison()))
+                .idUtilisateur(employe.getIdUtilisateur())
+                .idLivraison(livraison.getIdLivraison())
+                .urlAction("/admin/livraisons")
+                .build();
+
+        notificationService.creerNotification(notifEmploye);
+
+        // Notification au staff
+        if (reservation != null) {
+            notificationService.creerNotificationPourStaff(
+                    TypeNotification.SYSTEME_INFO,
+                    "Employé retiré d'une livraison",
+                    String.format("L'employé %s %s a été retiré de la livraison '%s' (Réservation: %s).",
+                            employe.getPrenom(),
+                            employe.getNom(),
+                            livraison.getTitreLivraison(),
+                            reservation.getReferenceReservation()),
+                    reservation.getIdReservation(),
+                    "/admin/livraisons/" + livraison.getIdLivraison()
+            );
+        }
 
         log.info("✅ Affectation supprimée avec succès");
     }
@@ -985,6 +1215,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                         "Ligne de réservation avec ID " + idLigne + " introuvable"));
 
         Livraison livraison = ligne.getLivraison();
+        Reservation reservation = ligne.getReservation();
         if (livraison == null) {
             throw new CustomException("Cette ligne n'est pas associée à une livraison");
         }
@@ -1120,7 +1351,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             // VÉRIFIER SI LA RÉSERVATION EST TERMINÉE
             // ============================================
 
-            Reservation reservation = ligne.getReservation();
+
             List<LigneReservation> toutesLignesReservation =
                     ligneReservationRepo.findByReservation_IdReservation(reservation.getIdReservation());
 
@@ -1154,6 +1385,40 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             livraisonRepo.save(livraison);
         }
 
+        // ✅ AJOUT : Notification aux employés concernés + staff
+
+        // Notification au staff
+        notificationService.creerNotificationPourStaff(
+                TypeNotification.SYSTEME_INFO,
+                "Ligne de retour confirmée",
+                String.format("Le produit '%s' (Qté: %d) de la livraison '%s' a été retourné et le stock a été réintégré. Réservation: %s",
+                        ligne.getProduit().getNomProduit(),
+                        ligne.getQuantite(),
+                        livraison.getTitreLivraison(),
+                        reservation.getReferenceReservation()),
+                reservation.getIdReservation(),
+                "/admin/livraisons/" + livraison.getIdLivraison()
+        );
+
+        // Notification aux employés affectés à cette livraison
+        List<AffectationLivraison> affectations =
+                affectationRepo.findByLivraison_IdLivraison(livraison.getIdLivraison());
+
+        for (AffectationLivraison affectation : affectations) {
+            NotificationRequestDto notifEmploye = NotificationRequestDto.builder()
+                    .typeNotification(TypeNotification.SYSTEME_INFO)
+                    .titre("Ligne retournée")
+                    .message(String.format("Le produit '%s' (Qté: %d) de la livraison '%s' a été marqué comme retourné.",
+                            ligne.getProduit().getNomProduit(),
+                            ligne.getQuantite(),
+                            livraison.getTitreLivraison()))
+                    .idUtilisateur(affectation.getUtilisateur().getIdUtilisateur())
+                    .idLivraison(livraison.getIdLivraison())
+                    .urlAction("/admin/livraisons/" + livraison.getIdLivraison())
+                    .build();
+
+            notificationService.creerNotification(notifEmploye);
+        }
         // ============================================
         // RETOURNER LE DTO
         // ============================================
