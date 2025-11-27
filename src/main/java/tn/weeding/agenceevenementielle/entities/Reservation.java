@@ -95,4 +95,7 @@ public class Reservation implements Serializable {
         dateModification = LocalDateTime.now();
     }
 
+    public boolean isStockReserve() {
+        return stockReserve;
+    }
 }

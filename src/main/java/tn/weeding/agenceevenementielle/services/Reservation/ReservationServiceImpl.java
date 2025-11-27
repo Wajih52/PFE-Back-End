@@ -2,12 +2,12 @@ package tn.weeding.agenceevenementielle.services.Reservation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
+
 import tn.weeding.agenceevenementielle.dto.modifDateReservation.DateConstraintesDto;
 import tn.weeding.agenceevenementielle.dto.modifDateReservation.DatePeriodeDto;
+import tn.weeding.agenceevenementielle.dto.notification.NotificationRequestDto;
 import tn.weeding.agenceevenementielle.dto.reservation.*;
 import tn.weeding.agenceevenementielle.entities.*;
 import tn.weeding.agenceevenementielle.entities.enums.*;
@@ -17,8 +17,10 @@ import tn.weeding.agenceevenementielle.exceptions.ProduitException;
 import tn.weeding.agenceevenementielle.exceptions.ReservationException;
 import tn.weeding.agenceevenementielle.repository.*;
 import  tn.weeding.agenceevenementielle.exceptions.ReservationException.StockIndisponibleException;
+import tn.weeding.agenceevenementielle.services.EmailService;
 import tn.weeding.agenceevenementielle.services.FactureServiceInterface;
-import tn.weeding.agenceevenementielle.services.PdfGeneratorService;
+import tn.weeding.agenceevenementielle.services.NotificationServiceInterface;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,12 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * ==========================================
- * IMPLÉMENTATION DU SERVICE DE RÉSERVATION
- * Sprint 4 - Gestion des réservations (incluant devis)
- * ==========================================
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -44,13 +41,11 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     private final UtilisateurRepository utilisateurRepo;
     private final InstanceProduitRepository instanceProduitRepo;
     private final MouvementStockRepository mouvementStockRepo;
-    private final InstanceProduitServiceInterface instanceProduitService;
     private final DateReservationValidator dateValidator;
-    private final AuthenticationFacade authenticationFacade;
-    private final PdfGeneratorService pdfGeneratorService;
-    private FactureRepository factureRepository ;
-
     private final FactureServiceInterface factureService;
+
+    private final NotificationServiceInterface notificationService;
+    private final EmailService emailService;
 
     // ============ CRÉATION DE DEVIS PAR LE CLIENT ============
 
@@ -219,6 +214,37 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             Reservation devisSaved = reservationRepo.save(reservation);
             log.info("✅ Devis créé {} - Montant: {} TND (stock NON réservé)",
                     devisSaved.getReferenceReservation(), montantTotal);
+
+            // ========================================
+            // 🔔 NOTIFICATIONS + EMAIL ADMINS/MANAGERS
+            // ========================================
+
+            // Créer message détaillé
+            StringBuilder messageNotif = new StringBuilder();
+            messageNotif.append(String.format(
+                    "Le client %s %s a créé un nouveau devis (%s).\n\n",
+                    client.getPrenom(), client.getNom(),
+                    devisSaved.getReferenceReservation()
+            ));
+            messageNotif.append(String.format("📅 Période: %s au %s\n",
+                    devisSaved.getDateDebut(),
+                    devisSaved.getDateFin()
+            ));
+            messageNotif.append(String.format("💰 Montant: %.2f TND\n", devisSaved.getMontantTotal()));
+            messageNotif.append(String.format("📦 Produits: %d lignes\n", devisSaved.getLigneReservations().size()));
+            messageNotif.append("\n⏰ En attente de validation et modification.");
+
+            // Notifier tous les admins et managers
+            notificationService.creerNotificationPourStaff(
+                    TypeNotification.NOUVEAU_DEVIS,
+                    "Nouveau devis en attente",
+                    messageNotif.toString(),
+                    devisSaved.getIdReservation(),
+                    "/admin/reservation-detail/" + devisSaved.getIdReservation()
+            );
+
+            log.info("📧 Notifications envoyées aux admins/managers pour le devis {}",
+                    devisSaved.getReferenceReservation());
 
             return convertToResponseDto(devisSaved);
         }
@@ -448,11 +474,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             montantFinal = 0.0;
         }
 
-
         reservation.setMontantTotal(montantFinal);
-
-
-
         reservation.setCommentaireAdmin(modificationDto.getCommentaireAdmin());
         reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(2));
         reservation.setValidationAutomatique(false);
@@ -466,6 +488,104 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         // Mettre à jour la facture DEVIS si elle existe
         mettreAJourFactureDevis(reservation);
 
+        // ========================================
+        // 🔔 NOTIFICATION + EMAIL CLIENT
+        // ========================================
+
+        Utilisateur client = reservation.getUtilisateur();
+
+        // Construire le message de notification
+        StringBuilder messageNotif = new StringBuilder();
+        messageNotif.append(String.format(
+                "Votre devis %s a été modifié par notre équipe.\n\n",
+                reservation.getReferenceReservation()
+        ));
+
+        // Détails des modifications
+        if (reservation.getMontantOriginal() != null &&
+                !reservation.getMontantOriginal().equals(reservation.getMontantTotal())) {
+            messageNotif.append(String.format(
+                    " Montant mis à jour: %.2f TND → %.2f TND\n",
+                    reservation.getMontantOriginal(),
+                    reservation.getMontantTotal()
+            ));
+        }
+
+        if (reservation.getRemisePourcentage() != null && reservation.getRemisePourcentage() > 0) {
+            messageNotif.append(String.format(
+                    " Remise appliquée: %.1f%%\n",
+                    reservation.getRemisePourcentage()
+            ));
+        } else if (reservation.getRemiseMontant() != null && reservation.getRemiseMontant() > 0) {
+            messageNotif.append(String.format(
+                    " Remise appliquée: %.2f TND\n",
+                    reservation.getRemiseMontant()
+            ));
+        }
+
+        if (modificationDto.getCommentaireAdmin() != null &&
+                !modificationDto.getCommentaireAdmin().isBlank()) {
+            messageNotif.append(String.format(
+                    "\n💬 Commentaire: %s\n",
+                    modificationDto.getCommentaireAdmin()
+            ));
+        }
+
+        messageNotif.append(String.format(
+                "\n⏰ Vous avez jusqu'au %s pour accepter ou refuser ce devis.",
+                reservation.getDateExpirationDevis().toLocalDate()
+        ));
+
+        // Créer la notification en BD
+        NotificationRequestDto notif = NotificationRequestDto.builder()
+                .typeNotification(TypeNotification.DEVIS_VALIDE)
+                .titre("Votre devis a été modifié")
+                .message(messageNotif.toString())
+                .idUtilisateur(client.getIdUtilisateur())
+                .idReservation(reservation.getIdReservation())
+                .urlAction("/client/mes-devis")
+                .build();
+
+        notificationService.creerNotification(notif);
+
+        // Envoyer email au client
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append(String.format(
+                "Votre devis %s a été examiné et modifié par notre équipe.\n\n",
+                reservation.getReferenceReservation()
+        ));
+        emailBody.append(String.format(
+                "Montant final: %.2f TND\n",
+                reservation.getMontantTotal()
+        ));
+
+        if (reservation.getRemisePourcentage() != null && reservation.getRemisePourcentage() > 0) {
+            emailBody.append(String.format(
+                    "Une remise de %.1f%% a été appliquée.\n\n",
+                    reservation.getRemisePourcentage()
+            ));
+        }
+
+        if (modificationDto.getCommentaireAdmin() != null) {
+            emailBody.append(String.format("Commentaire de notre équipe:\n%s\n\n",
+                    modificationDto.getCommentaireAdmin()));
+        }
+
+        emailBody.append(String.format(
+                "Vous avez jusqu'au %s pour accepter ou refuser ce devis dans votre espace client.",
+                reservation.getDateExpirationDevis().toLocalDate()
+        ));
+
+        emailService.envoyerEmailNotification(
+                client.getEmail(),
+                client.getPrenom(),
+                TypeNotification.DEVIS_VALIDE,
+                "Votre devis a été modifié",
+                emailBody.toString()
+        );
+
+        log.info("📧 Notification + Email envoyés au client {} pour modification devis",
+                client.getEmail());
 
         return convertToResponseDto(reservation);
     }
@@ -478,6 +598,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 username,
                 validationDto.getAccepter() ? "ACCEPTE" : "REFUSE",
                 validationDto.getIdReservation());
+
+        Utilisateur client = utilisateurRepo.findByPseudoOrEmail(username,username).orElse(null);
 
         Reservation reservation = reservationRepo.findById(validationDto.getIdReservation())
                 .orElseThrow(() -> new CustomException("Réservation introuvable"));
@@ -492,6 +614,27 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             reservation.setStatutReservation(StatutReservation.ANNULE);
             reservation.setCommentaireClient(validationDto.getCommentaireClient());
             reservationRepo.save(reservation);
+
+            // 🔔 NOTIFICATION ADMINS/MANAGERS - DEVIS REFUSÉ
+            notificationService.creerNotificationPourStaff(
+                    TypeNotification.SYSTEME_ALERTE,
+                    "Devis refusé par le client",
+                    String.format(
+                            "Le client %s  a refusé le devis %s.\n\n" +
+                                    "Motif: %s\n\n" +
+                                    "Montant du devis: %.2f TND",
+                            client!=null ? client.getPrenom()+" "+client.getNom() : "N/A",
+                            reservation.getReferenceReservation(),
+                            validationDto.getCommentaireClient() != null ? validationDto.getCommentaireClient() : "Non spécifié",
+                            reservation.getMontantTotal()
+                    ),
+                    reservation.getIdReservation(),
+                    "/admin/reservations-details/" + reservation.getIdReservation()
+            );
+
+            log.info("📧 Admins notifiés du refus du devis {}", reservation.getReferenceReservation());
+
+
             return convertToResponseDto(reservation);
         }
 
@@ -524,8 +667,9 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             );
         }
 
-        // ✅ Le stock est disponible → On peut réserver
-        reservation.setDateExpirationDevis(null);
+        //  Le stock est disponible → On peut réserver
+        //Date Expiration Reservation si Le client ne fais pas un acompte (une semaine )
+        reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(7));
         Reservation resValidee = reserverStockPourReservation(reservation);
 
         log.info("🎉 Réservation {} confirmée par le client et stock réservé avec succès",
@@ -542,8 +686,73 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             log.info("✅ Facture PRO_FORMA générée/mise à jour avec succès");
         } catch (Exception e) {
             log.error("❌ Erreur génération facture PRO_FORMA : {}", e.getMessage());
-            // Ne pas bloquer la validation si la facture échoue
+
         }
+
+        // ========================================
+        // 🔔 NOTIFICATION + EMAIL ADMINS/MANAGERS
+        // ========================================
+
+        StringBuilder messageNotif = new StringBuilder();
+        messageNotif.append(String.format(
+                "🎉 Le client %s a accepté le devis et confirmé sa réservation!\n\n",
+                client!= null ? client.getPrenom()+" "+client.getNom(): "N/A"
+        ));
+        messageNotif.append(String.format("📋 Réservation: %s\n", resValidee.getReferenceReservation()));
+        messageNotif.append(String.format("📅 Période: %s au %s\n",
+                resValidee.getDateDebut(),
+                resValidee.getDateFin()
+        ));
+        messageNotif.append(String.format("💰 Montant total: %.2f TND\n", resValidee.getMontantTotal()));
+        messageNotif.append(String.format("💵 Montant payé: %.2f TND\n",
+                resValidee.getMontantPaye() != null ? resValidee.getMontantPaye() : 0.0));
+        messageNotif.append(String.format("📦 Produits: %d lignes\n", resValidee.getLigneReservations().size()));
+        messageNotif.append("\n✅ Le stock a été réservé automatiquement.");
+        messageNotif.append("\n📋 Une facture PRO_FORMA a été générée.");
+
+        // Notifier les admins/managers
+        notificationService.creerNotificationPourStaff(
+                TypeNotification.NOUVELLE_RESERVATION,
+                "Nouvelle réservation confirmée",
+                messageNotif.toString(),
+                resValidee.getIdReservation(),
+                "/admin/reservation-details/" + resValidee.getIdReservation()
+        );
+
+        log.info("📧 Notifications envoyées aux admins/managers pour la réservation confirmée {}",
+                resValidee.getReferenceReservation());
+
+        String messageNotifClient = "";
+        messageNotif.append(String.format(
+                "Nous vous remercions vivement d'avoir choisi ELEGANT HIVE pour votre prochaine réservation du %s.\n\n",
+                resValidee.getDateDebut()
+        ));
+        messageNotif.append(" Nous sommes ravis de vous servir très prochainement.\n");
+        messageNotif.append("  Afin de finaliser la validation de votre dossier et de bloquer définitivement cette reservation pour vous,\n");
+        messageNotif.append(String.format("pourriez-vous procéder au règlement de l'acompte 💵  d'ici le 📅 %s ?\n",   resValidee.getDateExpirationDevis().toLocalDate()));
+
+        // ========================================
+        // 🔔 NOTIFICATION + EMAIL Client
+        // ========================================
+
+        // Créer la notification en BD pour client
+        NotificationRequestDto notif = NotificationRequestDto.builder()
+                .typeNotification(TypeNotification.RESERVATION_CONFIRMEE)
+                .titre("🎉 Réservation Confirmé")
+                .message(messageNotifClient)
+                .idUtilisateur(Objects.requireNonNull(client).getIdUtilisateur())
+                .idReservation(resValidee.getIdReservation())
+                .urlAction("/client/reservation-details/"+resValidee.getIdReservation())
+                .build();
+        notificationService.creerNotification(notif);
+
+        emailService.envoyerEmailNotification(
+                client.getEmail(),
+                client.getPrenom(),
+                TypeNotification.RESERVATION_CONFIRMEE,
+                "Votre Reservation est Confirmé",
+                messageNotifClient
+        );
 
         return convertToResponseDto(resValidee);
     }
@@ -554,6 +763,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     public void annulerReservationParClient(Long idReservation, String motif, String username) {
         log.info("❌ Annulation de la réservation ID: {} par le client {} - Motif: {}",
                 idReservation, username, motif);
+
+        Utilisateur client = utilisateurRepo.findByPseudoOrEmail(username,username).orElse(null);
 
         Reservation reservation = reservationRepo.findById(idReservation)
                 .orElseThrow(() -> new CustomException("Réservation introuvable"));
@@ -585,6 +796,50 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             reservationRepo.save(reservation);
             log.info("✅ Devis annulé (aucune libération de stock nécessaire)");
         }
+
+        // ========================================
+        // 🔔 NOTIFICATION + EMAIL ADMINS/MANAGERS
+        // ========================================
+
+        boolean etaitConfirme = reservation.getStatutReservation() == StatutReservation.ANNULE &&
+                !reservation.isStockReserve();
+
+        StringBuilder messageNotif = new StringBuilder();
+        messageNotif.append(String.format(
+                " Le client %s  a annulé %s %s.\n\n",
+                client!=null ? client.getPrenom()+" "+client.getNom():"N/A",
+                etaitConfirme ? "sa réservation" : "son devis",
+                reservation.getReferenceReservation()
+        ));
+        messageNotif.append(String.format("💰 Montant: %.2f TND\n", reservation.getMontantTotal()));
+
+        if (etaitConfirme && reservation.getMontantPaye() != null && reservation.getMontantPaye() > 0) {
+            messageNotif.append(String.format("💵 Montant déjà payé: %.2f TND (remboursement à prévoir)\n",
+                    reservation.getMontantPaye()));
+        }
+
+        if (motif != null && !motif.isBlank()) {
+            messageNotif.append(String.format("\n💬 Motif: %s\n", motif));
+        }
+
+        if (etaitConfirme) {
+            messageNotif.append("\nLe stock a été libéré automatiquement.");
+        }
+
+        // Notifier les admins/managers
+        notificationService.creerNotificationPourStaff(
+                TypeNotification.SYSTEME_ALERTE,
+                etaitConfirme ? "Réservation annulée par le client" : "Devis annulé par le client",
+                messageNotif.toString(),
+                reservation.getIdReservation(),
+                "/admin/reservation-details/" + reservation.getIdReservation()
+        );
+
+        log.info("📧 Notifications envoyées aux admins/managers pour annulation de {}",
+                reservation.getReferenceReservation());
+
+
+
     }
 
     @Override
@@ -623,6 +878,60 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             reservationRepo.save(reservation);
             log.info("✅ Devis annulé (aucune libération de stock nécessaire) :  Par {}",username);
         }
+
+        // ========================================
+        // 🔔 NOTIFICATION + EMAIL CLIENT
+        // ========================================
+
+        StringBuilder messageNotif = new StringBuilder();
+        messageNotif.append(String.format(
+                "⚠️ Votre devis %s a été annulé par notre équipe.\n\n",
+                reservation.getReferenceReservation()
+        ));
+
+        if (motif != null && !motif.isBlank()) {
+            messageNotif.append(String.format("💬 Motif: %s\n\n", motif));
+        }
+
+        messageNotif.append("Vous pouvez créer un nouveau devis à tout moment dans votre espace client.");
+
+        // Créer la notification en BD
+        NotificationRequestDto notif = NotificationRequestDto.builder()
+                .typeNotification(TypeNotification.SYSTEME_ALERTE)
+                .titre("Votre devis a été annulé")
+                .message(messageNotif.toString())
+                .idUtilisateur(reservation.getUtilisateur().getIdUtilisateur())
+                .idReservation(reservation.getIdReservation())
+                .urlAction("/client/mes-commandes")
+                .build();
+
+        notificationService.creerNotification(notif);
+
+        // Envoyer email au client
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append(String.format(
+                "Nous vous informons que votre devis %s a été annulé.\n\n",
+                reservation.getReferenceReservation()
+        ));
+
+        if (motif != null && !motif.isBlank()) {
+            emailBody.append(String.format("Raison: %s\n\n", motif));
+        }
+
+        emailBody.append("N'hésitez pas à créer un nouveau devis ou à nous contacter pour plus d'informations.\n\n");
+        emailBody.append("L'équipe Elegant Hive reste à votre disposition.");
+
+        emailService.envoyerEmailNotification(
+                reservation.getUtilisateur().getEmail(),
+                reservation.getUtilisateur().getPrenom(),
+                TypeNotification.SYSTEME_ALERTE,
+                "Votre devis a été annulé",
+                emailBody.toString()
+        );
+
+        log.info("📧 Notification + Email envoyés au client {} pour annulation devis",
+                reservation.getUtilisateur().getEmail());
+
     }
 
     // ============ CONSULTATION ============

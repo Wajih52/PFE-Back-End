@@ -14,19 +14,14 @@ import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.repository.*;
 
 import java.io.ByteArrayOutputStream;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Implémentation du service de gestion des livraisons
- * Sprint 6 - Gestion des livraisons
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -62,7 +57,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             throw new CustomException("Certaines lignes de réservation sont introuvables");
         }
 
-        // ✅ CONTRAINTE: Vérifier que toutes les lignes appartiennent à LA MÊME réservation
+        //  CONTRAINTE: Vérifier que toutes les lignes appartiennent à LA MÊME réservation
         Reservation reservation = lignes.get(0).getReservation();
         boolean toutesMemReservation = lignes.stream()
                 .allMatch(ligne -> ligne.getReservation().getIdReservation().equals(reservation.getIdReservation()));
@@ -300,7 +295,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         log.info("📋 Récupération des lignes de la livraison ID {}", idLivraison);
 
         // Vérifier que la livraison existe
-        Livraison livraison = livraisonRepo.findById(idLivraison)
+        livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
 
         // Récupérer les lignes de réservation
@@ -970,10 +965,6 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                         .count(),
                 toutesLignesDeLivraison.size());
 
-        // ============================================
-        // RETOURNER LE DTO
-        // ============================================
-
         return toLigneReservationResponseDto(ligne);
     }
 
@@ -1226,8 +1217,10 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         Integer quantiteApres = 0 ;
         if(typeMouvement==TypeMouvement.LIVRAISON) {
              quantiteApres = quantiteAvant - 1;
+        }else if (instance.getStatut().equals(StatutInstance.EN_RETOUR)){
+             quantiteApres = quantiteAvant;
         }else{
-             quantiteApres = quantiteAvant + 1;
+            quantiteApres = quantiteAvant +1 ;
         }
 
         MouvementStock mouvement = MouvementStock.builder()
