@@ -410,6 +410,20 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
                     // ✅ DÉCRÉMENTATION DU STOCK (selon le type de produit)
                     if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
+
+                        // Enregistrer le mouvement de stock
+                        enregistrerMouvementStock(
+                                produit,
+                                ligne.getQuantite(),
+                                TypeMouvement.LIVRAISON,
+                                reservation,
+                                "Décrémentation stock lors de la livraison EN_COURS - Client -  " +
+                                        (reservation != null ?
+                                                reservation.getUtilisateur().getNom()+" "+reservation.getUtilisateur().getPrenom()+
+                                                        " ("+reservation.getUtilisateur().getPseudo()+")"
+                                                : null),
+                                username
+                        );
                         // Produit quantitatif: décrémenter le stock
                         int quantiteAvant = produit.getQuantiteDisponible();
                         produit.setQuantiteDisponible(quantiteAvant - ligne.getQuantite());
@@ -421,17 +435,6 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                                 produit.getQuantiteDisponible(),
                                 ligne.getQuantite());
 
-                        // Enregistrer le mouvement de stock
-                        enregistrerMouvementStock(
-                                produit,
-                                ligne.getQuantite(),
-                                TypeMouvement.LIVRAISON,
-                                reservation,
-                                "Décrémentation stock lors de la livraison EN_COURS - Réservation " +
-                                        (reservation != null ? reservation.getReferenceReservation() : null),
-                                username
-                        );
-
                     } else if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE
                             && ligne.getInstancesReservees() != null) {
                         // Produit avec référence: passer les instances en EN_LIVRAISON
@@ -439,6 +442,18 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                             instance.setStatut(StatutInstance.EN_LIVRAISON);
                             instanceProduitRepo.save(instance);
 
+                            // Enregistrer le mouvement d'instance
+                            enregistrerMouvementInstance(
+                                    instance,
+                                    TypeMouvement.LIVRAISON,
+                                    "Livraison en cours vers client - " +
+                                            (reservation != null ?
+                                                    reservation.getUtilisateur().getNom()+" "+reservation.getUtilisateur().getPrenom()+
+                                                            " ("+reservation.getUtilisateur().getPseudo()+")"
+                                                    : null),
+                                    username,
+                                    reservation
+                            );
                             // Décrémenter le stock du produit (1 instance = -1 stock)
                             int quantiteAvant = produit.getQuantiteDisponible();
                             produit.setQuantiteDisponible(quantiteAvant - 1);
@@ -449,15 +464,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                                     quantiteAvant,
                                     produit.getQuantiteDisponible());
 
-                            // Enregistrer le mouvement d'instance
-                            enregistrerMouvementInstance(
-                                    instance,
-                                    TypeMouvement.LIVRAISON,
-                                    "Livraison en cours vers client - Réservation " +
-                                            (reservation != null ? reservation.getReferenceReservation() : null),
-                                    username,
-                                    reservation
-                            );
+
                         }
 
                         log.info("📦 {} instances passées en EN_LIVRAISON pour ligne {}",
@@ -530,9 +537,9 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 NotificationRequestDto notifClient = NotificationRequestDto.builder()
                         .typeNotification(TypeNotification.LIVRAISON_EN_COURS)
                         .titre("Livraison en cours")
-                        .message(String.format("La livraison '%s' est en cours. " +
+                        .message(String.format("La livraison de votre Reservation '%s' est en cours. " +
                                         "Préparez-vous à recevoir votre matériel le %s à %s.",
-                                livraison.getTitreLivraison(),
+                                reservation.getReferenceReservation(),
                                 livraison.getDateLivraison(),
                                 livraison.getHeureLivraison()))
                         .idUtilisateur(reservation.getUtilisateur().getIdUtilisateur())
@@ -1262,12 +1269,6 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     instance.setStatut(StatutInstance.DISPONIBLE);
                     instanceProduitRepo.save(instance);
 
-                    // Produit en quantité : réintégrer le stock
-                    Integer quantiteAvant = ligne.getProduit().getQuantiteDisponible();
-                    ligne.getProduit().setQuantiteDisponible(quantiteAvant+1);
-                    produitRepo.save(ligne.getProduit());
-
-
                     // Enregistrer mouvement
                     enregistrerMouvementInstance(
                             instance,
@@ -1277,6 +1278,12 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                             username,
                             ligne.getReservation()
                     );
+
+                    // Produit en quantité : réintégrer le stock
+                    Integer quantiteAvant = ligne.getProduit().getQuantiteDisponible();
+                    ligne.getProduit().setQuantiteDisponible(quantiteAvant+1);
+                    produitRepo.save(ligne.getProduit());
+
 
                     log.info("📦 Instance {} : {} → DISPONIBLE",
                             instance.getNumeroSerie(),
@@ -1290,19 +1297,13 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 log.info("✅ {} instances libérées et DISPONIBLES", ligne.getQuantite());
 
 
-
-
-
-
             }
 
         } else {
+
             // Produit en quantité : réintégrer le stock
             Integer quantiteAvant = ligne.getProduit().getQuantiteDisponible();
             Integer quantiteApres = quantiteAvant + ligne.getQuantite();
-
-            ligne.getProduit().setQuantiteDisponible(quantiteApres);
-            produitRepo.save(ligne.getProduit());
 
             // Enregistrer mouvement stock
             enregistrerMouvementStock(
@@ -1316,6 +1317,11 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                             "Réservation " + ligne.getReservation().getReferenceReservation(),
                     username
             );
+
+            ligne.getProduit().setQuantiteDisponible(quantiteApres);
+            produitRepo.save(ligne.getProduit());
+
+
 
             log.info("📦 Stock réintégré: {} → {} (+{})",
                     quantiteAvant,

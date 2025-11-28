@@ -394,7 +394,7 @@ public class EmailService {
             </div>
         </body>
         </html>
-        """, prenom, type.getIcone(), titre, message);
+        """, prenom, message);
     }
 
     }

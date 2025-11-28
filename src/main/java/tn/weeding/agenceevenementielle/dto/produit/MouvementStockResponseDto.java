@@ -24,6 +24,7 @@ public class MouvementStockResponseDto {
 
     // Pour les réservations
     private Long idReservation;
+    private String referenceReservation;
     private LocalDate dateDebut;
     private LocalDate dateFin;
 

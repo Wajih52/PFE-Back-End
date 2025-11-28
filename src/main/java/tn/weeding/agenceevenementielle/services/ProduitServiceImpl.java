@@ -1154,6 +1154,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setMotif(mouvement.getMotif());
         dto.setEffectuePar(mouvement.getEffectuePar());
         dto.setDateMouvement(mouvement.getDateMouvement());
+        dto.setReferenceReservation(mouvement.getReferenceReservation());
         dto.setIdReservation(mouvement.getIdReservation());
         dto.setCodeInstance(mouvement.getCodeInstance());
         dto.setDateDebut(mouvement.getDateDebut());

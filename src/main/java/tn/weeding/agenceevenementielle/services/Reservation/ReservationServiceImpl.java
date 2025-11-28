@@ -240,7 +240,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     "Nouveau devis en attente",
                     messageNotif.toString(),
                     devisSaved.getIdReservation(),
-                    "/admin/reservation-detail/" + devisSaved.getIdReservation()
+                    "/admin/devis-validation"
             );
 
             log.info("📧 Notifications envoyées aux admins/managers pour le devis {}",
@@ -722,14 +722,14 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         log.info("📧 Notifications envoyées aux admins/managers pour la réservation confirmée {}",
                 resValidee.getReferenceReservation());
 
-        String messageNotifClient = "";
-        messageNotif.append(String.format(
+        StringBuilder messageNotifClient = new StringBuilder();
+        messageNotifClient.append(String.format(
                 "Nous vous remercions vivement d'avoir choisi ELEGANT HIVE pour votre prochaine réservation du %s.\n\n",
                 resValidee.getDateDebut()
         ));
-        messageNotif.append(" Nous sommes ravis de vous servir très prochainement.\n");
-        messageNotif.append("  Afin de finaliser la validation de votre dossier et de bloquer définitivement cette reservation pour vous,\n");
-        messageNotif.append(String.format("pourriez-vous procéder au règlement de l'acompte 💵  d'ici le 📅 %s ?\n",   resValidee.getDateExpirationDevis().toLocalDate()));
+        messageNotifClient.append(" Nous sommes ravis de vous servir très prochainement.\n");
+        messageNotifClient.append("  Afin de finaliser la validation de votre dossier et de bloquer définitivement cette reservation pour vous,\n");
+        messageNotifClient.append(String.format("pourriez-vous procéder au règlement de l'acompte 💵  d'ici le 📅 %s ?\n",   resValidee.getDateExpirationDevis().toLocalDate()));
 
         // ========================================
         // 🔔 NOTIFICATION + EMAIL Client
@@ -739,7 +739,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         NotificationRequestDto notif = NotificationRequestDto.builder()
                 .typeNotification(TypeNotification.RESERVATION_CONFIRMEE)
                 .titre("🎉 Réservation Confirmé")
-                .message(messageNotifClient)
+                .message(messageNotifClient.toString())
                 .idUtilisateur(Objects.requireNonNull(client).getIdUtilisateur())
                 .idReservation(resValidee.getIdReservation())
                 .urlAction("/client/reservation-details/"+resValidee.getIdReservation())
@@ -751,7 +751,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 client.getPrenom(),
                 TypeNotification.RESERVATION_CONFIRMEE,
                 "Votre Reservation est Confirmé",
-                messageNotifClient
+                messageNotifClient.toString()
         );
 
         return convertToResponseDto(resValidee);
@@ -1540,6 +1540,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         if (reservation != null) {
             mouvement.setReferenceReservation(reservation.getReferenceReservation());
             mouvement.setIdReservation(reservation.getIdReservation());
+            mouvement.setDateDebut(reservation.getDateDebut());
+            mouvement.setDateFin(reservation.getDateFin());
         }
 
 
