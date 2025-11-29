@@ -9,6 +9,7 @@ import tn.weeding.agenceevenementielle.entities.enums.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -97,5 +98,9 @@ public class Reservation implements Serializable {
 
     public boolean isStockReserve() {
         return stockReserve;
+    }
+
+    public boolean isPaiementComplet(){
+        return Objects.equals(montantTotal, montantPaye);
     }
 }

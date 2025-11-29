@@ -220,5 +220,27 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     );
 
 
+    /**
+     * 📅 Récupérer les réservations dont les dates de lignes chevauchent une période
+     * Utilisé pour le calendrier
+     */
+    @Query("SELECT DISTINCT r FROM Reservation r " +
+            "JOIN r.ligneReservations l " +
+            "WHERE (l.dateDebut <= :dateFin AND l.dateFin >= :dateDebut)")
+    List<Reservation> findReservationsEntreDates(
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
+    );
+
+    /**
+     * 📊 Compter les réservations dans une période
+     */
+    @Query("SELECT COUNT(DISTINCT r) FROM Reservation r " +
+            "JOIN r.ligneReservations l " +
+            "WHERE (l.dateDebut <= :dateFin AND l.dateFin >= :dateDebut)")
+    long countReservationsEntreDates(
+            @Param("dateDebut") LocalDate dateDebut,
+            @Param("dateFin") LocalDate dateFin
+    );
 
 }

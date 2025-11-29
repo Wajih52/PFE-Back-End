@@ -82,4 +82,16 @@ public interface LivraisonRepository extends JpaRepository<Livraison, Long> {
             "JOIN l.ligneReservations lr " +
             "WHERE lr.reservation.idReservation = :idReservation")
     List<Livraison> findLivraisonsByReservation(@Param("idReservation") Long idReservation);
+
+    /**
+     * 📅 Récupérer les livraisons entre deux dates
+     */
+    List<Livraison> findByDateLivraisonBetween(LocalDate dateDebut, LocalDate dateFin);
+
+    /**
+     * 📊 Compter les livraisons entre deux dates
+     */
+    long countByDateLivraisonBetween(LocalDate dateDebut, LocalDate dateFin);
+
+
 }
