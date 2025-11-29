@@ -292,6 +292,11 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         Integer ancienneQuantite = ligne.getQuantite();
         Integer nouvelleQuantite = dto.getQuantite();
 
+        LocalDate ancienneDateDebut = ligne.getDateDebut();
+        LocalDate ancienneDateFin = ligne.getDateFin();
+        LocalDate nouvelleDateDebut = dto.getDateDebut();
+        LocalDate nouvelleDateFin = dto.getDateFin();
+
 
 
         // 🎯 La réservation a-t-elle déjà commencé ?
@@ -304,7 +309,9 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
                             "Veuillez contacter l'administration."
             );
         }
-        // Si la quantité change, gérer le stock
+        // ----------------------------------------------------
+        // GESTION DU CHANGEMENT DE QUANTITÉ
+        // -------------------------------------------------------
         if (!ancienneQuantite.equals(nouvelleQuantite)) {
             log.info("🔄 Changement de quantité: {} -> {}", ancienneQuantite, nouvelleQuantite);
 
@@ -332,7 +339,53 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
             }
         }
 
-        // Mettre à jour les autres champs
+        // ---------------------------------------------------------------
+        //  GESTION DU CHANGEMENT DE DATES (POUR INSTANCES)
+        // --------------------------------------------------------------
+        boolean datesOntChange = !ancienneDateDebut.equals(nouvelleDateDebut)
+                || !ancienneDateFin.equals(nouvelleDateFin);
+
+        if (datesOntChange && produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
+            log.info("📅 Changement de dates pour produit AVEC_REFERENCE: {} -> {} / {} -> {}",
+                    ancienneDateDebut, nouvelleDateDebut, ancienneDateFin, nouvelleDateFin);
+
+            // 🔍 Vérifier si les instances actuelles sont disponibles sur la nouvelle période
+            boolean instancesDisponiblesSurNouvellePeriode = verifierDisponibiliteInstancesActuelles(
+                    ligne,
+                    nouvelleDateDebut,
+                    nouvelleDateFin,
+                    reservation.getIdReservation()
+            );
+
+            if (!instancesDisponiblesSurNouvellePeriode) {
+                log.warn("⚠️ Les instances actuelles ne sont pas disponibles sur la nouvelle période");
+                log.info("🔄 Réaffectation automatique de nouvelles instances disponibles...");
+
+                // Libérer les anciennes instances
+                Set<InstanceProduit> anciennesInstances = new HashSet<>(ligne.getInstancesReservees());
+                ligne.setInstancesReservees(new HashSet<>());
+                ligneReservationRepo.save(ligne);
+
+                log.info("✅ {} anciennes instances libérées", anciennesInstances.size());
+
+                // Affecter de nouvelles instances disponibles sur la nouvelle période
+                affecterInstancesAutomatiquement(
+                        ligne,
+                        produit,
+                        nouvelleQuantite,  // Même quantité mais nouvelles instances
+                        username
+                );
+
+                log.info("✅ {} nouvelles instances affectées pour la période {} -> {}",
+                        nouvelleQuantite, nouvelleDateDebut, nouvelleDateFin);
+            } else {
+                log.info("✅ Les instances actuelles sont disponibles sur la nouvelle période");
+            }
+        }
+
+        // ----------------------------------------------------------------
+        //  MISE À JOUR DES CHAMPS
+        // ----------------------------------------------------------------
         ligne.setQuantite(nouvelleQuantite);
         ligne.setDateDebut(dto.getDateDebut());
         ligne.setDateFin(dto.getDateFin());
@@ -340,7 +393,10 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
 
         ligne = ligneReservationRepo.save(ligne);
         log.info("✅ Ligne modifiée avec succès");
-        //  Recalculer le montant total
+
+        // --------------------------------------------------------------
+        //  RECALCUL DU MONTANT TOTAL
+        //---------------------------------------------------------------
         double ancienMontant = reservation.getMontantTotal() != null ? reservation.getMontantTotal() : 0.0;
         double nouveauMontant = montantCalculService.recalculerEtMettreAJourMontantTotal(reservation);
         reservationRepo.save(reservation);
@@ -834,6 +890,49 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
         log.info("✅ Disponibilité confirmée");
     }
 
+
+    /**
+     * 🔍 Vérifier si les instances actuellement réservées sont disponibles sur une nouvelle période
+     *
+     * @param ligne La ligne de réservation
+     * @param nouvelleDateDebut Nouvelle date de début
+     * @param nouvelleDateFin Nouvelle date de fin
+     * @param reservationExclue ID de la réservation actuelle à exclure de la vérification
+     * @return true si toutes les instances sont disponibles, false sinon
+     */
+    private boolean verifierDisponibiliteInstancesActuelles(
+            LigneReservation ligne,
+            LocalDate nouvelleDateDebut,
+            LocalDate nouvelleDateFin,
+            Long reservationExclue) {
+
+        if (ligne.getInstancesReservees() == null || ligne.getInstancesReservees().isEmpty()) {
+            return true;  // Pas d'instances à vérifier
+        }
+
+        log.debug("🔍 Vérification de {} instances sur la période {} -> {}",
+                ligne.getInstancesReservees().size(), nouvelleDateDebut, nouvelleDateFin);
+
+        // Vérifier chaque instance une par une
+        for (InstanceProduit instance : ligne.getInstancesReservees()) {
+            long conflits = ligneReservationRepo.countReservationsForInstanceInPeriodExcludingReservation(
+                    instance.getIdInstance(),
+                    nouvelleDateDebut,
+                    nouvelleDateFin,
+                    reservationExclue
+            );
+
+            if (conflits > 0) {
+                log.warn("❌ Instance {} a {} conflits sur la nouvelle période",
+                        instance.getNumeroSerie(), conflits);
+                return false;  // Au moins une instance n'est pas disponible
+            }
+        }
+
+        log.debug("✅ Toutes les instances sont disponibles");
+        return true;  // Toutes les instances sont disponibles
+    }
+
     // ============================================
     //  CONVERSION DTO 🔄
     // ============================================
@@ -877,7 +976,7 @@ public class LigneReservationServiceImpl implements LigneReservationServiceInter
     }
 
     // ============================================
-    // MÉTHODES PRIVÉES - MOUVEMENTS STOCK
+    // MÉTHODES  - MOUVEMENTS STOCK
     // ============================================
 
     /**

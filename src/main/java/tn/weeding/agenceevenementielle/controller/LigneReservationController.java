@@ -50,11 +50,11 @@ public class LigneReservationController {
     private final AuthenticationFacade authenticationFacade;
 
     // ============================================
-    // PARTIE 1: CRÉATION DE LIGNES
+    //  CRÉATION DE LIGNES
     // ============================================
 
     /**
-     * 🛒 Ajouter un produit au panier/réservation
+     *  Ajouter un produit au panier/réservation
      * Le CLIENT ou l'ADMIN peut ajouter des produits à une réservation
      */
     @PostMapping("/{idReservation}")
