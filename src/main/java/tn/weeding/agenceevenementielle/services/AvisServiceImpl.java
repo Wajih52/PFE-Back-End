@@ -340,6 +340,21 @@ public class AvisServiceImpl implements AvisServiceInterface {
         log.info("✅ Avis supprimé définitivement");
     }
 
+    @Override
+    @Transactional
+    public AvisResponseDto modifierVisibilite(Long idAvis, Boolean visible) {
+        log.info("👁️ Modification de la visibilité de l'avis {} à {}", idAvis, visible);
+
+        Avis avis = avisRepository.findById(idAvis)
+                .orElseThrow(() -> new CustomException("Avis non trouvé avec l'ID : " + idAvis));
+
+        avis.setVisible(visible);
+        Avis avisSaved = avisRepository.save(avis);
+
+        log.info("✅ Visibilité de l'avis {} modifiée à {}", idAvis, visible);
+        return convertToDto(avisSaved);
+    }
+
 
     @Override
     @Transactional(readOnly = true)

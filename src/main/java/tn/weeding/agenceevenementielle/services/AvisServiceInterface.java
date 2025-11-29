@@ -122,4 +122,9 @@ public interface AvisServiceInterface {
      * Obtenir les produits les mieux notés
      */
     List<Object[]> getTopProduitsParNote(Long minAvis);
+
+    /**
+     * modifier visibilité avis
+     */
+    AvisResponseDto modifierVisibilite(Long idAvis, Boolean visible);
 }

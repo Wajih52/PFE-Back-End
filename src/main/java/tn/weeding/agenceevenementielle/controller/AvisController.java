@@ -57,6 +57,18 @@ public class AvisController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/admin/{id}/visibilite")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(summary = "[ADMIN] Modifier la visibilité d'un avis",
+            description = "Rendre un avis visible ou invisible au public")
+    public ResponseEntity<AvisResponseDto> modifierVisibilite(
+            @PathVariable Long id,
+            @RequestParam Boolean visible) {
+        log.info("👁️ [ADMIN] Modification de la visibilité de l'avis {} à {}", id, visible);
+        AvisResponseDto response = avisService.modifierVisibilite(id, visible);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('CLIENT')")
     @Operation(summary = "Supprimer un avis",
