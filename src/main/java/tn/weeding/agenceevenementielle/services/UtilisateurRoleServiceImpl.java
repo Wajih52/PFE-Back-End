@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tn.weeding.agenceevenementielle.config.AuthenticationFacade;
 import tn.weeding.agenceevenementielle.dto.UtilisateurResponseDto;
 import tn.weeding.agenceevenementielle.dto.UtilisateurRoleResponseDto;
+import tn.weeding.agenceevenementielle.dto.UtilisateurRoleWithUserDto;
 import tn.weeding.agenceevenementielle.entities.Role;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
 import tn.weeding.agenceevenementielle.entities.UtilisateurRole;
@@ -145,8 +146,31 @@ public class UtilisateurRoleServiceImpl implements UtilisateurRoleServiceInterfa
     }
     @Transactional(readOnly = true)
     @Override
-    public List<UtilisateurRole> getAssociationUtilisateursByRole(Long roleId) {
-        return utilisateurRoleRepository.findByRoleIdRole(roleId);
+    public List<UtilisateurRoleWithUserDto> getAssociationUtilisateursByRole(Long roleId) {
+        List<UtilisateurRole> associations = utilisateurRoleRepository.findByRoleIdRole(roleId);
+        return associations.stream()
+                .map(ur -> UtilisateurRoleWithUserDto.builder()
+                        .idUtilisateurRole(ur.getIdUtilisateurRole())
+                        .dateAffectationRole(ur.getDateAffectationRole())
+                        .attribuePar(ur.getAttribuePar())
+                        // Rôle
+                        .idRole(ur.getRole().getIdRole())
+                        .nomRole(ur.getRole().getNom())
+                        .descriptionRole(ur.getRole().getDescription())
+                        // Utilisateur (seulement les infos nécessaires)
+                        .idUtilisateur(ur.getUtilisateur().getIdUtilisateur())
+                        .pseudo(ur.getUtilisateur().getPseudo())
+                        .nom(ur.getUtilisateur().getNom())
+                        .prenom(ur.getUtilisateur().getPrenom())
+                        .email(ur.getUtilisateur().getEmail())
+                        .codeUtilisateur(ur.getUtilisateur().getCodeUtilisateur())
+                        .telephone(ur.getUtilisateur().getTelephone().toString())
+                        .image(ur.getUtilisateur().getImage())
+                        .etatCompte(ur.getUtilisateur().getEtatCompte() != null
+                                ? ur.getUtilisateur().getEtatCompte().toString()
+                                : null)
+                        .build())
+                .toList();
     }
 
     @Override

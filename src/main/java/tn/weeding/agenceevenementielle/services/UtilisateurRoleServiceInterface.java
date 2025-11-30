@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.services;
 
 import tn.weeding.agenceevenementielle.dto.UtilisateurRoleResponseDto;
+import tn.weeding.agenceevenementielle.dto.UtilisateurRoleWithUserDto;
 import tn.weeding.agenceevenementielle.entities.UtilisateurRole;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface UtilisateurRoleServiceInterface {
     List<UtilisateurRole> getRolesByUtilisateur(Long utilisateurId);
 
     // Récupérer toutes les associations utilisateurs ayant un rôle donné
-    List<UtilisateurRole> getAssociationUtilisateursByRole(Long roleId);
+    List<UtilisateurRoleWithUserDto> getAssociationUtilisateursByRole(Long roleId);
 
     // méthode pour récupérer les rôles avec les détails
     List<UtilisateurRoleResponseDto> getRolesWithDetailsByUtilisateur(Long utilisateurId);

@@ -5,6 +5,8 @@ import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.StatutPointage;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 @Entity
 @Getter
@@ -17,15 +19,21 @@ public class Pointage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idPointage;
-    @Temporal(TemporalType.DATE)
-    Date dateTravail;
+
+
+    LocalDate dateTravail;
+
+
+    LocalTime heureDebut;
+
     @Temporal(TemporalType.TIME)
-    Time heureDebut;
-    @Temporal(TemporalType.TIME)
-    Time heureFin;
+    LocalTime heureFin;
+
     @Enumerated(EnumType.STRING)
     StatutPointage statutPointage;
+
     Double totalHeures;
+
     String description;
 
     //Pointage 0..* ---------------- 1 Utilisateur

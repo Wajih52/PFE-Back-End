@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.dto.UtilisateurRoleResponseDto;
+import tn.weeding.agenceevenementielle.dto.UtilisateurRoleWithUserDto;
 import tn.weeding.agenceevenementielle.entities.UtilisateurRole;
 import tn.weeding.agenceevenementielle.services.UtilisateurRoleServiceInterface;
 
@@ -80,14 +81,9 @@ public class UtilisateurRoleController {
 
     @GetMapping("/roles/{roleId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ResponseEntity<List<UtilisateurRole>> getAssociationUtilisateursByRole(@PathVariable Long roleId) {
-        List<UtilisateurRole> associationUtilisateurs = utilisateurRoleService.getAssociationUtilisateursByRole(roleId);
+    public ResponseEntity<List<UtilisateurRoleWithUserDto>> getAssociationUtilisateursByRole(@PathVariable Long roleId) {
+        List<UtilisateurRoleWithUserDto> associationUtilisateurs =
+                utilisateurRoleService.getAssociationUtilisateursByRole(roleId);
         return ResponseEntity.ok(associationUtilisateurs);
     }
-//    @GetMapping("/roles/{roleId}/utilisateurs")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-//    public ResponseEntity<List<UtilisateurRole>> getUtilisateursByRole(@PathVariable Long roleId) {
-//        List<UtilisateurRole> associationUtilisateurs = utilisateurRoleService.getAssociationUtilisateursByRole(roleId);
-//        return ResponseEntity.ok(associationUtilisateurs);
-//    }
-}
+    }

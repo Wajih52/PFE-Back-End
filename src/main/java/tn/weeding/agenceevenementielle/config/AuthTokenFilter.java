@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import tn.weeding.agenceevenementielle.services.CustomUserDetailsService;
 
 import java.io.IOException;
-@Component
+
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
 
