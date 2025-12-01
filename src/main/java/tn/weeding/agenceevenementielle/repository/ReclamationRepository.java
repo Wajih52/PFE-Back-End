@@ -105,4 +105,13 @@ public interface ReclamationRepository extends JpaRepository<Reclamation, Long> 
             "r.statutReclamation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReclamation.EN_ATTENTE," +
             " tn.weeding.agenceevenementielle.entities.enums.StatutReclamation.EN_COURS)")
     long countReclamationsUrgentesNonTraitees();
+
+    //=================================================
+    // Statistiques (Pour dashboard)
+    //=================================================
+
+    /**
+     * Compter les réclamations par statuts multiples
+     */
+    Long countByStatutReclamationIn(List<StatutReclamation> statuts);
 }

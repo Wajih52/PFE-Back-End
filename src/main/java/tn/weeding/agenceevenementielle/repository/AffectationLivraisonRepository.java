@@ -54,4 +54,18 @@ public interface AffectationLivraisonRepository extends JpaRepository<Affectatio
      * Supprimer toutes les affectations d'une livraison
      */
     void deleteByLivraison_IdLivraison(Long idLivraison);
+
+    //=================================================
+    // Statistiques (Pour dashboard)
+    //=================================================
+
+    /**
+     * Top employés par nombre de livraisons effectuées
+     * Retourne: [idEmploye, nombreLivraisons]
+     */
+    @Query("SELECT a.utilisateur.idUtilisateur, COUNT(a) " +
+            "FROM AffectationLivraison a " +
+            "GROUP BY a.utilisateur.idUtilisateur " +
+            "ORDER BY COUNT(a) DESC")
+    List<Object[]> findTopEmployesParNombreLivraisons(@Param("limit") int limit);
 }

@@ -92,6 +92,12 @@ public interface LivraisonRepository extends JpaRepository<Livraison, Long> {
      * 📊 Compter les livraisons entre deux dates
      */
     long countByDateLivraisonBetween(LocalDate dateDebut, LocalDate dateFin);
+    //=================================================
+    // Statistiques (Pour dashboard)
+    //=================================================
 
-
+    /**
+     * Compter les livraisons d'une date spécifique
+     */
+    Long countByDateLivraison(LocalDate date);
 }

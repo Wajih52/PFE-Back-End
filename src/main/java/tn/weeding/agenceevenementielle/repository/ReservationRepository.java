@@ -243,4 +243,44 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("dateFin") LocalDate dateFin
     );
 
+
+    //===================================
+    //  Dashbooard et analyse
+    //==================================
+
+
+    /**
+     * Compter les réservations créées sur une période
+     */
+    Long countByDateCreationBetween(LocalDateTime debut, LocalDateTime fin);
+
+    /**
+     * Compter les réservations confirmées sur une période
+     */
+    Long countByStatutReservationAndDateCreationBetween(
+            StatutReservation statut,
+            LocalDateTime debut,
+            LocalDateTime fin
+    );
+
+
+    /**
+     * Trouver les réservations confirmées sur une période
+     */
+    List<Reservation> findByStatutReservationAndDateCreationBetween(
+            StatutReservation statut,
+            LocalDateTime debut,
+            LocalDateTime fin
+    );
+
+    /**
+     * Trouver les réservations avec paiements en retard
+     */
+    @Query("SELECT r FROM Reservation r " +
+            "WHERE r.statutReservation = 'CONFIRME' " +
+            "AND r.montantPaye < r.montantTotal " +
+            "AND r.dateDebut < :date")
+    List<Reservation> findReservationsAvecPaiementsEnRetard(@Param("date") LocalDate date);
+
+
 }

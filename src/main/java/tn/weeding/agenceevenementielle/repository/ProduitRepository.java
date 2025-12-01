@@ -167,7 +167,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "               WHERE lr2.produit.idProduit = p.idProduit " +
             "               AND lr2.dateDebut <= :dateFin " +
             "               AND lr2.dateFin >= :dateDebut " +
-            "               AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) >= :quantiteMin")  // ✅ UNIQUEMENT CONFIRME
+            "               AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) >= :quantiteMin")
     List<Produit> findProduitsAvecQuantiteMinSurPeriode(
             @Param("quantiteMin") Integer quantiteMin,
             @Param("dateDebut") LocalDate dateDebut,
@@ -192,7 +192,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "               WHERE lr2.produit.idProduit = p.idProduit " +
             "               AND lr2.dateDebut <= :dateFin " +
             "               AND lr2.dateFin >= :dateDebut " +
-            "               AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) <= :seuil " +  // ✅ UNIQUEMENT CONFIRME
+            "               AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) <= :seuil " +
             "AND (p.quantiteDisponible - " +
             "     COALESCE((SELECT SUM(lr3.quantite) FROM LigneReservation lr3 " +
             "               WHERE lr3.produit.idProduit = p.idProduit " +
@@ -246,7 +246,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             "                WHERE lr2.produit.idProduit = p.idProduit " +
             "                AND lr2.dateDebut <= :dateFin " +
             "                AND lr2.dateFin >= :dateDebut " +
-            "                AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) > 0)")  // ✅ UNIQUEMENT CONFIRME
+            "                AND lr2.reservation.statutReservation = 'CONFIRME'), 0)) > 0)")
     List<Produit> searchProduitsAvecPeriode(
             @Param("categorie") Categorie categorie,
             @Param("typeProduit") TypeProduit typeProduit,
@@ -284,6 +284,7 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
      *
      * Calcule le pourcentage d'utilisation de chaque produit
      * Utile pour optimisation et décisions d'achat
+     * retour Object [idProduit , nomProduit , tauxOccupation]
      */
     @Query("SELECT p.idProduit, p.nomProduit, " +
             "CASE WHEN p.quantiteDisponible > 0 " +
@@ -305,4 +306,53 @@ public interface ProduitRepository extends JpaRepository<Produit, Long> {
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin
     );
+
+    //=================================================
+    // Statistiques (Pour dashboard)
+    //=================================================
+
+
+    /**
+     * Compter les produits en alerte de stock critique AUJOURD'HUI
+     * Un produit est critique si : quantité disponible aujourd'hui < seuilCritique
+     */
+    @Query("SELECT COUNT(p) FROM Produit p " +
+            "WHERE p.typeProduit = tn.weeding.agenceevenementielle.entities.enums.TypeProduit.EN_QUANTITE " +
+            "AND (p.quantiteDisponible - " +
+            "     COALESCE((SELECT SUM(lr.quantite) FROM LigneReservation lr " +
+            "               WHERE lr.produit.idProduit = p.idProduit " +
+            "               AND lr.reservation.statutReservation = 'CONFIRME' " +
+            "               AND CURRENT_DATE BETWEEN lr.dateDebut AND lr.dateFin), 0)) " +
+            "< p.seuilCritique")
+    Long countProduitsEnAlerteCritiqueAujourdhui();
+
+    /**
+     * Récupérer la liste des produits en alerte critique AUJOURD'HUI
+     * Retourne: [idProduit, nomProduit, quantiteStock, quantiteDispoAujourdhui, seuilCritique]
+     */
+    @Query("SELECT p.idProduit, p.nomProduit, p.quantiteDisponible, " +
+            "(p.quantiteDisponible - COALESCE(SUM(lr.quantite), 0)) as qteDispo, " +
+            "p.seuilCritique " +
+            "FROM Produit p " +
+            "LEFT JOIN LigneReservation lr ON lr.produit.idProduit = p.idProduit " +
+            "AND lr.reservation.statutReservation = 'CONFIRME' " +
+            "AND CURRENT_DATE BETWEEN lr.dateDebut AND lr.dateFin " +
+            "WHERE p.quantiteDisponible IS NOT NULL " +
+            "AND p.seuilCritique IS NOT NULL " +
+            "GROUP BY p.idProduit, p.nomProduit, p.quantiteDisponible, p.seuilCritique " +
+            "HAVING (p.quantiteDisponible - COALESCE(SUM(lr.quantite), 0)) < p.seuilCritique " +
+            "ORDER BY (p.quantiteDisponible - COALESCE(SUM(lr.quantite), 0)) ASC")
+    List<Object[]> findProduitsEnAlerteCritiqueAujourdhui();
+
+    /**
+     * Compter les produits en alerte critique pour une date spécifique
+     */
+    @Query("SELECT COUNT(p) FROM Produit p " +
+            "WHERE (p.quantiteDisponible - " +
+            "       COALESCE((SELECT SUM(lr.quantite) FROM LigneReservation lr " +
+            "                 WHERE lr.produit.idProduit = p.idProduit " +
+            "                 AND lr.reservation.statutReservation = 'CONFIRME' " +
+            "                 AND :date BETWEEN lr.dateDebut AND lr.dateFin), 0)) " +
+            "< p.seuilCritique")
+    Long countProduitsEnAlerteCritiqueParDate(@Param("date") LocalDate date);
 }

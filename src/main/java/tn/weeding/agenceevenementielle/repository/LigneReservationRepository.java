@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tn.weeding.agenceevenementielle.entities.LigneReservation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutLivraison;
+import tn.weeding.agenceevenementielle.entities.enums.StatutReservation;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.List;
 
 /**
  * Repository pour la gestion des lignes de réservation
- * Sprint 4 - Gestion des réservations (incluant devis)
+ *
  */
 @Repository
 public interface LigneReservationRepository extends JpaRepository<LigneReservation, Long>
@@ -478,33 +479,6 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
     );
 
 
-    /**
-     * Vérifier si TOUTES les instances d'une ligne sont disponibles
-     * sur une nouvelle période (méthode auxiliaire)
-     *
-     * @param idLigne ID de la ligne de réservation
-     * @param dateDebut Nouvelle date de début
-     * @param dateFin Nouvelle date de fin
-     * @param reservationExclue Réservation à exclure
-     * @return true si toutes les instances sont disponibles, false sinon
-     */
-    @Query("SELECT CASE WHEN COUNT(lr) = 0 THEN true ELSE false END " +
-            "FROM LigneReservation lr " +
-            "JOIN lr.instancesReservees inst " +
-            "WHERE inst.idInstance IN (" +
-            "   SELECT ir.idInstance FROM LigneReservation l " +
-            "   JOIN l.instancesReservees ir " +
-            "   WHERE l.idLigneReservation = :idLigne" +
-            ") " +
-            "AND lr.reservation.idReservation != :reservationExclue " +
-            "AND lr.reservation.statutReservation IN (tn.weeding.agenceevenementielle.entities.enums.StatutReservation.CONFIRME) " +
-            "AND ((lr.dateDebut <= :dateFin AND lr.dateFin >= :dateDebut))")
-    Boolean areAllInstancesAvailableForModification(
-            @Param("idLigne") Long idLigne,
-            @Param("dateDebut") LocalDate dateDebut,
-            @Param("dateFin") LocalDate dateFin,
-            @Param("reservationExclue") Long reservationExclue
-    );
 
     /**
      * Trouve la quantité maximale réservée pour un produit à une date donnée
@@ -560,6 +534,110 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             @Param("idProduit") Long idProduit,
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin
+    );
+
+    //=================================================
+    // Statistiques (Pour dashboard)
+    //=================================================
+
+    /**
+     * Top produits les plus loués (par nombre de locations)
+     * Retourne: [idProduit, nomProduit, nombreLocations, chiffreAffairesGenere]
+     */
+    @Query(value = "SELECT p.idProduit, p.nomProduit, COUNT(lr.idLigneReservation) as nb_locations, " +
+            "COALESCE(SUM(lr.quantite * (DATEDIFF(lr.dateFin, lr.dateDebut) + 1) * lr.prixUnitaire), 0) as ca_genere " +
+            "FROM LigneReservation lr " +
+            "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
+            "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
+            "WHERE r.statutReservation = 'CONFIRME' " +
+            "GROUP BY p.idProduit, p.nomProduit " +
+            "ORDER BY nb_locations DESC " +
+            "LIMIT :limit",
+            nativeQuery = true)
+    List<Object[]> findTopProduitsLoues(@Param("limit") int limit);
+
+    /**
+     * Top produits par CA généré
+     * Retourne: [idProduit, nomProduit, chiffreAffairesGenere]
+     */
+    @Query(value = "SELECT p.idProduit, p.nomProduit, " +
+            "SUM(lr.quantite * (DATEDIFF(lr.dateFin, lr.dateDebut) + 1) * lr.prixUnitaire) as ca_genere " +
+            "FROM LigneReservation lr " +
+            "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
+            "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
+            "WHERE r.statutReservation = 'CONFIRME' " +
+            "GROUP BY p.idProduit, p.nomProduit " +
+            "ORDER BY ca_genere DESC " +
+            "LIMIT :limit",
+            nativeQuery = true)
+    List<Object[]> findTopProduitsParCA(@Param("limit") int limit);
+
+    /**
+     * CA par catégorie de produits
+     * Retourne: [categorie, chiffreAffaires]
+     */
+    @Query(value = "SELECT p.categorieProduit, " +
+            "SUM(lr.quantite * (DATEDIFF(lr.dateFin, lr.dateDebut) + 1) * lr.prixUnitaire) as ca_total " +
+            "FROM LigneReservation lr " +
+            "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
+            "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
+            "WHERE r.statutReservation = 'CONFIRME' " +
+            "GROUP BY p.categorieProduit " +
+            "ORDER BY ca_total DESC",
+            nativeQuery = true)
+    List<Object[]> findCAParCategorie();
+
+    /**
+     * Top produits loués sur une période spécifique
+     * Retourne: [idProduit, nomProduit, nombreLocations, chiffreAffairesGenere]
+     */
+    @Query(value = "SELECT p.idProduit, p.nomProduit, COUNT(lr.idLigneReservation) as nb_locations, " +
+            "COALESCE(SUM(lr.quantite * (DATEDIFF(lr.dateFin, lr.dateDebut) + 1) * lr.prixUnitaire), 0) as ca_genere " +
+            "FROM LigneReservation lr " +
+            "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
+            "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
+            "WHERE r.statutReservation = 'CONFIRME' " +
+            "AND lr.dateDebut >= :debut " +
+            "AND lr.dateFin <= :fin " +
+            "GROUP BY p.idProduit, p.nomProduit " +
+            "ORDER BY nb_locations DESC " +
+            "LIMIT :limit",
+            nativeQuery = true)
+    List<Object[]> findTopProduitsLouesPeriode(@Param("debut") LocalDate debut,
+                                               @Param("fin") LocalDate fin,
+                                               @Param("limit") int limit);
+
+    /**
+     * CA par catégorie sur une période
+     * Retourne: [categorie, chiffreAffaires]
+     */
+    @Query(value = "SELECT p.categorieProduit, " +
+            "SUM(lr.quantite * (DATEDIFF(lr.dateFin, lr.dateDebut) + 1) * lr.prixUnitaire) as ca_total " +
+            "FROM LigneReservation lr " +
+            "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
+            "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
+            "WHERE r.statutReservation = 'CONFIRME' " +
+            "AND lr.dateDebut >= :debut " +
+            "AND lr.dateFin <= :fin " +
+            "GROUP BY p.categorieProduit " +
+            "ORDER BY ca_total DESC",
+            nativeQuery = true)
+    List<Object[]> findCAParCategoriePeriode(@Param("debut") LocalDate debut,
+                                             @Param("fin") LocalDate fin);
+    /**
+     * Compter le nombre de locations d'un produit
+     */
+    Long countByProduit_IdProduitAndReservation_StatutReservation(
+            Long idProduit,
+            StatutReservation statut
+    );
+
+    /**
+     * Compter les retours attendus pour une date donnée
+     */
+    Long countByDateFinAndStatutLivraisonLigneIn(
+            LocalDate dateFin,
+            List<StatutLivraison> statuts
     );
 
 }

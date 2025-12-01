@@ -41,4 +41,22 @@ public interface PaiementRepository extends JpaRepository<Paiement, Long> {
     @Query(value = "SELECT codePaiement FROM paiement WHERE codePaiement LIKE CONCAT(:yearPrefix, '%') ORDER BY codePaiement DESC LIMIT 1", nativeQuery = true)
     Optional<String> findLastCodePaiementByYear(@Param("yearPrefix") String yearPrefix);
 
+
+    //===================================
+    //  Dashbooard et analyse
+    //==================================
+
+    /**
+     * Trouver les paiements validés
+     */
+    List<Paiement> findByValidePar_IsNotNull();
+
+    /**
+     * Trouver les paiements sur une période (validés uniquement)
+     */
+    List<Paiement> findByDatePaiementBetweenAndValidePar_IsNotNull(
+            LocalDateTime debut,
+            LocalDateTime fin
+    );
+
 }

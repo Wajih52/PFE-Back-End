@@ -121,12 +121,6 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
             "AND a.statut = 'APPROUVE' AND a.visible = true")
     Double getMoyenneNotesByProduit(@Param("produitId") Long produitId);
 
-    /**
-     * Nombre d'avis approuvés pour un produit
-     */
-    @Query("SELECT COUNT(a) FROM Avis a WHERE a.produit.idProduit = :produitId " +
-            "AND a.statut = 'APPROUVE' AND a.visible = true")
-    Long getNombreAvisApprouvesByProduit(@Param("produitId") Long produitId);
 
     /**
      * Répartition des notes pour un produit
@@ -172,4 +166,35 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
     @Query("SELECT a FROM Avis a WHERE LOWER(a.commentaire) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "ORDER BY a.dateAvis DESC")
     List<Avis> searchByCommentaire(@Param("keyword") String keyword);
+
+
+
+    //===================================
+    //  Dashbooard et analyse
+    //==================================
+
+    /**
+     * Moyenne des notes par catégorie de produits
+     * Retourne: [categorie, moyenneNote]
+     */
+    @Query("SELECT p.categorieProduit, AVG(a.note) " +
+            "FROM Avis a " +
+            "JOIN a.produit p " +
+            "WHERE a.statut = 'APPROUVE' " +
+            "GROUP BY p.categorieProduit " +
+            "ORDER BY AVG(a.note) DESC")
+    List<Object[]> findMoyenneNotesParCategorie();
+
+    /**
+     * Trouver les avis approuvés d'un produit
+     */
+    List<Avis> findByProduit_IdProduitAndStatutContainingAndVisibleTrue(Long idProduit, StatutAvis statutAvis);
+
+    /**
+     * Trouver les avis approuvés d'un produit
+     */
+    @Query("SELECT a FROM Avis a WHERE a.produit.idProduit = :produitId " +
+            "AND a.statut = 'APPROUVE' AND a.visible = true")
+    List<Avis> getAvisApprouvesByProduit(@Param("produitId") Long produitId);
+
 }

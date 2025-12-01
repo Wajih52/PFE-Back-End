@@ -111,4 +111,17 @@ public interface PointageRepository extends JpaRepository<Pointage, Long> {
             "  SELECT p.utilisateur.idUtilisateur FROM Pointage p WHERE p.dateTravail = :date" +
             ")")
     List<Long> findEmployesAbsents(@Param("date") LocalDate date);
+
+    //=================================================
+    // Statistiques (Pour dashboard)
+    //=================================================
+
+    /**
+     * Trouver les pointages d'un employé sur une période
+     */
+    List<Pointage> findByUtilisateur_IdUtilisateurAndDateTravailBetween(
+            Long idUtilisateur,
+            LocalDate dateDebut,
+            LocalDate dateFin
+    );
 }
