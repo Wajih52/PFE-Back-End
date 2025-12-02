@@ -549,13 +549,12 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "FROM LigneReservation lr " +
             "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
             "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
-            "WHERE r.statutReservation = 'CONFIRME' " +
+            "WHERE r.statutReservation IN ('CONFIRME', 'TERMINE') " +
             "GROUP BY p.idProduit, p.nomProduit " +
             "ORDER BY nb_locations DESC " +
             "LIMIT :limit",
             nativeQuery = true)
     List<Object[]> findTopProduitsLoues(@Param("limit") int limit);
-
     /**
      * Top produits par CA généré
      * Retourne: [idProduit, nomProduit, chiffreAffairesGenere]
@@ -565,7 +564,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "FROM LigneReservation lr " +
             "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
             "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
-            "WHERE r.statutReservation = 'CONFIRME' " +
+            "WHERE r.statutReservation IN ('CONFIRME', 'TERMINE') " +
             "GROUP BY p.idProduit, p.nomProduit " +
             "ORDER BY ca_genere DESC " +
             "LIMIT :limit",
@@ -581,7 +580,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "FROM LigneReservation lr " +
             "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
             "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
-            "WHERE r.statutReservation = 'CONFIRME' " +
+            "WHERE r.statutReservation IN ('CONFIRME', 'TERMINE') " +
             "GROUP BY p.categorieProduit " +
             "ORDER BY ca_total DESC",
             nativeQuery = true)
@@ -596,7 +595,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "FROM LigneReservation lr " +
             "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
             "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
-            "WHERE r.statutReservation = 'CONFIRME' " +
+            "WHERE r.statutReservation IN ('CONFIRME', 'TERMINE') " +
             "AND lr.dateDebut >= :debut " +
             "AND lr.dateFin <= :fin " +
             "GROUP BY p.idProduit, p.nomProduit " +
@@ -616,7 +615,7 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             "FROM LigneReservation lr " +
             "JOIN Produit p ON lr.produit_idProduit = p.idProduit " +
             "JOIN Reservation r ON lr.reservation_idReservation = r.idReservation " +
-            "WHERE r.statutReservation = 'CONFIRME' " +
+            "WHERE r.statutReservation IN ('CONFIRME', 'TERMINE') " +
             "AND lr.dateDebut >= :debut " +
             "AND lr.dateFin <= :fin " +
             "GROUP BY p.categorieProduit " +

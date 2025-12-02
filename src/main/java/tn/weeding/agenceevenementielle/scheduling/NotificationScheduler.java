@@ -515,7 +515,7 @@ public class NotificationScheduler {
                                 devis,
                                 client,
                                 joursRestants,
-                                "⚠️ URGENT: Validez votre devis avant demain",
+                                " URGENT: Validez votre devis avant demain",
                                 String.format(
                                         "Bonjour %s,\n\n" +
                                                 "⚠️ ATTENTION: Votre devis %s expire DEMAIN !\n\n" +
@@ -549,7 +549,7 @@ public class NotificationScheduler {
                                 devis,
                                 client,
                                 joursRestants,
-                                "🚨 DERNIÈRE CHANCE: Validez votre devis AUJOURD'HUI",
+                                " DERNIÈRE CHANCE: Validez votre devis AUJOURD'HUI",
                                 String.format(
                                         "Bonjour %s,\n\n" +
                                                 "🚨 ALERTE: C'est votre DERNIER JOUR pour valider le devis %s !\n\n" +

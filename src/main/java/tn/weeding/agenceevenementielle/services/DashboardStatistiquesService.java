@@ -305,8 +305,8 @@ public class DashboardStatistiquesService {
                             .nomProduit(produit.getNomProduit())
                             .codeProduit(produit.getCodeProduit())
                             .imageProduit(produit.getImageProduit())
-                            .nombreLocations(((Number) row[1]).longValue())
-                            .chiffreAffaires(((Number) row[2]).doubleValue())
+                            .nombreLocations(((Number) row[2]).longValue())
+                            .chiffreAffaires(((Number) row[3]).doubleValue())
                             .moyenneNotes(calculerMoyenneNotesProduit(idProduit))
                             .build();
                 })
@@ -329,8 +329,8 @@ public class DashboardStatistiquesService {
                             .nomProduit(produit.getNomProduit())
                             .codeProduit(produit.getCodeProduit())
                             .imageProduit(produit.getImageProduit())
-                            .nombreLocations(((Number) row[1]).longValue())
-                            .chiffreAffaires(((Number) row[2]).doubleValue())
+                            .nombreLocations(((Number) row[2]).longValue())
+                            .chiffreAffaires(((Number) row[3]).doubleValue())
                             .moyenneNotes(calculerMoyenneNotesProduit(idProduit))
                             .build();
                 })
@@ -353,7 +353,7 @@ public class DashboardStatistiquesService {
                             .nomProduit(produit.getNomProduit())
                             .codeProduit(produit.getCodeProduit())
                             .imageProduit(produit.getImageProduit())
-                            .chiffreAffaires(((Number) row[1]).doubleValue())
+                            .chiffreAffaires(((Number) row[2]).doubleValue())
                             .nombreLocations(compterLocationsProduit(idProduit))
                             .moyenneNotes(calculerMoyenneNotesProduit(idProduit))
                             .build();

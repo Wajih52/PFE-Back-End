@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import tn.weeding.agenceevenementielle.dto.authentification.RoleRequestDto;
 import tn.weeding.agenceevenementielle.dto.authentification.RoleResponseDto;
 import tn.weeding.agenceevenementielle.entities.Role;
+import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.exceptions.RoleNotFoundException;
 import tn.weeding.agenceevenementielle.repository.RoleRepository;
+import tn.weeding.agenceevenementielle.repository.UtilisateurRoleRepository;
+
 import java.util.List;
 
 @Service
@@ -17,7 +20,7 @@ import java.util.List;
 public class RoleServiceImpl implements RoleServiceInterface{
 
     private RoleRepository roleRepository;
-    private CodeGeneratorService codeGeneratorService;
+    private UtilisateurRoleRepository utilisateurRoleRepository;
 
     @Override
     public RoleResponseDto creationRole(RoleRequestDto roleRequestDto) {
@@ -65,6 +68,10 @@ public class RoleServiceImpl implements RoleServiceInterface{
     @Override
     public void deleteRole(Long id) {
         Role role = roleRepository.findById(id).orElseThrow(()->new RoleNotFoundException(id));
+
+       if(!utilisateurRoleRepository.findByRoleIdRole(id).isEmpty()) {
+           throw new CustomException("cette ròle est déjà affecté à {"+utilisateurRoleRepository.findByRoleIdRole(id).size()+"} utilisateurs");
+       }
         roleRepository.delete(role);
     }
 
