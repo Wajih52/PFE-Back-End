@@ -92,7 +92,7 @@ public class ReclamationController {
      * GET /api/reclamations/mes-reclamations
      */
     @GetMapping("/mes-reclamations")
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAnyRole('CLIENT','EMPLOYE','MANAGER')")
     public ResponseEntity<List<ReclamationResponseDto>> getMesReclamations(Authentication authentication) {
         log.info("📋 Récupération des réclamations de l'utilisateur connecté");
         // Récupérer l'ID de l'utilisateur connecté depuis le token

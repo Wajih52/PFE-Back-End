@@ -193,7 +193,7 @@ public class ReservationController {
      * 📋 Récupérer une réservation par son ID
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE','MANAGER')")
     @Operation(summary = "Récupérer une réservation par ID",
             description = "Obtenir les détails complets d'une réservation")
     public ResponseEntity<ReservationResponseDto> getReservationById(@PathVariable Long id) {
@@ -205,7 +205,7 @@ public class ReservationController {
      * 📋 Récupérer une réservation par sa référence
      */
     @GetMapping("/reference/{reference}")
-    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
+    @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE','MANAGER')")
     @Operation(summary = "Récupérer une réservation par référence",
             description = "Rechercher une réservation par son numéro de référence (ex: RES-2025-0001)")
     public ResponseEntity<ReservationResponseDto> getReservationByReference(@PathVariable String reference) {
@@ -217,7 +217,7 @@ public class ReservationController {
      * 📋 Récupérer TOUTES les réservations d'un client (ses propres réservations)
      */
     @GetMapping("/mes-reservations")
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAnyRole('CLIENT','EMPLOYE','MANAGER')")
     @Operation(summary = "Mes réservations (CLIENT)",
             description = "Le client consulte toutes ses réservations et devis")
     public ResponseEntity<List<ReservationResponseDto>> getMesReservations() {
@@ -356,7 +356,7 @@ public class ReservationController {
      * ❌ Le client annule sa réservation ou l'admin
      */
     @DeleteMapping("/{id}/annuler")
-    @PreAuthorize("hasAnyRole('CLIENT','ADMIN')")
+    @PreAuthorize("hasAnyRole('CLIENT','ADMIN','MANAGER')")
     @Operation(summary = "Annuler une réservation (CLIENT)",
             description = "Le client annule sa réservation (si pas encore livrée)")
     public ResponseEntity<Map<String, String>> annulerReservationParClient(
@@ -493,17 +493,6 @@ public class ReservationController {
      * - Configurer les datepickers
      * - Afficher les règles au client
      * - Validation côté client
-     *
-     * Exemple d'utilisation Angular:
-     * ```typescript
-     * ngOnInit() {
-     *   this.reservationService.getDateConstraints().subscribe(constraints => {
-     *     this.minDate = new Date(constraints.dateMinimale);
-     *     this.maxDate = new Date(constraints.dateMaximale);
-     *     this.maxDuration = constraints.dureeMaxJours;
-     *   });
-     * }
-     * ```
      */
     @GetMapping("/contraintes-dates")
     @Operation(summary = "Obtenir les contraintes de dates",

@@ -108,7 +108,7 @@ public class UtilisateurController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<List<UtilisateurResponseDto>> afficherTous() {
         return ResponseEntity.status(200).body(utilisateurServiceInterface.afficherUtilisateurs());
     }
