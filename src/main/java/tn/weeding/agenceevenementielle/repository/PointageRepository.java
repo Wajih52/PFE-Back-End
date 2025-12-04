@@ -86,7 +86,8 @@ public interface PointageRepository extends JpaRepository<Pointage, Long> {
     @Query("SELECT COALESCE(SUM(p.totalHeures), 0.0) FROM Pointage p " +
             "WHERE p.utilisateur.idUtilisateur = :idUtilisateur " +
             "AND p.dateTravail BETWEEN :dateDebut AND :dateFin " +
-            "AND p.statutPointage = 'present'")
+            "AND p.statutPointage IN (tn.weeding.agenceevenementielle.entities.enums.StatutPointage.present," +
+            " tn.weeding.agenceevenementielle.entities.enums.StatutPointage.enRetard)")
     Double sumTotalHeuresByUtilisateurAndPeriode(
             @Param("idUtilisateur") Long idUtilisateur,
             @Param("dateDebut") LocalDate dateDebut,

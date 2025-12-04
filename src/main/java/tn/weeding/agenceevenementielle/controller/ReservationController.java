@@ -277,6 +277,22 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    /**
+     * Récupérer les réservations de l'employé connecté (où il est affecté en livraison)
+     */
+    @GetMapping("/mes-reservations-affectees")
+    @PreAuthorize("hasAnyRole('EMPLOYE', 'MANAGER', 'ADMIN')")
+    @Operation(summary = "Mes réservations affectées",
+            description = "Récupère les réservations où l'employé est affecté aux livraisons")
+    public ResponseEntity<List<ReservationResponseDto>> getMesReservationsAffectees() {
+        log.info("📋 Récupération des réservations affectées à l'employé connecté");
+
+        String username = authenticationFacade.getAuthentication().getName();
+        List<ReservationResponseDto> reservations =
+                reservationService.getReservationsEmployeAffecte(username);
+
+        return ResponseEntity.ok(reservations);
+    }
 
     // ============================================
     // PARTIE 5: RECHERCHE AVANCÉE

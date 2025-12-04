@@ -43,6 +43,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     private final MouvementStockRepository mouvementStockRepo;
     private final DateReservationValidator dateValidator;
     private final FactureServiceInterface factureService;
+    private final AffectationLivraisonRepository affectationRepo ;
 
     private final NotificationServiceInterface notificationService;
     private final EmailService emailService;
@@ -1033,6 +1034,53 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     public List<ReservationResponseDto> getReservationsPassees() {
         return reservationRepo.findReservationsPassees()
                 .stream()
+                .map(this::convertToResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservationResponseDto> getReservationsEmployeAffecte(String username) {
+        log.info("📋 Recherche des réservations pour l'employé: {}", username);
+
+        // 1. Récupérer l'utilisateur connecté
+        Utilisateur employe = utilisateurRepo.findByPseudoOrEmail(username,username)
+                .orElseThrow(() -> new CustomException("Utilisateur introuvable"));
+
+        // 2. Récupérer toutes les affectations de cet employé
+        List<AffectationLivraison> affectations =
+                affectationRepo.findByUtilisateur_IdUtilisateur(employe.getIdUtilisateur());
+
+        log.info("✅ Trouvé {} affectations pour l'employé", affectations.size());
+
+        // 3. Extraire les IDs de livraisons
+        Set<Long> idsLivraisons = affectations.stream()
+                .map(a -> a.getLivraison().getIdLivraison())
+                .collect(Collectors.toSet());
+
+        if (idsLivraisons.isEmpty()) {
+            log.info("ℹ️ Aucune livraison affectée à cet employé");
+            return Collections.emptyList();
+        }
+
+        // 4. Récupérer les lignes de réservation associées à ces livraisons
+        List<LigneReservation> lignes = ligneReservationRepo
+                .findByLivraison_IdLivraisonIn(new ArrayList<>(idsLivraisons));
+
+        log.info("✅ Trouvé {} lignes de réservation", lignes.size());
+
+        // 5. Extraire les réservations uniques
+        Set<Long> idsReservations = lignes.stream()
+                .map(ligne -> ligne.getReservation().getIdReservation())
+                .collect(Collectors.toSet());
+
+        // 6. Récupérer les réservations complètes
+        List<Reservation> reservations = reservationRepo
+                .findAllById(idsReservations);
+
+        log.info("✅ Trouvé {} réservations affectées à l'employé", reservations.size());
+
+        // 7. Convertir en DTO et retourner
+        return reservations.stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
     }

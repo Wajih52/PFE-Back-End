@@ -130,6 +130,11 @@ public interface ReservationServiceInterface {
      */
     List<ReservationResponseDto> getAllDevisEnAttente();
 
+    /**
+     * Récupérer les réservations où l'employé est affecté
+     */
+    List<ReservationResponseDto> getReservationsEmployeAffecte(String username);
+
     // ============ RECHERCHE AVANCÉE ============
 
     /**

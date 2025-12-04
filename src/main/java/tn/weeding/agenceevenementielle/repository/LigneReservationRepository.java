@@ -95,6 +95,11 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
     List<LigneReservation> findByLivraison_IdLivraison(Long idLivraison);
 
     /**
+     * Trouver les lignes de réservation par liste d'IDs de livraison
+     */
+    List<LigneReservation> findByLivraison_IdLivraisonIn(List<Long> idsLivraisons);
+
+    /**
      * Trouver les lignes sans livraison assignée (réservations confirmées)
      */
     @Query("SELECT lr FROM LigneReservation lr " +
