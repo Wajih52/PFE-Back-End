@@ -293,6 +293,7 @@ public class CalendrierService {
 
         List<Reservation> reservations = reservationRepo.findReservationsEntreDates(dateDebut, dateFin);
         double montantTotalPeriode = reservations.stream()
+                .filter(reservation -> reservation.getStatutReservation() != StatutReservation.ANNULE)
                 .mapToDouble(Reservation::getMontantTotal)
                 .sum();
 

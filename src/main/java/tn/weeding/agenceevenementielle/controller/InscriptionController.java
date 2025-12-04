@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/inscriptions")
+@RequestMapping("/api/inscriptions")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
 public class InscriptionController {

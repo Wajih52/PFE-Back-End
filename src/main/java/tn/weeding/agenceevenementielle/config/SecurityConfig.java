@@ -56,10 +56,10 @@ public class SecurityConfig {
                         s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(a->
-                        a.requestMatchers("/auth/**",
-                                          "/inscriptions/**",
-                                          "/oauth2/**",
-                                          "/login/oauth2/**",
+                        a.requestMatchers("api/auth/**",
+                                          "api/inscriptions/**",
+                                          "api/oauth2/**",
+                                          "api/login/oauth2/**",
                                           "/swagger-ui/**",
                                           "/v3/api-docs/**",
                                           "/swagger-resources/**",

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/monitoring")
+@RequestMapping("/api/monitoring")
 @AllArgsConstructor
 public class MonitoringController {
     private TokenBlacklistService tokenBlacklistService;

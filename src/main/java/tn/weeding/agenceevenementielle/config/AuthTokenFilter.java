@@ -90,10 +90,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 || path.startsWith("/v3/api-docs")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/webjars")
-                || path.startsWith("/monitoring")
-                || path.startsWith("/oauth2")
-                || path.startsWith("/login/oauth2")
-                || path.startsWith("/utilisateur/ajouter")
+                || path.startsWith("/api/monitoring")
+                || path.startsWith("/api/oauth2")
+                || path.startsWith("/api/login/oauth2")
+                || path.startsWith("api//utilisateur/ajouter")
                 || path.startsWith("/uploads");
     }
 }

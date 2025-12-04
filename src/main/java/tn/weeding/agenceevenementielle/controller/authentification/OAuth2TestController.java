@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/oauth2/test")
+@RequestMapping("/api/oauth2/test")
 @RequiredArgsConstructor
 @Slf4j
 public class OAuth2TestController {

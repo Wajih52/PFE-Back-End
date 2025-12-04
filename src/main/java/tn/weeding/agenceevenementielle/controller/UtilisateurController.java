@@ -24,7 +24,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/utilisateurs")
+@RequestMapping("/api/utilisateurs")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
 public class UtilisateurController {

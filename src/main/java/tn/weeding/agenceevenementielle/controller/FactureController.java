@@ -21,7 +21,7 @@ import tn.weeding.agenceevenementielle.services.FactureServiceInterface;
 import java.util.List;
 
 @RestController
-@RequestMapping("/factures")
+@RequestMapping("/api/factures")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Factures", description = "Gestion des factures (Devis, Pro-forma, Finale)")

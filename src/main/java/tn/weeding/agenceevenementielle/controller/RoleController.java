@@ -14,7 +14,7 @@ import tn.weeding.agenceevenementielle.services.RoleServiceInterface;
 import java.util.List;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/api/roles")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @PreAuthorize("hasRole('ADMIN')")
 public class RoleController {
