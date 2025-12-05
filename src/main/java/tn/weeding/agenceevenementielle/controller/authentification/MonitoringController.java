@@ -24,4 +24,12 @@ public class MonitoringController {
 
         return ResponseEntity.ok(status);
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, String>> health() {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "UP");
+        response.put("message", "Application is running");
+        return ResponseEntity.ok(response);
+    }
 }
