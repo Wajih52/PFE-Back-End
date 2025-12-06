@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tn.weeding.agenceevenementielle.services.CustomUserDetailsService;
 
@@ -90,7 +89,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 || path.startsWith("/v3/api-docs")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/webjars")
-                || path.startsWith("/api/monitoring")
+                || path.startsWith("/api/monitoring/health")
                 || path.startsWith("/api/oauth2")
                 || path.startsWith("/api/login/oauth2")
                 || path.startsWith("api//utilisateur/ajouter")
