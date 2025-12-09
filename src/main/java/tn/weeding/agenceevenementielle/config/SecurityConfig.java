@@ -60,7 +60,8 @@ public class SecurityConfig {
                         s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(a->
-                        a.requestMatchers("api/auth/**",
+                        a.requestMatchers("/api/monitoring/**",
+                                          "api/auth/**",
                                           "api/inscriptions/**",
                                           "api/oauth2/**",
                                           "api/login/oauth2/**",
@@ -72,6 +73,7 @@ public class SecurityConfig {
                                           "/uploads/**",
                                           "/error",
                                           "/api/reclamations/create"
+
                         ).permitAll().anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
