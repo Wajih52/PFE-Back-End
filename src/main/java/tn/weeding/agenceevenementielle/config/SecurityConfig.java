@@ -113,7 +113,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Autoriser Angular (localhost:4200)
-        configuration.setAllowedOrigins(Arrays.asList("app.cors.allowed-origins","http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8000","http://localhost:4200"));
 
         // Autoriser toutes les méthodes HTTP
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
@@ -133,7 +133,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
-        log.info("✅ Configuration CORS activée pour http://localhost:4200");
+        log.info("✅ Configuration CORS activée pour http://localhost:8000 (NGINX) et http://localhost:4200 (DEV)");
         return source;
     }
 }
