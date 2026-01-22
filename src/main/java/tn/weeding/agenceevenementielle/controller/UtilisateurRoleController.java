@@ -22,6 +22,9 @@ public class UtilisateurRoleController {
 
     private UtilisateurRoleServiceInterface utilisateurRoleService;
 
+    /**
+     * afficher les utilisateur-roles (classe d'asssociation entre utilisateur et role )
+     */
     @GetMapping("/afficheUtilisateur-Role")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<List<UtilisateurRole>> getAllUtilisateurRoles() {
@@ -29,6 +32,9 @@ public class UtilisateurRoleController {
         return ResponseEntity.ok(roles);
     }
 
+    /**
+     * afficher un utilisateur-role
+     */
     @GetMapping("/Utilisateur-Role/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<UtilisateurRole> getUtilisateurRoleById(@PathVariable Long id) {
@@ -37,6 +43,9 @@ public class UtilisateurRoleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * ajouter un utilisateur-role ( assigner un role à un utilisateur )
+     */
     @PostMapping("/ajoutUtilisateur-Role")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UtilisateurRole> addUtilisateurRole( @RequestParam Long idUtilisateur,
@@ -45,6 +54,9 @@ public class UtilisateurRoleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
+    /**
+     * modifier utilsiateur role
+     */
     @PutMapping("/modifierUtilisateur-Role/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UtilisateurRole> updateUtilisateurRole(@PathVariable Long id,
@@ -53,6 +65,9 @@ public class UtilisateurRoleController {
         return ResponseEntity.ok(updated);
     }
 
+    /**
+     * supprimer utilosateur-role
+     */
     @DeleteMapping("/supprimerUtilisateur-Roles/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteUtilisateurRole(@PathVariable Long id) {
@@ -60,6 +75,9 @@ public class UtilisateurRoleController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * afficher les roles d'un utilisatuer
+     */
     @GetMapping("/utilisateur/{utilisateurId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<List<UtilisateurRole>> getRolesByUtilisateur(@PathVariable Long utilisateurId) {
@@ -69,7 +87,6 @@ public class UtilisateurRoleController {
 
     /**
      * Récupère tous les rôles d'un utilisateur avec les détails d'attribution
-     * Utilisé pour afficher dans le modal de gestion des rôles
      */
     @GetMapping("/utilisateur/{utilisateurId}/details")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -79,6 +96,9 @@ public class UtilisateurRoleController {
         return ResponseEntity.ok(rolesDetails);
     }
 
+    /**
+     * Les associations concernant un role
+     */
     @GetMapping("/roles/{roleId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<List<UtilisateurRoleWithUserDto>> getAssociationUtilisateursByRole(@PathVariable Long roleId) {

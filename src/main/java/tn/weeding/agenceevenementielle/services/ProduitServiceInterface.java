@@ -14,10 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ✅ VERSION CORRIGÉE : Interface du service de gestion des produits
+ * Interface du service de gestion des produits
  *
- * Nouvelles méthodes ajoutées pour gérer la disponibilité avec périodes
- * Sprint 3 : Gestion des produits et du stock
  */
 public interface ProduitServiceInterface {
 
@@ -70,7 +68,7 @@ public interface ProduitServiceInterface {
 
     /**
      * Obtenir les produits disponibles (stock > 0)
-     * NE PREND PAS EN COMPTE LES PÉRIODES
+     * ON NE PREND PAS EN COMPTE LES PÉRIODES
      * Utilisé uniquement pour la vue administrative du stock global
      */
     List<ProduitResponseDto> getProduitsDisponibles();
@@ -82,7 +80,7 @@ public interface ProduitServiceInterface {
 
     /**
      * Obtenir les produits avec stock critique
-     * NE PREND PAS EN COMPTE LES PÉRIODES
+     * ON NE PREND PAS EN COMPTE LES PÉRIODES
      */
     List<ProduitResponseDto> getProduitsStockCritique(Integer seuil);
 
@@ -122,23 +120,12 @@ public interface ProduitServiceInterface {
      * Pour produits de type EN_QUANTITE uniquement
      * Retourne : quantiteDisponible - quantités réservées pendant la période
      *
-     * @param idProduit ID du produit
-     * @param dateDebut Date de début de la période
-     * @param dateFin Date de fin de la période
-     * @return Quantité réellement disponible
      */
     Integer calculerQuantiteDisponibleSurPeriode(Long idProduit, LocalDate dateDebut, LocalDate dateFin);
 
     /**
      * Vérifier si une quantité est disponible sur une période
      *
-     * Remplace l'ancienne méthode verifierDisponibilite(id, quantite)
-     *
-     * @param idProduit ID du produit
-     * @param quantiteDemandee Quantité souhaitée
-     * @param dateDebut Date de début
-     * @param dateFin Date de fin
-     * @return true si disponible, false sinon
      */
     Boolean verifierDisponibiliteSurPeriode(
             Long idProduit,
@@ -153,9 +140,6 @@ public interface ProduitServiceInterface {
      * Retourne uniquement les produits réellement disponibles pendant la période
      * Utilisé pour l'affichage du catalogue client avec dates
      *
-     * @param dateDebut Date de début
-     * @param dateFin Date de fin
-     * @return Liste des produits disponibles
      */
     List<ProduitResponseDto> getCatalogueDisponibleSurPeriode(LocalDate dateDebut, LocalDate dateFin);
 
@@ -164,14 +148,6 @@ public interface ProduitServiceInterface {
      *
      * Permet de filtrer les produits disponibles selon plusieurs critères
      * ET une période de disponibilité
-     *
-     * @param categorie Catégorie (optionnel)
-     * @param typeProduit Type de produit (optionnel)
-     * @param minPrix Prix minimum (optionnel)
-     * @param maxPrix Prix maximum (optionnel)
-     * @param dateDebut Date de début (optionnel, mais si fourni dateFin obligatoire)
-     * @param dateFin Date de fin (optionnel, mais si fourni dateDebut obligatoire)
-     * @return Liste des produits correspondants
      */
     List<ProduitResponseDto> searchProduitsAvecPeriode(
             Categorie categorie,
@@ -185,12 +161,8 @@ public interface ProduitServiceInterface {
     /**
      * Produits avec quantité minimum disponible sur période
      *
-     * Utilisé pour suggérer des alternatives ou filtrer par quantité minimale
+     * Utilisé pour filtrer par quantité minimale
      *
-     * @param quantiteMin Quantité minimum requise
-     * @param dateDebut Date de début
-     * @param dateFin Date de fin
-     * @return Liste des produits avec quantité suffisante
      */
     List<ProduitResponseDto> getProduitsAvecQuantiteMinSurPeriode(
             Integer quantiteMin,
@@ -204,10 +176,6 @@ public interface ProduitServiceInterface {
      * Identifie les produits qui auront un stock faible pendant une période
      * Utile pour alertes et planification
      *
-     * @param seuil Seuil critique (ex: 5)
-     * @param dateDebut Date de début
-     * @param dateFin Date de fin
-     * @return Liste des produits en situation critique
      */
     List<ProduitResponseDto> getProduitsStockCritiqueSurPeriode(
             Integer seuil,
@@ -221,9 +189,6 @@ public interface ProduitServiceInterface {
      * Retourne le pourcentage d'utilisation de chaque produit
      * Utilisé pour statistiques et optimisation
      *
-     * @param dateDebut Date de début
-     * @param dateFin Date de fin
-     * @return Map avec idProduit -> Map(nomProduit, tauxOccupation)
      */
     List<Map<String, Object>> getTauxOccupationSurPeriode(LocalDate dateDebut, LocalDate dateFin);
 

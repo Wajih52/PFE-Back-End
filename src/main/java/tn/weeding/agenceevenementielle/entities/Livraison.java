@@ -39,6 +39,7 @@ public class Livraison implements Serializable {
     @Column(nullable = false, updatable = false)
     private LocalDateTime dateCreation;
 
+    //Audit automatique
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime dateModification;

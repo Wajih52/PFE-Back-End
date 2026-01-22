@@ -42,13 +42,13 @@ public class CodeGeneratorService {
             int nextNumber = number + 1;
 
             String newCode = String.format("%s%04d", prefix, nextNumber);
-            log.debug("📊 Dernier code {} : {} → Nouveau : {}", typeRole, code, newCode);
+            log.debug("Dernier code {} : {} → Nouveau : {}", typeRole, code, newCode);
             return newCode;
 
         } else {
             // Premier utilisateur de ce type
             String firstCode = prefix + "0001";
-            log.debug("🆕 Premier code {} : {}", typeRole, firstCode);
+            log.debug("Premier code {} : {}", typeRole, firstCode);
             return firstCode;
         }
     }
@@ -83,7 +83,7 @@ public class CodeGeneratorService {
             String numberPart = code.substring(prefix.length());
             return Integer.parseInt(numberPart);
         } catch (Exception e) {
-            log.warn("⚠️ Impossible d'extraire le numéro du code : {}. Retour à 0.", code);
+            log.warn("Impossible d'extraire le numéro du code : {}. Retour à 0.", code);
             return 0;
         }
     }
@@ -105,11 +105,11 @@ public class CodeGeneratorService {
             int lastNumber = Integer.parseInt(numberPart);
             int newNumber = lastNumber + 1;
             String newCode = yearPrefix + String.format("%04d", newNumber);
-            log.info("✅ Code paiement généré: {}", newCode);
+            log.info("code paiement généré: {}", newCode);
             return newCode;
         } else {
             String newCode = yearPrefix + "0001";
-            log.info("✅ Premier code paiement: {}", newCode);
+            log.info("Premier code paiement: {}", newCode);
             return newCode;
         }
     }
@@ -152,7 +152,7 @@ public class CodeGeneratorService {
         int numero = (int) count + 1;
         String numeroFacture = String.format("%s-%s-%04d", prefixe, datePart, numero);
 
-        log.info("📄 Numéro de facture généré : {}", numeroFacture);
+        log.info("Numéro de facture généré : {}", numeroFacture);
         return numeroFacture;
     }
 }

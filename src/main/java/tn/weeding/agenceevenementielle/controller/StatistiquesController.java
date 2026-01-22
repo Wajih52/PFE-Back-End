@@ -13,26 +13,20 @@ import tn.weeding.agenceevenementielle.services.DashboardStatistiquesService;
 
 import java.time.LocalDate;
 
-/**
- * ==========================================
- * CONTROLLER STATISTIQUES & ANALYTICS
- * ==========================================
- * Endpoints pour le dashboard de statistiques
- * Accessible uniquement aux ADMIN et MANAGER
- */
+
+
 @RestController
 @RequestMapping("/api/statistiques")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Statistiques & Analytics", description = "APIs pour le dashboard de statistiques")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class StatistiquesController {
 
     private final DashboardStatistiquesService dashboardStatistiquesService;
 
     /**
-     * 📊 Obtenir toutes les statistiques du dashboard
-     * GET /api/statistiques/dashboard
+     * Obtenir toutes les statistiques du dashboard
      */
     @GetMapping("/dashboard")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -41,11 +35,11 @@ public class StatistiquesController {
             description = "Retourne tous les KPIs, graphiques et métriques pour le dashboard principal"
     )
     public ResponseEntity<DashboardStatistiquesDto> getDashboardStatistiques() {
-        log.info("📊 [API] Requête: statistiques dashboard globales");
+        log.info("statistiques dashboard globales");
 
         DashboardStatistiquesDto stats = dashboardStatistiquesService.getDashboardStatistiques();
 
-        log.info("✅ [API] Statistiques calculées: CA total = {}, {} réservations",
+        log.info("Statistiques calculées: CA total = {}, {} réservations",
                 stats.getChiffreAffairesTotal(),
                 stats.getNombreTotalReservations());
 
@@ -53,8 +47,7 @@ public class StatistiquesController {
     }
 
     /**
-     * 📊 Obtenir les statistiques pour une période spécifique
-     * GET /api/statistiques/dashboard/periode?dateDebut=2025-01-01&dateFin=2025-01-31
+     * Obtenir les statistiques pour une période spécifique
      */
     @GetMapping("/dashboard/periode")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -66,19 +59,19 @@ public class StatistiquesController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin
     ) {
-        log.info("📊 [API] Requête: statistiques pour période {} - {}", dateDebut, dateFin);
+        log.info("statistiques pour période {} - {}", dateDebut, dateFin);
 
         DashboardStatistiquesDto stats = dashboardStatistiquesService
                 .getDashboardStatistiquesPeriode(dateDebut, dateFin);
 
-        log.info("✅ [API] Statistiques période calculées: CA = {}",
+        log.info("Statistiques période calculées: CA = {}",
                 stats.getChiffreAffairesTotal());
 
         return ResponseEntity.ok(stats);
     }
 
     /**
-     * 📈 Vérifier la santé de l'API statistiques
+     * Vérifier la santé de l'API statistiques
      * GET /api/statistiques/health
      */
     @GetMapping("/health")
@@ -88,7 +81,7 @@ public class StatistiquesController {
             description = "Endpoint de test pour vérifier que l'API statistiques fonctionne"
     )
     public ResponseEntity<String> healthCheck() {
-        log.info("🏥 [API] Health check statistiques");
-        return ResponseEntity.ok("API Statistiques opérationnelle ✅");
+        log.info("Health check statistiques");
+        return ResponseEntity.ok("API Statistiques opérationnelle ");
     }
 }

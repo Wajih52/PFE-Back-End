@@ -2,7 +2,6 @@ package tn.weeding.agenceevenementielle.entities.enums;
 
 /**
  * État physique d'une instance de produit
- * Sprint 3 - Gestion des produits et du stock
  */
 public enum EtatPhysique {
     NEUF,               // État neuf

@@ -16,6 +16,7 @@ public class ProduitException extends RuntimeException {
     // Exceptions spécifiques
 
     public static class ProduitNotFoundException extends ProduitException {
+
         public ProduitNotFoundException(Long idProduit) {
             super("Produit introuvable avec l'ID : " + idProduit);
         }
@@ -26,6 +27,7 @@ public class ProduitException extends RuntimeException {
     }
 
     public static class StockInsuffisantException extends ProduitException {
+
         public StockInsuffisantException(String nomProduit, Integer quantiteRequise, Integer quantiteDisponible) {
             super(String.format("Stock insuffisant pour le produit '%s'. Demandé : %d, Disponible : %d",
                     nomProduit, quantiteRequise, quantiteDisponible));

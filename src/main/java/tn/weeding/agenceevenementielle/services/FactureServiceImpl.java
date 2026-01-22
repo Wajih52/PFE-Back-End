@@ -40,7 +40,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
 
     @Override
     public FactureResponseDto genererFacture(GenererFactureRequestDto request, String username) {
-        log.info("📄 Génération de facture {} pour réservation {}", request.getTypeFacture(), request.getIdReservation());
+        log.info("Génération de facture {} pour réservation {}", request.getTypeFacture(), request.getIdReservation());
 
         // Vérifier que la réservation existe
         Reservation reservation = reservationRepository.findById(request.getIdReservation())
@@ -92,11 +92,11 @@ public class FactureServiceImpl implements FactureServiceInterface {
             facture.setCheminPDF(cheminPDF);
             facture = factureRepository.save(facture);
         } catch (DocumentException | IOException e) {
-            log.error("❌ Erreur génération PDF : {}", e.getMessage());
+            log.error(" Erreur génération PDF : {}", e.getMessage());
             throw new CustomException("Erreur lors de la génération du PDF : " + e.getMessage());
         }
 
-        log.info("✅ Facture générée : {}", facture.getNumeroFacture());
+        log.info(" Facture générée : {}", facture.getNumeroFacture());
         return convertToDto(facture);
     }
 
@@ -116,7 +116,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
      */
     @Override
     public FactureResponseDto genererOuMettreAJourFacture(Long idReservation, TypeFacture typeFacture, String username) {
-        log.info("🔄 Génération ou mise à jour facture {} pour réservation {}", typeFacture, idReservation);
+        log.info(" Génération ou mise à jour facture {} pour réservation {}", typeFacture, idReservation);
 
         Reservation reservation = reservationRepository.findById(idReservation)
                 .orElseThrow(() -> new CustomException("Réservation introuvable"));
@@ -128,12 +128,12 @@ public class FactureServiceImpl implements FactureServiceInterface {
                 .findFirst();
 
         if (factureExistante.isPresent()) {
-            // ✅ Mise à jour de la facture existante
-            log.info("📝 Facture {} existante trouvée, mise à jour...", typeFacture);
+            //  Mise à jour de la facture existante
+            log.info(" Facture {} existante trouvée, mise à jour...", typeFacture);
             return regenererPdfFacture(factureExistante.get().getIdFacture(), username);
         } else {
-            // ✅ Création d'une nouvelle facture
-            log.info("➕ Aucune facture {} trouvée, création...", typeFacture);
+            // Création d'une nouvelle facture
+            log.info(" Aucune facture {} trouvée, création...", typeFacture);
             GenererFactureRequestDto request = GenererFactureRequestDto.builder()
                     .idReservation(idReservation)
                     .typeFacture(typeFacture)
@@ -209,7 +209,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
         try {
             return Files.readAllBytes(Paths.get(facture.getCheminPDF()));
         } catch (IOException e) {
-            log.error("❌ Erreur lecture PDF : {}", e.getMessage());
+            log.error(" Erreur lecture PDF : {}", e.getMessage());
             throw new CustomException("Erreur lors de la lecture du PDF");
         }
     }
@@ -222,13 +222,13 @@ public class FactureServiceImpl implements FactureServiceInterface {
         facture.setStatutFacture(nouveauStatut);
         facture = factureRepository.save(facture);
 
-        log.info("✅ Statut facture mis à jour : {} -> {}", facture.getNumeroFacture(), nouveauStatut);
+        log.info("Statut facture mis à jour : {} -> {}", facture.getNumeroFacture(), nouveauStatut);
         return convertToDto(facture);
     }
 
     @Override
     public FactureResponseDto regenererPdfFacture(Long idFacture, String username) {
-        log.info("🔄 Mise à jour de la facture ID: {}", idFacture);
+        log.info(" Mise à jour de la facture ID: {}", idFacture);
 
         Facture facture = factureRepository.findById(idFacture)
                 .orElseThrow(() -> new CustomException("Facture introuvable"));
@@ -257,10 +257,10 @@ public class FactureServiceImpl implements FactureServiceInterface {
             facture.setCheminPDF(cheminPDF);
             facture = factureRepository.save(facture);
 
-            log.info("✅ Facture mise à jour : {}", facture.getNumeroFacture());
+            log.info(" Facture mise à jour : {}", facture.getNumeroFacture());
             return convertToDto(facture);
         } catch (DocumentException | IOException e) {
-            log.error("❌ Erreur mise à jour PDF : {}", e.getMessage());
+            log.error(" Erreur mise à jour PDF : {}", e.getMessage());
             throw new CustomException("Erreur lors de la mise à jour du PDF");
         }
     }
@@ -328,7 +328,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
         facture.setMontantRemise(montantRemise);
         facture.setMontantTTC(montantTotalSansRemise);
 
-        log.info("💰 Calculs facture : Total sans remise={}DT, Remise={}DT, HT={}DT, TVA={}DT, TTC={}DT",
+        log.info(" Calculs facture : Total sans remise={}DT, Remise={}DT, HT={}DT, TVA={}DT, TTC={}DT",
                 montantTotalSansRemise, montantRemise, montantHT_SansRemise, montantTVA, montantTotalApresRemise);
 
         return facture;
@@ -371,7 +371,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
     }
 
     /**
-     * 🆕 Méthode helper pour mettre à jour les montants d'une facture
+     * Méthode helper pour mettre à jour les montants d'une facture
      */
     private Facture mettreAJourMontantsFacture(Facture facture, Reservation reservation) {
         // Recalculer les montants (même logique que dans creerFacture)
@@ -410,7 +410,7 @@ public class FactureServiceImpl implements FactureServiceInterface {
     @Transactional(readOnly = true)
     public void mettreAJourFactureDevisSafe(Long idReservation) {
         try {
-            log.info("🔄 Mise à jour sécurisée de la facture DEVIS pour réservation {}", idReservation);
+            log.info(" Mise à jour sécurisée de la facture DEVIS pour réservation {}", idReservation);
 
             Reservation reservation = reservationRepository.findById(idReservation)
                     .orElseThrow(() -> new CustomException("Réservation introuvable"));
@@ -432,13 +432,13 @@ public class FactureServiceImpl implements FactureServiceInterface {
 
                 factureRepository.save(facture);
 
-                log.info("✅ Facture DEVIS {} mise à jour avec succès",
+                log.info(" Facture DEVIS {} mise à jour avec succès",
                         facture.getNumeroFacture());
             } else {
-                log.info("ℹ️ Aucune facture DEVIS à mettre à jour");
+                log.info(" Aucune facture DEVIS à mettre à jour");
             }
         } catch (Exception e) {
-            log.error("❌ Erreur lors de la mise à jour de la facture DEVIS : {}",
+            log.error(" Erreur lors de la mise à jour de la facture DEVIS : {}",
                     e.getMessage(), e);
         }
     }

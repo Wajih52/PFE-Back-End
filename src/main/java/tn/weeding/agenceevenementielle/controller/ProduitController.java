@@ -28,12 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Contrôleur REST pour la gestion des produits et du stock
- *
- * Nouveaux endpoints ajoutés pour gérer la disponibilité avec périodes
- * Sprint 3 : Gestion des produits et du stock
- */
+
 @RestController
 @RequestMapping("/api/produits")
 @RequiredArgsConstructor
@@ -46,7 +41,7 @@ public class ProduitController {
     private final AuthenticationFacade authenticationFacade;
 
     // ============================================
-    // GESTION DES PRODUITS (CRUD)
+    //  CRUD
     // ============================================
 
     @PostMapping
@@ -54,7 +49,7 @@ public class ProduitController {
     @Operation(summary = "Créer un nouveau produit",
             description = "Permet à l'admin ou employé d'ajouter un nouveau produit au catalogue")
     public ResponseEntity<ProduitResponseDto> creerProduit(@Valid @RequestBody ProduitRequestDto produitDto) {
-        log.info("📦 Requête de création de produit reçue");
+        log.info("Requête de création de produit reçue");
         String username = authenticationFacade.getAuthentication().getName();
         ProduitResponseDto produit = produitService.creerProduit(produitDto, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(produit);
@@ -67,7 +62,7 @@ public class ProduitController {
     public ResponseEntity<ProduitResponseDto> modifierProduit(
             @PathVariable Long id,
             @Valid @RequestBody ProduitRequestDto produitDto) {
-        log.info("🔧 Requête de modification du produit ID : {}", id);
+        log.info("Requête de modification du produit ID : {}", id);
         String username = authenticationFacade.getAuthentication().getName();
         ProduitResponseDto produit = produitService.modifierProduit(id, produitDto, username);
         return ResponseEntity.ok(produit);
@@ -78,7 +73,7 @@ public class ProduitController {
     @Operation(summary = "Supprimer/Désactiver un produit",
             description = "Désactive un produit (soft delete)")
     public ResponseEntity<Void> supprimerProduit(@PathVariable Long id) {
-        log.info("🗑️ Requête de suppression du produit ID : {}", id);
+        log.info("Requête de suppression du produit ID : {}", id);
         String username = authenticationFacade.getAuthentication().getName();
         produitService.supprimerProduit(id, username);
         return ResponseEntity.noContent().build();
@@ -87,9 +82,9 @@ public class ProduitController {
     @DeleteMapping("/{id}/supprimer-definitivement")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Supprimer définitivement un produit de la base de données",
-            description = "⚠️ DANGER: Suppression permanente (hard delete)")
+            description = "Suppression permanente (hard delete)")
     public ResponseEntity<Map<String, String>> supprimerProduitDefinitivement(@PathVariable Long id) {
-        log.info("🗑️💥 Requête de suppression DÉFINITIVE du produit ID : {}", id);
+        log.info("Requête de suppression DÉFINITIVE du produit ID : {}", id);
         String username = authenticationFacade.getAuthentication().getName();
 
         try {
@@ -112,7 +107,7 @@ public class ProduitController {
     public ResponseEntity<ProduitResponseDto> reactiverProduit(
             @PathVariable Long id,
             @RequestParam Integer quantite) {
-        log.info("♻️ Requête de réactivation du produit ID : {}", id);
+        log.info("Requête de réactivation du produit ID : {}", id);
         String username = authenticationFacade.getAuthentication().getName();
         ProduitResponseDto produit = produitService.reactiverProduit(id, quantite, username);
         return ResponseEntity.ok(produit);
@@ -122,7 +117,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir un produit par ID",
             description = "Récupère les détails d'un produit spécifique")
     public ResponseEntity<ProduitResponseDto> getProduitById(@PathVariable Long id) {
-        log.info("🔍 Requête de récupération du produit ID : {}", id);
+        log.info("Requête de récupération du produit ID : {}", id);
         ProduitResponseDto produit = produitService.getProduitById(id);
         return ResponseEntity.ok(produit);
     }
@@ -131,7 +126,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir un produit par code",
             description = "Récupère les détails d'un produit via son code unique")
     public ResponseEntity<ProduitResponseDto> getProduitByCode(@PathVariable String code) {
-        log.info("🔍 Requête de récupération du produit avec code : {}", code);
+        log.info("Requête de récupération du produit avec code : {}", code);
         ProduitResponseDto produit = produitService.getProduitByCode(code);
         return ResponseEntity.ok(produit);
     }
@@ -140,7 +135,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir tous les produits",
             description = "Récupère la liste complète des produits")
     public ResponseEntity<List<ProduitResponseDto>> getAllProduits() {
-        log.info("📋 Requête de récupération de tous les produits");
+        log.info("Requête de récupération de tous les produits");
         List<ProduitResponseDto> produits = produitService.getAllProduits();
         return ResponseEntity.ok(produits);
     }
@@ -153,7 +148,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir les produits disponibles (stock global)",
             description = "⚠️ NE PREND PAS EN COMPTE LES PÉRIODES - Utilisé pour vue admin uniquement")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsDisponibles() {
-        log.info("📋 Requête de récupération des produits disponibles (stock global)");
+        log.info("Requête de récupération des produits disponibles (stock global)");
         List<ProduitResponseDto> produits = produitService.getProduitsDisponibles();
         return ResponseEntity.ok(produits);
     }
@@ -171,10 +166,10 @@ public class ProduitController {
     @GetMapping("/stock-critique")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
     @Operation(summary = "Obtenir les produits avec stock critique (stock global)",
-            description = "⚠️ NE PREND PAS EN COMPTE LES PÉRIODES")
+            description = "NE PREND PAS EN COMPTE LES PÉRIODES")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsStockCritique(
             @RequestParam(required = false) @Parameter(description = "Seuil critique (défaut: 5)") Integer seuil) {
-        log.info("⚠️ Requête de récupération des produits en stock critique (seuil: {})", seuil);
+        log.info("Requête de récupération des produits en stock critique (seuil: {})", seuil);
         List<ProduitResponseDto> produits = produitService.getProduitsStockCritique(seuil);
         return ResponseEntity.ok(produits);
     }
@@ -183,7 +178,7 @@ public class ProduitController {
     @Operation(summary = "Rechercher des produits par nom",
             description = "Recherche par correspondance partielle insensible à la casse")
     public ResponseEntity<List<ProduitResponseDto>> searchProduitsByNom(@RequestParam String nom) {
-        log.info("🔍 Recherche de produits par nom : {}", nom);
+        log.info("Recherche de produits par nom : {}", nom);
         List<ProduitResponseDto> produits = produitService.searchProduitsByNom(nom);
         return ResponseEntity.ok(produits);
     }
@@ -192,7 +187,7 @@ public class ProduitController {
     @Operation(summary = "Filtrer par catégorie",
             description = "Récupère tous les produits d'une catégorie")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsByCategorie(@PathVariable Categorie categorie) {
-        log.info("📋 Requête de récupération des produits de catégorie : {}", categorie);
+        log.info("Requête de récupération des produits de catégorie : {}", categorie);
         List<ProduitResponseDto> produits = produitService.getProduitsByCategorie(categorie);
         return ResponseEntity.ok(produits);
     }
@@ -201,7 +196,7 @@ public class ProduitController {
     @Operation(summary = "Filtrer par type de produit",
             description = "Récupère tous les produits d'un type (EN_QUANTITE ou avecReference)")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsByType(@PathVariable TypeProduit type) {
-        log.info("📋 Requête de récupération des produits de type : {}", type);
+        log.info("Requête de récupération des produits de type : {}", type);
         List<ProduitResponseDto> produits = produitService.getProduitsByType(type);
         return ResponseEntity.ok(produits);
     }
@@ -216,7 +211,7 @@ public class ProduitController {
             @RequestParam(required = false) Double maxPrix,
             @RequestParam(required = false) Boolean disponible) {
 
-        log.info("🔍 Recherche multicritères : cat={}, type={}, prix={}-{}, dispo={}",
+        log.info("Recherche multicritères : categorie={}, type={}, prix={}-{}, disponible={}",
                 categorie, type, minPrix, maxPrix, disponible);
 
         List<ProduitResponseDto> produits = produitService.searchProduits(
@@ -238,7 +233,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)") LocalDate dateFin) {
 
-        log.info("🔍 Calcul quantité disponible produit ID: {} du {} au {}", id, dateDebut, dateFin);
+        log.info("Calcul quantité disponible produit ID: {} du {} au {}", id, dateDebut, dateFin);
 
         Integer quantite = produitService.calculerQuantiteDisponibleSurPeriode(id, dateDebut, dateFin);
         return ResponseEntity.ok(quantite);
@@ -255,7 +250,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)") LocalDate dateFin) {
 
-        log.info("🔍 Vérification disponibilité produit ID: {}, quantité: {}, période: {} -> {}",
+        log.info("Vérification disponibilité produit ID: {}, quantité: {}, période: {} -> {}",
                 id, quantite, dateDebut, dateFin);
 
         Boolean disponible = produitService.verifierDisponibiliteSurPeriode(
@@ -293,7 +288,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)") LocalDate dateFin) {
 
-        log.info("📋 Catalogue disponible du {} au {}", dateDebut, dateFin);
+        log.info("Catalogue disponible du {} au {}", dateDebut, dateFin);
 
         List<ProduitResponseDto> produits = produitService.getCatalogueDisponibleSurPeriode(
                 dateDebut, dateFin);
@@ -313,7 +308,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)") LocalDate dateFin) {
 
-        log.info("🔍 Recherche avec période : cat={}, type={}, prix={}-{}, période={}-{}",
+        log.info("Recherche avec période : cat={}, type={}, prix={}-{}, période={}-{}",
                 categorie, type, minPrix, maxPrix, dateDebut, dateFin);
 
         List<ProduitResponseDto> produits = produitService.searchProduitsAvecPeriode(
@@ -330,7 +325,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
 
-        log.info("📅 Récupération disponibilité pour période: {} à {}", dateDebut, dateFin);
+        log.info("Récupération disponibilité pour période: {} à {}", dateDebut, dateFin);
 
         List<ProduitDisponibiliteDto> produits = produitService
                 .getProduitsAvecDisponibilitePourPeriode(dateDebut, dateFin);
@@ -348,7 +343,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)") LocalDate dateFin) {
 
-        log.info("🔍 Produits avec quantité >= {} du {} au {}", quantiteMin, dateDebut, dateFin);
+        log.info("Produits avec quantité >= {} du {} au {}", quantiteMin, dateDebut, dateFin);
 
         List<ProduitResponseDto> produits = produitService.getProduitsAvecQuantiteMinSurPeriode(
                 quantiteMin, dateDebut, dateFin);
@@ -366,7 +361,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)") LocalDate dateFin) {
 
-        log.warn("⚠️ Vérification stock critique sur période: seuil={}, période={}-{}",
+        log.warn("Vérification stock critique sur période: seuil={}, période={}-{}",
                 seuil, dateDebut, dateFin);
 
         List<ProduitResponseDto> produits = produitService.getProduitsStockCritiqueSurPeriode(
@@ -384,7 +379,7 @@ public class ProduitController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")
             @Parameter(description = "Date de fin (format: yyyy-MM-dd)") LocalDate dateFin) {
 
-        log.info("📊 Calcul taux d'occupation du {} au {}", dateDebut, dateFin);
+        log.info("Calcul taux d'occupation du {} au {}", dateDebut, dateFin);
 
         List<Map<String, Object>> stats = produitService.getTauxOccupationSurPeriode(
                 dateDebut, dateFin);
@@ -403,7 +398,7 @@ public class ProduitController {
             @PathVariable Long id,
             @RequestParam Integer quantite,
             @RequestParam(required = false) String motif) {
-        log.info("➕ Ajout de stock: produit ID={}, quantité={}", id, quantite);
+        log.info("Ajout de stock: produit ID={}, quantité={}", id, quantite);
         String username = authenticationFacade.getAuthentication().getName();
         ProduitResponseDto produit = produitService.ajouterStock(id, quantite, motif, username);
         return ResponseEntity.ok(produit);
@@ -417,7 +412,7 @@ public class ProduitController {
             @PathVariable Long id,
             @RequestParam Integer quantite,
             @RequestParam(required = false) String motif) {
-        log.info("➖ Retrait de stock: produit ID={}, quantité={}", id, quantite);
+        log.info("Retrait de stock: produit ID={}, quantité={}", id, quantite);
         String username = authenticationFacade.getAuthentication().getName();
         ProduitResponseDto produit = produitService.retirerStock(id, quantite, motif, username);
         return ResponseEntity.ok(produit);
@@ -431,7 +426,7 @@ public class ProduitController {
             @PathVariable Long id,
             @RequestParam Integer nouvelleQuantite,
             @RequestParam(required = false) String motif) {
-        log.info("🔧 Ajustement de stock: produit ID={}, nouvelle quantité={}", id, nouvelleQuantite);
+        log.info("Ajustement de stock: produit ID={}, nouvelle quantité={}", id, nouvelleQuantite);
         String username = authenticationFacade.getAuthentication().getName();
         ProduitResponseDto produit = produitService.ajusterStock(id, nouvelleQuantite, motif, username);
         return ResponseEntity.ok(produit);
@@ -441,7 +436,7 @@ public class ProduitController {
     @Operation(summary = "Vérifier si le stock est critique",
             description = "Indique si le produit a atteint le seuil critique")
     public ResponseEntity<Boolean> verifierStockCritique(@PathVariable Long id) {
-        log.info("⚠️ Vérification du stock critique pour le produit ID : {}", id);
+        log.info("Vérification du stock critique pour le produit ID : {}", id);
         boolean critique = produitService.verifierStockCritique(id);
         return ResponseEntity.ok(critique);
     }
@@ -455,7 +450,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir les statistiques d'un produit",
             description = "Retourne les stats complètes (entrées, sorties, mouvements)")
     public ResponseEntity<StockStatistiquesDto> getStatistiquesProduit(@PathVariable Long id) {
-        log.info("📊 Requête des statistiques pour le produit ID : {}", id);
+        log.info("Requête des statistiques pour le produit ID : {}", id);
         StockStatistiquesDto stats = produitService.getStatistiquesProduit(id);
         return ResponseEntity.ok(stats);
     }
@@ -464,7 +459,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir les produits les plus loués",
             description = "Top des produits par nombre de réservations")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsLesPlusLoues() {
-        log.info("📊 Requête des produits les plus loués");
+        log.info("Requête des produits les plus loués");
         List<ProduitResponseDto> produits = produitService.getProduitsLesPlusLoues();
         return ResponseEntity.ok(produits);
     }
@@ -474,7 +469,7 @@ public class ProduitController {
             description = "Produits avec note moyenne supérieure au seuil")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsMieuxNotes(
             @RequestParam(required = false) Double minNote) {
-        log.info("📊 Requête des produits avec note >= {}", minNote);
+        log.info("Requête des produits avec note >= {}", minNote);
         List<ProduitResponseDto> produits = produitService.getProduitsMieuxNotes(minNote);
         return ResponseEntity.ok(produits);
     }
@@ -488,7 +483,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir l'historique des mouvements d'un produit",
             description = "Liste complète des mouvements de stock")
     public ResponseEntity<List<MouvementStockResponseDto>> getHistoriqueMouvements(@PathVariable Long id) {
-        log.info("📜 Requête d'historique des mouvements pour le produit ID : {}", id);
+        log.info("Requête d'historique des mouvements pour le produit ID : {}", id);
         List<MouvementStockResponseDto> mouvements = produitService.getHistoriqueMouvements(id);
         return ResponseEntity.ok(mouvements);
     }
@@ -498,7 +493,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir les mouvements par type",
             description = "Filtre les mouvements par type")
     public ResponseEntity<List<MouvementStockResponseDto>> getMouvementsByType(@PathVariable TypeMouvement type) {
-        log.info("📜 Requête des mouvements de type : {}", type);
+        log.info(" Requête des mouvements de type : {}", type);
         List<MouvementStockResponseDto> mouvements = produitService.getMouvementsByType(type);
         return ResponseEntity.ok(mouvements);
     }
@@ -508,7 +503,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir les mouvements par utilisateur",
             description = "Liste tous les mouvements effectués par un utilisateur")
     public ResponseEntity<List<MouvementStockResponseDto>> getMouvementsByUser(@PathVariable String username) {
-        log.info("📜 Requête des mouvements de l'utilisateur : {}", username);
+        log.info("Requête des mouvements de l'utilisateur : {}", username);
         List<MouvementStockResponseDto> mouvements = produitService.getMouvementsByUser(username);
         return ResponseEntity.ok(mouvements);
     }
@@ -520,7 +515,7 @@ public class ProduitController {
     public ResponseEntity<List<MouvementStockResponseDto>> getMouvementsByPeriode(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date debut,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fin) {
-        log.info("📜 Requête des mouvements du {} au {}", debut, fin);
+        log.info("Requête des mouvements du {} au {}", debut, fin);
         List<MouvementStockResponseDto> mouvements = produitService.getMouvementsByPeriode(debut, fin);
         return ResponseEntity.ok(mouvements);
     }
@@ -533,7 +528,7 @@ public class ProduitController {
             @PathVariable Long id,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date debut,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fin) {
-        log.info("📜 Requête des mouvements du produit ID: {} du {} au {}", id, debut, fin);
+        log.info("Requête des mouvements du produit ID: {} du {} au {}", id, debut, fin);
         List<MouvementStockResponseDto> mouvements =
                 produitService.getMouvementsProduitParPeriode(id, debut, fin);
         return ResponseEntity.ok(mouvements);

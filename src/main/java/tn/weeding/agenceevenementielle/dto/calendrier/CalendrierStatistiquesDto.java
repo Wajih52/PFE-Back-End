@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO pour les statistiques du calendrier
- * Sprint 7 - Gestion du calendrier
- */
+
 @Data
 @Builder
 @NoArgsConstructor

@@ -32,4 +32,5 @@ public interface UtilisateurRoleServiceInterface {
 
     // méthode pour récupérer les rôles avec les détails
     List<UtilisateurRoleResponseDto> getRolesWithDetailsByUtilisateur(Long utilisateurId);
+
 }

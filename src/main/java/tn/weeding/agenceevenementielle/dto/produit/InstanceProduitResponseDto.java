@@ -7,7 +7,6 @@ import java.time.LocalDate;
 
 /**
  * DTO de réponse pour les instances de produits
- * Sprint 3 - Gestion des produits et du stock
  */
 @Data
 @NoArgsConstructor

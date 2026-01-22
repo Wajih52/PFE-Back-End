@@ -36,7 +36,7 @@ public class PaiementController {
     @Operation(summary = "Créer un paiement")
     public ResponseEntity<PaiementResponseDto> creerPaiement(@Valid @RequestBody PaiementRequestDto paiementDto) {
         String username = authenticationFacade.getCurrentUserPseudo();
-        log.info("📝 Requête de création de paiement par: {}", username);
+        log.info("Requête de création de paiement par: {}", username);
         PaiementResponseDto paiement = paiementService.creerPaiement(paiementDto, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(paiement);
     }
@@ -46,7 +46,7 @@ public class PaiementController {
     @Operation(summary = "Valider un paiement")
     public ResponseEntity<PaiementResponseDto> validerPaiement(@PathVariable Long id) {
         String username = authenticationFacade.getCurrentUserPseudo();
-        log.info("✅ Validation du paiement ID: {} par {}", id, username);
+        log.info("Validation du paiement ID: {} par {}", id, username);
         PaiementResponseDto paiement = paiementService.validerPaiement(id, username);
         return ResponseEntity.ok(paiement);
     }
@@ -60,7 +60,7 @@ public class PaiementController {
             return ResponseEntity.badRequest().build();
         }
         String username = authenticationFacade.getCurrentUserPseudo();
-        log.info("❌ Refus du paiement ID: {} par {}", id, username);
+        log.info("Refus du paiement ID: {} par {}", id, username);
         PaiementResponseDto paiement = paiementService.refuserPaiement(id, motifRefus, username);
         return ResponseEntity.ok(paiement);
     }

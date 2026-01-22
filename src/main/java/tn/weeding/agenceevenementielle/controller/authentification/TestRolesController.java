@@ -26,7 +26,7 @@ public class TestRolesController {
     public ResponseEntity<?> userAccess() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "✅ Accès utilisateur autorisé");
+        response.put("message", " Accès utilisateur autorisé");
         response.put("username", auth.getName());
         response.put("roles", auth.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -42,7 +42,7 @@ public class TestRolesController {
     public ResponseEntity<?> adminAccess() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "✅ Accès ADMIN autorisé");
+        response.put("message", " Accès ADMIN autorisé");
         response.put("username", auth.getName());
         return ResponseEntity.ok(response);
     }
@@ -55,7 +55,7 @@ public class TestRolesController {
     public ResponseEntity<?> managerAccess() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "✅ Accès MANAGER autorisé");
+        response.put("message", "Accès MANAGER autorisé");
         response.put("username", auth.getName());
         return ResponseEntity.ok(response);
     }
@@ -68,7 +68,7 @@ public class TestRolesController {
     public ResponseEntity<?> employeAccess() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "✅ Accès EMPLOYE autorisé");
+        response.put("message", "Accès EMPLOYE autorisé");
         response.put("username", auth.getName());
         return ResponseEntity.ok(response);
     }
@@ -81,7 +81,7 @@ public class TestRolesController {
     public ResponseEntity<?> clientAccess() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "✅ Accès CLIENT autorisé");
+        response.put("message", "Accès CLIENT autorisé");
         response.put("username", auth.getName());
         return ResponseEntity.ok(response);
     }

@@ -47,7 +47,6 @@ public class UtilisateurSecurityService {
         if (isAdmin) {
             return true;
         }
-
         // Sinon, seulement son propre profil
         return isOwner(utilisateurId);
     }

@@ -43,13 +43,10 @@ public interface NotificationServiceInterface {
      */
     void supprimerNotification(Long idNotification, Long idUtilisateur);
 
+
     /**
      * Méthodes helper pour créer rapidement des notifications
      */
-    void creerNotificationReservationConfirmee(Long idUtilisateur, Long idReservation, String referenceReservation);
-    void creerNotificationDevisValide(Long idUtilisateur, Long idReservation, String referenceDevis);
-    void creerNotificationLivraisonPrevue(Long idUtilisateur, Long idLivraison, String dateLivraison);
-    void creerNotificationPaiementRecu(Long idUtilisateur, Long idPaiement, Double montant);
     void creerNotificationStockCritique(Long idProduit, String nomProduit, Integer quantiteRestante);
 
     void creerNotificationAvecEmail(NotificationRequestDto dto);

@@ -39,7 +39,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
     @Override
     public PaiementResponseDto creerPaiement(PaiementRequestDto dto, String username) {
-        log.info("💳 Création d'un paiement pour la réservation ID: {} par {}", dto.getIdReservation(), username);
+        log.info("Création d'un paiement pour la réservation ID: {} par {}", dto.getIdReservation(), username);
 
         Reservation reservation = reservationRepository.findById(dto.getIdReservation())
                 .orElseThrow(() -> new CustomException("Réservation introuvable avec l'ID: " + dto.getIdReservation()));
@@ -73,10 +73,10 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         Paiement savedPaiement = paiementRepository.save(paiement);
 
-        log.info("✅ Paiement créé avec succès: {} - Montant: {} TND", codePaiement, dto.getMontantPaiement());
+        log.info("Paiement créé avec succès: {} - Montant: {} TND", codePaiement, dto.getMontantPaiement());
 
         // ========================================
-        // 🔔 NOTIFICATIONS + EMAILS
+        //  NOTIFICATIONS + EMAILS
         // ========================================
 
         Utilisateur client = reservation.getUtilisateur();
@@ -89,8 +89,8 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                 createur.getIdUtilisateur().equals(client.getIdUtilisateur());
 
         if (creeParClient) {
-            // ✅ CLIENT crée un paiement → Notifier les ADMINS/MANAGERS
-            log.info("📧 Notification des admins/managers - Nouveau paiement par le client");
+            // CLIENT crée un paiement → Notifier les ADMINS/MANAGERS
+            log.info("Notification des admins/managers - Nouveau paiement par le client");
 
             notificationService.creerNotificationPourStaff(
                     TypeNotification.NOUVEAU_PAIEMENT,
@@ -107,7 +107,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         } else {
             // ADMIN/MANAGER crée un paiement → Notifier le CLIENT
-            log.info("📧 Notification du client - Paiement enregistré par l'admin");
+            log.info("Notification du client - Paiement enregistré par l'admin");
 
             NotificationRequestDto notifClient = NotificationRequestDto.builder()
                     .typeNotification(TypeNotification.PAIEMENT_EN_ATTENTE)
@@ -142,7 +142,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
     @Override
     public PaiementResponseDto validerPaiement(Long idPaiement, String username) {
-        log.info("✅ Validation du paiement ID: {} par {}", idPaiement, username);
+        log.info("Validation du paiement ID: {} par {}", idPaiement, username);
 
         Paiement paiement = paiementRepository.findById(idPaiement)
                 .orElseThrow(() -> new CustomException("Paiement introuvable avec l'ID: " + idPaiement));
@@ -160,11 +160,11 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
         mettreAJourMontantPayeReservation(paiement.getReservation().getIdReservation());
         verifierEtMettreAJourStatutReservation(paiement.getReservation().getIdReservation());
 
-        log.info("✅ Paiement validé: {} - {} TND", paiement.getCodePaiement(), paiement.getMontantPaiement());
+        log.info("Paiement validé: {} - {} TND", paiement.getCodePaiement(), paiement.getMontantPaiement());
 
 
         // ========================================
-        // 🔔 NOTIFICATION + EMAIL AU CLIENT
+        //  NOTIFICATION + EMAIL AU CLIENT
         // ========================================
 
         Utilisateur client = paiement.getReservation().getUtilisateur();
@@ -174,7 +174,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
 
             // admin ou manager valide un paiement → Notifier les autres ADMINS/MANAGERS
-            log.info("📧 Notification des admins - validation paiement par {}",username);
+            log.info("Notification des admins - validation paiement par {}",username);
 
             // Vérifier si le paiement est maintenant complet
         Boolean paiementComplet = isReservationPayeeCompletement(reservation.getIdReservation());
@@ -184,7 +184,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         if (paiementComplet) {
             messageNotif = String.format(
-                    "✅ Votre paiement de %.2f TND a été validé. Votre réservation %s est maintenant entièrement payée !",
+                    "Votre paiement de %.2f TND a été validé. Votre réservation %s est maintenant entièrement payée !",
                     paiement.getMontantPaiement(),
                     reservation.getReferenceReservation()
             );
@@ -248,7 +248,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                 messageEmail
         );
 
-        log.info("📧 Notification + Email envoyés au client {} pour validation paiement", client.getEmail());
+        log.info("Notification + Email envoyés au client {} pour validation paiement", client.getEmail());
         Double montantDejaPayeAvant = calculerMontantPaye(paiement.getReservation().getIdReservation()) - paiement.getMontantPaiement();
 
         return convertToResponseDto(savedPaiement, montantDejaPayeAvant);
@@ -256,7 +256,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
     @Override
     public PaiementResponseDto refuserPaiement(Long idPaiement, String motifRefus, String username) {
-        log.info("❌ Refus du paiement ID: {} par {}", idPaiement, username);
+        log.info("Refus du paiement ID: {} par {}", idPaiement, username);
 
         Paiement paiement = paiementRepository.findById(idPaiement)
                 .orElseThrow(() -> new CustomException("Paiement introuvable avec l'ID: " + idPaiement));
@@ -272,10 +272,10 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         Paiement savedPaiement = paiementRepository.save(paiement);
 
-        log.info("❌ Paiement refusé: {}", paiement.getCodePaiement());
+        log.info("Paiement refusé: {}", paiement.getCodePaiement());
 
         // ========================================
-        // 🔔 NOTIFICATION + EMAIL AU CLIENT
+        // NOTIFICATION + EMAIL AU CLIENT
         // ========================================
 
         Utilisateur client = paiement.getReservation().getUtilisateur();
@@ -286,7 +286,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                 .typeNotification(TypeNotification.PAIEMENT_REFUSE)
                 .titre("Paiement refusé")
                 .message(String.format(
-                        "❌ Votre paiement de %.2f TND pour la réservation %s a été refusé. Motif: %s. " +
+                        "Votre paiement de %.2f TND pour la réservation %s a été refusé. Motif: %s. " +
                                 "Veuillez corriger et soumettre un nouveau paiement.",
                         paiement.getMontantPaiement(),
                         reservation.getReferenceReservation(),
@@ -316,7 +316,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                 )
         );
 
-        log.info("📧 Notification + Email envoyés au client {} pour refus paiement", client.getEmail());
+        log.info("Notification + Email envoyés au client {} pour refus paiement", client.getEmail());
 
         Double montantDejaPayeAvant = calculerMontantPaye(paiement.getReservation().getIdReservation());
 
@@ -481,7 +481,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
     @Override
     public void supprimerPaiement(Long idPaiement, String username) {
-        log.info("🗑️ Suppression du paiement ID: {} par {}", idPaiement, username);
+        log.info("Suppression du paiement ID: {} par {}", idPaiement, username);
 
         Paiement paiement = paiementRepository.findById(idPaiement)
                 .orElseThrow(() -> new CustomException("Paiement introuvable avec l'ID: " + idPaiement));
@@ -498,7 +498,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         paiementRepository.save(paiement);
 
-        log.info("✅ Paiement supprimé (annulé): {}", paiement.getCodePaiement());
+        log.info("Paiement supprimé (annulé): {}", paiement.getCodePaiement());
     }
 
     private void mettreAJourMontantPayeReservation(Long idReservation) {
@@ -510,7 +510,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
 
         reservationRepository.save(reservation);
 
-        log.info("💰 Montant payé mis à jour pour réservation {}: {} TND", reservation.getReferenceReservation(), montantPaye);
+        log.info("Montant payé mis à jour pour réservation {}: {} TND", reservation.getReferenceReservation(), montantPaye);
     }
 
     private void verifierEtMettreAJourStatutReservation(Long idReservation) {
@@ -520,7 +520,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
         Boolean paiementComplet = isReservationPayeeCompletement(idReservation);
 
         if (paiementComplet) {
-            log.info("✅ Paiement complet pour la réservation: {}", reservation.getReferenceReservation());
+            log.info("Paiement complet pour la réservation: {}", reservation.getReferenceReservation());
 
             if (reservation.getStatutPaiement() == StatutPaiementRes.EN_ATTENTE_PAIEMENT||
             reservation.getStatutPaiement()==StatutPaiementRes.PARTIELLEMENT_PAYE) {
@@ -534,7 +534,7 @@ public class PaiementServiceImpl implements PaiementServiceInterface{
                 }
                 reservationRepository.save(reservation);
 
-                log.info("📝 Statut Paiement réservation mis à jour: EN_ATTENTE_PAIEMENT → CONFIRME");
+                log.info("Statut Paiement réservation mis à jour: EN_ATTENTE_PAIEMENT → CONFIRME");
             }
         }else{
             reservation.setStatutPaiement(StatutPaiementRes.PARTIELLEMENT_PAYE);

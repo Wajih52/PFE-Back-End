@@ -21,9 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controller REST pour la gestion des réclamations
- */
+
 @RestController
 @RequestMapping("/api/reclamations")
 @RequiredArgsConstructor
@@ -35,15 +33,14 @@ public class ReclamationController {
     private final AuthenticationFacade authenticationFacade ;
 
     /**
-     * Créer une réclamation (public - pour visiteurs ET clients)
-     * POST /api/reclamations
+     * Créer une réclamation (public - pour visiteurs ET clients et employés)
      */
     @PostMapping("create")
     public ResponseEntity<ReclamationResponseDto> creerReclamation(
             @Valid @RequestBody ReclamationRequestDto dto,
             Authentication authentication) {
 
-        log.info("📝 Nouvelle réclamation - Type: {}", dto.getTypeReclamation());
+        log.info("Nouvelle réclamation - Type: {}", dto.getTypeReclamation());
 
         // Récupérer le username si l'utilisateur est connecté
         String username = (authentication != null) ? authentication.getName() : null;
@@ -54,47 +51,43 @@ public class ReclamationController {
 
     /**
      * Récupérer toutes les réclamations (ADMIN/EMPLOYE)
-     * GET /api/reclamations
      */
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
     public ResponseEntity<List<ReclamationResponseDto>> getAllReclamations() {
-        log.info("📋 Récupération de toutes les réclamations");
+        log.info("Récupération de toutes les réclamations");
         List<ReclamationResponseDto> reclamations = reclamationService.getAllReclamations();
         return ResponseEntity.ok(reclamations);
     }
 
     /**
      * Récupérer une réclamation par ID
-     * GET /api/reclamations/{id}
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE', 'CLIENT')")
     public ResponseEntity<ReclamationResponseDto> getReclamationById(@PathVariable Long id) {
-        log.info("🔍 Récupération réclamation ID: {}", id);
+        log.info("Récupération réclamation ID: {}", id);
         ReclamationResponseDto reclamation = reclamationService.getReclamationById(id);
         return ResponseEntity.ok(reclamation);
     }
 
     /**
      * Récupérer une réclamation par code
-     * GET /api/reclamations/code/{code}
      */
     @GetMapping("/code/{code}")
     public ResponseEntity<ReclamationResponseDto> getReclamationByCode(@PathVariable String code) {
-        log.info("🔍 Récupération réclamation Code: {}", code);
+        log.info("Récupération réclamation Code: {}", code);
         ReclamationResponseDto reclamation = reclamationService.getReclamationByCode(code);
         return ResponseEntity.ok(reclamation);
     }
 
     /**
      * Récupérer les réclamations de l'utilisateur connecté
-     * GET /api/reclamations/mes-reclamations
      */
     @GetMapping("/mes-reclamations")
     @PreAuthorize("hasAnyRole('CLIENT','EMPLOYE','MANAGER')")
     public ResponseEntity<List<ReclamationResponseDto>> getMesReclamations(Authentication authentication) {
-        log.info("📋 Récupération des réclamations de l'utilisateur connecté");
+        log.info("Récupération des réclamations de l'utilisateur connecté");
         // Récupérer l'ID de l'utilisateur connecté depuis le token
         Long idUtilisateur = authenticationFacade.getCurrentUserId();
         List<ReclamationResponseDto> reclamations = reclamationService.getReclamationsByUtilisateur(idUtilisateur);
@@ -102,15 +95,14 @@ public class ReclamationController {
     }
 
     /**
-     * Récupérer les réclamations d'un utilisateur spécifique (ADMIN)
-     * GET /api/reclamations/utilisateur/{idUtilisateur}
+     * Récupérer les réclamations d'un utilisateur spécifique (ADMIN et managers )
      */
     @GetMapping("/utilisateur/{idUtilisateur}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<List<ReclamationResponseDto>> getReclamationsByUtilisateur(
             @PathVariable Long idUtilisateur) {
 
-        log.info("📋 Récupération réclamations utilisateur ID: {}", idUtilisateur);
+        log.info("Récupération réclamations utilisateur ID: {}", idUtilisateur);
         List<ReclamationResponseDto> reclamations =
                 reclamationService.getReclamationsByUtilisateur(idUtilisateur);
         return ResponseEntity.ok(reclamations);
@@ -118,13 +110,12 @@ public class ReclamationController {
 
     /**
      * Récupérer les réclamations par email (pour visiteurs)
-     * GET /api/reclamations/email?email=xxx
      */
     @GetMapping("/email")
     public ResponseEntity<List<ReclamationResponseDto>> getReclamationsByEmail(
             @RequestParam String email) {
 
-        log.info("📋 Récupération réclamations email: {}", email);
+        log.info("Récupération réclamations email: {}", email);
         List<ReclamationResponseDto> reclamations =
                 reclamationService.getReclamationsByEmail(email);
         return ResponseEntity.ok(reclamations);
@@ -132,14 +123,13 @@ public class ReclamationController {
 
     /**
      * Récupérer les réclamations par statut
-     * GET /api/reclamations/statut/{statut}
      */
     @GetMapping("/statut/{statut}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
     public ResponseEntity<List<ReclamationResponseDto>> getReclamationsByStatut(
             @PathVariable StatutReclamation statut) {
 
-        log.info("📋 Récupération réclamations statut: {}", statut);
+        log.info("Récupération réclamations statut: {}", statut);
         List<ReclamationResponseDto> reclamations =
                 reclamationService.getReclamationsByStatut(statut);
         return ResponseEntity.ok(reclamations);
@@ -147,14 +137,13 @@ public class ReclamationController {
 
     /**
      * Récupérer les réclamations par type
-     * GET /api/reclamations/type/{type}
      */
     @GetMapping("/type/{type}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
     public ResponseEntity<List<ReclamationResponseDto>> getReclamationsByType(
             @PathVariable TypeReclamation type) {
 
-        log.info("📋 Récupération réclamations type: {}", type);
+        log.info("Récupération réclamations type: {}", type);
         List<ReclamationResponseDto> reclamations =
                 reclamationService.getReclamationsByType(type);
         return ResponseEntity.ok(reclamations);
@@ -162,7 +151,6 @@ public class ReclamationController {
 
     /**
      * Récupérer les réclamations par priorité
-     * GET /api/reclamations/priorite/{priorite}
      */
     @GetMapping("/priorite/{priorite}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -177,14 +165,13 @@ public class ReclamationController {
 
     /**
      * Récupérer les réclamations liées à une réservation
-     * GET /api/reclamations/reservation/{idReservation}
      */
     @GetMapping("/reservation/{idReservation}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE', 'CLIENT')")
     public ResponseEntity<List<ReclamationResponseDto>> getReclamationsByReservation(
             @PathVariable Long idReservation) {
 
-        log.info("📋 Récupération réclamations réservation ID: {}", idReservation);
+        log.info("Récupération réclamations réservation ID: {}", idReservation);
         List<ReclamationResponseDto> reclamations =
                 reclamationService.getReclamationsByReservation(idReservation);
         return ResponseEntity.ok(reclamations);
@@ -192,7 +179,6 @@ public class ReclamationController {
 
     /**
      * Classer une réclamation (priorité + statut)
-     * PATCH /api/reclamations/{id}/classer
      */
     @PatchMapping("/{id}/classer")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -201,7 +187,7 @@ public class ReclamationController {
             @Valid @RequestBody ClasserReclamationDto dto,
             Authentication authentication) {
 
-        log.info("🏷️ Classification réclamation ID: {}", id);
+        log.info("Classification réclamation ID: {}", id);
         ReclamationResponseDto updated =
                 reclamationService.classerReclamation(id, dto, authentication.getName());
         return ResponseEntity.ok(updated);
@@ -209,7 +195,6 @@ public class ReclamationController {
 
     /**
      * Traiter/Répondre à une réclamation
-     * PATCH /api/reclamations/{id}/traiter
      */
     @PatchMapping("/{id}/traiter")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -218,7 +203,7 @@ public class ReclamationController {
             @Valid @RequestBody TraiterReclamationDto dto,
             Authentication authentication) {
 
-        log.info("💬 Traitement réclamation ID: {}", id);
+        log.info("Traitement réclamation ID: {}", id);
         ReclamationResponseDto updated =
                 reclamationService.traiterReclamation(id, dto, authentication.getName());
         return ResponseEntity.ok(updated);
@@ -226,7 +211,6 @@ public class ReclamationController {
 
     /**
      * Recherche multi-critères
-     * GET /api/reclamations/rechercher?statut=XX&type=XX&priorite=XX&idUtilisateur=XX
      */
     @GetMapping("/rechercher")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -236,7 +220,7 @@ public class ReclamationController {
             @RequestParam(required = false) PrioriteReclamation priorite,
             @RequestParam(required = false) Long idUtilisateur) {
 
-        log.info("🔍 Recherche réclamations - Statut: {}, Type: {}, Priorité: {}, Utilisateur: {}",
+        log.info("Recherche réclamations - Statut: {}, Type: {}, Priorité: {}, Utilisateur: {}",
                 statut, type, priorite, idUtilisateur);
 
         List<ReclamationResponseDto> reclamations =
@@ -246,7 +230,6 @@ public class ReclamationController {
 
     /**
      * Récupérer les réclamations sur une période
-     * GET /api/reclamations/periode?debut=XX&fin=XX
      */
     @GetMapping("/periode")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -254,7 +237,7 @@ public class ReclamationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime debut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
 
-        log.info("📅 Récupération réclamations période: {} - {}", debut, fin);
+        log.info("Récupération réclamations période: {} - {}", debut, fin);
         List<ReclamationResponseDto> reclamations =
                 reclamationService.getReclamationsByPeriode(debut, fin);
         return ResponseEntity.ok(reclamations);
@@ -262,12 +245,11 @@ public class ReclamationController {
 
     /**
      * Statistiques des réclamations
-     * GET /api/reclamations/statistiques
      */
     @GetMapping("/statistiques")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<Map<String, Object>> getStatistiques() {
-        log.info("📊 Récupération des statistiques des réclamations");
+        log.info("Récupération des statistiques des réclamations");
 
         Map<String, Object> stats = new HashMap<>();
         stats.put("enAttente", reclamationService.countByStatut(StatutReclamation.EN_ATTENTE));
@@ -280,12 +262,11 @@ public class ReclamationController {
 
     /**
      * Supprimer une réclamation (ADMIN uniquement)
-     * DELETE /api/reclamations/{id}
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteReclamation(@PathVariable Long id) {
-        log.warn("🗑️ Suppression réclamation ID: {}", id);
+        log.warn("Suppression réclamation ID: {}", id);
         reclamationService.deleteReclamation(id);
         return ResponseEntity.noContent().build();
     }

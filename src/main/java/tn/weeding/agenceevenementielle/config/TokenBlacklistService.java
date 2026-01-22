@@ -1,6 +1,6 @@
 package tn.weeding.agenceevenementielle.config;
 
-import lombok.Getter;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,13 +37,13 @@ public class TokenBlacklistService {
              try {
                  redisTemplate.getConnectionFactory().getConnection().ping();
                  useRedis = true;
-                 log.info("✅ Redis détecté et connecté - Mode REDIS activé");
+                 log.info(" Redis détecté et connecté - Mode REDIS activé");
              } catch (Exception e) {
-                 log.warn("⚠️ Redis non disponible - Mode MÉMOIRE activé (fallback)");
+                 log.warn("Redis non disponible - Mode MÉMOIRE activé (fallback)");
                  useRedis = false;
              }
          } else {
-             log.warn("⚠️ RedisTemplate non configuré - Mode MÉMOIRE activé");
+             log.warn(" RedisTemplate non configuré - Mode MÉMOIRE activé");
              useRedis = false;
          }
      }
@@ -80,7 +80,7 @@ public class TokenBlacklistService {
                  jwtExpiration,
                  TimeUnit.MILLISECONDS
          );
-         log.info("🔴 Token ajouté à la blacklist Redis avec TTL de {} ms", jwtExpiration);
+         log.info(" Token ajouté à la blacklist Redis avec TTL de {} ms", jwtExpiration);
      }
 
      public boolean isBlacklistedInRedis(String token) {
@@ -93,7 +93,7 @@ public class TokenBlacklistService {
 
      private void addToMemoryBlacklist(String token) {
          inMemoryBlacklist.add(token);
-         log.info("🟡 Token ajouté à la blacklist en mémoire (mode fallback)");
+         log.info(" Token ajouté à la blacklist en mémoire (mode fallback)");
      }
 
      public boolean isBlacklistedInMemory(String token) {

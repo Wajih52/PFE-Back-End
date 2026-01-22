@@ -29,12 +29,12 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Override
     @Transactional
     public void demanderReinitialisationMotDePasse(PasswordResetRequestDto request) {
-        log.info("🔑 Demande de réinitialisation pour: {}", request.getEmail());
+        log.info("Demande de réinitialisation pour: {}", request.getEmail());
 
         // 1. Chercher l'utilisateur par email
         Utilisateur utilisateur = utilisateurRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> {
-                    log.warn("⚠️ Email non trouvé : {}", request.getEmail());
+                    log.warn("Email non trouvé : {}", request.getEmail());
                      return new CustomException("Aucun compte associé à cet email");});
 
         // 2 Vérifier si le compte est activé
@@ -44,7 +44,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         // 3 Les utilisateurs Google peuvent créer/modifier un mot de passe
         if (Boolean.TRUE.equals(utilisateur.getGoogleAccount())) {
-            log.info("🔐 Compte Google détecté : activation de l'authentification hybride pour {}",
+            log.info("Compte Google détecté : activation de l'authentification hybride pour {}",
                     utilisateur.getEmail());
             // On continue le processus normalement
             // L'utilisateur pourra créer un mot de passe ET garder Google comme option
@@ -65,7 +65,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         utilisateur.setDernierEnvoiEmail(LocalDateTime.now());
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Token généré et sauvegardé pour : {}", utilisateur.getEmail());
+        log.info("Token généré et sauvegardé pour : {}", utilisateur.getEmail());
 
         // 7. Construire le lien de réinitialisation
         String resetLink = "http://localhost:4200/auth/reset-password?token=" + resetToken;
@@ -79,24 +79,24 @@ public class PasswordResetServiceImpl implements PasswordResetService {
                 emailContent
         );
 
-        log.info("✅ Email de réinitialisation envoyé à: {}", utilisateur.getEmail());
+        log.info("Email de réinitialisation envoyé à: {}", utilisateur.getEmail());
     }
 
     @Override
     @Transactional
     public void reinitialiserMotDePasse(PasswordResetDto request) {
-        log.info("🔄 Tentative de réinitialisation avec le token");
+        log.info("Tentative de réinitialisation avec le token");
 
         // 1. Chercher l'utilisateur par token
         Utilisateur utilisateur = utilisateurRepository.findByResetPasswordToken(request.getToken())
                 .orElseThrow(() -> {
-                    log.warn("⚠️ Token invalide ou expiré");
+                    log.warn("Token invalide ou expiré");
                     return new CustomException("Token invalide ou expiré");
                 });
 
         // 2. Vérifier si le token a expiré
         if (utilisateur.getResetPasswordExpiration().isBefore(LocalDateTime.now())) {
-            log.warn("⏰ Token expiré pour : {}", utilisateur.getEmail());
+            log.warn(" Token expiré pour : {}", utilisateur.getEmail());
             throw new CustomException("Le token a expiré. Veuillez refaire une demande.");
         }
 
@@ -111,13 +111,13 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         // 5 Si c'était un compte Google, il devient maintenant hybride
         if (Boolean.TRUE.equals(utilisateur.getGoogleAccount())) {
-            log.info("🔄 Compte Google converti en compte hybride (Google + Mot de passe) pour : {}",
+            log.info("Compte Google converti en compte hybride (Google + Mot de passe) pour : {}",
                     utilisateur.getEmail());
         }
 
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Mot de passe réinitialisé avec succès pour: {}", utilisateur.getEmail());
+        log.info("Mot de passe réinitialisé avec succès pour: {}", utilisateur.getEmail());
 
         // 6 Envoyer un email de confirmation
         emailService.sendEmail(

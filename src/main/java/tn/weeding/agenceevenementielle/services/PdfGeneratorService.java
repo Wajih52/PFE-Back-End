@@ -75,11 +75,11 @@ public class PdfGeneratorService {
             writer.close();
             fos.close();
 
-            log.info("📄 PDF généré avec succès : {}", filePath);
+            log.info("PDF généré avec succès : {}", filePath);
             return filePath;
 
         } catch (Exception e) {
-            log.error("❌ Erreur génération PDF : {}", e.getMessage());
+            log.error("Erreur génération PDF : {}", e.getMessage());
 
             // Nettoyer en cas d'erreur
             if (document != null && document.isOpen()) {
@@ -219,7 +219,7 @@ public class PdfGeneratorService {
     }
 
     /**
-     * 🆕 CORRECTION : Ajouter l'en-tête avec logo à gauche et infos client à droite
+     *  Ajouter l'en-tête avec logo à gauche et infos client à droite
      */
     private void ajouterEnteteFacture(Document document, Utilisateur client) throws DocumentException, IOException {
         // Table à 2 colonnes : gauche (entreprise + logo), droite (client)
@@ -238,7 +238,7 @@ public class PdfGeneratorService {
             logo.scaleToFit(80, 80);
             cellGauche.addElement(logo);
         } catch (Exception e) {
-            log.warn("⚠️ Logo introuvable : {}", LOGO_PATH);
+            log.warn("Logo introuvable : {}", LOGO_PATH);
             // Si le logo n'existe pas, afficher juste le nom
         }
 
@@ -292,10 +292,10 @@ public class PdfGeneratorService {
     }
 
     /**
-     * 🔧 CORRECTION : Ajoute le tableau des produits avec 5 colonnes
+     * Ajoute le tableau des produits avec 5 colonnes
      */
     private void ajouterTableauProduits(Document document, Reservation reservation) throws DocumentException {
-        PdfPTable table = new PdfPTable(5); // 5 colonnes au lieu de 4
+        PdfPTable table = new PdfPTable(5); // 5 colonnes
         table.setWidthPercentage(100);
         table.setWidths(new float[]{35, 12, 15, 18, 20}); // Ajuster les largeurs
 
@@ -345,14 +345,14 @@ public class PdfGeneratorService {
         table.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.setWidths(new float[]{60, 40});
 
-        // 1️⃣ Calculer le montant total AVANT remise (somme brute des lignes)
+        // 1- Calculer le montant total AVANT remise (somme brute des lignes)
         double montantTotalSansRemise = 0.0;
         for (LigneReservation ligne : reservation.getLigneReservations()) {
             long nbrJours = calculerNombreJours(ligne.getDateDebut(), ligne.getDateFin());
             montantTotalSansRemise += ligne.getQuantite() * ligne.getPrixUnitaire() * nbrJours;
         }
 
-        // 2️⃣ Calculer le HT depuis le total TTC AVANT remise
+        // 2- Calculer le HT depuis le total TTC AVANT remise
         double montantHT_SansRemise = montantTotalSansRemise / (1 + TVA_TAUX);
 
         // 3- Afficher montantHT_SansRemise

@@ -34,14 +34,7 @@ public class AuthenticationFacade {
         return authentication.getName();
     }
 
-    /**
-     * Vérifie si un utilisateur est connecté
-     */
-    public boolean isAuthenticated() {
-        Authentication authentication = getAuthentication();
-        return authentication != null && authentication.isAuthenticated()
-                && !"anonymousUser".equals(authentication.getName());
-    }
+
     public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

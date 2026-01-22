@@ -35,7 +35,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional
     public AvisResponseDto creerAvis(AvisCreateDto dto, String username) {
-        log.info("⭐ Création d'un avis par {} pour le produit {}", username, dto.getIdProduit());
+        log.info("Création d'un avis par {} pour le produit {}", username, dto.getIdProduit());
 
         // 1. Récupérer le client
         Utilisateur client = utilisateurRepository.findByPseudoOrEmail(username,username)
@@ -88,7 +88,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
 
         avis = avisRepository.save(avis);
 
-        log.info("✅ Avis créé avec succès : ID {}", avis.getIdAvis());
+        log.info(" Avis créé avec succès : ID {}", avis.getIdAvis());
 
         return convertToDto(avis);
     }
@@ -96,7 +96,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional
     public AvisResponseDto modifierAvis(AvisUpdateDto dto, String username) {
-        log.info("✏️ Modification de l'avis {} par {}", dto.getIdAvis(), username);
+        log.info("Modification de l'avis {} par {}", dto.getIdAvis(), username);
 
         Avis avis = avisRepository.findById(dto.getIdAvis())
                 .orElseThrow(() -> new CustomException("Avis introuvable"));
@@ -116,7 +116,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
 
         avis = avisRepository.save(avis);
 
-        log.info("✅ Avis modifié avec succès");
+        log.info("Avis modifié avec succès");
 
         return convertToDto(avis);
     }
@@ -124,7 +124,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional
     public void supprimerAvis(Long idAvis, String username) {
-        log.info("🗑️ Suppression de l'avis {} par {}", idAvis, username);
+        log.info("Suppression de l'avis {} par {}", idAvis, username);
 
         Avis avis = avisRepository.findById(idAvis)
                 .orElseThrow(() -> new CustomException("Avis introuvable"));
@@ -138,13 +138,13 @@ public class AvisServiceImpl implements AvisServiceInterface {
         avis.setVisible(false);
         avisRepository.save(avis);
 
-        log.info("✅ Avis supprimé (soft delete)");
+        log.info("Avis supprimé (soft delete)");
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getMesAvis(String username) {
-        log.info("📋 Récupération des avis de {}", username);
+        log.info("Récupération des avis de {}", username);
 
         Utilisateur client = utilisateurRepository.findByPseudoOrEmail(username,username)
                 .orElseThrow(() -> new CustomException("Client introuvable"));
@@ -160,7 +160,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Boolean peutEvaluerProduit(Long idReservation, Long idProduit, String username) {
-        log.info("🔍 Vérification si {} peut évaluer le produit {} (réservation {})",
+        log.info("Vérification si {} peut évaluer le produit {} (réservation {})",
                 username, idProduit, idReservation);
 
         Utilisateur client = utilisateurRepository.findByPseudoOrEmail(username,username)
@@ -202,7 +202,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAvisApprouvesByProduit(Long idProduit) {
-        log.info("📋 Récupération des avis approuvés pour le produit {}", idProduit);
+        log.info("Récupération des avis approuvés pour le produit {}", idProduit);
 
         List<Avis> avis = avisRepository.findAvisApprouvesByProduit(idProduit);
 
@@ -214,7 +214,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public StatistiquesAvisDto getStatistiquesAvisProduit(Long idProduit) {
-        log.info("📊 Calcul des statistiques d'avis pour le produit {}", idProduit);
+        log.info("Calcul des statistiques d'avis pour le produit {}", idProduit);
 
         Produit produit = produitRepository.findById(idProduit)
                 .orElseThrow(() -> new CustomException("Produit introuvable"));
@@ -268,7 +268,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAllAvis() {
-        log.info("📋 Récupération de tous les avis (ADMIN)");
+        log.info("Récupération de tous les avis (ADMIN)");
 
         List<Avis> avis = avisRepository.findAll();
 
@@ -280,7 +280,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAvisEnAttente() {
-        log.info("📋 Récupération des avis en attente de modération");
+        log.info("Récupération des avis en attente de modération");
 
         List<Avis> avis = avisRepository.findAvisEnAttente();
 
@@ -292,7 +292,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional
     public AvisResponseDto modererAvis(AvisModerationDto dto, String adminUsername) {
-        log.info("⚖️ Modération de l'avis {} par {} : {}",
+        log.info("Modération de l'avis {} par {} : {}",
                 dto.getIdAvis(), adminUsername, dto.getStatut());
 
         Avis avis = avisRepository.findById(dto.getIdAvis())
@@ -309,7 +309,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
 
         avis = avisRepository.save(avis);
 
-        log.info("✅ Avis {} : {}",
+        log.info("Avis {} : {}",
                 dto.getStatut() == StatutAvis.APPROUVE ? "approuvé" : "rejeté",
                 avis.getIdAvis());
 
@@ -330,20 +330,20 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional
     public void supprimerAvisDefinitivement(Long idAvis) {
-        log.info("🗑️ Suppression définitive de l'avis {} (ADMIN)", idAvis);
+        log.info("Suppression définitive de l'avis {} (ADMIN)", idAvis);
 
         Avis avis = avisRepository.findById(idAvis)
                 .orElseThrow(() -> new CustomException("Avis introuvable"));
 
         avisRepository.delete(avis);
 
-        log.info("✅ Avis supprimé définitivement");
+        log.info("Avis supprimé définitivement");
     }
 
     @Override
     @Transactional
     public AvisResponseDto modifierVisibilite(Long idAvis, Boolean visible) {
-        log.info("👁️ Modification de la visibilité de l'avis {} à {}", idAvis, visible);
+        log.info(" Modification de la visibilité de l'avis {} à {}", idAvis, visible);
 
         Avis avis = avisRepository.findById(idAvis)
                 .orElseThrow(() -> new CustomException("Avis non trouvé avec l'ID : " + idAvis));
@@ -351,7 +351,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
         avis.setVisible(visible);
         Avis avisSaved = avisRepository.save(avis);
 
-        log.info("✅ Visibilité de l'avis {} modifiée à {}", idAvis, visible);
+        log.info(" Visibilité de l'avis {} modifiée à {}", idAvis, visible);
         return convertToDto(avisSaved);
     }
 
@@ -359,7 +359,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAvisByStatut(StatutAvis statut) {
-        log.info("📋 Récupération des avis avec le statut {}", statut);
+        log.info(" Récupération des avis avec le statut {}", statut);
 
         List<Avis> avis = avisRepository.findByStatutOrderByDateAvisDesc(statut);
 
@@ -371,7 +371,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAvisByClient(Long clientId) {
-        log.info("📋 Récupération des avis du client {}", clientId);
+        log.info("Récupération des avis du client {}", clientId);
 
         List<Avis> avis = avisRepository.findByClient_IdUtilisateurOrderByDateAvisDesc(clientId);
 
@@ -383,7 +383,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAllAvisByProduit(Long idProduit) {
-        log.info("📋 Récupération de tous les avis du produit {} (ADMIN)", idProduit);
+        log.info("Récupération de tous les avis du produit {} (ADMIN)", idProduit);
 
         List<Avis> avis = avisRepository.findByProduit_IdProduitOrderByDateAvisDesc(idProduit);
 
@@ -399,7 +399,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAvisByNote(Integer note) {
-        log.info("📋 Recherche des avis avec la note {}", note);
+        log.info("Recherche des avis avec la note {}", note);
 
         List<Avis> avis = avisRepository.findByNoteAndStatutOrderByDateAvisDesc(
                 note, StatutAvis.APPROUVE
@@ -414,7 +414,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> getAvisByPeriode(LocalDateTime debut, LocalDateTime fin) {
-        log.info("📋 Recherche des avis entre {} et {}", debut, fin);
+        log.info("Recherche des avis entre {} et {}", debut, fin);
 
         List<Avis> avis = avisRepository.findAvisByPeriode(debut, fin);
 
@@ -426,7 +426,7 @@ public class AvisServiceImpl implements AvisServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AvisResponseDto> searchAvisByKeyword(String keyword) {
-        log.info("🔍 Recherche d'avis avec le mot-clé : {}", keyword);
+        log.info(" Recherche d'avis avec le mot-clé : {}", keyword);
 
         List<Avis> avis = avisRepository.searchByCommentaire(keyword);
 

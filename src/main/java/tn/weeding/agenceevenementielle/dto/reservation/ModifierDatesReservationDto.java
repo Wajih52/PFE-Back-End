@@ -11,9 +11,6 @@ import java.time.LocalDate;
 
 /**
  * DTO pour modifier les dates d'une réservation existante
- *
- * Utilisé par le client ou l'admin pour changer la période d'une réservation
- * Déclenche une nouvelle vérification de disponibilité
  */
 @Data
 @Builder

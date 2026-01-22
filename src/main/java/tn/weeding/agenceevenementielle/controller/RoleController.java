@@ -21,28 +21,43 @@ public class RoleController {
 
     private RoleServiceInterface roleService;
 
+    /**
+     * ajouter un role
+     */
     @PostMapping("/ajoutRole")
     public ResponseEntity<RoleResponseDto> ajoutRole(@Valid @RequestBody RoleRequestDto roleRequestDto) {
         RoleResponseDto roleCreated = roleService.creationRole(roleRequestDto);
         return ResponseEntity.status(201).body(roleCreated);
     }
 
+    /**
+     * afficher toutes les roles
+     */
     @GetMapping("/afficheRoles")
     public ResponseEntity<List<RoleResponseDto>> AfficheRoles() {
         return ResponseEntity.status(200).body(roleService.getAllRoles());
     }
+
+    /**
+     * afficher un role avec id
+     */
     @GetMapping("/afficheUnRole/{id}")
     public ResponseEntity<RoleResponseDto> AfficheUnRole(@PathVariable Long id) {
         return ResponseEntity.ok(roleService.getRoleParId(id));
     }
 
 
-
+    /**
+     * modifier un role
+     */
     @PutMapping("/modifierRole/{id}")
     public ResponseEntity<RoleResponseDto> modifierRole(@PathVariable Long id,@Valid @RequestBody RoleRequestDto roleRequestDto) {
         return ResponseEntity.ok(roleService.updateRole(id, roleRequestDto));
     }
 
+    /**
+     *supoprimer un role
+     */
     @DeleteMapping("/supprimerRole/{id}")
     public ResponseEntity<?> supprimerRole(@PathVariable Long id) {
         roleService.deleteRole(id);

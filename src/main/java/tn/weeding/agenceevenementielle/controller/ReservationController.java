@@ -25,18 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * ==========================================
- * CONTRÔLEUR REST POUR LA GESTION DES RÉSERVATIONS
- * Sprint 4 - Gestion des réservations (incluant devis)
- * ==========================================
- *
- * Workflow:
- * 1. CLIENT: Crée un devis (POST /api/reservations/devis)
- * 2. ADMIN: Modifie et valide le devis (PUT /api/reservations/devis/{id}/modifier)
- * 3. CLIENT: Accepte ou refuse le devis (POST /api/reservations/devis/{id}/valider)
- * 4. → Réservation confirmée ou annulée
- */
+
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
@@ -51,14 +40,13 @@ public class ReservationController {
     private final LigneReservationModificationDatesService modificationDatesService;
 
     // ============================================
-    // PARTIE 1: CRÉATION DE DEVIS (CLIENT)
+    // CRÉATION DE DEVIS (CLIENT)
     // ============================================
 
     /**
-     * 🛒 ÉTAPE 1: Le client crée un DEVIS (panier)
+     * Le client crée un DEVIS (une réservation en attente )
      * - Sélectionne les produits avec dates
      * - Vérification automatique de disponibilité
-     * - Génération du devis avec statut "En Attente"
      */
     @PostMapping("/devis")
     @PreAuthorize("hasRole('CLIENT')")
@@ -67,7 +55,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> creerDevis(
             @Valid @RequestBody DevisRequestDto devisRequest) {
 
-        log.info("📝 Nouvelle demande de devis reçue");
+        log.info("Nouvelle demande de devis reçue");
 
         String username = authenticationFacade.getAuthentication().getName();
         Long idUtilisateur = authenticationFacade.getCurrentUserId();
@@ -78,8 +66,7 @@ public class ReservationController {
     }
 
     /**
-     * 🔍 Vérifier la disponibilité d'un produit AVANT de créer le devis
-     * Permet d'afficher en temps réel si un produit est disponible
+     * Vérifier la disponibilité d'un produit AVANT de créer le devis
      */
     @PostMapping("/disponibilite/verifier")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
@@ -93,7 +80,7 @@ public class ReservationController {
     }
 
     /**
-     * 🔍 Vérifier la disponibilité de plusieurs produits en une fois
+     * Vérifier la disponibilité de plusieurs produits en une fois
      */
     @PostMapping("/disponibilite/verifier-plusieurs")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
@@ -107,14 +94,14 @@ public class ReservationController {
     }
 
     // ============================================
-    // PARTIE 2: MODIFICATION DU DEVIS (ADMIN)
+    // MODIFICATION DU DEVIS (ADMIN)
     // ============================================
 
     /**
-     * 🔧 ÉTAPE 2: L'ADMIN modifie et valide un DEVIS
-     * - Peut modifier les prix unitaires
-     * - Peut appliquer des remises (% ou montant fixe)
-     * - Le devis reste en statut "En Attente" jusqu'à la validation client
+     * L'ADMIN modifie un DEVIS
+     * - il Peut modifier les prix unitaires
+     * - ou bien appliquer des remises (% ou montant fixe)
+     * - et au final Le devis reste en statut "En Attente" jusqu'à la validation client
      */
     @PutMapping("/devis/{id}/modifier")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -124,7 +111,7 @@ public class ReservationController {
             @PathVariable Long id,
             @Valid @RequestBody DevisModificationDto modificationDto) {
 
-        log.info("🔧 Modification du devis ID: {} par l'admin", id);
+        log.info("Modification du devis ID: {} par l'admin", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         modificationDto.setIdReservation(id);
@@ -135,7 +122,7 @@ public class ReservationController {
     }
 
     /**
-     * ❌ L'admin peut annuler un devis
+     * L'admin peut annuler un devis
      */
     @DeleteMapping("/devis/{id}/annuler")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -145,7 +132,7 @@ public class ReservationController {
             @PathVariable Long id,
             @RequestParam(required = false) String motif) {
 
-        log.info("❌ Annulation du devis ID: {} par l'admin", id);
+        log.info("Annulation du devis ID: {} par l'admin", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         reservationService.annulerDevisParAdmin(id, motif, username);
@@ -154,23 +141,23 @@ public class ReservationController {
     }
 
     // ============================================
-    // PARTIE 3: VALIDATION DU DEVIS (CLIENT)
+    // VALIDATION DU DEVIS (CLIENT)
     // ============================================
 
     /**
-     * ✅ ÉTAPE 3: Le CLIENT valide ou refuse le devis
-     * - Si accepté → Réservation CONFIRMÉE + Instances réservées
+     * Le CLIENT valide ou refuse le devis
+     * - Si accepté → Réservation CONFIRMÉE + Instances réservées sur la période demandée
      * - Si refusé → Réservation ANNULÉE
      */
     @PostMapping("/devis/{id}/valider")
     @PreAuthorize("hasRole('CLIENT')")
     @Operation(summary = "Valider ou refuser un devis (CLIENT)",
-            description = "Le client accepte (confirme la réservation) ou refuse le devis modifié par l'admin")
+            description = "Le client accepte le devis (confirme la réservation) ou refuse le devis modifié par l'admin")
     public ResponseEntity<ReservationResponseDto> validerDevisParClient(
             @PathVariable Long id,
             @Valid @RequestBody ValidationDevisDto validationDto) {
 
-        log.info("🎯 Validation du devis ID: {} par le client", id);
+        log.info("Validation du devis ID: {} par le client", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         validationDto.setIdReservation(id);
@@ -178,19 +165,19 @@ public class ReservationController {
         ReservationResponseDto reservation = reservationService.validerDevisParClient(validationDto, username);
 
         String message = validationDto.getAccepter()
-                ? "🎉 Réservation confirmée avec succès!"
-                : "❌ Devis refusé";
+                ? "Réservation confirmée avec succès!"
+                : "Devis refusé";
         log.info(message);
 
         return ResponseEntity.ok(reservation);
     }
 
     // ============================================
-    // PARTIE 4: CONSULTATION DES RÉSERVATIONS
+    // CONSULTATION DES RÉSERVATIONS
     // ============================================
 
     /**
-     * 📋 Récupérer une réservation par son ID
+     * Récupérer une réservation par son ID
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE','MANAGER')")
@@ -202,7 +189,7 @@ public class ReservationController {
     }
 
     /**
-     * 📋 Récupérer une réservation par sa référence
+     * Récupérer une réservation par sa référence
      */
     @GetMapping("/reference/{reference}")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE','MANAGER')")
@@ -214,7 +201,7 @@ public class ReservationController {
     }
 
     /**
-     * 📋 Récupérer TOUTES les réservations d'un client (ses propres réservations)
+     * Récupérer TOUTES les réservations d'un client (ses propres réservations)
      */
     @GetMapping("/mes-reservations")
     @PreAuthorize("hasAnyRole('CLIENT','EMPLOYE','MANAGER')")
@@ -227,7 +214,7 @@ public class ReservationController {
     }
 
     /**
-     * 📋 Récupérer les devis en attente d'un client
+     * Récupérer les devis en attente d'un client
      */
     @GetMapping("/mes-devis-en-attente")
     @PreAuthorize("hasRole('CLIENT')")
@@ -240,7 +227,7 @@ public class ReservationController {
     }
 
     /**
-     * 📋 Récupérer TOUTES les réservations (ADMIN)
+     * Récupérer TOUTES les réservations (ADMIN)
      */
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -252,7 +239,7 @@ public class ReservationController {
     }
 
     /**
-     * 📋 Récupérer tous les devis en attente (ADMIN)
+     * Récupérer tous les devis en attente (ADMIN)
      */
     @GetMapping("/devis-en-attente")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -264,7 +251,7 @@ public class ReservationController {
     }
 
     /**
-     * 📋 Récupérer les réservations par statut
+     * Récupérer les réservations par statut
      */
     @GetMapping("/statut/{statut}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -285,7 +272,7 @@ public class ReservationController {
     @Operation(summary = "Mes réservations affectées",
             description = "Récupère les réservations où l'employé est affecté aux livraisons")
     public ResponseEntity<List<ReservationResponseDto>> getMesReservationsAffectees() {
-        log.info("📋 Récupération des réservations affectées à l'employé connecté");
+        log.info("Récupération des réservations affectées à l'employé connecté");
 
         String username = authenticationFacade.getAuthentication().getName();
         List<ReservationResponseDto> reservations =
@@ -295,7 +282,7 @@ public class ReservationController {
     }
 
     // ============================================
-    // PARTIE 5: RECHERCHE AVANCÉE
+    // RECHERCHE AVANCÉE
     // ============================================
 
     /**
@@ -313,7 +300,7 @@ public class ReservationController {
     }
 
     /**
-     * 📅 Récupérer les réservations dans une période
+     * Récupérer les réservations dans une période
      */
     @GetMapping("/periode")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -329,7 +316,7 @@ public class ReservationController {
     }
 
     /**
-     * 📅 Réservations confirmées à venir
+     * Réservations confirmées à venir
      */
     @GetMapping("/a-venir")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -341,7 +328,7 @@ public class ReservationController {
     }
 
     /**
-     * 📅 Réservations en cours
+     * Réservations en cours
      */
     @GetMapping("/en-cours")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -353,7 +340,7 @@ public class ReservationController {
     }
 
     /**
-     * 📅 Réservations passées
+     * Réservations passées
      */
     @GetMapping("/passees")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -365,11 +352,11 @@ public class ReservationController {
     }
 
     // ============================================
-    // PARTIE 6: ANNULATION ET MODIFICATION
+    // ANNULATION ET MODIFICATION
     // ============================================
 
     /**
-     * ❌ Le client annule sa réservation ou l'admin
+     * Le client annule sa réservation ou l'admin
      */
     @DeleteMapping("/{id}/annuler")
     @PreAuthorize("hasAnyRole('CLIENT','ADMIN','MANAGER')")
@@ -386,11 +373,11 @@ public class ReservationController {
     }
 
     // ============================================
-    // PARTIE 7: STATISTIQUES ET RAPPORTS
+    // STATISTIQUES ET RAPPORTS
     // ============================================
 
     /**
-     * 📊 Statistiques globales des réservations
+     * Statistiques globales des réservations
      */
     @GetMapping("/statistiques")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -402,7 +389,7 @@ public class ReservationController {
     }
 
     /**
-     * 📊 Statistiques d'un client
+     * Statistiques d'un client
      */
     @GetMapping("/statistiques/client/{idClient}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -414,7 +401,7 @@ public class ReservationController {
     }
 
     /**
-     * 💰 Chiffre d'affaires sur une période
+     * Chiffre d'affaires sur une période
      */
     @GetMapping("/chiffre-affaires")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -429,11 +416,11 @@ public class ReservationController {
     }
 
     // ============================================
-    // PARTIE 8: ALERTES ET NOTIFICATIONS
+    // ALERTES ET NOTIFICATIONS
     // ============================================
 
     /**
-     * 🔔 Réservations qui commencent bientôt
+     * Réservations qui commencent bientôt
      */
     @GetMapping("/alertes/commencant-dans/{nbreJours}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -448,7 +435,7 @@ public class ReservationController {
     }
 
     /**
-     * 🔔 Réservations qui se terminent bientôt
+     * Réservations qui se terminent bientôt
      */
     @GetMapping("/alertes/finissant-dans/{nbreJours}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -463,12 +450,12 @@ public class ReservationController {
     }
 
     /**
-     * 🔔 Devis expirés (pour relance client)
+     * Devis expirés depuis plus de N jours
      */
     @GetMapping("/alertes/devis-expires/{nbreJours}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Devis expirés (ADMIN)",
-            description = "Devis en attente depuis plus de N jours (nécessitent une relance)")
+            description = "Devis en attente depuis plus de N jours ")
     public ResponseEntity<List<ReservationResponseDto>> getDevisExpires(
             @PathVariable int nbreJours) {
 
@@ -477,7 +464,7 @@ public class ReservationController {
     }
 
     /**
-     * 🔔 Devis expirés (pour relance client)
+     * Devis expirés aujourdhui
      */
     @GetMapping("/alertes/devis-expires-ajourdhui")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -490,7 +477,7 @@ public class ReservationController {
     }
 
     /**
-     * 💰 Réservations avec paiement incomplet
+     * Réservations avec paiement incomplet
      */
     @GetMapping("/alertes/paiements-incomplets")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -503,19 +490,15 @@ public class ReservationController {
     }
 
     /**
-     * 📅 Obtenir les contraintes de dates pour les réservations
+     * Obtenir les contraintes de dates pour les réservations
      *
-     * Endpoint utilisé par le frontend pour:
-     * - Configurer les datepickers
-     * - Afficher les règles au client
-     * - Validation côté client
      */
     @GetMapping("/contraintes-dates")
     @Operation(summary = "Obtenir les contraintes de dates",
             description = "Retourne les règles de dates pour les réservations " +
                     "(dates min/max, durée min/max, etc.)")
     public ResponseEntity<DateConstraintesDto> getContraintesDates() {
-        log.debug("📅 Récupération des contraintes de dates");
+        log.debug("Récupération des contraintes de dates");
 
         DateConstraintesDto contraintes = reservationService.getContraintesDates();
 
@@ -523,10 +506,8 @@ public class ReservationController {
     }
 
     /**
-     * 📅 Valider une période de dates
-     *
-     * Endpoint pour valider une période AVANT de créer le devis
-     * Permet au frontend d'afficher des erreurs en temps réel
+     * Valider une période de dates
+     * - valider une période AVANT de créer le devis
      */
     @PostMapping("/valider-periode")
     @Operation(summary = "Valider une période de dates",
@@ -534,7 +515,7 @@ public class ReservationController {
     public ResponseEntity<DateValidationResponseDto> validerPeriode(
             @RequestBody @Valid DatePeriodeDto periodeDto) {
 
-        log.debug("📅 Validation période: {} -> {}",
+        log.debug("Validation période: {} -> {}",
                 periodeDto.getDateDebut(), periodeDto.getDateFin());
 
         try {
@@ -564,10 +545,8 @@ public class ReservationController {
     }
 
     /**
-     * 📅 Vérifier si des nouvelles dates sont disponibles pour une réservation
+     * Vérifier si des nouvelles dates sont disponibles pour une réservation
      *
-     * Permet au client de vérifier AVANT de modifier
-     * Ne modifie rien, juste vérifie
      */
     @PostMapping("/{idReservation}/verifier-nouvelles-dates")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'EMPLOYE')")
@@ -577,7 +556,7 @@ public class ReservationController {
             @PathVariable Long idReservation,
             @RequestBody @Valid DatePeriodeDto nouvellesDates) {
 
-        log.debug("🔍 Vérification nouvelles dates pour réservation {}", idReservation);
+        log.debug("Vérification nouvelles dates pour réservation {}", idReservation);
 
         // Valider les nouvelles dates
         try {
@@ -598,43 +577,25 @@ public class ReservationController {
     }
 
     // ============================================
-    // FONCTIONNALITÉ 1 : MODIFIER UNE SEULE LIGNE
+    // MODIFIER UNE SEULE LIGNE ( seulement la date )
     // ============================================
 
     /**
-     * 🎯 Modifier les dates d'une seule ligne de réservation
-     *
-     * IMPORTANT : Seul l'admin, le manager ou le client propriétaire peuvent modifier
-     *
-     * @param idRes ID de la réservation
-     * @param idLigne ID de la ligne à modifier
-     * @param request Nouvelles dates
-     * @return Réservation mise à jour avec détails des modifications
+     * Modifier les dates d'une seule ligne de réservation
      */
     @PutMapping("/{idRes}/lignes/{idLigne}/dates")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CLIENT')")
     @Operation(
             summary = "Modifier UNE ligne de réservation",
             description = """
-                    Permet de modifier les dates d'une seule ligne (un produit) sans toucher aux autres.
-                    
-                    **Cas d'usage :**
-                    - Client veut garder les chaises 2 jours de plus
-                    - Ajuster juste l'éclairage car montage plus tôt
-                    
-                    **Comportement :**
-                    - ✅ Vérification automatique de disponibilité
-                    - ✅ Recalcul des dates de la réservation (min/max des lignes)
-                    - ✅ Validation des instances pour produits avec référence
-                    - ✅ Ajout dans l'historique (commentaireAdmin)
-                    """
+                    Permet de modifier les dates d'une seule ligne (un produit) sans toucher aux autres."""
     )
     public ResponseEntity<ModificationDatesResponseDto> modifierUneLigne(
             @PathVariable Long idRes,
             @PathVariable Long idLigne,
             @Valid @RequestBody ModifierUneLigneRequestDto request) {
 
-        log.info("🔧 API - Modification d'une ligne - Réservation: {}, Ligne: {}", idRes, idLigne);
+        log.info("Modification la date d'une ligne - Réservation: {}, Ligne: {}", idRes, idLigne);
 
         String username = authenticationFacade.getAuthentication().getName();
 
@@ -642,51 +603,31 @@ public class ReservationController {
                 idRes, idLigne, request, username
         );
 
-        log.info("✅ Ligne {} modifiée avec succès", idLigne);
+        log.info("Ligne {} modifiée avec succès", idLigne);
 
         return ResponseEntity.ok(response);
     }
 
     // ============================================
-    // FONCTIONNALITÉ 2 : DÉCALER TOUTES LES LIGNES
+    // DÉCALER TOUTES LES LIGNES ( date )
     // ============================================
 
     /**
-     * 🎯 Décaler toutes les lignes d'une réservation
-     *
-     * IMPORTANT : Seul l'admin ou le manager peuvent effectuer un décalage global
-     *
-     * @param idRes ID de la réservation
-     * @param request Nombre de jours de décalage (+/-) et motif
-     * @return Réservation mise à jour avec détails des modifications
+     * Décaler toutes les lignes d'une réservation
      */
     @PutMapping("/{idRes}/decaler")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(
             summary = "Décaler TOUTES les lignes d'une réservation",
             description = """
-                    Permet de décaler toutes les lignes d'un même nombre de jours.
-                    
-                    **Cas d'usage :**
-                    - Événement reporté d'une semaine (COVID, météo, etc.)
-                    - Client veut avancer/reculer tout l'événement
-                    
-                    **Paramètres :**
-                    - `nombreJours` : +7 pour avancer de 7 jours, -7 pour reculer
-                    - `motif` : Raison du décalage (obligatoire)
-                    
-                    **Comportement :**
-                    - ✅ Décalage de TOUTES les lignes
-                    - ✅ Vérification automatique de disponibilité pour chaque ligne
-                    - ✅ Recalcul des dates de la réservation
-                    - ✅ Ajout dans l'historique avec le motif
+                    Permet de décaler toutes les lignes d'un même nombre de jours. (+/-)
                     """
     )
     public ResponseEntity<ModificationDatesResponseDto> decalerToutesLesLignes(
             @PathVariable Long idRes,
             @Valid @RequestBody DecalerToutesLignesRequestDto request) {
 
-        log.info("🔧 API - Décalage de toutes les lignes - Réservation: {}, Décalage: {} jours",
+        log.info("Décalage de toutes les lignes - Réservation: {}, Décalage: {} jours",
                 idRes, request.getNombreJours());
 
         String username = authenticationFacade.getAuthentication().getName();
@@ -695,23 +636,17 @@ public class ReservationController {
                 idRes, request, username
         );
 
-        log.info("✅ Toutes les lignes décalées de {} jours avec succès", request.getNombreJours());
+        log.info("Toutes les lignes décalées de {} jours avec succès", request.getNombreJours());
 
         return ResponseEntity.ok(response);
     }
 
     // ============================================
-    // FONCTIONNALITÉ 3 : MODIFIER PLUSIEURS LIGNES SPÉCIFIQUES
+    // MODIFIER PLUSIEURS LIGNES SPÉCIFIQUES (Date)
     // ============================================
 
     /**
-     * 🎯 Modifier plusieurs lignes spécifiques en une seule requête
-     *
-     * IMPORTANT : Seul l'admin ou le manager peuvent modifier plusieurs lignes à la fois
-     *
-     * @param idRes ID de la réservation
-     * @param request Liste des modifications à effectuer
-     * @return Réservation mise à jour avec détails des modifications
+     * Modifier plusieurs lignes spécifiques en une seule requête
      */
     @PutMapping("/{idRes}/lignes-multiples")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -719,43 +654,14 @@ public class ReservationController {
             summary = "Modifier plusieurs lignes spécifiques",
             description = """
                     Permet de modifier les dates de plusieurs lignes différentes en une seule requête.
-                    
-                    **Cas d'usage :**
-                    - Réorganisation complète de la logistique
-                    - Ajustement fin de plusieurs produits
-                    - Modifier certaines lignes sans toucher aux autres
-                    
-                    **Format de la requête :**
-                    ```json
-                    {
-                      "modifications": [
-                        {
-                          "idLigne": 1,
-                          "nouvelleDateDebut": "2025-11-10",
-                          "nouvelleDateFin": "2025-11-11"
-                        },
-                        {
-                          "idLigne": 2,
-                          "nouvelleDateDebut": "2025-11-12",
-                          "nouvelleDateFin": "2025-11-13"
-                        }
-                      ],
-                      "motif": "Réorganisation logistique"
-                    }
-                    ```
-                    
-                    **Comportement :**
-                    - ✅ Mise à jour batch (toutes les lignes en une transaction)
-                    - ✅ Vérification de disponibilité pour chaque ligne
-                    - ✅ Recalcul des dates de la réservation
-                    - ✅ Ajout dans l'historique
+                   
                     """
     )
     public ResponseEntity<ModificationDatesResponseDto> modifierPlusieurLignes(
             @PathVariable Long idRes,
             @Valid @RequestBody ModifierPlusieurLignesRequestDto request) {
 
-        log.info("🔧 API - Modification de plusieurs lignes - Réservation: {}, Nombre: {}",
+        log.info("Modification de plusieurs lignes - Réservation: {}, Nombre: {}",
                 idRes, request.getModifications().size());
 
         String username = authenticationFacade.getAuthentication().getName();
@@ -764,7 +670,7 @@ public class ReservationController {
                 idRes, request, username
         );
 
-        log.info("✅ {} lignes modifiées avec succès", request.getModifications().size());
+        log.info("{} lignes modifiées avec succès", request.getModifications().size());
 
         return ResponseEntity.ok(response);
     }

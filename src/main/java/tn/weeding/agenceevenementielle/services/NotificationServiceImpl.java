@@ -34,7 +34,7 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
 
     @Override
     public NotificationResponseDto creerNotification(NotificationRequestDto dto) {
-        log.info("🔔 Création d'une notification type: {} pour utilisateur ID: {}",
+        log.info("Création d'une notification type: {} pour utilisateur ID: {}",
                 dto.getTypeNotification(), dto.getIdUtilisateur());
 
         // Vérifier que l'utilisateur existe
@@ -56,7 +56,7 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
                 .build();
 
         notification = notificationRepo.save(notification);
-        log.info("✅ Notification créée avec ID: {}", notification.getIdNotification());
+        log.info("Notification créée avec ID: {}", notification.getIdNotification());
 
         return notificationMapper.toDto(notification);
     }
@@ -112,7 +112,7 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
         notification.setDateLecture(LocalDateTime.now());
         notification = notificationRepo.save(notification);
 
-        log.info("✅ Notification {} marquée comme lue", idNotification);
+        log.info("Notification {} marquée comme lue", idNotification);
         return notificationMapper.toDto(notification);
     }
 
@@ -122,7 +122,7 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
                 .orElseThrow(() -> new CustomException("Utilisateur introuvable"));
 
         notificationRepo.marquerToutesCommeLues(utilisateur, LocalDateTime.now());
-        log.info("✅ Toutes les notifications de l'utilisateur {} marquées comme lues", idUtilisateur);
+        log.info("Toutes les notifications de l'utilisateur {} marquées comme lues", idUtilisateur);
     }
 
     @Override
@@ -135,66 +135,10 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
         }
 
         notificationRepo.delete(notification);
-        log.info("🗑️ Notification {} supprimée", idNotification);
+        log.info(" Notification {} supprimée", idNotification);
     }
 
     // ============ MÉTHODES HELPER ============
-
-    @Override
-    public void creerNotificationReservationConfirmee(Long idUtilisateur, Long idReservation, String referenceReservation) {
-        NotificationRequestDto dto = NotificationRequestDto.builder()
-                .typeNotification(TypeNotification.RESERVATION_CONFIRMEE)
-                .titre("Réservation confirmée")
-                .message(String.format("Votre réservation %s a été confirmée avec succès.", referenceReservation))
-                .idUtilisateur(idUtilisateur)
-                .idReservation(idReservation)
-                .urlAction("/client/reservation-details/" + idReservation)
-                .build();
-
-        creerNotification(dto);
-    }
-
-    @Override
-    public void creerNotificationDevisValide(Long idUtilisateur, Long idReservation, String referenceDevis) {
-        NotificationRequestDto dto = NotificationRequestDto.builder()
-                .typeNotification(TypeNotification.DEVIS_VALIDE)
-                .titre("Devis validé")
-                .message(String.format("Votre devis %s a été validé par notre équipe. Vous pouvez maintenant confirmer votre réservation.", referenceDevis))
-                .idUtilisateur(idUtilisateur)
-                .idReservation(idReservation)
-                .urlAction("/client/mes-devis/")
-                .build();
-
-        creerNotification(dto);
-    }
-
-    @Override
-    public void creerNotificationLivraisonPrevue(Long idUtilisateur, Long idLivraison, String dateLivraison) {
-        NotificationRequestDto dto = NotificationRequestDto.builder()
-                .typeNotification(TypeNotification.LIVRAISON_PREVUE)
-                .titre("Livraison prévue")
-                .message(String.format("Votre livraison est prévue pour le %s. Préparez la réception du matériel.", dateLivraison))
-                .idUtilisateur(idUtilisateur)
-                .idLivraison(idLivraison)
-                .urlAction("/client/livraisons/" + idLivraison)
-                .build();
-
-        creerNotification(dto);
-    }
-
-    @Override
-    public void creerNotificationPaiementRecu(Long idUtilisateur, Long idPaiement, Double montant) {
-        NotificationRequestDto dto = NotificationRequestDto.builder()
-                .typeNotification(TypeNotification.PAIEMENT_RECU)
-                .titre("Paiement reçu")
-                .message(String.format("Nous avons bien reçu votre paiement de %.2f TND.", montant))
-                .idUtilisateur(idUtilisateur)
-                .idPaiement(idPaiement)
-                .urlAction("/client/mes-paiements")
-                .build();
-
-        creerNotification(dto);
-    }
 
     @Override
     public void creerNotificationStockCritique(Long idProduit, String nomProduit, Integer quantiteRestante) {
@@ -209,7 +153,7 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
             NotificationRequestDto dto = NotificationRequestDto.builder()
                     .typeNotification(TypeNotification.STOCK_CRITIQUE)
                     .titre("Stock critique")
-                    .message(String.format("⚠️ Le produit '%s' a atteint un niveau critique : %d unités restantes.",
+                    .message(String.format("Le produit '%s' a atteint un niveau critique : %d unités restantes.",
                             nomProduit, quantiteRestante))
                     .idUtilisateur(admin.getIdUtilisateur())
                     .idProduit(idProduit)
@@ -246,7 +190,7 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
     }
 
     /**
-     * Notifier tous les Manager et admins
+     * Notifier au choix (recepteur)
      */
     public void creerNotificationPour(TypeNotification type, String titre, String message,
                                            Long idReservation, String urlAction,String recepteur) {
@@ -293,6 +237,6 @@ public class NotificationServiceImpl implements NotificationServiceInterface {
                 dto.getMessage()
         );
 
-        log.info("✅ Notification créée ET email envoyé à {}", utilisateur.getEmail());
+        log.info("Notification créée ET email envoyé à {}", utilisateur.getEmail());
     }
 }

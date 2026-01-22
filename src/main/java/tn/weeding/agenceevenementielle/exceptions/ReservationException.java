@@ -2,7 +2,6 @@ package tn.weeding.agenceevenementielle.exceptions;
 
 /**
  * Exception personnalisée pour les erreurs liées aux réservations
- * Sprint 4 - Gestion des réservations
  */
 public class ReservationException extends RuntimeException {
 
@@ -80,10 +79,6 @@ public class ReservationException extends RuntimeException {
     }
     /**
      * Exception levée quand un produit n'est plus disponible lors de la validation d'un devis
-     *
-     * Utilisée dans la logique SOFT BOOKING:
-     * - Quand un client tente de valider un devis mais que le stock a été réservé entre-temps
-     * - Quand un admin tente de valider un devis avec un stock devenu indisponible
      */
     public static class StockIndisponibleException extends RuntimeException {
 
@@ -91,8 +86,6 @@ public class ReservationException extends RuntimeException {
             super(message);
         }
 
-        public StockIndisponibleException(String message, Throwable cause) {
-            super(message, cause);
-        }
+
     }
 }

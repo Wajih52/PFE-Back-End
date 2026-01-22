@@ -107,7 +107,7 @@ public class NotificationController {
     }
 
     /**
-     * Créer une notification (admin seulement)
+     * Créer une notification
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")

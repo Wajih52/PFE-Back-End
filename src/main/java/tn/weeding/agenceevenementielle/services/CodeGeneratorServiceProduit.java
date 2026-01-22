@@ -59,13 +59,13 @@ public class CodeGeneratorServiceProduit {
             int number = extractNumber(code, yearPrefix);
             int nextNumber = number + 1;
             String newCode = String.format("%s%04d", yearPrefix, nextNumber);
-            log.debug("📦 Dernier code produit : {} → Nouveau : {}", code, newCode);
+            log.debug("Dernier code produit : {} → Nouveau : {}", code, newCode);
             return newCode;
 
         } else {
             // Premier produit de l'année
             String firstCode = yearPrefix + "0001";
-            log.debug("🆕 Premier code produit de l'année : {}", firstCode);
+            log.debug("Premier code produit de l'année : {}", firstCode);
             return firstCode;
         }
     }
@@ -79,18 +79,11 @@ public class CodeGeneratorServiceProduit {
             String numberPart = code.substring(prefix.length());
             return Integer.parseInt(numberPart);
         } catch (Exception e) {
-            log.warn("⚠️ Impossible d'extraire le numéro du code : {}. Retour à 0.", code);
+            log.warn("Impossible d'extraire le numéro du code : {}. Retour à 0.", code);
             return 0;
         }
     }
 
-    /**
-     * Vérifie si un code produit existe déjà
-     */
-    @Transactional(readOnly = true)
-    public boolean codeExists(String codeProduit) {
-        return produitRepository.existsByCodeProduit(codeProduit);
-    }
 
     /**
      * Détermine le préfixe selon le nom de produit

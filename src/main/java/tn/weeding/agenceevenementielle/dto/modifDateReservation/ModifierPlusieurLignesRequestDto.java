@@ -12,20 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * ==========================================
  * DTO POUR MODIFIER PLUSIEURS LIGNES SPÉCIFIQUES
- * Fonctionnalité 3 : Flexibilité maximale
- * ==========================================
- *
- * 📝 CAS D'USAGE :
- * - Réorganisation complète de la logistique
- * - Ajustement fin de plusieurs produits
- * - Modifier certaines lignes sans toucher aux autres
- *
- * ✅ COMPORTEMENT :
- * - Mise à jour batch (plusieurs lignes en une seule requête)
- * - Recalcul automatique des dates de la réservation
- * - Vérification de disponibilité pour chaque ligne modifiée
  */
 @Data
 @Builder

@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 
 /**
  * Service pour la gestion du calendrier
- * Agrège les données de réservations et livraisons
- * Sprint 7 - Gestion du calendrier
  */
 @Service
 @RequiredArgsConstructor
@@ -33,29 +31,29 @@ public class CalendrierService {
     private final LigneReservationRepository ligneReservationRepo;
 
     /**
-     * 📅 Récupérer tous les événements du calendrier avec filtres
+     * Récupérer tous les événements du calendrier avec filtres
      */
     public List<CalendrierEventDto> getEvenements(CalendrierFiltreDto filtres) {
-        log.info("🔍 Récupération des événements du calendrier avec filtres: {}", filtres);
+        log.info("Récupération des événements du calendrier avec filtres: {}", filtres);
 
         List<CalendrierEventDto> evenements = new ArrayList<>();
 
-        // 1️⃣ Ajouter les réservations si demandé
+        // Ajouter les réservations si demandé
         if (Boolean.TRUE.equals(filtres.getInclureReservations())) {
             evenements.addAll(getReservationsCommeEvenements(filtres));
         }
 
-        // 2️⃣ Ajouter les livraisons si demandé
+        // Ajouter les livraisons si demandé
         if (Boolean.TRUE.equals(filtres.getInclureLivraisons())) {
             evenements.addAll(getLivraisonsCommeEvenements(filtres));
         }
 
-        log.info("✅ {} événements trouvés", evenements.size());
+        log.info("{} événements trouvés", evenements.size());
         return evenements;
     }
 
     /**
-     * 📋 Convertir les réservations en événements calendrier
+     * Convertir les réservations en événements calendrier
      */
     private List<CalendrierEventDto> getReservationsCommeEvenements(CalendrierFiltreDto filtres) {
         List<Reservation> reservations;
@@ -77,7 +75,7 @@ public class CalendrierService {
     }
 
     /**
-     * 🚚 Convertir les livraisons en événements calendrier
+     * Convertir les livraisons en événements calendrier
      */
     private List<CalendrierEventDto> getLivraisonsCommeEvenements(CalendrierFiltreDto filtres) {
         List<Livraison> livraisons;
@@ -99,7 +97,7 @@ public class CalendrierService {
     }
 
     /**
-     * 🔄 Convertir une Reservation en CalendrierEventDto
+     * Convertir une Reservation en CalendrierEventDto
      */
     private CalendrierEventDto convertirReservationEnEvent(Reservation reservation) {
         // Calculer les dates de début et fin (min/max des lignes)
@@ -152,7 +150,7 @@ public class CalendrierService {
     }
 
     /**
-     * 🔄 Convertir une Livraison en CalendrierEventDto
+     * Convertir une Livraison en CalendrierEventDto
      */
     private CalendrierEventDto convertirLivraisonEnEvent(Livraison livraison) {
         // Obtenir la réservation associée (via les lignes)
@@ -205,7 +203,7 @@ public class CalendrierService {
     }
 
     /**
-     * 🔍 Appliquer les filtres sur une réservation
+     * Appliquer les filtres sur une réservation
      */
     private boolean appliquerFiltresReservation(Reservation reservation, CalendrierFiltreDto filtres) {
         // Filtre par client ID
@@ -251,7 +249,7 @@ public class CalendrierService {
     }
 
     /**
-     * 🔍 Appliquer les filtres sur une livraison
+     * Appliquer les filtres sur une livraison
      */
     private boolean appliquerFiltresLivraison(Livraison livraison, CalendrierFiltreDto filtres) {
         // Filtre par employé
@@ -283,10 +281,10 @@ public class CalendrierService {
     }
 
     /**
-     * 📊 Obtenir les statistiques du calendrier pour une période
+     * Obtenir les statistiques du calendrier pour une période
      */
     public CalendrierStatistiquesDto getStatistiques(LocalDate dateDebut, LocalDate dateFin) {
-        log.info("📊 Calcul des statistiques pour la période {} - {}", dateDebut, dateFin);
+        log.info("Calcul des statistiques pour la période {} - {}", dateDebut, dateFin);
 
         long nombreReservations = reservationRepo.countReservationsEntreDates(dateDebut, dateFin);
         long nombreLivraisons = livraisonRepo.countByDateLivraisonBetween(dateDebut, dateFin);

@@ -35,7 +35,7 @@ public class InscriptionServiceImpl implements InscriptionServiceInterface {
     private final RoleRepository roleRepository;
     private final CodeGeneratorService codeGeneratorService;
 
-    private static final String ACTIVATION_LINK_BASE = "http://localhost:8080/inscriptions/activation?token=";
+    private static final String ACTIVATION_LINK_BASE = "http://localhost:8080/api/inscriptions/activation?token=";
     private static final int EMAIL_DELAY_MINUTES = 2;
 
     // ==================== INSCRIPTION ====================
@@ -88,7 +88,7 @@ public class InscriptionServiceImpl implements InscriptionServiceInterface {
         utilisateur.setDernierEnvoiEmail(LocalDateTime.now());
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Email d'activation renvoyé pour : {}", email);
+        log.info(" Email d'activation renvoyé pour : {}", email);
     }
 
     //======================Activer Compte =====================
@@ -174,7 +174,7 @@ public class InscriptionServiceImpl implements InscriptionServiceInterface {
             }
 
             // Si compte NON activé → SUPPRIMER
-            log.info("🗑️ Suppression du compte non activé avec pseudo: {}", utilisateur.getPseudo());
+            log.info(" Suppression du compte non activé avec pseudo: {}", utilisateur.getPseudo());
             utilisateurRepository.delete(utilisateur);
         }
     }
@@ -265,7 +265,7 @@ public class InscriptionServiceImpl implements InscriptionServiceInterface {
                 emailContent
         );
 
-        log.info("📧 Email d'activation envoyé à : {}", utilisateur.getEmail());
+        log.info("Email d'activation envoyé à : {}", utilisateur.getEmail());
     }
 
     // ==================== UTILITAIRES ====================
@@ -334,7 +334,7 @@ public class InscriptionServiceImpl implements InscriptionServiceInterface {
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>✨ Bienvenue chez Elegant Hive !</h1>
+                        <h1> Bienvenue chez Elegant Hive !</h1>
                     </div>
                     <div class="content">
                         <p>Bonjour <strong>%s</strong>,</p>
@@ -344,7 +344,7 @@ public class InscriptionServiceImpl implements InscriptionServiceInterface {
                             <a href="%s" class="button">Activer mon compte</a>
                         </div>
                         <div class="highlight">
-                            <p><strong>⚠️ Important :</strong></p>
+                            <p><strong> Important :</strong></p>
                             <ul style="margin: 5px 0;">
                                 <li>Ce lien est valide pendant <strong>5 minutes</strong></li>
                                 <li>Après activation, vous pourrez vous connecter immédiatement</li>

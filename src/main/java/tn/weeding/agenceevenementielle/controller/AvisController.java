@@ -39,7 +39,7 @@ public class AvisController {
     public ResponseEntity<AvisResponseDto> creerAvis(
             @Valid @RequestBody AvisCreateDto dto,
             Authentication authentication) {
-        log.info("📝 Requête de création d'avis par {}", authentication.getName());
+        log.info("Requête de création d'avis par {}", authentication.getName());
         AvisResponseDto response = avisService.creerAvis(dto, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -51,7 +51,7 @@ public class AvisController {
     public ResponseEntity<AvisResponseDto> modifierAvis(
             @Valid @RequestBody AvisUpdateDto dto,
             Authentication authentication) {
-        log.info("✏️ Requête de modification d'avis {} par {}",
+        log.info(" Requête de modification d'avis {} par {}",
                 dto.getIdAvis(), authentication.getName());
         AvisResponseDto response = avisService.modifierAvis(dto, authentication.getName());
         return ResponseEntity.ok(response);
@@ -64,7 +64,7 @@ public class AvisController {
     public ResponseEntity<AvisResponseDto> modifierVisibilite(
             @PathVariable Long id,
             @RequestParam Boolean visible) {
-        log.info("👁️ [ADMIN] Modification de la visibilité de l'avis {} à {}", id, visible);
+        log.info(" [ADMIN] Modification de la visibilité de l'avis {} à {}", id, visible);
         AvisResponseDto response = avisService.modifierVisibilite(id, visible);
         return ResponseEntity.ok(response);
     }
@@ -76,7 +76,7 @@ public class AvisController {
     public ResponseEntity<Void> supprimerAvis(
             @PathVariable Long id,
             Authentication authentication) {
-        log.info("🗑️ Requête de suppression d'avis {} par {}", id, authentication.getName());
+        log.info(" Requête de suppression d'avis {} par {}", id, authentication.getName());
         avisService.supprimerAvis(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }
@@ -86,7 +86,7 @@ public class AvisController {
     @Operation(summary = "Mes avis",
             description = "Le client consulte tous ses avis")
     public ResponseEntity<List<AvisResponseDto>> getMesAvis(Authentication authentication) {
-        log.info("📋 Requête des avis de {}", authentication.getName());
+        log.info("Requête des avis de {}", authentication.getName());
         log.info("authentication get name == > {}",authentication.getName());
         List<AvisResponseDto> avis = avisService.getMesAvis(authentication.getName());
         return ResponseEntity.ok(avis);
@@ -100,7 +100,7 @@ public class AvisController {
             @RequestParam Long idReservation,
             @RequestParam Long idProduit,
             Authentication authentication) {
-        log.info("🔍 Vérification si {} peut évaluer le produit {}",
+        log.info(" Vérification si {} peut évaluer le produit {}",
                 authentication.getName(), idProduit);
         Boolean peut = avisService.peutEvaluerProduit(
                 idReservation, idProduit, authentication.getName()
@@ -116,7 +116,7 @@ public class AvisController {
     @Operation(summary = "Avis d'un produit",
             description = "Obtenir tous les avis approuvés d'un produit (public)")
     public ResponseEntity<List<AvisResponseDto>> getAvisProduit(@PathVariable Long idProduit) {
-        log.info("📋 Requête des avis du produit {}", idProduit);
+        log.info(" Requête des avis du produit {}", idProduit);
         List<AvisResponseDto> avis = avisService.getAvisApprouvesByProduit(idProduit);
         return ResponseEntity.ok(avis);
     }
@@ -125,7 +125,7 @@ public class AvisController {
     @Operation(summary = "Statistiques d'un produit",
             description = "Obtenir les statistiques d'avis d'un produit")
     public ResponseEntity<StatistiquesAvisDto> getStatistiquesProduit(@PathVariable Long idProduit) {
-        log.info("📊 Requête des statistiques d'avis du produit {}", idProduit);
+        log.info("Requête des statistiques d'avis du produit {}", idProduit);
         StatistiquesAvisDto stats = avisService.getStatistiquesAvisProduit(idProduit);
         return ResponseEntity.ok(stats);
     }
@@ -134,7 +134,7 @@ public class AvisController {
     @Operation(summary = "Rechercher par note",
             description = "Rechercher les avis avec une note spécifique")
     public ResponseEntity<List<AvisResponseDto>> getAvisByNote(@PathVariable Integer note) {
-        log.info("🔍 Recherche des avis avec la note {}", note);
+        log.info("Recherche des avis avec la note {}", note);
         List<AvisResponseDto> avis = avisService.getAvisByNote(note);
         return ResponseEntity.ok(avis);
     }
@@ -143,7 +143,7 @@ public class AvisController {
     @Operation(summary = "Rechercher par mot-clé",
             description = "Rechercher des avis par mot-clé dans les commentaires")
     public ResponseEntity<List<AvisResponseDto>> rechercherAvis(@RequestParam String keyword) {
-        log.info("🔍 Recherche d'avis avec le mot-clé : {}", keyword);
+        log.info("Recherche d'avis avec le mot-clé : {}", keyword);
         List<AvisResponseDto> avis = avisService.searchAvisByKeyword(keyword);
         return ResponseEntity.ok(avis);
     }
@@ -157,7 +157,7 @@ public class AvisController {
     @Operation(summary = "[ADMIN] Tous les avis",
             description = "Obtenir tous les avis (tous statuts)")
     public ResponseEntity<List<AvisResponseDto>> getAllAvis() {
-        log.info("📋 [ADMIN] Requête de tous les avis");
+        log.info("[ADMIN] Requête de tous les avis");
         List<AvisResponseDto> avis = avisService.getAllAvis();
         return ResponseEntity.ok(avis);
     }
@@ -167,7 +167,7 @@ public class AvisController {
     @Operation(summary = "[ADMIN] Avis en attente",
             description = "Obtenir les avis en attente de modération")
     public ResponseEntity<List<AvisResponseDto>> getAvisEnAttente() {
-        log.info("📋 [ADMIN] Requête des avis en attente");
+        log.info("[ADMIN] Requête des avis en attente");
         List<AvisResponseDto> avis = avisService.getAvisEnAttente();
         return ResponseEntity.ok(avis);
     }
@@ -177,7 +177,7 @@ public class AvisController {
     @Operation(summary = "[ADMIN] Nombre d'avis en attente",
             description = "Obtenir le nombre d'avis en attente de modération")
     public ResponseEntity<Long> getNombreAvisEnAttente() {
-        log.info("📊 [ADMIN] Requête du nombre d'avis en attente");
+        log.info("[ADMIN] Requête du nombre d'avis en attente");
         Long nombre = avisService.getNombreAvisEnAttente();
         return ResponseEntity.ok(nombre);
     }
@@ -189,7 +189,7 @@ public class AvisController {
     public ResponseEntity<AvisResponseDto> modererAvis(
             @Valid @RequestBody AvisModerationDto dto,
             Authentication authentication) {
-        log.info("⚖️ [ADMIN] Modération de l'avis {} par {}",
+        log.info("[ADMIN] Modération de l'avis {} par {}",
                 dto.getIdAvis(), authentication.getName());
         AvisResponseDto response = avisService.modererAvis(dto, authentication.getName());
         return ResponseEntity.ok(response);
@@ -200,7 +200,7 @@ public class AvisController {
     @Operation(summary = "[ADMIN] Supprimer définitivement",
             description = "Supprimer définitivement un avis (hard delete)")
     public ResponseEntity<Void> supprimerAvisDefinitivement(@PathVariable Long id) {
-        log.info("🗑️ [ADMIN] Suppression définitive de l'avis {}", id);
+        log.info("[ADMIN] Suppression définitive de l'avis {}", id);
         avisService.supprimerAvisDefinitivement(id);
         return ResponseEntity.noContent().build();
     }
@@ -210,7 +210,7 @@ public class AvisController {
     @Operation(summary = "[ADMIN] Avis par statut",
             description = "Obtenir les avis avec un statut spécifique")
     public ResponseEntity<List<AvisResponseDto>> getAvisByStatut(@PathVariable StatutAvis statut) {
-        log.info("📋 [ADMIN] Requête des avis avec le statut {}", statut);
+        log.info("[ADMIN] Requête des avis avec le statut {}", statut);
         List<AvisResponseDto> avis = avisService.getAvisByStatut(statut);
         return ResponseEntity.ok(avis);
     }
@@ -220,7 +220,7 @@ public class AvisController {
     @Operation(summary = "[ADMIN] Avis d'un client",
             description = "Obtenir tous les avis d'un client spécifique")
     public ResponseEntity<List<AvisResponseDto>> getAvisByClient(@PathVariable Long clientId) {
-        log.info("📋 [ADMIN] Requête des avis du client {}", clientId);
+        log.info("[ADMIN] Requête des avis du client {}", clientId);
         List<AvisResponseDto> avis = avisService.getAvisByClient(clientId);
         return ResponseEntity.ok(avis);
     }
@@ -230,7 +230,7 @@ public class AvisController {
     @Operation(summary = "[ADMIN] Tous les avis d'un produit",
             description = "Obtenir tous les avis d'un produit (tous statuts)")
     public ResponseEntity<List<AvisResponseDto>> getAllAvisByProduit(@PathVariable Long idProduit) {
-        log.info("📋 [ADMIN] Requête de tous les avis du produit {}", idProduit);
+        log.info("[ADMIN] Requête de tous les avis du produit {}", idProduit);
         List<AvisResponseDto> avis = avisService.getAllAvisByProduit(idProduit);
         return ResponseEntity.ok(avis);
     }
@@ -242,7 +242,7 @@ public class AvisController {
     public ResponseEntity<List<AvisResponseDto>> getAvisByPeriode(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime debut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
-        log.info("📋 [ADMIN] Requête des avis entre {} et {}", debut, fin);
+        log.info("[ADMIN] Requête des avis entre {} et {}", debut, fin);
         List<AvisResponseDto> avis = avisService.getAvisByPeriode(debut, fin);
         return ResponseEntity.ok(avis);
     }
@@ -254,7 +254,7 @@ public class AvisController {
             description = "Obtenir les produits les mieux notés avec un minimum d'avis")
     public ResponseEntity<List<Object[]>> getTopProduitsParNote(
             @RequestParam(defaultValue = "3") Long minAvis) {
-        log.info("🏆 [ADMIN] Requête des top produits (min {} avis)", minAvis);
+        log.info("[ADMIN] Requête des top produits (min {} avis)", minAvis);
         List<Object[]> topProduits = avisService.getTopProduitsParNote(minAvis);
         return ResponseEntity.ok(topProduits);
     }

@@ -28,12 +28,12 @@ public class InscriptionController {
     @PostMapping("/inscrire")
     public ResponseEntity<?> inscription(@Valid @RequestBody UtilisateurInscriptionDto dtoInscription) {
         try {
-            log.info("📝 Nouvelle demande d'inscription pour : {}", dtoInscription.getEmail());
+            log.info("Nouvelle demande d'inscription pour : {}", dtoInscription.getEmail());
 
-            // Appeler le service (toute la logique est là)
+            // Appeler le service
             Utilisateur utilisateurCree = inscriptionService.inscription(dtoInscription);
 
-            log.info("✅ Inscription réussie pour : {}", utilisateurCree.getEmail());
+            log.info(" Inscription réussie pour : {}", utilisateurCree.getEmail());
 
             // Retourner 201 Created avec l'URI de la ressource créée
             return ResponseEntity
@@ -46,7 +46,7 @@ public class InscriptionController {
                     ));
 
         } catch (CustomException e) {
-            log.warn("⚠️ Erreur d'inscription : {}", e.getMessage());
+            log.warn(" Erreur d'inscription : {}", e.getMessage());
             return ResponseEntity
                     .badRequest()
                     .body(Map.of(
@@ -55,7 +55,7 @@ public class InscriptionController {
                     ));
 
         } catch (Exception e) {
-            log.error("💥 Erreur inattendue lors de l'inscription : {}", e.getMessage(), e);
+            log.error("Erreur inattendue lors de l'inscription : {}", e.getMessage(), e);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
@@ -71,7 +71,7 @@ public class InscriptionController {
             HttpServletResponse response) throws IOException {
 
         try {
-            log.info("🔓 Tentative d'activation avec le token : {}...", token.substring(0, 8));
+            log.info("Tentative d'activation avec le token : {}...", token.substring(0, 8));
 
             // Récupérer l'email AVANT l'activation (car le token sera supprimé)
             String email = inscriptionService.getEmailByToken(token);
@@ -79,7 +79,7 @@ public class InscriptionController {
             // Appeler le service pour activer le compte
             inscriptionService.activerCompte(token);
 
-            log.info("✅ Compte activé avec succès");
+            log.info("Compte activé avec succès");
 
             // Encodage de l'URL pour éviter "Malformed URI"
             String redirectUrl = "http://localhost:4200/auth/login?activated=true";
@@ -90,7 +90,7 @@ public class InscriptionController {
             response.sendRedirect(redirectUrl);
 
         } catch (CustomException e) {
-            log.error("❌ Erreur d'activation : {}", e.getMessage());
+            log.error("Erreur d'activation : {}", e.getMessage());
 
             // Encodage du message d'erreur
             String errorMessage = java.net.URLEncoder.encode(e.getMessage(), "UTF-8");
@@ -99,7 +99,7 @@ public class InscriptionController {
             );
 
         } catch (Exception e) {
-            log.error("💥 Erreur inattendue lors de l'activation : {}", e.getMessage(), e);
+            log.error("Erreur inattendue lors de l'activation : {}", e.getMessage(), e);
 
             response.sendRedirect(
                     "http://localhost:4200/auth/login?activated=false&error=Erreur+serveur"
@@ -110,12 +110,12 @@ public class InscriptionController {
     @PostMapping("/resend-activation")
     public ResponseEntity<?> renvoyerEmailActivation(@RequestParam("email") String email) {
         try {
-            log.info("📧 Demande de renvoi d'email pour : {}", email);
+            log.info("Demande de renvoi d'email pour : {}", email);
 
             // Appeler le service (toute la logique est là)
             inscriptionService.resendActivationEmail(email);
 
-            log.info("✅ Email d'activation renvoyé pour : {}", email);
+            log.info("Email d'activation renvoyé pour : {}", email);
 
             return ResponseEntity.ok(Map.of(
                     "message", "Email renvoyé avec succès",
@@ -123,7 +123,7 @@ public class InscriptionController {
             ));
 
         } catch (CustomException e) {
-            log.warn("⚠️ Erreur lors du renvoi : {}", e.getMessage());
+            log.warn("Erreur lors du renvoi : {}", e.getMessage());
 
             // Déterminer le code HTTP selon le type d'erreur
             HttpStatus status = e.getMessage().contains("introuvable")
@@ -138,7 +138,7 @@ public class InscriptionController {
                     ));
 
         } catch (Exception e) {
-            log.error("💥 Erreur inattendue lors du renvoi : {}", e.getMessage(), e);
+            log.error("Erreur inattendue lors du renvoi : {}", e.getMessage(), e);
 
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -149,12 +149,11 @@ public class InscriptionController {
         }
     }
 
-    // ==================== HEALTH CHECK (optionnel) ====================
+    // ==================== HEALTH CHECK ====================
 
     /**
      * Vérifier que le service d'inscription fonctionne
      * GET /inscriptions/health
-     * Utile pour les tests et le monitoring
      */
     @GetMapping("/health")
     public ResponseEntity<?> healthCheck() {

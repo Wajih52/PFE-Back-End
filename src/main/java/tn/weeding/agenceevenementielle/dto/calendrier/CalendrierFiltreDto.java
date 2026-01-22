@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * DTO pour filtrer les événements du calendrier
- * Sprint 7 - Gestion du calendrier
  */
 @Data
 @Builder
@@ -37,8 +36,8 @@ public class CalendrierFiltreDto {
     // ============================================
     // FILTRES PAR STATUT
     // ============================================
-    private List<String> statutsReservation; // EN_ATTENTE, CONFIRME, etc.
-    private List<String> statutsLivraison; // NOT_TODAY, EN_COURS, etc.
+    private List<String> statutsReservation; // EN_ATTENTE, CONFIRME , ......
+    private List<String> statutsLivraison; // NOT_TODAY, EN_COURS, .....
 
     // ============================================
     // FILTRES PAR CLIENT

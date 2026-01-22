@@ -93,4 +93,5 @@ public interface PointageServiceInterface {
      * Marquer automatiquement les absents (tâche programmée)
      */
     void marquerAbsentsAutomatiquement();
+
 }

@@ -9,17 +9,31 @@ import java.util.List;
 
 public interface PaiementServiceInterface {
     PaiementResponseDto creerPaiement(PaiementRequestDto dto, String username);
+
     PaiementResponseDto validerPaiement(Long idPaiement, String username);
+
     PaiementResponseDto refuserPaiement(Long idPaiement, String motifRefus, String username);
+
     PaiementResponseDto getPaiementById(Long idPaiement);
+
     PaiementResponseDto getPaiementByCode(String codePaiement);
+
     List<PaiementResponseDto> getPaiementsByReservation(Long idReservation);
+
     List<PaiementResponseDto> getPaiementsByClient(Long idClient);
+
     List<PaiementResponseDto> getAllPaiements();
+
     List<PaiementResponseDto> getPaiementsByStatut(StatutPaiement statut);
+
     List<PaiementResponseDto> getPaiementsEnAttente();
+
     List<PaiementResponseDto> getPaiementsByPeriode(LocalDateTime dateDebut, LocalDateTime dateFin);
+
     Double calculerMontantPaye(Long idReservation);
+
     void supprimerPaiement(Long idPaiement, String username);
+
     Boolean isReservationPayeeCompletement(Long idReservation);
+
 }

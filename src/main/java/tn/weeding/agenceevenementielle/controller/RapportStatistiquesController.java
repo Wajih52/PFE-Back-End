@@ -17,13 +17,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-/**
- * ==========================================
- * CONTROLLER RAPPORTS STATISTIQUES
- * ==========================================
- * BONUS : Téléchargement de rapports PDF et Excel
- * Accessible uniquement aux ADMIN et MANAGER
- */
+
 @RestController
 @RequestMapping("/api/statistiques/rapports")
 @RequiredArgsConstructor
@@ -35,8 +29,7 @@ public class RapportStatistiquesController {
     private final RapportStatistiquesService rapportService;
 
     /**
-     * 📄 Télécharger un rapport PDF des statistiques
-     * GET /api/statistiques/rapports/pdf
+     * Télécharger un rapport PDF des statistiques
      */
     @GetMapping("/pdf")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -45,7 +38,7 @@ public class RapportStatistiquesController {
             description = "Génère et télécharge un rapport PDF complet des statistiques"
     )
     public ResponseEntity<byte[]> telechargerRapportPDF() {
-        log.info("📄 [API] Requête: téléchargement rapport PDF");
+        log.info("téléchargement rapport PDF");
 
         try {
             byte[] pdfBytes = rapportService.genererRapportPDF();
@@ -59,20 +52,19 @@ public class RapportStatistiquesController {
             headers.setContentDispositionFormData("attachment", filename);
             headers.setContentLength(pdfBytes.length);
 
-            log.info("✅ [API] Rapport PDF généré: {} bytes", pdfBytes.length);
+            log.info("Rapport PDF généré: {} bytes", pdfBytes.length);
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(pdfBytes);
 
         } catch (DocumentException e) {
-            log.error("❌ [API] Erreur génération PDF", e);
+            log.error("Erreur génération PDF", e);
             return ResponseEntity.internalServerError().build();
         }
     }
 
     /**
-     * 📄 Télécharger un rapport PDF pour une période spécifique
-     * GET /api/statistiques/rapports/pdf/periode?dateDebut=...&dateFin=...
+     * Télécharger un rapport PDF pour une période spécifique
      */
     @GetMapping("/pdf/periode")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -84,7 +76,7 @@ public class RapportStatistiquesController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin
     ) {
-        log.info("📄 [API] Requête: rapport PDF période {} - {}", dateDebut, dateFin);
+        log.info(" rapport PDF période {} - {}", dateDebut, dateFin);
 
         try {
             byte[] pdfBytes = rapportService.genererRapportPDFPeriode(dateDebut, dateFin);
@@ -99,20 +91,19 @@ public class RapportStatistiquesController {
             headers.setContentDispositionFormData("attachment", filename);
             headers.setContentLength(pdfBytes.length);
 
-            log.info("✅ [API] Rapport PDF période généré: {} bytes", pdfBytes.length);
+            log.info("Rapport PDF période généré: {} bytes", pdfBytes.length);
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(pdfBytes);
 
         } catch (DocumentException e) {
-            log.error("❌ [API] Erreur génération PDF période", e);
+            log.error(" Erreur génération PDF période", e);
             return ResponseEntity.internalServerError().build();
         }
     }
 
     /**
-     * 📊 Télécharger un rapport Excel des statistiques
-     * GET /api/statistiques/rapports/excel
+     *  Télécharger un rapport Excel des statistiques
      */
     @GetMapping("/excel")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -121,7 +112,7 @@ public class RapportStatistiquesController {
             description = "Génère et télécharge un rapport Excel complet des statistiques"
     )
     public ResponseEntity<byte[]> telechargerRapportExcel() {
-        log.info("📊 [API] Requête: téléchargement rapport Excel");
+        log.info("téléchargement rapport Excel");
 
         try {
             byte[] excelBytes = rapportService.genererRapportExcel();
@@ -137,13 +128,13 @@ public class RapportStatistiquesController {
             headers.setContentDispositionFormData("attachment", filename);
             headers.setContentLength(excelBytes.length);
 
-            log.info("✅ [API] Rapport Excel généré: {} bytes", excelBytes.length);
+            log.info("Rapport Excel généré: {} bytes", excelBytes.length);
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(excelBytes);
 
         } catch (IOException e) {
-            log.error("❌ [API] Erreur génération Excel", e);
+            log.error("Erreur génération Excel", e);
             return ResponseEntity.internalServerError().build();
         }
     }

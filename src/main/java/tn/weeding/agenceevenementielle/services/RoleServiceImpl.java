@@ -86,4 +86,5 @@ public class RoleServiceImpl implements RoleServiceInterface{
                 role.getActive()
         );
     }
+
 }

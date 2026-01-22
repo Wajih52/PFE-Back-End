@@ -67,7 +67,7 @@ public class InstanceProduit implements Serializable {
     private LocalDate dateAcquisition;
 
     /**
-     * Date d'acquisition de l'instance
+     * Responsable d'acquisition
      */
     private String ajoutPar;
 

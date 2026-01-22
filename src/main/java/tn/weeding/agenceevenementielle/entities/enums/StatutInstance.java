@@ -2,7 +2,6 @@ package tn.weeding.agenceevenementielle.entities.enums;
 
 /**
  * Statut d'une instance de produit avec référence
- * Sprint 3 - Gestion des produits et du stock
  */
 public enum StatutInstance {
     DISPONIBLE,         // Disponible pour réservation

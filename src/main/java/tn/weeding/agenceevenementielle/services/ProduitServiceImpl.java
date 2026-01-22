@@ -41,13 +41,13 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
     private static final Integer SEUIL_CRITIQUE_DEFAUT = 5;
 
-// ============================================
-    // GESTION DES PRODUITS (CRUD) - INCHANGÉ
+    // ============================================
+    // GESTION DES PRODUITS (CRUD)
     // ============================================
 
     @Override
     public ProduitResponseDto creerProduit(ProduitRequestDto produitDto, String username) {
-        log.info("📦 Création d'un nouveau produit : {} par {}", produitDto.getNomProduit(), username);
+        log.info("Création d'un nouveau produit : {} par {}", produitDto.getNomProduit(), username);
 
         String imagePath = null;
 
@@ -63,7 +63,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                         codeProduit
                 );
             } catch (Exception e) {
-                log.error("❌ Erreur sauvegarde image: {}", e.getMessage());
+                log.error(" Erreur sauvegarde image: {}", e.getMessage());
             }
         }
 
@@ -105,13 +105,13 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             );
         }
 
-        log.info("✅ Produit créé avec succès : Code={}", produit.getCodeProduit());
+        log.info("Produit créé avec succès : Code={}", produit.getCodeProduit());
         return convertToDto(produit);
     }
 
     @Override
     public ProduitResponseDto modifierProduit(Long id, ProduitRequestDto produitDto, String username) {
-        log.info("🔧 Modification du produit ID: {} par {}", id, username);
+        log.info(" Modification du produit ID: {} par {}", id, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
@@ -135,20 +135,20 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 );
                 produit.setImageProduit(imagePath);
             } catch (Exception e) {
-                log.error("❌ Erreur mise à jour image: {}", e.getMessage());
+                log.error("Erreur mise à jour image: {}", e.getMessage());
             }
         }
 
         produit = produitRepository.save(produit);
 
-        log.info("✅ Produit modifié avec succès: Code={}", produit.getCodeProduit());
+        log.info("Produit modifié avec succès: Code={}", produit.getCodeProduit());
         return convertToDto(produit);
     }
 
 
     @Override
     public void supprimerProduit(Long id, String username) {
-        log.info("🗑️ Suppression du produit ID: {} par {}", id, username);
+        log.info("Suppression du produit ID: {} par {}", id, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -202,13 +202,13 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         produitRepository.save(produit);
 
-        log.info("✅ Produit désactivé: Code={}", produit.getCodeProduit());
+        log.info("Produit désactivé: Code={}", produit.getCodeProduit());
     }
 
     @Override
     @Transactional
     public void supprimerProduitDeBase(Long id, String username) {
-        log.info("🗑️ Suppression DÉFINITIVE du produit ID: {} par {}", id, username);
+        log.info("Suppression DÉFINITIVE du produit ID: {} par {}", id, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -224,14 +224,14 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             throw new CustomException("Impossible de supprimer un produit qui est actuellement réservé");
         }
 
-        // ✅ NOUVEAU: Détacher les mouvements de stock AVANT suppression
+        // Détacher les mouvements de stock AVANT suppression
         List<MouvementStock> mouvements = mouvementStockRepository.findByProduit_IdProduit(id);
 
         log.info("📦 {} mouvements de stock trouvés pour ce produit", mouvements.size());
 
         // Détacher chaque mouvement du produit
         for (MouvementStock mouvement : mouvements) {
-            mouvement.setProduit(null);  // ✅ Détacher la relation
+            mouvement.setProduit(null);  // Détacher la relation
             mouvement.setNomProduitArchive(produit.getNomProduit());
             mouvement.setCodeProduitArchive(produit.getCodeProduit());
             mouvement.setIdProduitArchive(produit.getIdProduit());
@@ -241,7 +241,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         // Si produit avec référence, gérer les instances
         if(produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
             List<InstanceProduit> instances = instanceProduitRepository.findByProduit_IdProduit(id);
-            log.info("🔖 {} instances trouvées", instances.size());
+            log.info("{} instances trouvées", instances.size());
 
             // Supprimer chaque instance (les mouvements d'instance seront orphelins aussi)
             for(InstanceProduit instance : instances) {
@@ -257,7 +257,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             }
         }
 
-        // ✅ NOUVEAU: Créer un mouvement final AVANT suppression
+        // Créer un mouvement final AVANT suppression
         MouvementStock mouvementFinal = new MouvementStock();
         mouvementFinal.setTypeMouvement(TypeMouvement.DESACTIVATION);
         mouvementFinal.setQuantite(produit.getQuantiteDisponible());
@@ -272,25 +272,25 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         mouvementFinal.setDateMouvement(LocalDateTime.now());
         // On associe pas au produit qui va être supprimé
         mouvementFinal.setProduit(null);
-        // Mais On garde les informations du produit
+        //  On garde les informations du produit
         mouvementFinal.setNomProduitArchive(produit.getNomProduit());
         mouvementFinal.setCodeProduitArchive(produit.getCodeProduit());
         mouvementFinal.setIdProduitArchive(produit.getIdProduit());
 
         mouvementStockRepository.save(mouvementFinal);
 
-        log.debug("📝 Mouvement final enregistré sans référence au produit");
+        log.debug("Mouvement final enregistré sans référence au produit");
 
         // Maintenant on peut supprimer le produit en toute sécurité
         produitRepository.delete(produit);
 
-        log.info("⚠️ Historique conservé malgré suppression produit");
-        log.info("✅ Produit supprimé définitivement: Code={}", produit.getCodeProduit());
+        log.info(" Historique conservé malgré suppression produit");
+        log.info("Produit supprimé définitivement: Code={}", produit.getCodeProduit());
     }
 
     @Override
     public ProduitResponseDto reactiverProduit(Long id, Integer quantite, String username) {
-        log.info("♻️ Réactivation du produit ID: {} avec quantité: {} par {}", id, quantite, username);
+        log.info("Réactivation du produit ID: {} avec quantité: {} par {}", id, quantite, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -323,14 +323,14 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         produit = produitRepository.save(produit);
 
-        log.info("✅ Produit réactivé: Code={}", produit.getCodeProduit());
+        log.info(" Produit réactivé: Code={}", produit.getCodeProduit());
         return convertToDto(produit);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProduitResponseDto getProduitById(Long id) {
-        log.debug("🔍 Recherche produit ID: {}", id);
+        log.debug(" Recherche produit ID: {}", id);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
@@ -342,7 +342,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public ProduitResponseDto getProduitByCode(String code) {
-        log.debug("🔍 Recherche produit Code: {}", code);
+        log.debug("Recherche produit Code: {}", code);
 
         Produit produit = produitRepository.findByCodeProduit(code)
                 .orElseThrow(() -> new ProduitException.ProduitNotFoundException(
@@ -354,7 +354,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ProduitResponseDto> getAllProduits() {
-        log.debug("📋 Récupération de tous les produits");
+        log.debug("Récupération de tous les produits");
 
         return produitRepository.findAll().stream()
                 .map(this::convertToDto)
@@ -367,7 +367,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ProduitResponseDto> getProduitsDisponibles() {
-        log.debug("📋 Récupération des produits disponibles (stock global)");
+        log.debug("Récupération des produits disponibles (stock global)");
 
         return produitRepository.findProduitsDisponibles().stream()
                 .map(this::convertToDto)
@@ -389,7 +389,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     public List<ProduitResponseDto> getProduitsStockCritique(Integer seuil) {
         Integer seuilEffectif = (seuil != null) ? seuil : SEUIL_CRITIQUE_DEFAUT;
 
-        log.debug("⚠️ Récupération des produits en stock critique (seuil: {})", seuilEffectif);
+        log.debug("Récupération des produits en stock critique (seuil: {})", seuilEffectif);
 
         return produitRepository.findProduitsStockCritique(seuilEffectif).stream()
                 .map(this::convertToDto)
@@ -399,7 +399,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ProduitResponseDto> searchProduitsByNom(String nom) {
-        log.debug("🔍 Recherche produits par nom: {}", nom);
+        log.debug("Recherche produits par nom: {}", nom);
 
         return produitRepository.searchByNom(nom).stream()
                 .map(this::convertToDto)
@@ -409,7 +409,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ProduitResponseDto> getProduitsByCategorie(Categorie categorie) {
-        log.debug("🔍 Recherche produits par catégorie: {}", categorie);
+        log.debug("Recherche produits par catégorie: {}", categorie);
 
         return produitRepository.findByCategorieProduit(categorie).stream()
                 .map(this::convertToDto)
@@ -419,7 +419,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ProduitResponseDto> getProduitsByType(TypeProduit typeProduit) {
-        log.debug("🔍 Recherche produits par type: {}", typeProduit);
+        log.debug("Recherche produits par type: {}", typeProduit);
 
         return produitRepository.findByTypeProduit(typeProduit).stream()
                 .map(this::convertToDto)
@@ -435,7 +435,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             Double maxPrix,
             Boolean disponible) {
 
-        log.debug("🔍 Recherche multicritères: cat={}, type={}, prix={}-{}, dispo={}",
+        log.debug(" Recherche multicritères: cat={}, type={}, prix={}-{}, dispo={}",
                 categorie, typeProduit, minPrix, maxPrix, disponible);
 
         return produitRepository.searchProduits(
@@ -455,7 +455,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Integer calculerQuantiteDisponibleSurPeriode(Long idProduit, LocalDate dateDebut, LocalDate dateFin) {
-        log.info("🔍 Calcul quantité disponible produit ID: {} du {} au {}",
+        log.info("Calcul quantité disponible produit ID: {} du {} au {}",
                 idProduit, dateDebut, dateFin);
 
         // Vérifier que le produit existe
@@ -487,7 +487,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             quantiteDispo = produit.getQuantiteDisponible();
         }
 
-        log.info("✅ Quantité disponible calculée: {} (stock total: {})",
+        log.info("Quantité disponible calculée: {} (stock total: {})",
                 quantiteDispo, produit.getQuantiteDisponible());
 
         return quantiteDispo;
@@ -501,7 +501,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             LocalDate dateDebut,
             LocalDate dateFin) {
 
-        log.info("🔍 Vérification disponibilité produit ID: {}, quantité: {}, période: {} -> {}",
+        log.info("vérification disponibilité produit ID: {}, quantité: {}, période: {} -> {}",
                 idProduit, quantiteDemandee, dateDebut, dateFin);
 
         // Vérifier que le produit existe
@@ -535,10 +535,10 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         }
 
         if (disponible) {
-            log.info("✅ Disponible: {} unités demandées", quantiteDemandee);
+            log.info("Disponible: {} unités demandées", quantiteDemandee);
         } else {
             Integer quantiteDispo = calculerQuantiteDisponibleSurPeriode(idProduit, dateDebut, dateFin);
-            log.warn("❌ Indisponible: {} demandées, {} disponibles", quantiteDemandee, quantiteDispo);
+            log.warn("Indisponible: {} demandées, {} disponibles", quantiteDemandee, quantiteDispo);
         }
 
         return disponible;
@@ -548,7 +548,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ProduitResponseDto> getCatalogueDisponibleSurPeriode(LocalDate dateDebut, LocalDate dateFin) {
-        log.info("📋 Récupération catalogue disponible du {} au {}", dateDebut, dateFin);
+        log.info(" Récupération catalogue disponible du {} au {}", dateDebut, dateFin);
 
         // les produits qui existent sur une période donnée
         List<Produit> produits = produitRepository.findProduitsDisponiblesSurPeriode(
@@ -556,7 +556,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 dateFin
         );
 
-        log.info("✅ {} produits disponibles trouvés", produits.size());
+        log.info(" {} produits disponibles trouvés", produits.size());
 
         return produits.stream()
                 .map(this::convertToDto)
@@ -576,7 +576,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         log.info("🔍 Recherche avec période: cat={}, type={}, prix={}-{}, période={}-{}",
                 categorie, typeProduit, minPrix, maxPrix, dateDebut, dateFin);
 
-        // ✅ NOUVELLE REQUÊTE JPQL avec période
+
         List<Produit> produits = produitRepository.searchProduitsAvecPeriode(
                 categorie,
                 typeProduit,
@@ -586,7 +586,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 dateFin
         );
 
-        log.info("✅ {} produits trouvés", produits.size());
+        log.info(" {} produits trouvés", produits.size());
 
         return produits.stream()
                 .map(this::convertToDto)
@@ -600,7 +600,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             LocalDate dateDebut,
             LocalDate dateFin) {
 
-        log.info("🔍 Recherche produits avec quantité >= {} du {} au {}",
+        log.info(" Recherche produits avec quantité >= {} du {} au {}",
                 quantiteMin, dateDebut, dateFin);
 
 
@@ -610,7 +610,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 dateFin
         );
 
-        log.info("✅ {} produits trouvés avec quantité suffisante", produits.size());
+        log.info("{} produits trouvés avec quantité suffisante", produits.size());
 
         return produits.stream()
                 .map(this::convertToDto)
@@ -626,7 +626,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         Integer seuilEffectif = (seuil != null) ? seuil : SEUIL_CRITIQUE_DEFAUT;
 
-        log.warn("⚠️ Vérification stock critique (seuil: {}) du {} au {}",
+        log.warn("Vérification stock critique (seuil: {}) du {} au {}",
                 seuilEffectif, dateDebut, dateFin);
 
         // les produits en stock critique sur une période donnée
@@ -637,7 +637,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         );
 
         if (!produits.isEmpty()) {
-            log.warn("⚠️ {} produits en stock critique sur cette période", produits.size());
+            log.warn("{} produits en stock critique sur cette période", produits.size());
         }
 
         return produits.stream()
@@ -648,7 +648,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<Map<String, Object>> getTauxOccupationSurPeriode(LocalDate dateDebut, LocalDate dateFin) {
-        log.info("📊 Calcul taux d'occupation du {} au {}", dateDebut, dateFin);
+        log.info(" Calcul taux d'occupation du {} au {}", dateDebut, dateFin);
 
 
         List<Object[]> resultats = produitRepository.findTauxOccupationProduitsParPeriode(
@@ -679,7 +679,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             stats.add(stat);
         }
 
-        log.info("📊 Statistiques générées pour {} produits", stats.size());
+        log.info("Statistiques générées pour {} produits", stats.size());
 
         return stats;
     }
@@ -688,7 +688,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     public List<ProduitDisponibiliteDto> getProduitsAvecDisponibilitePourPeriode(
             LocalDate dateDebut, LocalDate dateFin) {
 
-        log.info("🔍 Calcul disponibilité produits du {} au {}", dateDebut, dateFin);
+        log.info("Calcul disponibilité produits du {} au {}", dateDebut, dateFin);
 
         List<Produit> tousProduits = produitRepository.findAll();
         List<ProduitDisponibiliteDto> resultat = new ArrayList<>();
@@ -737,7 +737,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             resultat.add(dto);
         }
 
-        log.info("✅ {} produits avec disponibilité calculée", resultat.size());
+        log.info("{} produits avec disponibilité calculée", resultat.size());
         return resultat;
     }
     // ============================================
@@ -746,7 +746,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
     @Override
     public ProduitResponseDto ajouterStock(Long id, Integer quantite, String motif, String username) {
-        log.info("➕ Ajout de stock: produit ID={}, quantité={}, par {}", id, quantite, username);
+        log.info(" Ajout de stock: produit ID={}, quantité={}, par {}", id, quantite, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -777,7 +777,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         produit = produitRepository.save(produit);
 
-        log.info("✅ Stock ajouté: {} -> {} (Code: {})",
+        log.info("Stock ajouté: {} -> {} (Code: {})",
                 quantiteAvant, quantiteApres, produit.getCodeProduit());
 
         return convertToDto(produit);
@@ -785,7 +785,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
     @Override
     public ProduitResponseDto retirerStock(Long id, Integer quantite, String motif, String username) {
-        log.info("➖ Retrait de stock: produit ID={}, quantité={}, par {}", id, quantite, username);
+        log.info("Retrait de stock: produit ID={}, quantité={}, par {}", id, quantite, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -820,7 +820,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         produit = produitRepository.save(produit);
 
-        log.info("✅ Stock retiré: {} -> {} (Code: {})",
+        log.info("Stock retiré: {} -> {} (Code: {})",
                 quantiteAvant, quantiteApres, produit.getCodeProduit());
 
         return convertToDto(produit);
@@ -828,7 +828,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
     @Override
     public ProduitResponseDto ajusterStock(Long id, Integer nouvelleQuantite, String motif, String username) {
-        log.info("🔧 Ajustement de stock: produit ID={}, nouvelle quantité={}, par {}",
+        log.info("Ajustement de stock: produit ID={}, nouvelle quantité={}, par {}",
                 id, nouvelleQuantite, username);
 
         Produit produit = produitRepository.findById(id)
@@ -840,7 +840,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                     "L'ajustement de stock n'est possible que pour les produits de type EN_QUANTITE");
         }
 
-        // ✅  Vérifier la quantité maximale réservée
+        // Vérifier la quantité maximale réservée
         Integer quantiteMaxReservee = ligneReservationRepository
                 .findMaxQuantiteReserveeForProduit(id, LocalDate.now());
 
@@ -878,7 +878,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
         produit = produitRepository.save(produit);
 
-        log.info("✅ Stock ajusté: {} -> {} (Δ={}, Code: {})",
+        log.info("Stock ajusté: {} -> {} (Δ={}, Code: {})",
                 quantiteAvant, nouvelleQuantite, difference, produit.getCodeProduit());
 
         return convertToDto(produit);
@@ -895,7 +895,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 produit.getQuantiteDisponible() > 0;
 
         if (critique) {
-            log.warn("⚠️ Stock critique pour {}: {} unités",
+            log.warn("Stock critique pour {}: {} unités",
                     produit.getNomProduit(), produit.getQuantiteDisponible());
         }
 
@@ -909,7 +909,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public StockStatistiquesDto getStatistiquesProduit(Long id) {
-        log.info("📊 Génération statistiques pour produit ID: {}", id);
+        log.info("Génération statistiques pour produit ID: {}", id);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -930,7 +930,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                 dateDernierMouvement
         );
 
-        log.info("📊 Statistiques générées: entrées={}, sorties={}, stock={}",
+        log.info("Statistiques générées: entrées={}, sorties={}, stock={}",
                 stats.getTotalEntrees(), stats.getTotalSorties(), stats.getQuantiteDisponible());
 
         return stats;
@@ -939,7 +939,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ProduitResponseDto> getProduitsLesPlusLoues() {
-        log.info("📊 Récupération des produits les plus loués");
+        log.info("Récupération des produits les plus loués");
 
         return produitRepository.findProduitsLesPlusLoues().stream()
                 .map(this::convertToDto)
@@ -951,7 +951,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     public List<ProduitResponseDto> getProduitsMieuxNotes(Double minNote) {
         Double noteEffective = (minNote != null) ? minNote : 4.0;
 
-        log.info("📊 Récupération des produits avec note >= {}", noteEffective);
+        log.info("Récupération des produits avec note >= {}", noteEffective);
 
         return produitRepository.findProduitsMieuxNotes(noteEffective).stream()
                 .map(this::convertToDto)
@@ -965,7 +965,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<MouvementStockResponseDto> getHistoriqueMouvements(Long idProduit) {
-        log.info("📜 Récupération historique des mouvements pour produit ID: {}", idProduit);
+        log.info("Récupération historique des mouvements pour produit ID: {}", idProduit);
 
         // Vérifier que le produit existe
         produitRepository.findById(idProduit)
@@ -975,7 +975,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         List<MouvementStock> mouvements = mouvementStockRepository
                 .findByProduit_IdProduitOrderByDateMouvementDesc(idProduit);
 
-        log.info("📜 {} mouvements trouvés", mouvements.size());
+        log.info("{} mouvements trouvés", mouvements.size());
 
         return mouvements.stream()
                 .map(this::convertMouvementToDto)
@@ -985,7 +985,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<MouvementStockResponseDto> getMouvementsByType(TypeMouvement type) {
-        log.info("📜 Récupération des mouvements de type: {}", type);
+        log.info("Récupération des mouvements de type: {}", type);
 
         return mouvementStockRepository.findByTypeMouvement(type).stream()
                 .map(this::convertMouvementToDto)
@@ -995,7 +995,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<MouvementStockResponseDto> getMouvementsByUser(String username) {
-        log.info("📜 Récupération des mouvements de l'utilisateur: {}", username);
+        log.info("Récupération des mouvements de l'utilisateur: {}", username);
 
         return mouvementStockRepository.findByEffectueParOrderByDateMouvementDesc(username).stream()
                 .map(this::convertMouvementToDto)
@@ -1005,7 +1005,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<MouvementStockResponseDto> getMouvementsByPeriode(Date dateDebut, Date dateFin) {
-        log.info("📜 Récupération des mouvements du {} au {}", dateDebut, dateFin);
+        log.info("Récupération des mouvements du {} au {}", dateDebut, dateFin);
 
         return mouvementStockRepository.findByDateMouvementBetween(dateDebut, dateFin).stream()
                 .map(this::convertMouvementToDto)
@@ -1019,7 +1019,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             Date dateDebut,
             Date dateFin) {
 
-        log.info("📜 Récupération des mouvements du produit ID: {} du {} au {}",
+        log.info("Récupération des mouvements du produit ID: {} du {} au {}",
                 idProduit, dateDebut, dateFin);
 
         // Vérifier que le produit existe
@@ -1033,7 +1033,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     }
 
 
-// ============================================
+    // ============================================
     // MÉTHODES PRIVÉES - UTILITAIRES
     // ============================================
 
@@ -1070,13 +1070,13 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                     mouvement.setDateFin(reservation.getDateFin());
                 }
             } catch (Exception e) {
-                log.warn("⚠️ Impossible de récupérer les dates de la réservation {}", idReservation);
+                log.warn("Impossible de récupérer les dates de la réservation {}", idReservation);
             }
         }
 
         mouvementStockRepository.save(mouvement);
 
-        log.debug("📝 Mouvement enregistré: Type={}, Quantité={}, Motif={}",
+        log.debug("Mouvement enregistré: Type={}, Quantité={}, Motif={}",
                 typeMouvement, quantite, motif);
     }
     /**

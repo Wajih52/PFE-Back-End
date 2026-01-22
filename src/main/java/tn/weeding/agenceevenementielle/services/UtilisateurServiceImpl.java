@@ -88,16 +88,16 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
             utilisateurRole.setUtilisateur(utilisateur);
             utilisateurRole.setRole(role);
             //-------------------------ajouter l'association-----------------------
-                // ⚠️ Vérifier que la collection n’est pas nulle
+                // Vérifier que la collection n’est pas nulle
                 if (utilisateur.getUtilisateurRoles() == null) {
                     utilisateur.setUtilisateurRoles(new HashSet<>());
                 }
             utilisateur.getUtilisateurRoles().add(utilisateurRole);
 
-        // 🔑 Générer mot de passe temporaire
+        // Générer mot de passe temporaire
         String motDePasseTemporaire = UUID.randomUUID().toString().substring(0, 12);
 
-        // 📧 Envoyer email si c'est un employé/admin
+        //  Envoyer email si c'est un employé/admin
         if (role != null ) {
             emailService.envoyerEmailNouvelEmploye(
                     utilisateur.getEmail(),
@@ -129,7 +129,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
                 utilisateur.setImage(imagePath);
                 utilisateur = utilisateurRepository.save(utilisateur);
             } catch (Exception e) {
-                log.error("❌ Erreur sauvegarde image pour utilisateur {}: {}",
+                log.error(" Erreur sauvegarde image pour utilisateur {}: {}",
                         utilisateur.getIdUtilisateur(), e.getMessage());
             }
         }
@@ -159,7 +159,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
 
     @Override
     public UtilisateurResponseDto modifierUtilisateurPatch(Long id, UtilisateurRequestPatchDto utilisateurRequestPatchDto) {
-        log.info("🔄 Modification partielle de l'utilisateur ID: {}", id);
+        log.info("Modification partielle de l'utilisateur ID: {}", id);
         Optional<Utilisateur> existing = utilisateurRepository.findById(id);
         Utilisateur utilisateur ;
         if(existing.isPresent()) {
@@ -182,7 +182,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         utilisateur.setEtatCompte(StatutCompte.DESACTIVE);
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Compte désactivé : {}", utilisateur.getEmail());
+        log.info("Compte désactivé : {}", utilisateur.getEmail());
     }
 
     /**
@@ -191,7 +191,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
     @Override
     public void activerCompteAvecLogin(Utilisateur utilisateur) {
         if (utilisateur.getEtatCompte() == StatutCompte.DESACTIVE) {
-            log.info("🔄 Réactivation automatique du compte : {}", utilisateur.getEmail());
+            log.info("Réactivation automatique du compte : {}", utilisateur.getEmail());
             utilisateur.setEtatCompte(StatutCompte.ACTIVE);
             utilisateurRepository.save(utilisateur);
         }
@@ -205,7 +205,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         utilisateur.setEtatCompte(StatutCompte.ACTIVE);
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Compte Activé : {}", utilisateur.getEmail());
+        log.info("Compte Activé : {}", utilisateur.getEmail());
     }
 
     @Override
@@ -216,7 +216,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         utilisateur.setEtatCompte(StatutCompte.SUSPENDU);
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Compte Suspendu Par Administration : {}", utilisateur.getEmail());
+        log.info("Compte Suspendu Par Administration : {}", utilisateur.getEmail());
     }
 
     @Override
@@ -227,14 +227,14 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         utilisateur.setEtatCompte(StatutCompte.ARCHIVE);
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Compte Archivé avec succés : {}", utilisateur.getEmail());
+        log.info("Compte Archivé avec succés : {}", utilisateur.getEmail());
     }
 
 
     @Override
     @Transactional
     public UtilisateurResponseDto modifierImage(Long id, String base64Image) {
-        log.info("📷 Modification image pour utilisateur ID: {}", id);
+        log.info("Modification image pour utilisateur ID: {}", id);
 
         Utilisateur utilisateur = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Utilisateur introuvable"));
@@ -251,7 +251,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
             String imagePath = imageService.saveBase64Image(base64Image, utilisateur.getPseudo());
             utilisateur.setImage(imagePath);
 
-            log.info("✅ Nouvelle image sauvegardée: {}", imagePath);
+            log.info("Nouvelle image sauvegardée: {}", imagePath);
         }
         // Cas 2 : Supprimer l'image (null)
         else if (base64Image == null) {
@@ -259,7 +259,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
                 imageService.deleteImage(utilisateur.getImage());
                 utilisateur.setImage(null);
             }
-            log.info("🗑️ Image supprimée");
+            log.info("Image supprimée");
         }
         // Cas 3 : Garder l'ancienne (URL existante)
 
@@ -269,7 +269,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
     @Override
     @Transactional
     public void changerMotDePasse(Long id, ChangePasswordDto dto) {
-        log.info("🔑 Changement mot de passe pour utilisateur ID: {}", id);
+        log.info("Changement mot de passe pour utilisateur ID: {}", id);
 
         Utilisateur utilisateur = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Utilisateur introuvable"));
@@ -283,7 +283,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         utilisateur.setMotDePasse(passwordEncoder.encode(dto.getNouveauMotDePasse()));
         utilisateurRepository.save(utilisateur);
 
-        log.info("✅ Mot de passe modifié avec succès");
+        log.info(" Mot de passe modifié avec succès");
 
     }
 
@@ -366,7 +366,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         //vérifier is email est déjà pris par une autre utilisateur
         Optional<Utilisateur> utilisateurAvecEmail = utilisateurRepository.findByEmail(utilisateurRequestPatchDto.getEmail());
         if (utilisateurAvecEmail.isPresent() && !utilisateurAvecEmail.get().getIdUtilisateur().equals(utilisateur.getIdUtilisateur())) {
-            throw new CustomException("📧 Email déjà utilisé par un autre utilisateur !");
+            throw new CustomException("Email déjà utilisé par un autre utilisateur !");
         }
         // Vérifier si le nouveau pseudo est déjà pris par un autre utilisateur (pas lui-même)
         Optional<Utilisateur> utilisateurAvecPseudo = utilisateurRepository.findByPseudo(utilisateurRequestPatchDto.getPseudo());

@@ -15,9 +15,6 @@ public interface ReclamationServiceInterface {
 
     /**
      * Créer une réclamation (visiteur ou client connecté)
-     * @param dto DTO de création
-     * @param username Username de l'utilisateur connecté (null pour visiteur)
-     * @return DTO de la réclamation créée
      */
     ReclamationResponseDto creerReclamation(ReclamationRequestDto dto, String username);
 

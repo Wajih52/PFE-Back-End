@@ -9,7 +9,6 @@ import java.util.List;
 
 /**
  * Interface du service de gestion des livraisons
- * Sprint 6 - Gestion des livraisons
  */
 public interface LivraisonServiceInterface {
 
@@ -70,8 +69,6 @@ public interface LivraisonServiceInterface {
     /**
      * Obtenir toutes les lignes de réservation d'une livraison
      *
-     * @param idLivraison ID de la livraison
-     * @return Liste des lignes de réservation
      */
     List<LigneReservationResponseDto> getLignesLivraison(Long idLivraison);
 
@@ -85,14 +82,8 @@ public interface LivraisonServiceInterface {
     /**
      * Marquer une ligne de réservation spécifique comme LIVREE
      *
-     * @param idLigne ID de la ligne de réservation
-     * @param username Nom d'utilisateur de l'employé
-     * @return LigneReservationResponseDto mise à jour
      */
     LigneReservationResponseDto marquerLigneLivree(Long idLigne, String username);
-
-
-
 
 
     // ============================================

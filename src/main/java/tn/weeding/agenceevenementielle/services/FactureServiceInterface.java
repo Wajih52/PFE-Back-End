@@ -22,6 +22,7 @@ public interface FactureServiceInterface {
 
     // Filtres
     List<FactureResponseDto> getFacturesByStatut(StatutFacture statut);
+
     List<FactureResponseDto> getFacturesByType(TypeFacture type);
 
     // Téléchargement PDF

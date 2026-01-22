@@ -46,7 +46,7 @@ public class PointageServiceImpl implements PointageServiceInterface {
 
     @Override
     public PointageResponseDto pointerArrivee(String username) {
-        log.info("⏰ Pointage arrivée pour: {}", username);
+        log.info("Pointage arrivée pour: {}", username);
 
         Utilisateur utilisateur = getUtilisateur(username);
         LocalDate aujourdhui = LocalDate.now();
@@ -78,14 +78,14 @@ public class PointageServiceImpl implements PointageServiceInterface {
 
         pointage = pointageRepo.save(pointage);
 
-        log.info("✅ Pointage arrivée enregistré - Statut: {}", pointage.getStatutPointage());
+        log.info(" Pointage arrivée enregistré - Statut: {}", pointage.getStatutPointage());
 
         return mapToResponseDto(pointage);
     }
 
     @Override
     public PointageResponseDto pointerDepart(String username) {
-        log.info("⏰ Pointage départ pour: {}", username);
+        log.info("Pointage départ pour: {}", username);
 
         Utilisateur utilisateur = getUtilisateur(username);
         LocalDate aujourdhui = LocalDate.now();
@@ -111,7 +111,7 @@ public class PointageServiceImpl implements PointageServiceInterface {
 
         pointage = pointageRepo.save(pointage);
 
-        log.info("✅ Pointage départ enregistré - Total heures: {}", totalHeures);
+        log.info("Pointage départ enregistré - Total heures: {}", totalHeures);
 
         return mapToResponseDto(pointage);
     }
@@ -149,7 +149,7 @@ public class PointageServiceImpl implements PointageServiceInterface {
 
     @Override
     public PointageResponseDto creerPointageManuel(PointageRequestDto dto, String username) {
-        log.info("📝 Création pointage manuel par: {}", username);
+        log.info("Création pointage manuel par: {}", username);
 
         Utilisateur employe = utilisateurRepo.findById(dto.getIdUtilisateur())
                 .orElseThrow(() -> new CustomException("Employé introuvable"));
@@ -184,14 +184,14 @@ public class PointageServiceImpl implements PointageServiceInterface {
 
         pointage = pointageRepo.save(pointage);
 
-        log.info("✅ Pointage manuel créé pour l'employé ID: {}", employe.getIdUtilisateur());
+        log.info(" Pointage manuel créé pour l'employé ID: {}", employe.getIdUtilisateur());
 
         return mapToResponseDto(pointage);
     }
 
     @Override
     public PointageResponseDto modifierPointage(Long idPointage, PointageRequestDto dto, String username) {
-        log.info("✏️ Modification pointage ID: {} par: {}", idPointage, username);
+        log.info("Modification pointage ID: {} par: {}", idPointage, username);
 
         Pointage pointage = pointageRepo.findById(idPointage)
                 .orElseThrow(() -> new CustomException("Pointage introuvable"));
@@ -222,14 +222,14 @@ public class PointageServiceImpl implements PointageServiceInterface {
 
         pointage = pointageRepo.save(pointage);
 
-        log.info("✅ Pointage modifié");
+        log.info(" Pointage modifié");
 
         return mapToResponseDto(pointage);
     }
 
     @Override
     public void supprimerPointage(Long idPointage, String username) {
-        log.info("🗑️ Suppression pointage ID: {} par: {}", idPointage, username);
+        log.info(" Suppression pointage ID: {} par: {}", idPointage, username);
 
         if (!pointageRepo.existsById(idPointage)) {
             throw new CustomException("Pointage introuvable");
@@ -237,7 +237,7 @@ public class PointageServiceImpl implements PointageServiceInterface {
 
         pointageRepo.deleteById(idPointage);
 
-        log.info("✅ Pointage supprimé");
+        log.info("Pointage supprimé");
     }
 
     @Override
@@ -293,13 +293,13 @@ public class PointageServiceImpl implements PointageServiceInterface {
     @Override
     @Scheduled(cron = "0 0 20 * * ?") // Tous les jours à 20h00
     public void marquerAbsentsAutomatiquement() {
-        log.info("🤖 Tâche automatique: Marquage des absents du jour");
+        log.info(" Tâche automatique: Marquage des absents du jour");
 
         LocalDate aujourdhui = LocalDate.now();
         List<Long> idsAbsents = getEmployesAbsents(aujourdhui);
 
         if (idsAbsents.isEmpty()) {
-            log.info("✅ Aucun absent à marquer");
+            log.info(" Aucun absent à marquer");
             return;
         }
 
@@ -318,7 +318,7 @@ public class PointageServiceImpl implements PointageServiceInterface {
             pointageRepo.save(pointageAbsent);
         }
 
-        log.info("✅ {} employé(s) marqué(s) absent(s)", idsAbsents.size());
+        log.info("{} employé(s) marqué(s) absent(s)", idsAbsents.size());
     }
 
     // ============ MÉTHODES UTILITAIRES ============

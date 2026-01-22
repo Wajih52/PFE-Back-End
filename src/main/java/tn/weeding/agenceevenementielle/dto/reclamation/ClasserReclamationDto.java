@@ -7,7 +7,6 @@ import tn.weeding.agenceevenementielle.entities.enums.StatutReclamation;
 
 /**
  * DTO pour classer une réclamation (priorité et statut)
- * Utilisé pour mise à jour rapide sans réponse
  */
 @Data
 @NoArgsConstructor

@@ -58,7 +58,7 @@ public class MouvementStock implements Serializable {
     private TypeMouvement typeMouvement;
 
 
-    // Quantité du mouvement (toujours positif)
+    // Quantité du mouvement
     private Integer quantite;
 
     // Stock avant et après (pour produits EN_QUANTITE)
@@ -78,7 +78,7 @@ public class MouvementStock implements Serializable {
     private String referenceReservation;
     private Long idReservation;
 
-    // Pour les réservations, ajouter les dates de période
+    // Pour les réservations, on ajoute les dates de période
     private LocalDate dateDebut;
     private LocalDate dateFin;
 

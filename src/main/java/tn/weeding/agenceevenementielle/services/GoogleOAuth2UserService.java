@@ -34,7 +34,7 @@ public class GoogleOAuth2UserService {
 
         log.info("🔍 Traitement de l'utilisateur Google : {}", email);
 
-        // 1️⃣ Vérifier si l'utilisateur existe déjà
+        // 1- Vérifier si l'utilisateur existe déjà
         Optional<Utilisateur> existingUser = utilisateurRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
@@ -54,15 +54,15 @@ public class GoogleOAuth2UserService {
                 if(utilisateur.getEtatCompte()==StatutCompte.DESACTIVE){
                     utilisateur.setEtatCompte(StatutCompte.ACTIVE);
                     utilisateurRepository.save(utilisateur);
-                    log.info("🔄 Compte Réactivé de nouveau ");
+                    log.info(" Compte Réactivé de nouveau ");
                 }
-                log.info("✅ Utilisateur Google existant : {}", utilisateur.getPseudo());
+                log.info(" Utilisateur Google existant : {}", utilisateur.getPseudo());
                 return utilisateur.getPseudo();
             }
 
             // Cas 2 : Compte classique existant avec le même email
             if (Boolean.TRUE.equals(utilisateur.getActivationCompte())) {
-                log.warn("⚠️ Email {} déjà utilisé par un compte classique actif", email);
+                log.warn(" Email {} déjà utilisé par un compte classique actif", email);
                 throw new CustomException(
                         "CONNEXION_EXIST_IN_CLASSIC_MODE"
                 );
@@ -70,15 +70,15 @@ public class GoogleOAuth2UserService {
 
 
             // Cas 3 : Compte classique non activé
-            log.info("🔄 Conversion d'un compte non activé en compte Google");
+            log.info(" Conversion d'un compte non activé en compte Google");
             convertToGoogleAccount(utilisateur, prenom, nom, photoUrl);
             return utilisateur.getPseudo();
 
 
         }
 
-        // 2️⃣ Créer un nouvel utilisateur Google
-        log.info("➕ Création d'un nouvel utilisateur Google");
+        // 2- Créer un nouvel utilisateur Google
+        log.info(" Création d'un nouvel utilisateur Google");
         Utilisateur newUser = createGoogleUser(email, prenom, nom, photoUrl);
         return newUser.getPseudo();
     }
@@ -111,7 +111,7 @@ public class GoogleOAuth2UserService {
 
         // Sauvegarder l'utilisateur
         utilisateur = utilisateurRepository.save(utilisateur);
-        log.info("✅ Utilisateur créé avec le pseudo : {}", utilisateur.getPseudo());
+        log.info(" Utilisateur créé avec le pseudo : {}", utilisateur.getPseudo());
 
         // Assigner le rôle CLIENT automatiquement
         assignClientRole(utilisateur);
@@ -138,7 +138,7 @@ public class GoogleOAuth2UserService {
         }
 
         utilisateurRepository.save(utilisateur);
-        log.info("✅ Compte converti en compte Google : {}", utilisateur.getPseudo());
+        log.info(" Compte converti en compte Google : {}", utilisateur.getPseudo());
     }
 
     /**
@@ -170,6 +170,6 @@ public class GoogleOAuth2UserService {
         lien.setAttribuePar("GOOGLE_OAUTH2");
 
         utilisateurRoleRepository.save(lien);
-        log.info("✅ Rôle CLIENT assigné à l'utilisateur : {}", utilisateur.getPseudo());
+        log.info(" Rôle CLIENT assigné à l'utilisateur : {}", utilisateur.getPseudo());
     }
 }

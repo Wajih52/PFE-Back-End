@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
  * ==========================================
  * SERVICE DE STATISTIQUES DASHBOARD
  * ==========================================
- * Responsabilités :
  * - Calculer tous les KPIs pour le dashboard
  * - Générer les données pour les graphiques
  * - Analyser les tendances et évolutions
@@ -47,7 +46,7 @@ public class DashboardStatistiquesService {
      * Obtenir toutes les statistiques du dashboard
      */
     public DashboardStatistiquesDto getDashboardStatistiques() {
-        log.info("📊 Calcul des statistiques dashboard globales");
+        log.info("Calcul des statistiques dashboard globales");
 
         LocalDate aujourdhui = LocalDate.now();
         LocalDate debutMois = aujourdhui.withDayOfMonth(1);
@@ -100,7 +99,7 @@ public class DashboardStatistiquesService {
      * Obtenir les statistiques pour une période spécifique
      */
     public DashboardStatistiquesDto getDashboardStatistiquesPeriode(LocalDate dateDebut, LocalDate dateFin) {
-        log.info("📊 Calcul des statistiques dashboard pour la période: {} - {}", dateDebut, dateFin);
+        log.info("Calcul des statistiques dashboard pour la période: {} - {}", dateDebut, dateFin);
 
         return DashboardStatistiquesDto.builder()
                 .chiffreAffairesTotal(calculerCAMois(dateDebut, dateFin))

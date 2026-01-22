@@ -113,14 +113,4 @@ public class CalendrierEventDto {
         return "#9E9E9E";
     }
 
-    /**
-     * Obtenir l'icône selon le type
-     */
-    public static String getIconeParType(String type) {
-        return switch (type) {
-            case "RESERVATION" -> "📅";
-            case "LIVRAISON" -> "🚚";
-            default -> "📌";
-        };
-    }
 }

@@ -22,19 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * ==========================================
- * IMPLÉMENTATION DU SERVICE DE MODIFICATION DE DATES
- * Sprint 4 - Gestion des réservations
- * ==========================================
- *
- * 🎯 RESPONSABILITÉS :
- * 1. Modifier les dates d'une ou plusieurs lignes
- * 2. Vérifier la disponibilité AVANT modification
- * 3. Recalculer automatiquement les dates de la réservation
- * 4. Gérer les instances réservées (produits avec référence)
- * 5. Tracer les modifications dans les commentaires
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -51,7 +39,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
     private final UtilisateurRoleRepository utilisateurRoleRepo;
 
     // ============================================
-    // FONCTIONNALITÉ 1 : MODIFIER UNE SEULE LIGNE
+    // MODIFIER UNE SEULE LIGNE
     // ============================================
 
     @Override
@@ -61,10 +49,10 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             ModifierUneLigneRequestDto request,
             String username) {
 
-        log.info("🔧 Modification d'une ligne - Réservation: {}, Ligne: {}", idReservation, idLigne);
+        log.info("Modification d'une ligne - Réservation: {}, Ligne: {}", idReservation, idLigne);
 
 
-        // 1️⃣ Récupérer la réservation et la ligne
+        // 1- Récupérer la réservation et la ligne
         Reservation reservation = getReservationOrThrow(idReservation);
         LigneReservation ligne = getLigneReservationOrThrow(idLigne);
 
@@ -100,14 +88,14 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         LocalDate ancienneDateDebut = ligne.getDateDebut();
         LocalDate ancienneDateFin = ligne.getDateFin();
 
-        // 2️⃣ Valider les nouvelles dates
+        // 2 -  Valider les nouvelles dates
         dateValidator.validerPeriodeReservation(
                 request.getNouvelleDateDebut(),
                 request.getNouvelleDateFin(),
                 "Modification ligne #" + idLigne
         );
 
-        // 3️⃣ Vérifier la disponibilité sur la nouvelle période
+        // 3- Vérifier la disponibilité sur la nouvelle période
         verifierDisponibilitePourLigne(
                 ligne,
                 request.getNouvelleDateDebut(),
@@ -115,12 +103,12 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
                 idReservation
         );
 
-        // 4️⃣ Mettre à jour les dates de la ligne
+        // 4- Mettre à jour les dates de la ligne
         ligne.setDateDebut(request.getNouvelleDateDebut());
         ligne.setDateFin(request.getNouvelleDateFin());
         ligneReservationRepo.save(ligne);
 
-        log.info("✅ Dates de la ligne {} mises à jour: {} -> {}",
+        log.info(" Dates de la ligne {} mises à jour: {} -> {}",
                 idLigne, ancienneDateDebut, request.getNouvelleDateDebut());
 
         // Sauvegarder les anciennes valeurs
@@ -129,14 +117,14 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
 
         double ancienMontantTotal = reservation.getMontantTotal() != null ? reservation.getMontantTotal() : 0.0;
 
-        // 5️⃣ Recalculer les dates de la réservation
+        // 5- Recalculer les dates de la réservation
         recalculerDatesReservation(reservation);
 
-        // 6️⃣ 💰 RECALCULER LE MONTANT TOTAL 💰
+        // 6- RECALCULER LE MONTANT TOTAL
         double nouveauMontantTotal = montantCalculService.recalculerEtMettreAJourMontantTotal(reservation);
         reservationRepo.save(reservation);
 
-        // 7️⃣ Ajouter un commentaire d'historique
+        // 7- Ajouter un commentaire d'historique
         String commentaire = String.format(
                 "[%s] Modification ligne #%d (%s):%n Dates changées de %s→%s vers %s→%s.%n Motif: %s.%n Responsable: %s%n",
                 LocalDateTime.now(),
@@ -151,7 +139,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         );
         ajouterCommentaireHistorique(reservation, commentaire);
 
-        // 8️⃣ Construire la réponse
+        // 8- Construire la réponse
         return construireReponse(
                 reservation,
                 ancienneDateDebutRes,
@@ -171,7 +159,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
     }
 
     // ============================================
-    // FONCTIONNALITÉ 2 : DÉCALER TOUTES LES LIGNES
+    // DÉCALER TOUTES LES LIGNES
     // ============================================
 
     @Override
@@ -180,10 +168,10 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             DecalerToutesLignesRequestDto request,
             String username) {
 
-        log.info("🔧 Décalage de toutes les lignes - Réservation: {}, Décalage: {} jours",
+        log.info(" Décalage de toutes les lignes - Réservation: {}, Décalage: {} jours",
                 idReservation, request.getNombreJours());
 
-        // 1️⃣ Récupérer la réservation
+        // 1- Récupérer la réservation
         Reservation reservation = getReservationOrThrow(idReservation);
         List<LigneReservation> lignes = new ArrayList<>(reservation.getLigneReservations());
 
@@ -198,7 +186,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
 
         List<ModificationDatesResponseDto.DetailLigneModifiee> detailsLignes = new ArrayList<>();
 
-        // 2️⃣ Décaler chaque ligne
+        // 2- Décaler chaque ligne
         for (LigneReservation ligne : lignes) {
             LocalDate ancienneDateDebut = ligne.getDateDebut();
             LocalDate ancienneDateFin = ligne.getDateFin();
@@ -226,7 +214,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             ligne.setDateFin(nouvelleDateFin);
             ligneReservationRepo.save(ligne);
 
-            log.info("✅ Ligne {} décalée: {} -> {}",
+            log.info(" Ligne {} décalée: {} -> {}",
                     ligne.getIdLigneReservation(), ancienneDateDebut, nouvelleDateDebut);
 
             detailsLignes.add(construireDetailLigneModifiee(
@@ -234,13 +222,13 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             ));
         }
 
-        // 3️⃣ Recalculer les dates de la réservation
+        // 3- Recalculer les dates de la réservation
         recalculerDatesReservation(reservation);
 
-        // 💰 PAS DE RECALCUL DES MONTANTS (durée identique)
-        log.info("💰 Décalage uniquement : montant total inchangé = {}DT", montantTotal);
+        //  PAS DE RECALCUL DES MONTANTS (durée identique)
+        log.info(" Décalage uniquement : montant total inchangé = {}DT", montantTotal);
 
-        // 4️⃣ Ajouter un commentaire d'historique
+        // 4- Ajouter un commentaire d'historique
         String commentaire = String.format(
                 "[%s] Décalage global de %+d jours pour toutes les lignes (%d produits).%n " +
                         "Montant inchangé: %.2fDT.%n Motif: %s.%n responsable : %s%n",
@@ -253,7 +241,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         );
         ajouterCommentaireHistorique(reservation, commentaire);
 
-        // 5️⃣ Construire la réponse
+        // 5- Construire la réponse
         return construireReponse(
                 reservation,
                 ancienneDateDebutRes,
@@ -267,7 +255,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
     }
 
     // ============================================
-    // FONCTIONNALITÉ 3 : MODIFIER PLUSIEURS LIGNES SPÉCIFIQUES
+    //  MODIFIER PLUSIEURS LIGNES SPÉCIFIQUES
     // ============================================
 
     @Override
@@ -276,10 +264,10 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             ModifierPlusieurLignesRequestDto request,
             String username) {
 
-        log.info("🔧 Modification de plusieurs lignes - Réservation: {}, Nombre: {}",
+        log.info(" Modification de plusieurs lignes - Réservation: {}, Nombre: {}",
                 idReservation, request.getModifications().size());
 
-        // 1️⃣ Récupérer la réservation
+        // 1- Récupérer la réservation
         Reservation reservation = getReservationOrThrow(idReservation);
 
         // Sauvegarder les anciennes dates
@@ -290,7 +278,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
 
         List<ModificationDatesResponseDto.DetailLigneModifiee> detailsLignes = new ArrayList<>();
 
-        // 2️⃣ Traiter chaque modification
+        // 2- Traiter chaque modification
         for (ModifierPlusieurLignesRequestDto.ModificationLigneDto modif : request.getModifications()) {
             LigneReservation ligne = getLigneReservationOrThrow(modif.getIdLigne());
 
@@ -323,7 +311,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             ligne.setDateFin(modif.getNouvelleDateFin());
             ligneReservationRepo.save(ligne);
 
-            log.info("✅ Ligne {} modifiée: {} -> {}",
+            log.info(" Ligne {} modifiée: {} -> {}",
                     modif.getIdLigne(), ancienneDateDebut, modif.getNouvelleDateDebut());
 
             detailsLignes.add(construireDetailLigneModifiee(
@@ -332,14 +320,14 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             ));
         }
 
-        // 3️⃣ Recalculer les dates de la réservation
+        // 3- Recalculer les dates de la réservation
         recalculerDatesReservation(reservation);
 
-        // 4️⃣ 💰 RECALCULER LE MONTANT TOTAL 💰
+        // 4-  RECALCULER LE MONTANT TOTAL
         double nouveauMontantTotal = montantCalculService.recalculerEtMettreAJourMontantTotal(reservation);
         reservationRepo.save(reservation);
 
-        // 5️⃣ Ajouter un commentaire d'historique AVEC changement de montant
+        // 5- Ajouter un commentaire d'historique AVEC changement de montant
         String commentaire = String.format(
                 "[%s] Modification de %d lignes spécifiques.%n Montant : %.2fDT → %.2fDT (différence: %+.2fDT).%n Motif: %s.%n",
                 LocalDateTime.now(),
@@ -351,7 +339,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         );
         ajouterCommentaireHistorique(reservation, commentaire);
 
-        // 6️⃣ Construire la réponse
+        // 6- Construire la réponse
         return construireReponse(
                 reservation,
                 ancienneDateDebutRes,
@@ -369,7 +357,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
     // ============================================
 
     /**
-     * 🔄 Recalculer les dates de la réservation en fonction des lignes
+     *  Recalculer les dates de la réservation en fonction des lignes
      * dateDebut = MIN(toutes les dates de début des lignes)
      * dateFin = MAX(toutes les dates de fin des lignes)
      */
@@ -377,7 +365,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         List<LigneReservation> lignes = new ArrayList<>(reservation.getLigneReservations());
 
         if (lignes.isEmpty()) {
-            log.warn("⚠️ Aucune ligne trouvée pour recalculer les dates");
+            log.warn("Aucune ligne trouvée pour recalculer les dates");
             return;
         }
 
@@ -391,17 +379,17 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
                 .max(Comparator.naturalOrder())
                 .orElseThrow(() -> new CustomException("Impossible de calculer la date de fin"));
 
-        log.info("🔄 Recalcul des dates de réservation: {} -> {}", minDebut, maxFin);
+        log.info(" Recalcul des dates de réservation: {} -> {}", minDebut, maxFin);
 
         reservation.setDateDebut(minDebut);
         reservation.setDateFin(maxFin);
         reservationRepo.save(reservation);
 
-        log.info("✅ Dates de réservation recalculées: {} au {}", minDebut, maxFin);
+        log.info(" Dates de réservation recalculées: {} au {}", minDebut, maxFin);
     }
 
     /**
-     * ✅ Vérifier la disponibilité d'une ligne sur une nouvelle période
+     *  Vérifier la disponibilité d'une ligne sur une nouvelle période
      */
     private void verifierDisponibilitePourLigne(
             LigneReservation ligne,
@@ -411,7 +399,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
 
         Produit produit = ligne.getProduit();
 
-        log.debug("🔍 Vérification disponibilité - Produit: {} ({}), Période: {} -> {}",
+        log.debug(" Vérification disponibilité - Produit: {} ({}), Période: {} -> {}",
                 produit.getNomProduit(), produit.getTypeProduit(), nouvelleDateDebut, nouvelleDateFin);
 
         if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
@@ -458,7 +446,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
         int quantiteTotale = produit.getQuantiteInitial();
         int quantiteDisponible = quantiteTotale - quantiteReservee;
 
-        log.debug("📊 Disponibilité quantitative - Total: {}, Réservée: {}, Disponible: {}, Demandée: {}",
+        log.debug(" Disponibilité quantitative - Total: {}, Réservée: {}, Disponible: {}, Demandée: {}",
                 quantiteTotale, quantiteReservee, quantiteDisponible, quantiteDemandee);
 
         if (quantiteDisponible < quantiteDemandee) {
@@ -470,7 +458,7 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             ));
         }
 
-        log.info("✅ Disponibilité quantitative OK - {} unités disponibles", quantiteDisponible);
+        log.info(" Disponibilité quantitative OK - {} unités disponibles", quantiteDisponible);
     }
 
     /**
@@ -503,43 +491,9 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
             }
         });
 
-        log.info("✅ Toutes les instances sont disponibles");
+        log.info(" Toutes les instances sont disponibles");
     }
 
-    /**
-     * Construire un commentaire avec changement de montant
-     */
-    private String construireCommentaireModificationAvecMontant(
-            Long idLigne,
-            String nomProduit,
-            LocalDate ancienneDateDebut,
-            LocalDate ancienneDateFin,
-            LocalDate nouvelleDateDebut,
-            LocalDate nouvelleDateFin,
-            double ancienMontant,
-            double nouveauMontant,
-            String motif) {
-
-        double difference = nouveauMontant - ancienMontant;
-        String symbole = difference >= 0 ? "+" : "";
-
-        return String.format(
-                "[%s] Modification ligne #%d (%s): Dates %s→%s vers %s→%s. " +
-                        "💰 Montant: %.2fDT → %.2fDT (%s%.2fDT). Motif: %s",
-                LocalDate.now(),
-                idLigne,
-                nomProduit,
-                ancienneDateDebut,
-                ancienneDateFin,
-                nouvelleDateDebut,
-                nouvelleDateFin,
-                ancienMontant,
-                nouveauMontant,
-                symbole,
-                difference,
-                motif != null ? motif : "Non spécifié"
-        );
-    }
     /**
      * Ajouter un commentaire d'historique
      */
@@ -597,9 +551,9 @@ public class LigneReservationModificationDatesServiceImpl implements LigneReserv
                 .nouvelleDateDebutReservation(reservation.getDateDebut())
                 .nouvelleDateFinReservation(reservation.getDateFin())
                 .lignesModifiees(detailsLignes)
-                .ancienMontantTotal(ancienMontant)  // 💰 NOUVEAU
-                .nouveauMontantTotal(nouveauMontant)  // 💰 NOUVEAU
-                .differenceMontant(nouveauMontant - ancienMontant)  // 💰 NOUVEAU
+                .ancienMontantTotal(ancienMontant)
+                .nouveauMontantTotal(nouveauMontant)
+                .differenceMontant(nouveauMontant - ancienMontant)
                 .build();
     }
 

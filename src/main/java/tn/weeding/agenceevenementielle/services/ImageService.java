@@ -21,7 +21,7 @@ import java.util.Base64;
  * 2. Extrait les données brutes (après la virgule)
  * 3. Décode Base64 → bytes[]
  * 4. Sauvegarde bytes[] dans un fichier .jpg ou .png
- * 5. Retourne le chemin : "/uploads/profiles/john_123.jpg"
+ * 5. Retourne le chemin : "/uploads/profiles/wajih_123.jpg"
  */
 @Service
 @Slf4j
@@ -48,42 +48,42 @@ public class ImageService {
         }
 
         try {
-            // 1️⃣ Séparer "data:image/png;base64" et "iVBORw0KG..."
+            // 1- Séparer "data:image/png;base64" et "iVBORw0KG..."
             String[] parts = base64Image.split(",");
             String imageData = parts[1]; // Les données après la virgule
 
-            // 2️⃣ Décoder Base64 → bytes[]
+            // 2- Décoder Base64 → bytes[]
             byte[] bytes = Base64.getDecoder().decode(imageData);
 
-            // 3️⃣ Vérifier la taille
+            // 3- Vérifier la taille
             if (bytes.length > MAX_SIZE) {
                 throw new CustomException("Image trop volumineuse (max 5MB)");
             }
 
-            // 4️⃣ Déterminer l'extension (png ou jpg)
+            // 4- Déterminer l'extension (png ou jpg)
             String extension = parts[0].contains("png") ? "png" : "jpg";
 
-            // 5️⃣ Créer un nom de fichier unique
+            // 5- Créer un nom de fichier unique
             String filename = username + "_" + System.currentTimeMillis() + "." + extension;
-            // Exemple : john_1729512345678.jpg
+            // Exemple : wajih_1729512345678.jpg
 
-            // 6️⃣ Créer le dossier si n'existe pas
+            // 6- Créer le dossier si n'existe pas
             Path uploadPath = Paths.get(UPLOAD_DIR);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-            // 7️⃣ Écrire le fichier
+            // 7- Écrire le fichier
             Path filePath = uploadPath.resolve(filename);
             Files.write(filePath, bytes);
 
-            log.info("✅ Image sauvegardée : {}", filename);
+            log.info(" Image sauvegardée : {}", filename);
 
-            // 8️⃣ Retourner le chemin relatif
+            // 8- Retourner le chemin relatif
             return "/uploads/profiles/" + filename;
 
         } catch (Exception e) {
-            log.error("❌ Erreur sauvegarde image", e);
+            log.error(" Erreur sauvegarde image", e);
             throw new CustomException("Erreur lors de la sauvegarde de l'image");
         }
     }
@@ -91,7 +91,6 @@ public class ImageService {
     /**
      * Supprimer une ancienne image
      *
-     * @param imageUrl Chemin comme "/uploads/profiles/john_123.jpg"
      */
     public void deleteImage(String imageUrl) {
         if (imageUrl != null && imageUrl.startsWith("/uploads")) {
@@ -99,9 +98,9 @@ public class ImageService {
                 // Enlever le "/" du début pour obtenir le chemin relatif
                 Path filePath = Paths.get(imageUrl.substring(1));
                 Files.deleteIfExists(filePath);
-                log.info("🗑️ Image supprimée : {}", imageUrl);
+                log.info(" Image supprimée : {}", imageUrl);
             } catch (Exception e) {
-                log.warn("⚠️ Impossible de supprimer l'image : {}", imageUrl);
+                log.warn("Impossible de supprimer l'image : {}", imageUrl);
             }
         }
     }
@@ -125,7 +124,7 @@ public class ImageService {
                 deleteImage(imageUrl);
                 return null;
             }
-            log.info("🗑️ Image supprimée");
+            log.info(" Image supprimée");
         }
 
         return imageUrl ;

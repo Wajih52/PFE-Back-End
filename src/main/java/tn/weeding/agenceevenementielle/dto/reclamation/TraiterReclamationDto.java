@@ -9,7 +9,6 @@ import tn.weeding.agenceevenementielle.entities.enums.StatutReclamation;
 
 /**
  * DTO pour traiter/répondre à une réclamation
- * Utilisé par les admins et employés
  */
 @Data
 @NoArgsConstructor

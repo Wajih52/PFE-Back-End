@@ -39,6 +39,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     private final MouvementStockRepository mouvementStockRepo;
     private final ProduitRepository produitRepo;
     private final NotificationServiceInterface notificationService;
+    private final EmailService emailService;
 
     // ============================================
     // CRUD LIVRAISONS
@@ -46,7 +47,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public LivraisonResponseDto creerLivraison(LivraisonRequestDto dto, String username) {
-        log.info("🚚 Création d'une nouvelle livraison: {}", dto.getTitreLivraison());
+        log.info(" Création d'une nouvelle livraison: {}", dto.getTitreLivraison());
 
         // Vérifier que les lignes de réservation existent
         List<LigneReservation> lignes = ligneReservationRepo.findAllById(dto.getIdLignesReservation());
@@ -59,7 +60,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             throw new CustomException("Certaines lignes de réservation sont introuvables");
         }
 
-        //  CONTRAINTE: Vérifier que toutes les lignes appartiennent à LA MÊME réservation
+        // Vérifier que toutes les lignes appartiennent à LA MÊME réservation
         Reservation reservation = lignes.get(0).getReservation();
         boolean toutesMemReservation = lignes.stream()
                 .allMatch(ligne -> ligne.getReservation().getIdReservation().equals(reservation.getIdReservation()));
@@ -71,7 +72,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             );
         }
 
-        log.info("✅ Validation: Toutes les lignes appartiennent à la réservation {}",
+        log.info("Validation: Toutes les lignes appartiennent à la réservation {}",
                 reservation.getReferenceReservation());
 
         // Vérifier que la réservation est confirmée
@@ -103,10 +104,10 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         // Statut initial selon la date
         if (dto.getDateLivraison().equals(LocalDate.now())) {
             livraison.setStatutLivraison(StatutLivraison.EN_ATTENTE);
-            log.info("📅 Date de livraison = aujourd'hui → Statut = EN_ATTENTE");
+            log.info("Date de livraison = aujourd'hui → Statut = EN_ATTENTE");
         } else {
             livraison.setStatutLivraison(StatutLivraison.NOT_TODAY);
-            log.info("📅 Date de livraison = {} → Statut = NOT_TODAY", dto.getDateLivraison());
+            log.info("Date de livraison = {} → Statut = NOT_TODAY", dto.getDateLivraison());
         }
 
         livraison.setAffectationLivraisons(new HashSet<>());
@@ -126,7 +127,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     for (InstanceProduit instance : ligne.getInstancesReservees()) {
                         instance.setStatut(StatutInstance.EN_ATTENTE);
                         instanceProduitRepo.save(instance);
-                        log.info("📦 Instance {} → EN_ATTENTE", instance.getNumeroSerie());
+                        log.info("Instance {} → EN_ATTENTE", instance.getNumeroSerie());
                     }
                 }
             } else {
@@ -144,7 +145,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         }
         reservationRepo.save(reservation);
 
-        log.info("✅ Livraison créée avec succès - ID: {}, Réservation: {}, {} ligne(s)",
+        log.info("Livraison créée avec succès - ID: {}, Réservation: {}, {} ligne(s)",
                 livraison.getIdLivraison(),
                 reservation.getReferenceReservation(),
                 lignes.size());
@@ -162,7 +163,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 "/admin/livraisons/" + livraison.getIdLivraison()
         );
 
-        log.info("✅ Livraison créée avec succès - ID: {}, Réservation: {}, {} ligne(s)",
+        log.info("Livraison créée avec succès - ID: {}, Réservation: {}, {} ligne(s)",
                 livraison.getIdLivraison(),
                 reservation.getReferenceReservation(),
                 lignes.size());
@@ -172,7 +173,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public LivraisonResponseDto modifierLivraison(Long idLivraison, LivraisonRequestDto dto, String username) {
-        log.info("✏️ Modification de la livraison ID: {}", idLivraison);
+        log.info(" Modification de la livraison ID: {}", idLivraison);
 
         Livraison livraison = livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
@@ -221,11 +222,11 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 ligneReservationRepo.save(ligne);
             }
 
-            log.info("🔄 Lignes de réservation mises à jour pour la livraison");
+            log.info("Lignes de réservation mises à jour pour la livraison");
         }
 
         livraison = livraisonRepo.save(livraison);
-        log.info("✅ Livraison modifiée avec succès");
+        log.info("Livraison modifiée avec succès");
 
         return toDto(livraison);
     }
@@ -233,7 +234,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public LivraisonResponseDto getLivraisonById(Long idLivraison) {
-        log.info("📋 Récupération de la livraison ID: {}", idLivraison);
+        log.info("Récupération de la livraison ID: {}", idLivraison);
 
         Livraison livraison = livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
@@ -244,7 +245,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<LivraisonResponseDto> getAllLivraisons() {
-        log.info("📋 Récupération de toutes les livraisons");
+        log.info("Récupération de toutes les livraisons");
 
         return livraisonRepo.findAll().stream()
                 .map(this::toDto)
@@ -254,7 +255,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<LivraisonResponseDto> getLivraisonsByStatut(StatutLivraison statut) {
-        log.info("📋 Récupération des livraisons avec statut: {}", statut);
+        log.info(" Récupération des livraisons avec statut: {}", statut);
 
         return livraisonRepo.findByStatutLivraison(statut).stream()
                 .map(this::toDto)
@@ -264,7 +265,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<LivraisonResponseDto> getLivraisonsByDate(LocalDate date) {
-        log.info("📋 Récupération des livraisons du: {}", date);
+        log.info(" Récupération des livraisons du: {}", date);
         return livraisonRepo.findByDateLivraison(date).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
@@ -273,7 +274,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<LivraisonResponseDto> getLivraisonsBetweenDates(LocalDate dateDebut, LocalDate dateFin) {
-        log.info("📋 Récupération des livraisons entre {} et {}", dateDebut, dateFin);
+        log.info(" Récupération des livraisons entre {} et {}", dateDebut, dateFin);
 
         return livraisonRepo.findLivraisonsBetweenDates(dateDebut, dateFin).stream()
                 .map(this::toDto)
@@ -283,7 +284,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<LivraisonResponseDto> getLivraisonsAujourdhui() {
-        log.info("📋 Récupération des livraisons d'aujourd'hui");
+        log.info(" Récupération des livraisons d'aujourd'hui");
 
         return livraisonRepo.findLivraisonsAujourdhui().stream()
                 .map(this::toDto)
@@ -293,7 +294,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<LivraisonResponseDto> getLivraisonsByEmploye(Long idEmploye) {
-        log.info("📋 Récupération des livraisons de l'employé ID: {}", idEmploye);
+        log.info(" Récupération des livraisons de l'employé ID: {}", idEmploye);
 
         return livraisonRepo.findLivraisonsByEmploye(idEmploye).stream()
                 .map(this::toDto)
@@ -303,7 +304,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<LivraisonResponseDto> getLivraisonsByReservation(Long idReservation) {
-        log.info("📋 Récupération des livraisons de la réservation ID: {}", idReservation);
+        log.info("Récupération des livraisons de la réservation ID: {}", idReservation);
 
         return livraisonRepo.findLivraisonsByReservation(idReservation).stream()
                 .map(this::toDto)
@@ -312,7 +313,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public List<LigneReservationResponseDto> getLignesLivraison(Long idLivraison) {
-        log.info("📋 Récupération des lignes de la livraison ID {}", idLivraison);
+        log.info("Récupération des lignes de la livraison ID {}", idLivraison);
 
         // Vérifier que la livraison existe
         livraisonRepo.findById(idLivraison)
@@ -321,7 +322,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         // Récupérer les lignes de réservation
         List<LigneReservation> lignes = ligneReservationRepo.findByLivraison_IdLivraison(idLivraison);
 
-        log.info("✅ {} ligne(s) trouvée(s) pour la livraison #{}", lignes.size(), idLivraison);
+        log.info("{} ligne(s) trouvée(s) pour la livraison #{}", lignes.size(), idLivraison);
 
         // Convertir en DTO
         return lignes.stream()
@@ -331,7 +332,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public void supprimerLivraison(Long idLivraison, String username) {
-        log.info("🗑️ Suppression de la livraison ID: {}", idLivraison);
+        log.info("Suppression de la livraison ID: {}", idLivraison);
 
         Livraison livraison = livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
@@ -360,7 +361,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         // Supprimer la livraison
         livraisonRepo.delete(livraison);
 
-        // ✅ AJOUT : Notification pour le staff après suppression
+        //  Notification pour le staff après suppression
         if (reservation != null) {
             notificationService.creerNotificationPourStaff(
                     TypeNotification.SYSTEME_INFO,
@@ -374,7 +375,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             );
         }
 
-        log.info("✅ Livraison supprimée avec succès");
+        log.info("Livraison supprimée avec succès");
     }
 
     // ============================================
@@ -383,7 +384,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public LivraisonResponseDto changerStatutLivraison(Long idLivraison, StatutLivraison nouveauStatut, String username) {
-        log.info("🔄 Changement de statut de la livraison ID: {} → {}", idLivraison, nouveauStatut);
+        log.info(" Changement de statut de la livraison ID: {} → {}", idLivraison, nouveauStatut);
 
         Livraison livraison = livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
@@ -400,7 +401,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         //  Décrémentation lors du passage EN_COURS
         switch (nouveauStatut) {
             case EN_COURS:
-                log.info("🚚 Passage EN_COURS: Décrémentation du stock et mise à jour des statuts");
+                log.info("Passage EN_COURS: Décrémentation du stock et mise à jour des statuts");
 
                 // Mettre à jour les lignes
                 for (LigneReservation ligne : lignes) {
@@ -408,7 +409,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
                     Produit produit = ligne.getProduit();
 
-                    // ✅ DÉCRÉMENTATION DU STOCK (selon le type de produit)
+                    // DÉCRÉMENTATION DU STOCK (selon le type de produit)
                     if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE) {
 
                         // Enregistrer le mouvement de stock
@@ -429,7 +430,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                         produit.setQuantiteDisponible(quantiteAvant - ligne.getQuantite());
                         produitRepo.save(produit);
 
-                        log.info("📉 Stock décrémenté pour {}: {} → {} (- {})",
+                        log.info(" Stock décrémenté pour {}: {} → {} (- {})",
                                 produit.getNomProduit(),
                                 quantiteAvant,
                                 produit.getQuantiteDisponible(),
@@ -459,15 +460,35 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                             produit.setQuantiteDisponible(quantiteAvant - 1);
                             produitRepo.save(produit);
 
-                            log.info("📦 Instance {} → EN_LIVRAISON (Stock: {} → {})",
+                            log.info(" Instance {} → EN_LIVRAISON (Stock: {} → {})",
                                     instance.getNumeroSerie(),
                                     quantiteAvant,
                                     produit.getQuantiteDisponible());
 
 
                         }
+                        //vérification seuil critique et en envoie email + notification si seuil critique atteint
+                            if(produit.getQuantiteDisponible()<produit.getSeuilCritique()){
+                                notificationService.creerNotificationStockCritique
+                                        (produit.getIdProduit(),produit.getNomProduit(),produit.getQuantiteDisponible());
+                                List<Utilisateur> staff = utilisateurRepo.findAll().stream()
+                                        .filter(u -> u.getUtilisateurRoles().stream()
+                                                .anyMatch(ur -> ur.getRole().getNom().equals("ADMIN") ||
+                                                        ur.getRole().getNom().equals("MANAGER")))
+                                        .toList();
 
-                        log.info("📦 {} instances passées en EN_LIVRAISON pour ligne {}",
+                                String message = String.format(" le produit %s qui porte le nom %s a atteint la seuil critique ," +
+                                        " merci de consulter le stock pour la réapprovisionnement",produit.getCodeProduit(),produit.getNomProduit());
+
+                                for(Utilisateur admin : staff){
+                                    emailService.envoyerEmailNotification
+                                            (admin.getEmail(),admin.getPrenom(),TypeNotification.STOCK_CRITIQUE,
+                                                    "seuil Critique Atteint",message);
+                                }
+
+
+                            }
+                        log.info("{} instances passées en EN_LIVRAISON pour ligne {}",
                                 ligne.getInstancesReservees().size(),
                                 ligne.getIdLigneReservation());
                     }
@@ -480,7 +501,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 break;
 
             case LIVREE:
-                log.info("✅ Passage LIVREE: Produits livrés chez le client");
+                log.info("Passage LIVREE: Produits livrés chez le client");
                 if (!lignes.isEmpty()) {
                     reservation = lignes.get(0).getReservation();
                     // Vérifier si toutes les lignes de la réservation sont livrées
@@ -500,7 +521,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                                     instance.setStatut(StatutInstance.EN_UTILISATION);
                                     instanceProduitRepo.save(instance);
                                 }
-                                log.info("📦 {} instances passées en EN_UTILISATION",
+                                log.info("{} instances passées en EN_UTILISATION",
                                         ligne.getInstancesReservees().size());
                             }
 
@@ -509,7 +530,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                         // Mettre la réservation en EN_COURS
                         reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
                         // Le save sera fait automatiquement par JPA grâce à la cascade
-                        log.info("📋 Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
+                        log.info("Réservation {} passée EN_COURS (toutes les lignes sont livrées)",
                                 reservation.getReferenceReservation());
                         livraison.setStatutLivraison(nouveauStatut);
                     }
@@ -526,7 +547,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         livraison = livraisonRepo.save(livraison);
 
-        log.info("✅ Statut changé de {} à {} pour {} lignes", ancienStatut, nouveauStatut, lignes.size());
+        log.info("Statut changé de {} à {} pour {} lignes", ancienStatut, nouveauStatut, lignes.size());
 
         // Notifications selon le nouveau statut
         if (reservation != null && reservation.getUtilisateur() != null) {
@@ -611,30 +632,26 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public LivraisonResponseDto marquerLivraisonEnCours(Long idLivraison, String username) {
-        log.info("🚚 Marquage de la livraison ID {} comme EN_COURS", idLivraison);
+        log.info("Marquage de la livraison ID {} comme EN_COURS", idLivraison);
         return changerStatutLivraison(idLivraison, StatutLivraison.EN_COURS, username);
     }
 
     @Override
     public LivraisonResponseDto marquerLivraisonLivree(Long idLivraison, String username) {
-        log.info("✅ Marquage de la livraison ID {} comme LIVREE", idLivraison);
+        log.info("Marquage de la livraison ID {} comme LIVREE", idLivraison);
 
         return changerStatutLivraison(idLivraison, StatutLivraison.LIVREE, username);
     }
 
     /**
-     * ✅ Marquer une ligne de réservation spécifique comme LIVREE
+     * Marquer une ligne de réservation spécifique comme LIVREE
      * Cette méthode est appelée depuis le détail de la livraison
      * lorsque l'employé confirme la livraison d'une ligne
-     *
-     * @param idLigne ID de la ligne de réservation
-     * @param username Nom d'utilisateur de l'employé qui effectue l'action
-     * @return LigneReservationResponseDto mise à jour
      */
     @Override
     @Transactional
     public LigneReservationResponseDto marquerLigneLivree(Long idLigne, String username) {
-        log.info("📦 Marquage de la ligne de réservation ID {} comme LIVREE par {}", idLigne, username);
+        log.info("Marquage de la ligne de réservation ID {} comme LIVREE par {}", idLigne, username);
 
         // Récupérer la ligne de réservation
         LigneReservation ligne = ligneReservationRepo.findById(idLigne)
@@ -661,7 +678,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         // Vérifier que la ligne n'est pas déjà livrée
         if (ligne.getStatutLivraisonLigne() == StatutLivraison.LIVREE) {
-            log.warn("⚠️ La ligne {} est déjà marquée comme LIVREE", idLigne);
+            log.warn("La ligne {} est déjà marquée comme LIVREE", idLigne);
             throw new CustomException("Cette ligne est déjà marquée comme livrée");
         }
 
@@ -673,7 +690,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         ligne.setStatutLivraisonLigne(StatutLivraison.LIVREE);
         ligne = ligneReservationRepo.save(ligne);
 
-        log.info("✅ Ligne #{} : {} → LIVREE (Produit: {})",
+        log.info("Ligne #{} : {} → LIVREE (Produit: {})",
                 ligne.getIdLigneReservation(),
                 ancienStatut,
                 ligne.getProduit().getNomProduit());
@@ -690,7 +707,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     instance.setStatut(StatutInstance.EN_UTILISATION);
                     instanceProduitRepo.save(instance);
 
-                    log.info("📦 Instance {} :  EN_LIVRAISON → EN_UTILISATION ",
+                    log.info("Instance {} :  EN_LIVRAISON → EN_UTILISATION ",
                             instance.getNumeroSerie());
                 }
             }
@@ -706,7 +723,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         boolean toutesLignesLivrees = toutesLignesDeLivraison.stream()
                 .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE);
 
-        log.info("📊 État de la livraison #{}: {}/{} lignes livrées",
+        log.info("État de la livraison #{}: {}/{} lignes livrées",
                 livraison.getIdLivraison(),
                 toutesLignesDeLivraison.stream()
                         .filter(l -> l.getStatutLivraisonLigne() == StatutLivraison.LIVREE)
@@ -718,7 +735,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             livraison.setStatutLivraison(StatutLivraison.LIVREE);
             livraisonRepo.save(livraison);
 
-            log.info("🎉 TOUTES les lignes de la livraison #{} sont livrées → Livraison marquée LIVREE",
+            log.info("TOUTES les lignes de la livraison #{} sont livrées → Livraison marquée LIVREE",
                     livraison.getIdLivraison());
 
 
@@ -733,7 +750,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 reservation.setStatutLivraisonRes(StatutLivraison.LIVREE);
                 reservationRepo.save(reservation);
 
-                log.info("🎉 TOUTES les lignes de la réservation {} sont livrées",
+                log.info("TOUTES les lignes de la réservation {} sont livrées",
                         reservation.getReferenceReservation());
             }
         }
@@ -782,7 +799,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
     @Override
     public AffectationLivraisonDto affecterEmploye(AffectationLivraisonRequestDto dto, String username) {
-        log.info("👤 Affectation de l'employé ID {} à la livraison ID {}",
+        log.info("Affectation de l'employé ID {} à la livraison ID {}",
                 dto.getIdEmploye(), dto.getIdLivraison());
 
         // Vérifier que la livraison existe
@@ -858,14 +875,14 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             );
         }
 
-        log.info("✅ Employé {} affecté à la livraison {}", employe.getEmail(), livraison.getTitreLivraison());
+        log.info("Employé {} affecté à la livraison {}", employe.getEmail(), livraison.getTitreLivraison());
 
         return toAffectationDto(affectation);
     }
 
     @Override
     public void retirerEmploye(Long idAffectation, String username) {
-        log.info("🗑️ Retrait de l'affectation ID: {}", idAffectation);
+        log.info("Retrait de l'affectation ID: {}", idAffectation);
 
         AffectationLivraison affectation = affectationRepo.findById(idAffectation)
                 .orElseThrow(() -> new CustomException("Affectation introuvable avec ID: " + idAffectation));
@@ -911,13 +928,13 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             );
         }
 
-        log.info("✅ Affectation supprimée avec succès");
+        log.info("Affectation supprimée avec succès");
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<AffectationLivraisonDto> getAffectationsByLivraison(Long idLivraison) {
-        log.info("📋 Récupération des affectations de la livraison ID: {}", idLivraison);
+        log.info("Récupération des affectations de la livraison ID: {}", idLivraison);
 
         return affectationRepo.findByLivraison_IdLivraison(idLivraison).stream()
                 .map(this::toAffectationDto)
@@ -927,7 +944,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<AffectationLivraisonDto> getAffectationsByEmploye(Long idEmploye) {
-        log.info("📋 Récupération des affectations de l'employé ID: {}", idEmploye);
+        log.info(" Récupération des affectations de l'employé ID: {}", idEmploye);
 
         return affectationRepo.findByUtilisateur_IdUtilisateur(idEmploye).stream()
                 .map(this::toAffectationDto)
@@ -941,7 +958,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public byte[] genererBonLivraison(Long idLivraison) {
-        log.info("📄 Génération du bon de livraison ID: {}", idLivraison);
+        log.info("Génération du bon de livraison ID: {}", idLivraison);
 
         Livraison livraison = livraisonRepo.findById(idLivraison)
                 .orElseThrow(() -> new CustomException("Livraison introuvable avec ID: " + idLivraison));
@@ -1054,11 +1071,11 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
             document.close();
 
-            log.info("✅ Bon de livraison généré avec succès");
+            log.info("Bon de livraison généré avec succès");
             return baos.toByteArray();
 
         } catch (DocumentException e) {
-            log.error("❌ Erreur lors de la génération du PDF: {}", e.getMessage());
+            log.error("Erreur lors de la génération du PDF: {}", e.getMessage());
             throw new CustomException("Erreur lors de la génération du bon de livraison: " + e.getMessage());
         }
     }
@@ -1080,12 +1097,12 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     // ============================================
 
     /**
-     * 🔙 Marquer une ligne comme "En retour"
+     * Marquer une ligne comme "En retour"
      */
     @Override
     @Transactional
     public LigneReservationResponseDto marquerLigneEnRetour(Long idLigne, String username) {
-        log.info("🔙 Début marquage ligne EN RETOUR - ID: {}", idLigne);
+        log.info("Début marquage ligne EN RETOUR - ID: {}", idLigne);
 
         // ============================================
         // RÉCUPÉRATION ET VALIDATIONS
@@ -1128,7 +1145,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         ligne = ligneReservationRepo.save(ligne);
         ligne.getReservation().setStatutLivraisonRes(StatutLivraison.RETOUR);
 
-        log.info("✅ Ligne #{} : {} → RETOUR (Produit: {})",
+        log.info("Ligne #{} : {} → RETOUR (Produit: {})",
                 ligne.getIdLigneReservation(),
                 ancienStatut,
                 ligne.getProduit().getNomProduit());
@@ -1156,7 +1173,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                             ligne.getReservation()
                     );
 
-                    log.info("📦 Instance {} : EN_UTILISATION → EN_RETOUR",
+                    log.info("Instance {} : EN_UTILISATION → EN_RETOUR",
                             instance.getNumeroSerie());
                 }
             }
@@ -1185,16 +1202,16 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
             if (certainesRetournees) {
                 livraison.setStatutLivraison(StatutLivraison.RETOUR_PARTIEL);
-                log.info("📊 Livraison #{}: Passage à RETOUR_PARTIEL", livraison.getIdLivraison());
+                log.info("Livraison #{}: Passage à RETOUR_PARTIEL", livraison.getIdLivraison());
             } else {
                 livraison.setStatutLivraison(StatutLivraison.RETOUR);
-                log.info("📊 Livraison #{}: Passage a RETOUR", livraison.getIdLivraison());
+                log.info("Livraison #{}: Passage a RETOUR", livraison.getIdLivraison());
             }
 
             livraisonRepo.save(livraison);
         }
 
-        log.info("📊 État de la livraison #{}: {}/{} lignes en retour ou retournées",
+        log.info("État de la livraison #{}: {}/{} lignes en retour ou retournées",
                 livraison.getIdLivraison(),
                 toutesLignesDeLivraison.stream()
                         .filter(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOUR ||
@@ -1206,12 +1223,12 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
     }
 
     /**
-     * ✅ Marquer une ligne comme "Retournée" (finalisée)
+     * Marquer une ligne comme "Retournée" (finalisée)
      */
     @Override
     @Transactional
     public LigneReservationResponseDto marquerLigneRetournee(Long idLigne, String username) {
-        log.info("✅ Début marquage ligne RETOURNEE - ID: {}", idLigne);
+        log.info("Début marquage ligne RETOURNEE - ID: {}", idLigne);
 
         // ============================================
         // RÉCUPÉRATION ET VALIDATIONS
@@ -1229,7 +1246,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
         // Vérifier que la ligne n'est pas déjà retournée
         if (ligne.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE) {
-            log.warn("⚠️ La ligne {} est déjà marquée comme RETOURNEE", idLigne);
+            log.warn("La ligne {} est déjà marquée comme RETOURNEE", idLigne);
             throw new CustomException("Cette ligne est déjà marquée comme retournée");
         }
 
@@ -1251,7 +1268,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         ligne.setStatutLivraisonLigne(StatutLivraison.RETOURNEE);
         ligne = ligneReservationRepo.save(ligne);
 
-        log.info("✅ Ligne #{} : {} → RETOURNEE (Produit: {})",
+        log.info("Ligne #{} : {} → RETOURNEE (Produit: {})",
                 ligne.getIdLigneReservation(),
                 ancienStatut,
                 ligne.getProduit().getNomProduit());
@@ -1285,7 +1302,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                     produitRepo.save(ligne.getProduit());
 
 
-                    log.info("📦 Instance {} : {} → DISPONIBLE",
+                    log.info("Instance {} : {} → DISPONIBLE",
                             instance.getNumeroSerie(),
                             instance.getStatut());
                 }
@@ -1294,7 +1311,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 ligne.getInstancesReservees().clear();
                 ligneReservationRepo.save(ligne);
 
-                log.info("✅ {} instances libérées et DISPONIBLES", ligne.getQuantite());
+                log.info("{} instances libérées et DISPONIBLES", ligne.getQuantite());
 
 
             }
@@ -1323,7 +1340,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
 
 
-            log.info("📦 Stock réintégré: {} → {} (+{})",
+            log.info("Stock réintégré: {} → {} (+{})",
                     quantiteAvant,
                     quantiteApres,
                     ligne.getQuantite());
@@ -1339,7 +1356,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
         boolean toutesLignesRetournees = toutesLignesDeLivraison.stream()
                 .allMatch(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE);
 
-        log.info("📊 État de la livraison #{}: {}/{} lignes retournées",
+        log.info("État de la livraison #{}: {}/{} lignes retournées",
                 livraison.getIdLivraison(),
                 toutesLignesDeLivraison.stream()
                         .filter(l -> l.getStatutLivraisonLigne() == StatutLivraison.RETOURNEE)
@@ -1350,7 +1367,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
             livraison.setStatutLivraison(StatutLivraison.RETOURNEE);
             livraisonRepo.save(livraison);
 
-            log.info("🎉 Livraison #{} : TOUTES les lignes sont retournées → Statut RETOURNEE",
+            log.info("Livraison #{} : TOUTES les lignes sont retournées → Statut RETOURNEE",
                     livraison.getIdLivraison());
 
             // ============================================
@@ -1371,7 +1388,7 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
                 reservation.setStatutLivraisonRes(StatutLivraison.RETOURNEE);
                 reservationRepo.save(reservation);
 
-                log.info("🎉 Réservation {} : TOUTES les lignes retournées → Statut TERMINE",
+                log.info("Réservation {} : TOUTES les lignes retournées → Statut TERMINE",
                         reservation.getReferenceReservation());
             }
         } else {
@@ -1381,11 +1398,11 @@ public class LivraisonServiceImpl implements LivraisonServiceInterface {
 
             if (auMoinsUneEnRetour) {
                 livraison.setStatutLivraison(StatutLivraison.RETOUR_PARTIEL);
-                log.info("📊 Livraison #{}: Passage à RETOUR_PARTIEL (retour en cours)",
+                log.info("Livraison #{}: Passage à RETOUR_PARTIEL (retour en cours)",
                         livraison.getIdLivraison());
             } else {
                 livraison.setStatutLivraison(StatutLivraison.RETOUR);
-                log.info("📊 Livraison #{}: Passage à RETOUR", livraison.getIdLivraison());
+                log.info("Livraison #{}: Passage à RETOUR", livraison.getIdLivraison());
             }
 
             livraisonRepo.save(livraison);

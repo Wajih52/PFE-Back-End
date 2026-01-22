@@ -35,7 +35,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
 
     @Override
     public ReclamationResponseDto creerReclamation(ReclamationRequestDto dto, String username) {
-        log.info("📝 Création d'une nouvelle réclamation - Type: {}", dto.getTypeReclamation());
+        log.info("Création d'une nouvelle réclamation - Type: {}", dto.getTypeReclamation());
 
         // Créer la réclamation
         Reclamation reclamation = Reclamation.builder()
@@ -55,9 +55,9 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
             Utilisateur utilisateur = utilisateurRepository.findByPseudo(username)
                     .orElseThrow(() -> new CustomException("Utilisateur introuvable: " + username));
             reclamation.setUtilisateur(utilisateur);
-            log.info("✅ Réclamation associée à l'utilisateur: {}", username);
+            log.info("Réclamation associée à l'utilisateur: {}", username);
         } else {
-            log.info("👤 Réclamation soumise par un visiteur (email: {})", dto.getContactEmail());
+            log.info("Réclamation soumise par un visiteur (email: {})", dto.getContactEmail());
         }
 
         // Associer une réservation si fournie
@@ -65,11 +65,11 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
             Reservation reservation = reservationRepository.findById(dto.getIdReservation())
                     .orElseThrow(() -> new CustomException("Réservation introuvable: " + dto.getIdReservation()));
             reclamation.setReservation(reservation);
-            log.info("📦 Réclamation liée à la réservation: {}", reservation.getReferenceReservation());
+            log.info(" Réclamation liée à la réservation: {}", reservation.getReferenceReservation());
         }
 
         Reclamation saved = reclamationRepository.save(reclamation);
-        log.info("✅ Réclamation créée avec succès - Code: {}", saved.getCodeReclamation());
+        log.info("Réclamation créée avec succès - Code: {}", saved.getCodeReclamation());
 
         return mapToResponseDto(saved);
     }
@@ -77,7 +77,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getAllReclamations() {
-        log.info("📋 Récupération de toutes les réclamations");
+        log.info(" Récupération de toutes les réclamations");
         return reclamationRepository.findAll().stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
@@ -86,7 +86,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public ReclamationResponseDto getReclamationById(Long id) {
-        log.info("🔍 Recherche de la réclamation ID: {}", id);
+        log.info("Recherche de la réclamation ID: {}", id);
         Reclamation reclamation = reclamationRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Réclamation introuvable avec l'ID: " + id));
         return mapToResponseDto(reclamation);
@@ -95,7 +95,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public ReclamationResponseDto getReclamationByCode(String code) {
-        log.info("🔍 Recherche de la réclamation Code: {}", code);
+        log.info("Recherche de la réclamation Code: {}", code);
         Reclamation reclamation = reclamationRepository.findByCodeReclamation(code)
                 .orElseThrow(() -> new CustomException("Réclamation introuvable avec le code: " + code));
         return mapToResponseDto(reclamation);
@@ -104,7 +104,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getReclamationsByUtilisateur(Long idUtilisateur) {
-        log.info("📋 Récupération des réclamations de l'utilisateur ID: {}", idUtilisateur);
+        log.info(" Récupération des réclamations de l'utilisateur ID: {}", idUtilisateur);
 
         // Vérifier que l'utilisateur existe
         if (!utilisateurRepository.existsById(idUtilisateur)) {
@@ -119,7 +119,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getReclamationsByEmail(String email) {
-        log.info("📋 Récupération des réclamations pour l'email: {}", email);
+        log.info(" Récupération des réclamations pour l'email: {}", email);
         return reclamationRepository.findByContactEmail(email).stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
@@ -128,7 +128,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getReclamationsByStatut(StatutReclamation statut) {
-        log.info("📋 Récupération des réclamations avec statut: {}", statut);
+        log.info("Récupération des réclamations avec statut: {}", statut);
         return reclamationRepository.findByStatutReclamation(statut).stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
@@ -137,7 +137,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getReclamationsByType(TypeReclamation type) {
-        log.info("📋 Récupération des réclamations de type: {}", type);
+        log.info("Récupération des réclamations de type: {}", type);
         return reclamationRepository.findByTypeReclamation(type).stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
@@ -146,7 +146,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getReclamationsByPriorite(PrioriteReclamation priorite) {
-        log.info("📋 Récupération des réclamations priorité: {}", priorite);
+        log.info("Récupération des réclamations priorité: {}", priorite);
         return reclamationRepository.findByPrioriteReclamation(priorite).stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
@@ -155,7 +155,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getReclamationsByReservation(Long idReservation) {
-        log.info("📋 Récupération des réclamations pour la réservation ID: {}", idReservation);
+        log.info("Récupération des réclamations pour la réservation ID: {}", idReservation);
 
         // Vérifier que la réservation existe
         if (!reservationRepository.existsById(idReservation)) {
@@ -169,7 +169,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
 
     @Override
     public ReclamationResponseDto classerReclamation(Long id, ClasserReclamationDto dto, String username) {
-        log.info("🏷️ Classification de la réclamation ID: {} par {}", id, username);
+        log.info("Classification de la réclamation ID: {} par {}", id, username);
 
         Reclamation reclamation = reclamationRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Réclamation introuvable avec l'ID: " + id));
@@ -184,7 +184,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
         reclamation.setTraitePar(utilisateur.getCodeUtilisateur());
 
         Reclamation updated = reclamationRepository.save(reclamation);
-        log.info("✅ Réclamation classée - Statut: {}, Priorité: {}",
+        log.info("Réclamation classée - Statut: {}, Priorité: {}",
                 dto.getStatutReclamation(), dto.getPrioriteReclamation());
 
         return mapToResponseDto(updated);
@@ -192,7 +192,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
 
     @Override
     public ReclamationResponseDto traiterReclamation(Long id, TraiterReclamationDto dto, String username) {
-        log.info("💬 Traitement de la réclamation ID: {} par {}", id, username);
+        log.info("Traitement de la réclamation ID: {} par {}", id, username);
 
         Reclamation reclamation = reclamationRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Réclamation introuvable avec l'ID: " + id));
@@ -209,9 +209,8 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
         reclamation.setTraitePar(utilisateur.getCodeUtilisateur());
 
         Reclamation updated = reclamationRepository.save(reclamation);
-        log.info("✅ Réclamation traitée avec succès");
+        log.info("Réclamation traitée avec succès");
 
-        // TODO: Envoyer une notification par email au client
 
         return mapToResponseDto(updated);
     }
@@ -224,7 +223,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
             PrioriteReclamation priorite,
             Long idUtilisateur) {
 
-        log.info("🔍 Recherche multi-critères - Statut: {}, Type: {}, Priorité: {}, Utilisateur: {}",
+        log.info("Recherche multi-critères - Statut: {}, Type: {}, Priorité: {}, Utilisateur: {}",
                 statut, type, priorite, idUtilisateur);
 
         return reclamationRepository.rechercherReclamations(statut, type, priorite, idUtilisateur).stream()
@@ -235,7 +234,7 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public List<ReclamationResponseDto> getReclamationsByPeriode(LocalDateTime debut, LocalDateTime fin) {
-        log.info("📅 Récupération des réclamations entre {} et {}", debut, fin);
+        log.info("Récupération des réclamations entre {} et {}", debut, fin);
         return reclamationRepository.findByDateReclamationBetween(debut, fin).stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
@@ -255,14 +254,14 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
 
     @Override
     public void deleteReclamation(Long id) {
-        log.warn("🗑️ Suppression de la réclamation ID: {}", id);
+        log.warn("Suppression de la réclamation ID: {}", id);
 
         if (!reclamationRepository.existsById(id)) {
             throw new CustomException("Réclamation introuvable avec l'ID: " + id);
         }
 
         reclamationRepository.deleteById(id);
-        log.info("✅ Réclamation supprimée");
+        log.info("Réclamation supprimée");
     }
 
     // ==================== MÉTHODES UTILITAIRES ====================

@@ -9,7 +9,6 @@ import java.time.LocalTime;
 
 /**
  * DTO de réponse pour une affectation de livraison
- * Sprint 6 - Gestion des livraisons
  */
 @Data
 @AllArgsConstructor

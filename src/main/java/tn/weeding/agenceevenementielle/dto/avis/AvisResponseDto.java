@@ -41,6 +41,6 @@ public class AvisResponseDto {
     private LocalDateTime dateModeration;
 
     // Métadonnées
-    private Boolean peutEtreModifie; // Le client peut-il modifier son avis ?
-    private Boolean peutEtreSupprime; // Le client peut-il supprimer son avis ?
+    private Boolean peutEtreModifie; // Le client peut modifier son avis ?
+    private Boolean peutEtreSupprime; // Le client peut supprimer son avis ?
 }

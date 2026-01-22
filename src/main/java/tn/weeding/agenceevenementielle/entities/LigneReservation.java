@@ -21,39 +21,27 @@ public class LigneReservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idLigneReservation;
 
-    /**
-     * Quantité réservée
-     * - Pour produits quantitatifs (EN_QUANTITE): nombre d'unités (ex: 50 chaises)
-     * - Pour produits avec référence (AVEC_REFERENCE): nombre d'instances (ex: 3 projecteurs)
-     */
+
     @Column(nullable = false)
     private Integer quantite;
 
 
-    /**
-     * Prix unitaire au moment de la réservation
-     */
+
     @Column(nullable = false)
     private Double prixUnitaire;
 
-    /**
-     * Date de début de la réservation
-     */
 
     LocalDate dateDebut;
 
-    /**
-     * Date de fin de la réservation
-     */
+
     LocalDate dateFin;
 
-    /**
-     * Statut de la ligne de réservation
-     */
+
     @Enumerated(EnumType.STRING)
     StatutLivraison statutLivraisonLigne;
 
-
+    @Column(length = 1000)
+    private String observations;
 
 
     //LigneReservation 1..*-------1 Reservation
@@ -69,13 +57,12 @@ public class LigneReservation implements Serializable {
     Livraison livraison;
 
     /**
-     * NOUVEAU : Instances spécifiques réservées
-     *
+
      * Utilisé UNIQUEMENT pour les produits avec référence (typeProduit = AVEC_REFERENCE)
-     * - Pour produits quantitatifs: cette liste est vide/null (NORMAL)
-     * - Pour produits avec référence: contient les N instances réservées
-     *
-     * Exemple pour 3 projecteurs réservés:
+     * - Pour produits quantitatifs : cette liste est vide/null (NORMAL)
+     * - Pour produits avec référence : contient les N instances réservées
+
+     * Exemple pour 3 projecteurs réservés :
      * instancesReservees = [PROJ-2025-001, PROJ-2025-002, PROJ-2025-003]
      */
     @ManyToMany(fetch = FetchType.LAZY)
@@ -86,11 +73,7 @@ public class LigneReservation implements Serializable {
     )
     private Set<InstanceProduit> instancesReservees;
 
-    /**
-     * Observations sur cette ligne de réservation
-     */
-    @Column(length = 1000)
-    private String observations;
+
 
 
     // ============ MÉTHODES UTILITAIRES ============
@@ -112,21 +95,4 @@ public class LigneReservation implements Serializable {
         return produit != null && produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE;
     }
 
-    /**
-     * Vérifie si toutes les instances sont affectées
-     * (uniquement pour produits avec référence)
-     */
-    public boolean toutesInstancesAffectees() {
-        if (!isProduitAvecReference()) {
-            return true; // N/A pour produits quantitatifs
-        }
-        return instancesReservees != null && instancesReservees.size() == quantite;
-    }
-
-    /**
-     * Retourne le nombre d'instances affectées
-     */
-    public int getNombreInstancesAffectees() {
-        return instancesReservees != null ? instancesReservees.size() : 0;
-    }
 }

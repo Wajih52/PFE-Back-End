@@ -10,10 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * ==========================================
  * DTO DE RÉPONSE APRÈS MODIFICATION DE DATES
- * Retourné par les 3 fonctionnalités
- * ==========================================
  */
 @Data
 @Builder
@@ -54,7 +51,7 @@ public class ModificationDatesResponseDto {
     private List<DetailLigneModifiee> lignesModifiees;
 
     /**
-     * 💰 Montants
+     * Montants
      */
     private Double ancienMontantTotal;
     private Double nouveauMontantTotal;

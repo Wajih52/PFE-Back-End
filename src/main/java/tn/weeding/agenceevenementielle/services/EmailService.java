@@ -27,7 +27,7 @@ public class EmailService {
     @Async
     public void sendEmail(String destinataire, String sujet, String contenuHtml) {
         try {
-            System.out.println("📧 Envoi d'email vers : " + destinataire);
+            System.out.println("Envoi d'email vers : " + destinataire);
 
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -37,10 +37,10 @@ public class EmailService {
             helper.setText(contenuHtml, true); // true = HTML
 
             mailSender.send(mimeMessage);
-            System.out.println("✅ Email envoyé avec succès à " + destinataire);
+            System.out.println("Email envoyé avec succès à " + destinataire);
 
         } catch (Exception e) {
-            System.err.println("❌ Erreur lors de l'envoi de l'email : " + e.getMessage());
+            System.err.println("Erreur lors de l'envoi de l'email : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -84,7 +84,7 @@ public class EmailService {
             </head>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                    <h2 style="color: #667eea;">🔐 Réinitialisation de mot de passe</h2>
+                    <h2 style="color: #667eea;"> Réinitialisation de mot de passe</h2>
            
                     <p>Bonjour %s,</p>
             
@@ -105,7 +105,7 @@ public class EmailService {
                     </div>
             
                     <p style="color: #666; font-size: 14px;">
-                        ⏰ Ce lien expire dans 30 minutes.
+                         Ce lien expire dans 30 minutes.
                     </p>
             
                     <p style="color: #666; font-size: 14px;">
@@ -142,7 +142,7 @@ public class EmailService {
             </head>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                    <h2 style="color: #28a745;">✅ Mot de passe modifié</h2>
+                    <h2 style="color: #28a745;"> Mot de passe modifié</h2>
             
                     <p>Bonjour %s,</p>
             
@@ -151,7 +151,7 @@ public class EmailService {
                     <p>Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</p>
             
                     <p style="color: #666; font-size: 14px;">
-                        ⚠️ Si vous n'êtes pas à l'origine de cette modification,
+                        ️ Si vous n'êtes pas à l'origine de cette modification,
                         contactez immédiatement notre support.
                     </p>
             
@@ -232,7 +232,7 @@ public class EmailService {
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>🔐 Réinitialisation de mot de passe</h1>
+                        <h1> Réinitialisation de mot de passe</h1>
                     </div>
                     <div class="content">
                         <p>Bonjour <strong>%s</strong>,</p>
@@ -241,7 +241,7 @@ public class EmailService {
                         <div style="text-align: center;">
                             <a href="%s" class="button">Réinitialiser mon mot de passe</a>
                         </div>
-                        <p><strong>⚠️ Important :</strong></p>
+                        <p><strong> Important :</strong></p>
                         <ul>
                             <li>Ce lien est valide pendant <strong>30 minutes</strong></li>
                             <li>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email</li>
@@ -260,7 +260,7 @@ public class EmailService {
 @Async
     public void envoyerEmailNouvelEmploye(String email, String prenom, String pseudo, String motDePasseTemporaire) {
         String contenu = construireEmailNouvelEmploye(prenom, pseudo, motDePasseTemporaire);
-        sendEmail(email, "🎉 Bienvenue chez Elegant Hive - Vos identifiants", contenu);
+        sendEmail(email, " Bienvenue chez Elegant Hive - Vos identifiants", contenu);
     }
 
     private String construireEmailNouvelEmploye(String prenom, String pseudo, String motDePasse) {
@@ -290,26 +290,26 @@ public class EmailService {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🎉 Bienvenue chez Elegant Hive !</h1>
+                    <h1> Bienvenue chez Elegant Hive !</h1>
                 </div>
                 <div class="content">
                     <p>Bonjour <strong>%s</strong>,</p>
-                    
+               
                     <p>Votre compte employé a été créé avec succès ! 🎊</p>
                     
                     <div class="credentials">
-                        <p><strong>📧 Identifiant (Pseudo) :</strong> <code>%s</code></p>
-                        <p><strong>🔑 Mot de passe temporaire :</strong> <code>%s</code></p>
+                        <p><strong> Identifiant (Pseudo) :</strong> <code>%s</code></p>
+                        <p><strong> Mot de passe temporaire :</strong> <code>%s</code></p>
                     </div>
                     
                     <div style="text-align: center;">
                         <a href="http://localhost:4200/auth/login" class="button">
-                            🚀 Se connecter maintenant
+                             Se connecter maintenant
                         </a>
                     </div>
                     
                     <div class="warning">
-                        <p><strong>⚠️ IMPORTANT :</strong></p>
+                        <p><strong> IMPORTANT :</strong></p>
                         <ul style="margin: 10px 0; padding-left: 20px;">
                             <li>Ce mot de passe est <strong>temporaire</strong></li>
                             <li>Vous devrez le changer à votre première connexion</li>

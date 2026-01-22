@@ -88,7 +88,6 @@ public class Produit implements Serializable {
 
     /**
      * Instances individuelles (uniquement pour typeProduit = AVEC_REFERENCE)
-     * Permet le suivi détaillé de chaque unité physique
      */
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<InstanceProduit> instances;
@@ -104,18 +103,12 @@ public class Produit implements Serializable {
     @OneToMany(mappedBy = "produit", orphanRemoval = true)
     private Set<MouvementStock> mouvementStockProduit;
 
+
+
+
+
+
     // ============ MÉTHODES UTILITAIRES ============
-
-    /**
-     * Vérifie si le produit est en stock critique
-     */
-    public boolean isStockCritique() {
-        if (seuilCritique == null) {
-            seuilCritique = (typeProduit == TypeProduit.AVEC_REFERENCE) ? 2 : 5;
-        }
-        return quantiteDisponible != null && quantiteDisponible <= seuilCritique;
-    }
-
     /**
      * Vérifie si le produit est disponible
      */
@@ -123,15 +116,4 @@ public class Produit implements Serializable {
         return quantiteDisponible != null && quantiteDisponible > 0;
     }
 
-    /**
-     * Pour les produits AVEC_REFERENCE: compte le nombre d'instances disponibles
-     */
-    public int getNombreInstancesDisponibles() {
-        if (typeProduit == TypeProduit.AVEC_REFERENCE && instances != null) {
-            return (int) instances.stream()
-                    .filter(InstanceProduit::isDisponiblePhysiquement)
-                    .count();
-        }
-        return quantiteDisponible != null ? quantiteDisponible : 0;
-    }
 }

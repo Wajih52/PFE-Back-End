@@ -12,7 +12,6 @@ import java.time.LocalTime;
 
 /**
  * DTO pour affecter un employé à une livraison
- * Sprint 6 - Gestion des livraisons
  */
 @Data
 @AllArgsConstructor

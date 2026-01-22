@@ -21,23 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * ==========================================
- * CONTRÔLEUR REST POUR LA GESTION DES LIGNES DE RÉSERVATION
- * Sprint 4 - Gestion des réservations (incluant devis)
- * ==========================================
- * Endpoints disponibles:
- * - POST   /api/lignes-reservation/{idReservation}           : Ajouter une ligne à une réservation
- * - GET    /api/lignes-reservation/{id}                      : Récupérer une ligne par ID
- * - GET    /api/lignes-reservation/reservation/{idRes}       : Lignes d'une réservation
- * - GET    /api/lignes-reservation/produit/{idProduit}       : Lignes contenant un produit
- * - GET    /api/lignes-reservation/statut/{statut}           : Lignes par statut de livraison
- * - PUT    /api/lignes-reservation/{id}                      : Modifier une ligne
- * - PATCH  /api/lignes-reservation/{id}/statut               : Changer le statut
- * - DELETE /api/lignes-reservation/{id}                      : Supprimer une ligne
- * - GET    /api/lignes-reservation/reservation/{id}/montant  : Montant total
- * - GET    /api/lignes-reservation/reservation/{id}/stats    : Statistiques
- */
+
 @RestController
 @RequestMapping("/api/lignes-reservation")
 @RequiredArgsConstructor
@@ -54,7 +38,7 @@ public class LigneReservationController {
     // ============================================
 
     /**
-     *  Ajouter un produit au panier/réservation
+     *  Ajouter un produit au réservation
      * Le CLIENT ou l'ADMIN peut ajouter des produits à une réservation
      */
     @PostMapping("/{idReservation}")
@@ -65,7 +49,7 @@ public class LigneReservationController {
             @PathVariable Long idReservation,
             @Valid @RequestBody LigneReservationRequestDto ligneRequest) {
 
-        log.info("🛒 Nouvelle demande d'ajout de ligne à la réservation ID: {}", idReservation);
+        log.info(" Nouvelle demande d'ajout de ligne à la réservation ID: {}", idReservation);
 
         String username = authenticationFacade.getAuthentication().getName();
         LigneReservationResponseDto ligne = ligneReservationService.creerLigneReservation(
@@ -75,24 +59,24 @@ public class LigneReservationController {
     }
 
     // ============================================
-    // PARTIE 2: CONSULTATION DES LIGNES
+    //  CONSULTATION DES LIGNES
     // ============================================
 
     /**
-     * 📋 Récupérer une ligne par son ID
+     * Récupérer une ligne par son ID
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'MANAGER', 'EMPLOYE')")
     @Operation(summary = "Récupérer une ligne par ID",
             description = "Obtenir les détails d'une ligne de réservation spécifique")
     public ResponseEntity<LigneReservationResponseDto> getLigneById(@PathVariable Long id) {
-        log.info("🔍 Recherche de la ligne ID: {}", id);
+        log.info("Recherche de la ligne ID: {}", id);
         LigneReservationResponseDto ligne = ligneReservationService.getLigneReservationById(id);
         return ResponseEntity.ok(ligne);
     }
 
     /**
-     * 📋 Récupérer toutes les lignes d'une réservation
+     *  Récupérer toutes les lignes d'une réservation
      */
     @GetMapping("/reservation/{idReservation}")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -101,7 +85,7 @@ public class LigneReservationController {
     public ResponseEntity<List<LigneReservationResponseDto>> getLignesByReservation(
             @PathVariable Long idReservation) {
 
-        log.info("📋 Récupération des lignes de la réservation ID: {}", idReservation);
+        log.info("Récupération des lignes de la réservation ID: {}", idReservation);
         List<LigneReservationResponseDto> lignes =
                 ligneReservationService.getLignesReservationByReservation(idReservation);
 
@@ -109,7 +93,7 @@ public class LigneReservationController {
     }
 
     /**
-     * 📋 Récupérer les lignes contenant un produit spécifique
+     *  Récupérer les lignes contenant un produit spécifique
      */
     @GetMapping("/produit/{idProduit}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -118,7 +102,7 @@ public class LigneReservationController {
     public ResponseEntity<List<LigneReservationResponseDto>> getLignesByProduit(
             @PathVariable Long idProduit) {
 
-        log.info("📋 Recherche des lignes du produit ID: {}", idProduit);
+        log.info(" Recherche des lignes du produit ID: {}", idProduit);
         List<LigneReservationResponseDto> lignes =
                 ligneReservationService.getLignesReservationByProduit(idProduit);
 
@@ -126,7 +110,7 @@ public class LigneReservationController {
     }
 
     /**
-     * 📋 Récupérer les lignes par statut de livraison
+     *  Récupérer les lignes par statut de livraison
      */
     @GetMapping("/statut/{statut}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -135,7 +119,7 @@ public class LigneReservationController {
     public ResponseEntity<List<LigneReservationResponseDto>> getLignesByStatut(
             @PathVariable StatutLivraison statut) {
 
-        log.info("📋 Recherche des lignes avec statut: {}", statut);
+        log.info(" Recherche des lignes avec statut: {}", statut);
         List<LigneReservationResponseDto> lignes =
                 ligneReservationService.getLignesReservationByStatut(statut);
 
@@ -143,11 +127,11 @@ public class LigneReservationController {
     }
 
     // ============================================
-    // PARTIE 3: MODIFICATION DES LIGNES
+    // MODIFICATION DES LIGNES
     // ============================================
 
     /**
-     * ✏️ Modifier une ligne de réservation
+     *  Modifier une ligne de réservation
      * Permet de changer la quantité, les dates ou les observations
      */
     @PutMapping("/{id}")
@@ -158,7 +142,7 @@ public class LigneReservationController {
             @PathVariable Long id,
             @Valid @RequestBody LigneReservationRequestDto ligneRequest) {
 
-        log.info("✏️ Modification de la ligne ID: {}", id);
+        log.info(" Modification de la ligne ID: {}", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         LigneReservationResponseDto ligne = ligneReservationService.modifierLigneReservation(
@@ -168,7 +152,7 @@ public class LigneReservationController {
     }
 
     /**
-     * 🔄 Mettre à jour le statut de livraison d'une ligne
+     * Mettre à jour le statut de livraison d'une ligne
      */
     @PatchMapping("/{id}/statut")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -178,7 +162,7 @@ public class LigneReservationController {
             @PathVariable Long id,
             @RequestParam StatutLivraison nouveauStatut) {
 
-        log.info("🔄 Changement de statut pour la ligne ID: {} -> {}", id, nouveauStatut);
+        log.info(" Changement de statut pour la ligne ID: {} -> {}", id, nouveauStatut);
         String username = authenticationFacade.getAuthentication().getName();
 
         LigneReservationResponseDto ligne = ligneReservationService.updateStatutLivraison(id, nouveauStatut,username);
@@ -187,11 +171,11 @@ public class LigneReservationController {
     }
 
     // ============================================
-    // PARTIE 4: SUPPRESSION DES LIGNES
+    //  SUPPRESSION DES LIGNES
     // ============================================
 
     /**
-     * ❌ Supprimer une ligne de réservation
+     *  Supprimer une ligne de réservation
      * Libère automatiquement le stock et les instances
      */
     @DeleteMapping("/{id}")
@@ -199,7 +183,7 @@ public class LigneReservationController {
     @Operation(summary = "Supprimer une ligne",
             description = "Retirer un produit du panier avec libération automatique du stock")
     public ResponseEntity<Map<String, String>> supprimerLigne(@PathVariable Long id) {
-        log.info("🗑️ Suppression de la ligne ID: {}", id);
+        log.info(" Suppression de la ligne ID: {}", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         ligneReservationService.supprimerLigneReservation(id, username);
@@ -211,11 +195,11 @@ public class LigneReservationController {
     }
 
     // ============================================
-    // PARTIE 5: STATISTIQUES ET CALCULS
+    //  STATISTIQUES ET CALCULS
     // ============================================
 
     /**
-     * 💰 Calculer le montant total d'une réservation
+     *  Calculer le montant total d'une réservation
      */
     @GetMapping("/reservation/{idReservation}/montant")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -224,7 +208,7 @@ public class LigneReservationController {
     public ResponseEntity<Map<String, Double>> calculerMontantTotal(
             @PathVariable Long idReservation) {
 
-        log.info("💰 Calcul du montant pour la réservation ID: {}", idReservation);
+        log.info(" Calcul du montant pour la réservation ID: {}", idReservation);
 
         Double montantTotal = ligneReservationService.calculerMontantTotalReservation(idReservation);
 
@@ -232,7 +216,7 @@ public class LigneReservationController {
     }
 
     /**
-     * 📊 Obtenir les statistiques d'une réservation
+     * Obtenir les statistiques d'une réservation
      */
     @GetMapping("/reservation/{idReservation}/statistiques")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'MANAGER', 'EMPLOYE')")
@@ -241,7 +225,7 @@ public class LigneReservationController {
     public ResponseEntity<Map<String, Object>> getStatistiques(
             @PathVariable Long idReservation) {
 
-        log.info("📊 Statistiques pour la réservation ID: {}", idReservation);
+        log.info(" Statistiques pour la réservation ID: {}", idReservation);
 
         Map<String, Object> stats = ligneReservationService.getStatistiquesReservation(idReservation);
 
@@ -257,12 +241,10 @@ public class LigneReservationController {
         return ResponseEntity.ok(instances);
     }
 
-    // ============================================
-    // PARTIE 6: ENDPOINTS DE VÉRIFICATION (UTILITAIRES)
-    // ============================================
+
 
     /**
-     * ✅ Vérifier si une ligne existe
+     *  Vérifier si une ligne existe
      */
     @GetMapping("/{id}/exists")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'MANAGER', 'EMPLOYE')")

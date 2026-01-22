@@ -12,7 +12,6 @@ import java.util.List;
 
 /**
  * DTO de réponse pour une livraison
- * Sprint 6 - Gestion des livraisons
  */
 @Data
 @AllArgsConstructor

@@ -130,7 +130,7 @@ public enum TypeMouvement {
     CORRECTION,
 
     /**
-     * Correction de stock (alias pour compatibilité)
+     * Correction de stock
      * Même fonction que CORRECTION
      */
     CORRECTION_STOCK;
@@ -141,7 +141,6 @@ public enum TypeMouvement {
 
     /**
      * Vérifie si le mouvement est une entrée (augmente le stock)
-     * @return true si c'est une entrée, false sinon
      */
     public boolean isEntree() {
         return switch (this) {
@@ -159,7 +158,6 @@ public enum TypeMouvement {
 
     /**
      * Vérifie si le mouvement est une sortie (diminue le stock)
-     * @return true si c'est une sortie, false sinon
      */
     public boolean isSortie() {
         return switch (this) {
@@ -172,80 +170,5 @@ public enum TypeMouvement {
                  LIVRAISON -> true;
             default -> false;
         };
-    }
-
-    /**
-     * Vérifie si le mouvement est un ajustement (ne change pas forcément le stock)
-     * @return true si c'est un ajustement, false sinon
-     */
-    public boolean isAjustement() {
-        return this == AJUSTEMENT_INVENTAIRE ||
-                this == CORRECTION ||
-                this == CORRECTION_STOCK;
-    }
-
-    /**
-     * Obtient le libellé français du type de mouvement
-     * @return Libellé descriptif
-     */
-    public String getLibelle() {
-        return switch (this) {
-            case CREATION -> "Création du produit";
-            case REACTIVATION -> "Réactivation";
-            case DESACTIVATION -> "Désactivation";
-            case AJOUT_STOCK -> "Ajout de stock";
-            case ENTREE_STOCK -> "Entrée de stock";
-            case RETRAIT_STOCK -> "Retrait de stock";
-            case MAINTENANCE -> "Envoi en maintenance";
-            case RETOUR_MAINTENANCE -> "Retour de maintenance";
-            case PRODUIT_ENDOMMAGE -> "Produit endommagé";
-            case AJOUT_INSTANCE -> "Ajout d'instance";
-            case SUPPRESSION_INSTANCE -> "Suppression d'instance";
-            case RESERVATION -> "Réservation";
-            case ANNULATION_RESERVATION -> "Annulation de réservation";
-            case LIVRAISON -> "Livraison";
-            case RETOUR -> "Retour";
-            case AJUSTEMENT_INVENTAIRE -> "Ajustement inventaire";
-            case CORRECTION -> "Correction";
-            case CORRECTION_STOCK -> "Correction de stock";
-        };
-    }
-
-    /**
-     * Obtient l'icône associée au type de mouvement
-     * @return Emoji représentant le type
-     */
-    public String getIcon() {
-        return switch (this) {
-            case CREATION -> "🆕";
-            case REACTIVATION -> "♻️";
-            case DESACTIVATION -> "🗑️";
-            case AJOUT_STOCK, ENTREE_STOCK -> "📦";
-            case RETRAIT_STOCK -> "📤";
-            case  LIVRAISON -> "🚚";
-            case  RETOUR -> "🔙";
-            case MAINTENANCE -> "🔧";
-            case RETOUR_MAINTENANCE -> "✅";
-            case PRODUIT_ENDOMMAGE -> "💔";
-            case AJOUT_INSTANCE -> "➕";
-            case SUPPRESSION_INSTANCE -> "➖";
-            case RESERVATION -> "📅";
-            case ANNULATION_RESERVATION -> "❌";
-            case AJUSTEMENT_INVENTAIRE, CORRECTION, CORRECTION_STOCK -> "📝";
-        };
-    }
-
-    /**
-     * Obtient la classe CSS pour le style visuel
-     * @return Nom de la classe CSS
-     */
-    public String getCssClass() {
-        if (isEntree()) {
-            return "mouvement-entree";
-        } else if (isSortie()) {
-            return "mouvement-sortie";
-        } else {
-            return "mouvement-ajustement";
-        }
     }
 }

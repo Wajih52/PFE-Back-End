@@ -17,16 +17,7 @@ import tn.weeding.agenceevenementielle.services.Calendrier.CalendrierService;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * ==========================================
- * CONTRÔLEUR REST POUR LA GESTION DU CALENDRIER
- * ==========================================
- *
- * Endpoints disponibles:
- * - POST   /api/calendrier/evenements          : Récupérer les événements avec filtres
- * - GET    /api/calendrier/statistiques        : Statistiques pour une période
- * - GET    /api/calendrier/mois                : Événements d'un mois spécifique
- */
+
 @RestController
 @RequestMapping("/api/calendrier")
 @RequiredArgsConstructor
@@ -38,39 +29,28 @@ public class CalendrierController {
     private final CalendrierService calendrierService;
 
     /**
-     * 📅 Récupérer tous les événements avec filtres
-     * POST /api/calendrier/evenements
-     *
-     * Permet de filtrer par:
-     * - Période (dateDebut, dateFin)
-     * - Type d'événement (réservations, livraisons)
-     * - Client, Employé, Produit
-     * - Statuts
+     * Récupérer tous les événements avec filtres
      */
     @PostMapping("/evenements")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE', 'CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE')")
     @Operation(
             summary = "Récupérer les événements du calendrier",
-            description = "Retourne les réservations et livraisons selon les filtres appliqués. " +
-                    "Les clients ne voient que leurs propres événements."
+            description = "Retourne les réservations et livraisons selon les filtres appliqués. "
+
     )
     public ResponseEntity<List<CalendrierEventDto>> getEvenements(
             @Valid @RequestBody CalendrierFiltreDto filtres
     ) {
-        log.info("📅 GET /api/calendrier/evenements - Filtres: {}", filtres);
-
-        // TODO: Si l'utilisateur est CLIENT, forcer filtres.idClient = idUtilisateurConnecté
-        // Pour l'instant, on fait confiance aux permissions Spring Security
+        log.info("les événements avec filtres : {}", filtres);
 
         List<CalendrierEventDto> evenements = calendrierService.getEvenements(filtres);
 
-        log.info("✅ {} événements retournés", evenements.size());
+        log.info("{} événements retournés", evenements.size());
         return ResponseEntity.ok(evenements);
     }
 
     /**
-     * 📊 Obtenir les statistiques pour une période
-     * GET /api/calendrier/statistiques?dateDebut=2025-01-01&dateFin=2025-01-31
+     * Obtenir les statistiques pour une période
      */
     @GetMapping("/statistiques")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
@@ -82,7 +62,7 @@ public class CalendrierController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin
     ) {
-        log.info("📊 GET /api/calendrier/statistiques - {} à {}", dateDebut, dateFin);
+        log.info(" statistique calendrier - {} à {}", dateDebut, dateFin);
 
         CalendrierStatistiquesDto stats = calendrierService.getStatistiques(dateDebut, dateFin);
 
@@ -90,8 +70,7 @@ public class CalendrierController {
     }
 
     /**
-     * 📅 Raccourci: Événements d'un mois spécifique
-     * GET /api/calendrier/mois?annee=2025&mois=6
+     *  Événements d'un mois spécifique
      */
     @GetMapping("/mois")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE', 'CLIENT')")
@@ -103,7 +82,7 @@ public class CalendrierController {
             @RequestParam int annee,
             @RequestParam int mois
     ) {
-        log.info("📅 GET /api/calendrier/mois - {}/{}", mois, annee);
+        log.info("Événements d'un mois spécifique - {}/{}", mois, annee);
 
         // Calculer le premier et dernier jour du mois
         LocalDate dateDebut = LocalDate.of(annee, mois, 1);
@@ -118,7 +97,7 @@ public class CalendrierController {
 
         List<CalendrierEventDto> evenements = calendrierService.getEvenements(filtres);
 
-        log.info("✅ {} événements pour {}/{}", evenements.size(), mois, annee);
+        log.info("{} événements pour {}/{}", evenements.size(), mois, annee);
         return ResponseEntity.ok(evenements);
     }
 }

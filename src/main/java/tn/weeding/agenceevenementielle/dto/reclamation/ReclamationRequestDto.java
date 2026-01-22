@@ -6,7 +6,6 @@ import tn.weeding.agenceevenementielle.entities.enums.TypeReclamation;
 
 /**
  * DTO pour créer une réclamation
- * Utilisé par les clients connectés et les visiteurs
  */
 @Data
 @NoArgsConstructor
@@ -32,6 +31,6 @@ public class ReclamationRequestDto {
     @NotNull(message = "Le type de réclamation est obligatoire")
     private TypeReclamation typeReclamation;
 
-    // Optionnel - ID de la réservation concernée (si applicable)
+    // Optionnel - ID de la réservation concernée
     private Long idReservation;
 }

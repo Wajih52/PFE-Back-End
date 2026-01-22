@@ -40,7 +40,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 if (jwt != null) {
                     // 1. Vérifier si le token est blacklisté
                     if (tokenBlacklistService.isBlacklisted(jwt)) {
-                        log.warn("❌ Tentative d'utilisation d'un token blacklisté");
+                        log.warn(" Tentative d'utilisation d'un token blacklisté");
                         filterChain.doFilter(request, response);
                         return;
                     }
@@ -65,12 +65,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         // 5. Définir l'authentification dans le contexte de sécurité
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                        log.debug("✅ Utilisateur '{}' authentifié avec {} rôles",
+                        log.debug(" Utilisateur '{}' authentifié avec {} rôles",
                                 identifiant, userDetails.getAuthorities().size());
                     }
                 }
             }catch (Exception e) {
-                log.error("❌ Erreur lors de l'authentification de l'utilisateur: {}", e.getMessage());
+                log.error(" Erreur lors de l'authentification de l'utilisateur: {}", e.getMessage());
             }
             filterChain.doFilter(request, response);
     }
@@ -92,7 +92,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/monitoring/health")
                 || path.startsWith("/api/oauth2")
                 || path.startsWith("/api/login/oauth2")
-                || path.startsWith("api//utilisateur/ajouter")
                 || path.startsWith("/uploads");
     }
 }

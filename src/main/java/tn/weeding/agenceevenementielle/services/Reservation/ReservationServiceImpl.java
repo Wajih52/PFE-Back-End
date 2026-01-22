@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public ReservationResponseDto creerDevis(DevisRequestDto devisRequest, Long idUtilisateur, String username) {
-        log.info("🎯 Création d'un devis par le client ID: {} ({})", idUtilisateur, username);
+        log.info("Création d'un devis par le client ID: {} ({})", idUtilisateur, username);
 
         // 1. Vérifier que l'utilisateur existe
         Utilisateur client = utilisateurRepo.findById(idUtilisateur)
@@ -64,7 +64,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
 
         // VALIDER LES DATES DE CHAQUE LIGNE
-        log.info("📅 Validation des dates pour {} lignes", devisRequest.getLignesReservation().size());
+        log.info("Validation des dates pour {} lignes", devisRequest.getLignesReservation().size());
 
         for (LigneReservationRequestDto ligneDto : devisRequest.getLignesReservation()) {
             try {
@@ -79,21 +79,21 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                         ligneDto.getDateFin()
                 );
 
-                log.debug("✅ Dates valides pour produit {} - Durée: {} jours",
+                log.debug("Dates valides pour produit {} - Durée: {} jours",
                         ligneDto.getIdProduit(), nbJours);
 
             } catch (DateValidationException e) {
-                log.error("❌ Dates invalides pour produit {}: {}",
+                log.error("Dates invalides pour produit {}: {}",
                         ligneDto.getIdProduit(), e.getMessage());
                // throw e; // Propager l'exception au controller
             }
         }
 
-        log.info("✅ Toutes les dates sont valides");
+        log.info("Toutes les dates sont valides");
 
 
         // 3. Vérifier la disponibilité de TOUS les produits AVANT de créer le devis
-        log.info("📦 Vérification de la disponibilité de {} produits", devisRequest.getLignesReservation().size());
+        log.info("Vérification de la disponibilité de {} produits", devisRequest.getLignesReservation().size());
 
 
         for (LigneReservationRequestDto ligneDto : devisRequest.getLignesReservation()) {
@@ -110,14 +110,14 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
 
             if (!dispo.getDisponible()) {
-                log.warn("❌ Produit {} non disponible", dispo.getNomProduit());
+                log.warn("Produit {} non disponible", dispo.getNomProduit());
                 throw new CustomException(
                         "Le produit '" + dispo.getNomProduit() + "' n'est pas disponible. " +
                                 dispo.getMessage()
                 );
             }
         }
-        log.info("✅ Tous les produits sont disponibles");
+        log.info("Tous les produits sont disponibles");
 
         // 4. Créer la réservation (devis) avec statut "EnAttente"
         Reservation reservation = new Reservation();
@@ -175,7 +175,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             montantTotal += sousTotal;
 
             lignes.add(ligne);
-            log.info("📝 Ligne ajoutée: {} x {} = {} TND pour {} jours",
+            log.info("Ligne ajoutée: {} x {} = {} TND pour {} jours",
                     produit.getNomProduit(), ligne.getQuantite(), sousTotal,nbJours);
         }
 
@@ -189,35 +189,35 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
 
 
-        log.info("✅ Devis créé avec succès: {} - Montant: {} TND",
+        log.info("Devis créé avec succès: {} - Montant: {} TND",
                 reservation.getReferenceReservation(), montantTotal);
 
         //  VALIDATION AUTOMATIQUE si client Valide directement sans Review Admin
         if(devisRequest.isValidationAutomatique()){
-            log.info("🚀 Mode validation automatique → Réservation immédiate du stock");
+            log.info("Mode validation automatique → Réservation immédiate du stock");
             reservation.setValidationAutomatique(true);
             Reservation devisSaved = reservationRepo.save(reservation);
             // Réserver le stock immédiatement
            Reservation resValidee = reserverStockPourReservation(devisSaved );
 
-            log.info("✅ Devis validé automatiquement {} - montant {} TND - Réservation confirmée",
+            log.info("Devis validé automatiquement {} - montant {} TND - Réservation confirmée",
                     resValidee.getReferenceReservation(),montantTotal);
 
            return convertToResponseDto(resValidee);
         }else{
-            // 📋 MODE CLASSIQUE : Attente review admin
-            log.info("⏳ Mode classique → Stock NON réservé, en attente de validation");
+            // MODE CLASSIQUE : Attente review admin
+            log.info("Mode classique → Stock NON réservé, en attente de validation");
             reservation.setValidationAutomatique(false);
             reservation.setStockReserve(false);
             // Définir date d'expiration
             reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(2));
 
             Reservation devisSaved = reservationRepo.save(reservation);
-            log.info("✅ Devis créé {} - Montant: {} TND (stock NON réservé)",
+            log.info("Devis créé {} - Montant: {} TND (stock NON réservé)",
                     devisSaved.getReferenceReservation(), montantTotal);
 
             // ========================================
-            // 🔔 NOTIFICATIONS + EMAIL ADMINS/MANAGERS
+            // NOTIFICATIONS + EMAIL ADMINS/MANAGERS
             // ========================================
 
             // Créer message détaillé
@@ -227,13 +227,13 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     client.getPrenom(), client.getNom(),
                     devisSaved.getReferenceReservation()
             ));
-            messageNotif.append(String.format("📅 Période: %s au %s\n",
+            messageNotif.append(String.format(" Période: %s au %s\n",
                     devisSaved.getDateDebut(),
                     devisSaved.getDateFin()
             ));
-            messageNotif.append(String.format("💰 Montant: %.2f TND\n", devisSaved.getMontantTotal()));
-            messageNotif.append(String.format("📦 Produits: %d lignes\n", devisSaved.getLigneReservations().size()));
-            messageNotif.append("\n⏰ En attente de validation et modification.");
+            messageNotif.append(String.format(" Montant: %.2f TND\n", devisSaved.getMontantTotal()));
+            messageNotif.append(String.format(" Produits: %d lignes\n", devisSaved.getLigneReservations().size()));
+            messageNotif.append("\n En attente de validation et modification.");
 
             // Notifier tous les admins et managers
             notificationService.creerNotificationPourStaff(
@@ -244,7 +244,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     "/admin/devis-validation"
             );
 
-            log.info("📧 Notifications envoyées aux admins/managers pour le devis {}",
+            log.info(" Notifications envoyées aux admins/managers pour le devis {}",
                     devisSaved.getReferenceReservation());
 
             return convertToResponseDto(devisSaved);
@@ -255,7 +255,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public DisponibiliteResponseDto verifierDisponibilite(VerificationDisponibiliteDto verificationDto) {
-        log.debug("🔍 Vérification disponibilité - Produit: {}, Quantité: {}, Période: {} -> {}",
+        log.debug(" Vérification disponibilité - Produit: {}, Quantité: {}, Période: {} -> {}",
                 verificationDto.getIdProduit(), verificationDto.getQuantite(),
                 verificationDto.getDateDebut(), verificationDto.getDateFin());
 
@@ -267,7 +267,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     "vérification disponibilité"
             );
         } catch (DateValidationException e) {
-            log.error("❌ Dates invalides: {}", e.getMessage());
+            log.error(" Dates invalides: {}", e.getMessage());
 
             // Retourner une réponse avec les informations d'erreur
             return DisponibiliteResponseDto.builder()
@@ -328,7 +328,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             );
         }
 
-        log.debug("📊 Quantité - Demandée: {}, Réservée: {}, Disponible: {}",
+        log.debug(" Quantité - Demandée: {}, Réservée: {}, Disponible: {}",
                 verificationDto.getQuantite(), quantiteReservee, quantiteDisponible);
 
         return response;
@@ -352,7 +352,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
 
 
-        log.debug("📊 Instances disponibles sur période [{} - {}]: {}",
+        log.debug("Instances disponibles sur période [{} - {}]: {}",
                 verificationDto.getDateDebut(),
                 verificationDto.getDateFin(),
                 instancesDisponiblesPourPeriode);
@@ -393,7 +393,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             );
         }
 
-        log.debug("📊 Instances - Demandées: {}, Réservées: {}, Disponibles: {}",
+        log.debug(" Instances - Demandées: {}, Réservées: {}, Disponibles: {}",
                 verificationDto.getQuantite(), instancesReservees, instancesDisponiblesPourPeriode);
 
         return response;
@@ -410,7 +410,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public ReservationResponseDto modifierDevisParAdmin(DevisModificationDto modificationDto, String username) {
-        log.info("🔧 Modification du devis ID: {} par l'admin {}",
+        log.info("Modification du devis ID: {} par l'admin {}",
                 modificationDto.getIdReservation(), username);
 
         Reservation reservation = reservationRepo.findById(modificationDto.getIdReservation())
@@ -428,14 +428,14 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                         .orElseThrow(() -> new CustomException("Ligne introuvable"));
 
                 if (ligneModif.getNouveauPrixUnitaire() != null) {
-                    log.info("💰 Modification prix: {} -> {} TND",
+                    log.info(" Modification prix: {} -> {} TND",
                             ligne.getPrixUnitaire(), ligneModif.getNouveauPrixUnitaire());
                     ligne.setPrixUnitaire(ligneModif.getNouveauPrixUnitaire());
                 }
 
                 if (ligneModif.getNouvelleQuantite() != null) {
 
-                    log.info("🔢 Modification quantité: {} -> {}",
+                    log.info("Modification quantité: {} -> {}",
                             ligne.getQuantite(), ligneModif.getNouvelleQuantite());
                     ligne.setQuantite(ligneModif.getNouvelleQuantite());
                 }
@@ -458,14 +458,14 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         if (modificationDto.getRemisePourcentage() != null && modificationDto.getRemisePourcentage() > 0) {
             double remise = montantOriginal2 * (modificationDto.getRemisePourcentage() / 100.0);
             montantFinal -= remise;
-            log.info("💸 Remise de {}%: -{} TND", modificationDto.getRemisePourcentage(), remise);
+            log.info(" Remise de {}%: -{} TND", modificationDto.getRemisePourcentage(), remise);
             reservation.setRemisePourcentage(modificationDto.getRemisePourcentage());
             reservation.setRemiseMontant(0.0);
         }
 
         if (modificationDto.getRemiseMontant() != null && modificationDto.getRemiseMontant() > 0) {
             montantFinal -= modificationDto.getRemiseMontant();
-            log.info("💸 Remise fixe: -{} TND", modificationDto.getRemiseMontant());
+            log.info(" Remise fixe: -{} TND", modificationDto.getRemiseMontant());
             reservation.setRemiseMontant(modificationDto.getRemiseMontant());
             reservation.setRemisePourcentage(0.0);
         }
@@ -483,14 +483,14 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         reservationRepo.save(reservation);
 
-        log.info("✅ Devis modifié - Montant original: {} TND, Montant final: {} TND",
+        log.info(" Devis modifié - Montant original: {} TND, Montant final: {} TND",
                 reservation.getMontantOriginal(), montantFinal);
 
         // Mettre à jour la facture DEVIS si elle existe
         mettreAJourFactureDevis(reservation);
 
         // ========================================
-        // 🔔 NOTIFICATION + EMAIL CLIENT
+        //  NOTIFICATION + EMAIL CLIENT
         // ========================================
 
         Utilisateur client = reservation.getUtilisateur();
@@ -527,13 +527,13 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         if (modificationDto.getCommentaireAdmin() != null &&
                 !modificationDto.getCommentaireAdmin().isBlank()) {
             messageNotif.append(String.format(
-                    "\n💬 Commentaire: %s\n",
+                    "\n Commentaire: %s\n",
                     modificationDto.getCommentaireAdmin()
             ));
         }
 
         messageNotif.append(String.format(
-                "\n⏰ Vous avez jusqu'au %s pour accepter ou refuser ce devis.",
+                "\n Vous avez jusqu'au %s pour accepter ou refuser ce devis.",
                 reservation.getDateExpirationDevis().toLocalDate()
         ));
 
@@ -585,7 +585,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 emailBody.toString()
         );
 
-        log.info("📧 Notification + Email envoyés au client {} pour modification devis",
+        log.info(" Notification + Email envoyés au client {} pour modification devis",
                 client.getEmail());
 
         return convertToResponseDto(reservation);
@@ -595,7 +595,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public ReservationResponseDto validerDevisParClient(ValidationDevisDto validationDto, String username) {
-        log.info("🎯 ✅ Client {} {} le devis ID: {}",
+        log.info(" Client {} {} le devis ID: {}",
                 username,
                 validationDto.getAccepter() ? "ACCEPTE" : "REFUSE",
                 validationDto.getIdReservation());
@@ -611,12 +611,12 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         // Client refuse le devis
         if (!validationDto.getAccepter()) {
-            log.warn("❌ Client refuse le devis {}", reservation.getReferenceReservation());
+            log.warn(" Client refuse le devis {}", reservation.getReferenceReservation());
             reservation.setStatutReservation(StatutReservation.ANNULE);
             reservation.setCommentaireClient(validationDto.getCommentaireClient());
             reservationRepo.save(reservation);
 
-            // 🔔 NOTIFICATION ADMINS/MANAGERS - DEVIS REFUSÉ
+            //  NOTIFICATION ADMINS/MANAGERS - DEVIS REFUSÉ
             notificationService.creerNotificationPourStaff(
                     TypeNotification.SYSTEME_ALERTE,
                     "Devis refusé par le client",
@@ -633,7 +633,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     "/admin/reservations-details/" + reservation.getIdReservation()
             );
 
-            log.info("📧 Admins notifiés du refus du devis {}", reservation.getReferenceReservation());
+            log.info(" Admins notifiés du refus du devis {}", reservation.getReferenceReservation());
 
 
             return convertToResponseDto(reservation);
@@ -646,13 +646,13 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
 
         // VÉRIFIER LA DISPONIBILITÉ AVANT DE CONFIRMER
-        log.info("🔍 Vérification de la disponibilité AVANT validation...");
+        log.info("Vérification de la disponibilité AVANT validation...");
         try {
             verifierDisponibiliteAvantValidation(reservation);
-            log.info("✅ Disponibilité confirmée, réservation du stock...");
+            log.info(" Disponibilité confirmée, réservation du stock...");
         } catch (ReservationException.StockIndisponibleException e) {
-            // ❌ Le stock n'est plus disponible
-            log.error("❌ Stock devenu indisponible: {}", e.getMessage());
+            //  Le stock n'est plus disponible
+            log.error("Stock devenu indisponible: {}", e.getMessage());
 
             // Informer le client et lui proposer des alternatives
             reservation.setStatutReservation(StatutReservation.ANNULE);
@@ -673,43 +673,43 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         reservation.setDateExpirationDevis(LocalDateTime.now().plusDays(7));
         Reservation resValidee = reserverStockPourReservation(reservation);
 
-        log.info("🎉 Réservation {} confirmée par le client et stock réservé avec succès",
+        log.info(" Réservation {} confirmée par le client et stock réservé avec succès",
                 resValidee.getReferenceReservation());
 
-        // 🆕 GÉNÉRATION AUTOMATIQUE DE LA FACTURE PRO_FORMA
+        //  GÉNÉRATION AUTOMATIQUE DE LA FACTURE PRO_FORMA
         try {
-            log.info("📄 Génération automatique de la facture PRO_FORMA...");
+            log.info("Génération automatique de la facture PRO_FORMA...");
             factureService.genererOuMettreAJourFacture(
                     resValidee.getIdReservation(),
                     TypeFacture.PRO_FORMA,
                     username
             );
-            log.info("✅ Facture PRO_FORMA générée/mise à jour avec succès");
+            log.info("Facture PRO_FORMA générée/mise à jour avec succès");
         } catch (Exception e) {
-            log.error("❌ Erreur génération facture PRO_FORMA : {}", e.getMessage());
+            log.error(" Erreur génération facture PRO_FORMA : {}", e.getMessage());
 
         }
 
         // ========================================
-        // 🔔 NOTIFICATION + EMAIL ADMINS/MANAGERS
+        // NOTIFICATION + EMAIL ADMINS/MANAGERS
         // ========================================
 
         StringBuilder messageNotif = new StringBuilder();
         messageNotif.append(String.format(
-                "🎉 Le client %s a accepté le devis et confirmé sa réservation!\n\n",
+                " Le client %s a accepté le devis et confirmé sa réservation!\n\n",
                 client!= null ? client.getPrenom()+" "+client.getNom(): "N/A"
         ));
-        messageNotif.append(String.format("📋 Réservation: %s\n", resValidee.getReferenceReservation()));
-        messageNotif.append(String.format("📅 Période: %s au %s\n",
+        messageNotif.append(String.format(" Réservation: %s\n", resValidee.getReferenceReservation()));
+        messageNotif.append(String.format(" Période: %s au %s\n",
                 resValidee.getDateDebut(),
                 resValidee.getDateFin()
         ));
-        messageNotif.append(String.format("💰 Montant total: %.2f TND\n", resValidee.getMontantTotal()));
-        messageNotif.append(String.format("💵 Montant payé: %.2f TND\n",
+        messageNotif.append(String.format(" Montant total: %.2f TND\n", resValidee.getMontantTotal()));
+        messageNotif.append(String.format(" Montant payé: %.2f TND\n",
                 resValidee.getMontantPaye() != null ? resValidee.getMontantPaye() : 0.0));
-        messageNotif.append(String.format("📦 Produits: %d lignes\n", resValidee.getLigneReservations().size()));
-        messageNotif.append("\n✅ Le stock a été réservé automatiquement.");
-        messageNotif.append("\n📋 Une facture PRO_FORMA a été générée.");
+        messageNotif.append(String.format(" Produits: %d lignes\n", resValidee.getLigneReservations().size()));
+        messageNotif.append("\nLe stock a été réservé automatiquement.");
+        messageNotif.append("\n Une facture PRO_FORMA a été générée.");
 
         // Notifier les admins/managers
         notificationService.creerNotificationPourStaff(
@@ -720,7 +720,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 "/admin/reservation-details/" + resValidee.getIdReservation()
         );
 
-        log.info("📧 Notifications envoyées aux admins/managers pour la réservation confirmée {}",
+        log.info("Notifications envoyées aux admins/managers pour la réservation confirmée {}",
                 resValidee.getReferenceReservation());
 
         StringBuilder messageNotifClient = new StringBuilder();
@@ -730,16 +730,16 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         ));
         messageNotifClient.append(" Nous sommes ravis de vous servir très prochainement.\n");
         messageNotifClient.append("  Afin de finaliser la validation de votre dossier et de bloquer définitivement cette reservation pour vous,\n");
-        messageNotifClient.append(String.format("pourriez-vous procéder au règlement de l'acompte 💵  d'ici le 📅 %s ?\n",   resValidee.getDateExpirationDevis().toLocalDate()));
+        messageNotifClient.append(String.format("pourriez-vous procéder au règlement de l'acompte   d'ici le 📅 %s ?\n",   resValidee.getDateExpirationDevis().toLocalDate()));
 
         // ========================================
-        // 🔔 NOTIFICATION + EMAIL Client
+        //  NOTIFICATION + EMAIL Client
         // ========================================
 
         // Créer la notification en BD pour client
         NotificationRequestDto notif = NotificationRequestDto.builder()
                 .typeNotification(TypeNotification.RESERVATION_CONFIRMEE)
-                .titre("🎉 Réservation Confirmé")
+                .titre("Réservation Confirmé")
                 .message(messageNotifClient.toString())
                 .idUtilisateur(Objects.requireNonNull(client).getIdUtilisateur())
                 .idReservation(resValidee.getIdReservation())
@@ -762,7 +762,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public void annulerReservationParClient(Long idReservation, String motif, String username) {
-        log.info("❌ Annulation de la réservation ID: {} par le client {} - Motif: {}",
+        log.info(" Annulation de la réservation ID: {} par le client {} - Motif: {}",
                 idReservation, username, motif);
 
         Utilisateur client = utilisateurRepo.findByPseudoOrEmail(username,username).orElse(null);
@@ -782,24 +782,24 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         // Libérer les instances si c'était confirmé
         if (reservation.getStatutReservation() == StatutReservation.CONFIRME) {
-            log.info("🔓 Libération du stock pour réservation CONFIRMÉE");
+            log.info(" Libération du stock pour réservation CONFIRMÉE");
            Reservation reservationlibere = libererStockReservation(reservation);
             reservationlibere.setStatutReservation(StatutReservation.ANNULE);
             reservationlibere.setCommentaireClient(motif);
             reservationlibere.setStockReserve(false);
             reservationRepo.save(reservationlibere);
-            log.info("✅ Réservation annulée avec libération du stock");
+            log.info("Réservation annulée avec libération du stock");
         }else if (reservation.getStatutReservation() == StatutReservation.EN_ATTENTE) {
             // Simple annulation, pas de stock à libérer
-            log.info("✅ Annulation devis EN_ATTENTE (pas de stock réservé)");
+            log.info("Annulation devis EN_ATTENTE (pas de stock réservé)");
             reservation.setStatutReservation(StatutReservation.ANNULE);
             reservation.setCommentaireClient(motif);
             reservationRepo.save(reservation);
-            log.info("✅ Devis annulé (aucune libération de stock nécessaire)");
+            log.info("Devis annulé (aucune libération de stock nécessaire)");
         }
 
         // ========================================
-        // 🔔 NOTIFICATION + EMAIL ADMINS/MANAGERS
+        // NOTIFICATION + EMAIL ADMINS/MANAGERS
         // ========================================
 
         boolean etaitConfirme = reservation.getStatutReservation() == StatutReservation.ANNULE &&
@@ -812,15 +812,15 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 etaitConfirme ? "sa réservation" : "son devis",
                 reservation.getReferenceReservation()
         ));
-        messageNotif.append(String.format("💰 Montant: %.2f TND\n", reservation.getMontantTotal()));
+        messageNotif.append(String.format("Montant: %.2f TND\n", reservation.getMontantTotal()));
 
         if (etaitConfirme && reservation.getMontantPaye() != null && reservation.getMontantPaye() > 0) {
-            messageNotif.append(String.format("💵 Montant déjà payé: %.2f TND (remboursement à prévoir)\n",
+            messageNotif.append(String.format("Montant déjà payé: %.2f TND (remboursement à prévoir)\n",
                     reservation.getMontantPaye()));
         }
 
         if (motif != null && !motif.isBlank()) {
-            messageNotif.append(String.format("\n💬 Motif: %s\n", motif));
+            messageNotif.append(String.format("\nMotif: %s\n", motif));
         }
 
         if (etaitConfirme) {
@@ -836,7 +836,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 "/admin/reservation-details/" + reservation.getIdReservation()
         );
 
-        log.info("📧 Notifications envoyées aux admins/managers pour annulation de {}",
+        log.info("Notifications envoyées aux admins/managers pour annulation de {}",
                 reservation.getReferenceReservation());
 
 
@@ -846,7 +846,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     @Override
     public void annulerDevisParAdmin(Long idReservation, String motif, String username) {
         // Même logique que l'annulation par le client (différence commentaire)
-        log.info("❌ Annulation de la réservation ID: {} par l'admin {} - Motif: {}",
+        log.info("Annulation de la réservation ID: {} par l'admin {} - Motif: {}",
                 idReservation, username, motif);
 
         Reservation reservation = reservationRepo.findById(idReservation)
@@ -864,34 +864,34 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         // Libérer les instances si c'était confirmé
         if (reservation.getStatutReservation() == StatutReservation.CONFIRME) {
-            log.info("🔓 Libération du stock pour réservation CONFIRMÉE : Par {}",username);
+            log.info("Libération du stock pour réservation CONFIRMÉE : Par {}",username);
             Reservation reservationlibere = libererStockReservation(reservation);
             reservationlibere.setStatutReservation(StatutReservation.ANNULE);
             reservationlibere.setCommentaireAdmin(motif);
             reservationlibere.setStockReserve(false);
             reservationRepo.save(reservationlibere);
-            log.info("✅ Réservation annulée avec libération du stock:  Par {}",username);
+            log.info("Réservation annulée avec libération du stock:  Par {}",username);
         }else if (reservation.getStatutReservation() == StatutReservation.EN_ATTENTE) {
             // Simple annulation, pas de stock à libérer
-            log.info("✅ Annulation devis EN_ATTENTE (pas de stock réservé) :  Par {}",username);
+            log.info("Annulation devis EN_ATTENTE (pas de stock réservé) :  Par {}",username);
             reservation.setStatutReservation(StatutReservation.ANNULE);
             reservation.setCommentaireAdmin(motif);
             reservationRepo.save(reservation);
-            log.info("✅ Devis annulé (aucune libération de stock nécessaire) :  Par {}",username);
+            log.info("Devis annulé (aucune libération de stock nécessaire) :  Par {}",username);
         }
 
         // ========================================
-        // 🔔 NOTIFICATION + EMAIL CLIENT
+        // NOTIFICATION + EMAIL CLIENT
         // ========================================
 
         StringBuilder messageNotif = new StringBuilder();
         messageNotif.append(String.format(
-                "⚠️ Votre devis %s a été annulé par notre équipe.\n\n",
+                "Votre devis %s a été annulé par notre équipe.\n\n",
                 reservation.getReferenceReservation()
         ));
 
         if (motif != null && !motif.isBlank()) {
-            messageNotif.append(String.format("💬 Motif: %s\n\n", motif));
+            messageNotif.append(String.format(" Motif: %s\n\n", motif));
         }
 
         messageNotif.append("Vous pouvez créer un nouveau devis à tout moment dans votre espace client.");
@@ -930,7 +930,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 emailBody.toString()
         );
 
-        log.info("📧 Notification + Email envoyés au client {} pour annulation devis",
+        log.info("Notification + Email envoyés au client {} pour annulation devis",
                 reservation.getUtilisateur().getEmail());
 
     }
@@ -1040,7 +1040,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public List<ReservationResponseDto> getReservationsEmployeAffecte(String username) {
-        log.info("📋 Recherche des réservations pour l'employé: {}", username);
+        log.info("Recherche des réservations pour l'employé: {}", username);
 
         // 1. Récupérer l'utilisateur connecté
         Utilisateur employe = utilisateurRepo.findByPseudoOrEmail(username,username)
@@ -1050,7 +1050,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         List<AffectationLivraison> affectations =
                 affectationRepo.findByUtilisateur_IdUtilisateur(employe.getIdUtilisateur());
 
-        log.info("✅ Trouvé {} affectations pour l'employé", affectations.size());
+        log.info("Trouvé {} affectations pour l'employé", affectations.size());
 
         // 3. Extraire les IDs de livraisons
         Set<Long> idsLivraisons = affectations.stream()
@@ -1058,7 +1058,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .collect(Collectors.toSet());
 
         if (idsLivraisons.isEmpty()) {
-            log.info("ℹ️ Aucune livraison affectée à cet employé");
+            log.info("Aucune livraison affectée à cet employé");
             return Collections.emptyList();
         }
 
@@ -1066,7 +1066,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         List<LigneReservation> lignes = ligneReservationRepo
                 .findByLivraison_IdLivraisonIn(new ArrayList<>(idsLivraisons));
 
-        log.info("✅ Trouvé {} lignes de réservation", lignes.size());
+        log.info("Trouvé {} lignes de réservation", lignes.size());
 
         // 5. Extraire les réservations uniques
         Set<Long> idsReservations = lignes.stream()
@@ -1077,7 +1077,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         List<Reservation> reservations = reservationRepo
                 .findAllById(idsReservations);
 
-        log.info("✅ Trouvé {} réservations affectées à l'employé", reservations.size());
+        log.info("Trouvé {} réservations affectées à l'employé", reservations.size());
 
         // 7. Convertir en DTO et retourner
         return reservations.stream()
@@ -1144,12 +1144,11 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
      * Cette méthode est appelée juste avant de confirmer la réservation
      * pour s'assurer que le stock n'a pas été réservé entre-temps
      *
-     * @throws StockIndisponibleException si un produit n'est plus disponible
      */
     private void verifierDisponibiliteAvantValidation(Reservation reservation)
             throws StockIndisponibleException {
 
-        log.debug("🔍 Vérification disponibilité pour réservation {}",
+        log.debug("Vérification disponibilité pour réservation {}",
                 reservation.getReferenceReservation());
 
         for (LigneReservation ligne : reservation.getLigneReservations()) {
@@ -1173,12 +1172,12 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                         dispo.getQuantiteDisponible()
                 );
 
-                log.error("❌ {}", message);
+                log.error(" {}", message);
                 throw new StockIndisponibleException(message);
             }
         }
 
-        log.debug("✅ Tous les produits sont disponibles");
+        log.debug("Tous les produits sont disponibles");
     }
 
     public VerificationModificationDatesDto verifAvantModifDateReservation (Long idReservation, DatePeriodeDto nouvellesDates){
@@ -1270,16 +1269,16 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Override
     public ReservationSummaryDto getStatistiquesReservationsClient(Long idClient) {
-        log.info("📊 Récupération des statistiques pour le client ID: {}", idClient);
+        log.info("Récupération des statistiques pour le client ID: {}", idClient);
 
-        // 1️⃣ VÉRIFIER QUE LE CLIENT EXISTE
+        // 1- VÉRIFIER QUE LE CLIENT EXISTE
         Utilisateur client = utilisateurRepo.findById(idClient)
                 .orElseThrow(() -> new CustomException("Client avec ID " + idClient + " introuvable"));
 
-        // 2️⃣ RÉCUPÉRER TOUTES LES RÉSERVATIONS DU CLIENT
+        // 2- RÉCUPÉRER TOUTES LES RÉSERVATIONS DU CLIENT
         List<Reservation> reservations = reservationRepo.findByUtilisateur_IdUtilisateur(idClient);
 
-        // 3️⃣ CALCULER LES STATISTIQUES GÉNÉRALES
+        // 3- CALCULER LES STATISTIQUES GÉNÉRALES
 
         long nombreTotal = reservations.size();
 
@@ -1299,7 +1298,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .filter(r -> r.getStatutReservation() == StatutReservation.TERMINE)
                 .count();
 
-        // 4️⃣ CALCULER LES MONTANTS
+        // 4- CALCULER LES MONTANTS
 
         // Montant total de toutes les réservations confirmées et terminées
         double montantTotal = reservations.stream()
@@ -1320,7 +1319,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 ? montantTotal / (nombreConfirme + nombreTermine)
                 : 0.0;
 
-        // 5️⃣ TROUVER LES PRODUITS LES PLUS RÉSERVÉS PAR CE CLIENT
+        // 5- TROUVER LES PRODUITS LES PLUS RÉSERVÉS PAR CE CLIENT
 
         // Map : ID Produit -> Nombre de fois réservé
         Map<Long, Long> produitsReserves = new HashMap<>();
@@ -1341,7 +1340,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                 .limit(3)
                 .toList();
 
-        // 6️⃣ CONSTRUIRE LE RÉSULTAT
+        // 6- CONSTRUIRE LE RÉSULTAT
 
         ReservationSummaryDto summary = ReservationSummaryDto.builder()
                 .totalReservations(nombreTotal)
@@ -1367,7 +1366,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
         summary.setProduitsPreferences(produitsPreferences);
 
-        log.info("✅ Statistiques client calculées: {} réservations totales, {} € de CA",
+        log.info(" Statistiques client calculées: {} réservations totales, {} € de CA",
                 nombreTotal, montantTotal);
 
         return summary;
@@ -1485,10 +1484,10 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             String motif,
             String username) {
 
-        log.info("📦 Enregistrement mouvement stock: {} {} pour produit '{}'",
+        log.info(" Enregistrement mouvement stock: {} {} pour produit '{}'",
                 quantite, typeMouvement, produit.getNomProduit());
 
-        // 1️⃣ CALCULER LA QUANTITÉ AVANT/APRÈS LE MOUVEMENT
+        // 1- CALCULER LA QUANTITÉ AVANT/APRÈS LE MOUVEMENT
 
         Integer quantiteAvant = null;
         Integer quantiteApres = null;
@@ -1526,22 +1525,22 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             }
         }
 
-        // 2️⃣ CRÉER LE MOUVEMENT DE STOCK
+        // 2- CRÉER LE MOUVEMENT DE STOCK
 
         MouvementStock mouvement = new MouvementStock(produit,typeMouvement,Math.abs(quantite),quantiteAvant,quantiteApres,
                 motif != null ? motif : typeMouvement.toString(),username);
 
-        // 3️⃣ ASSOCIER LA RÉSERVATION SI FOURNIE
+        // 3- ASSOCIER LA RÉSERVATION SI FOURNIE
         if (reservation != null) {
             mouvement.setReferenceReservation(reservation.getReferenceReservation());
             mouvement.setIdReservation(reservation.getIdReservation());
         }
 
-        // 4️⃣ SAUVEGARDER LE MOUVEMENT
+        // 4- SAUVEGARDER LE MOUVEMENT
         mouvementStockRepo.save(mouvement);
 
-        // 5️⃣ LOG DÉTAILLÉ
-        log.info("✅ Mouvement stock enregistré:");
+        // 5- LOG DÉTAILLÉ
+        log.info("Mouvement stock enregistré:");
         log.info("   - Produit: {} (ID: {})", produit.getNomProduit(), produit.getIdProduit());
         log.info("   - Type: {}", typeMouvement);
         log.info("   - Quantité: {}", quantite);
@@ -1556,13 +1555,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
     }
 
     /**
-     * VARIANTE : Enregistrer un mouvement pour un produit AVEC_REFERENCE
-     *
-     * @param instance Instance de produit concernée
-     * @param typeMouvement Type de mouvement
-     * @param reservation Réservation associée
-     * @param motif Motif du mouvement
-     * @param username Utilisateur ayant effectué l'action
+     * Enregistrer un mouvement pour un produit AVEC_REFERENCE
      */
     @Transactional
     public void enregistrerMouvementStockInstance(
@@ -1572,7 +1565,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
             String motif,
             String username) {
 
-        log.info("📦 Enregistrement mouvement pour instance: {} - {}",
+        log.info("Enregistrement mouvement pour instance: {} - {}",
                 instance.getNumeroSerie(), typeMouvement);
 
         MouvementStock mouvement = new MouvementStock(instance.getProduit(),typeMouvement,1,
@@ -1596,7 +1589,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         // Sauvegarder
         mouvementStockRepo.save(mouvement);
 
-        log.info("✅ Mouvement instance enregistré: {} - Instance: {}",
+        log.info("Mouvement instance enregistré: {} - Instance: {}",
                 typeMouvement, instance.getNumeroSerie());
     }
 
@@ -1697,7 +1690,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         for (LigneReservation ligne : reservation.getLigneReservations()) {
             if (ligne.isProduitAvecReference()) {
 
-                // ✅ Vérifier la disponibilité sur la période
+                // Vérifier la disponibilité sur la période
                 List<InstanceProduit> instancesDisponibles = instanceProduitRepo.findInstancesDisponiblesSurPeriode(
                         ligne.getProduit().getIdProduit(),
                         ligne.getDateDebut(),
@@ -1711,7 +1704,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                     );
                 }
 
-                // ✅ Affecter les instances à la ligne (ManyToMany)
+                // Affecter les instances à la ligne (ManyToMany)
                 Set<InstanceProduit> instancesAAffecter = instancesDisponibles.stream()
                         .limit(ligne.getQuantite())
                         .collect(Collectors.toSet());
@@ -1762,7 +1755,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
         reservation.setStockReserve(Boolean.TRUE);
 
-        log.info("🎉 Réservation confirmée avec succès: {}", reservation.getReferenceReservation());
+        log.info("Réservation confirmée avec succès: {}", reservation.getReferenceReservation());
 
         reservationRepo.save(reservation);
         return reservation ;
@@ -1771,7 +1764,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
 
     @Transactional
     public Reservation libererStockReservation(Reservation reservation) {
-        log.info("🔓 Libération du stock pour {}",
+        log.info("Libération du stock pour {}",
                 reservation.getReferenceReservation());
 
         if (!Boolean.TRUE.equals(reservation.getStockReserve())) {
@@ -1815,7 +1808,7 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         }
         reservation.setStockReserve(Boolean.FALSE);
         reservationRepo.save(reservation);
-        log.info("✅ Stock libéré pour {}", reservation.getReferenceReservation());
+        log.info("Stock libéré pour {}", reservation.getReferenceReservation());
         return reservation;
     }
 

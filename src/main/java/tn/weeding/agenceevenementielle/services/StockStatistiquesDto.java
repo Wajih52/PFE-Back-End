@@ -8,12 +8,10 @@ import java.time.LocalDateTime;
 
 
 /**
- * ✅ DTO pour les statistiques de stock d'un produit
+ * DTO pour les statistiques de stock d'un produit
  *
  * Contient les informations agrégées sur les mouvements de stock
- * Utilisé pour le tableau de bord et les rapports
  *
- * Sprint 3 : Gestion des produits et du stock
  */
 @Data
 @Builder
@@ -53,117 +51,4 @@ public class StockStatistiquesDto {
      */
     private LocalDateTime dateDernierMouvement;
 
-    // ============================================
-    // MÉTHODES CALCULÉES (optionnelles)
-    // ============================================
-
-    /**
-     * Calcule le solde net des mouvements (entrées - sorties)
-     * Devrait correspondre à la quantité disponible si les données sont cohérentes
-     *
-     * @return Différence entre entrées et sorties
-     */
-    public Integer getSoldeNet() {
-        return (totalEntrees != null ? totalEntrees : 0) -
-                (totalSorties != null ? totalSorties : 0);
-    }
-
-    /**
-     * Calcule le taux de rotation du stock (sorties / quantité disponible)
-     * Plus le taux est élevé, plus le produit est souvent utilisé
-     *
-     * @return Taux de rotation en pourcentage
-     */
-    public Double getTauxRotation() {
-        if (quantiteDisponible == null || quantiteDisponible == 0) {
-            return 0.0;
-        }
-
-        double sorties = totalSorties != null ? totalSorties : 0;
-        return (sorties / quantiteDisponible) * 100.0;
-    }
-
-    /**
-     * Calcule le taux d'utilisation (sorties / entrées)
-     * Permet de voir quel pourcentage du stock entré a été utilisé
-     *
-     * @return Taux d'utilisation en pourcentage
-     */
-    public Double getTauxUtilisation() {
-        if (totalEntrees == null || totalEntrees == 0) {
-            return 0.0;
-        }
-
-        double sorties = totalSorties != null ? totalSorties : 0;
-        return (sorties / totalEntrees) * 100.0;
-    }
-
-
-    /**
-     * Obtient un résumé textuel des statistiques
-     * Utilisé pour les logs et l'affichage rapide
-     *
-     * @return Description textuelle des stats
-     */
-    public String getResume() {
-        return String.format(
-                "Stats: %d entrées, %d sorties, %d disponible, %d mouvements",
-                totalEntrees != null ? totalEntrees : 0,
-                totalSorties != null ? totalSorties : 0,
-                quantiteDisponible != null ? quantiteDisponible : 0,
-                nombreMouvements != null ? nombreMouvements : 0
-        );
-    }
-
-    /**
-     * Obtient le niveau d'activité du produit
-     * Basé sur le nombre de mouvements
-     *
-     * @return "FAIBLE", "MOYEN" ou "ÉLEVÉ"
-     */
-    public String getNiveauActivite() {
-        if (nombreMouvements == null || nombreMouvements == 0) {
-            return "AUCUNE";
-        } else if (nombreMouvements < 5) {
-            return "FAIBLE";
-        } else if (nombreMouvements < 20) {
-            return "MOYEN";
-        } else {
-            return "ÉLEVÉ";
-        }
-    }
-
-    /**
-     * Vérifie si les données sont cohérentes
-     * Le solde net devrait être proche de la quantité disponible
-     *
-     * @return true si cohérent (différence < 10%), false sinon
-     */
-    public Boolean isCoherent() {
-        if (quantiteDisponible == null || quantiteDisponible == 0) {
-            return getSoldeNet() == 0;
-        }
-
-        int solde = getSoldeNet();
-        double difference = Math.abs(solde - quantiteDisponible);
-        double tolerance = quantiteDisponible * 0.1; // 10% de tolérance
-
-        return difference <= tolerance;
-    }
-
-    /**
-     * Obtient un message d'alerte si les données sont incohérentes
-     *
-     * @return Message d'alerte ou null si tout est OK
-     */
-    public String getMessageAlerte() {
-        if (!isCoherent()) {
-            return String.format(
-                    "⚠️ Incohérence détectée : solde calculé (%d) ≠ quantité disponible (%d)",
-                    getSoldeNet(),
-                    quantiteDisponible
-            );
-        }
-        return null;
-    }
 }

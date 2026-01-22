@@ -15,7 +15,4 @@ public class DateValidationException extends RuntimeException {
         super(message);
     }
 
-    public DateValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

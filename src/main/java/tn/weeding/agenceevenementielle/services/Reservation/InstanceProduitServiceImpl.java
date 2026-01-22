@@ -425,7 +425,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         log.info("Affectation de {} instances du produit ID: {} à la ligne {} (période: {}-{})",
                 quantite, idProduit, idLigneReservation, dateDebut, dateFin);
 
-        // ✅ Vérifier la disponibilité sur la PÉRIODE
+        // Vérifier la disponibilité sur la PÉRIODE
         List<InstanceProduit> instancesDisponibles = instanceRepo.findInstancesDisponiblesSurPeriode(
                 idProduit,
                 dateDebut,
@@ -439,12 +439,11 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                             "(demandé: " + quantite + ")");
         }
 
-        // ✅ Récupérer les instances (SANS changer leur statut)
+        // Récupérer les instances (SANS changer leur statut)
         List<InstanceProduit> instancesAAffecter = instancesDisponibles.stream()
                 .limit(quantite)
                 .toList();
 
-        // ⚠️ NE PAS modifier l'instance ici !
         // La relation ManyToMany est gérée dans le ReservationService
 
         log.info("{} instances identifiées pour la ligne {}", quantite, idLigneReservation);
@@ -524,7 +523,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
     @Override
     @Transactional(readOnly = true)
     public List<MouvementStockResponseDto> getHistoriqueMouvementsInstance(String numeroSerie) {
-        log.info("📜 Récupération historique mouvements pour instance: {}", numeroSerie);
+        log.info("Récupération historique mouvements pour instance: {}", numeroSerie);
 
         // Vérifier que l'instance existe
         InstanceProduit instance = instanceRepo.findByNumeroSerie(numeroSerie)
@@ -535,7 +534,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         List<MouvementStock> mouvements = mouvementStockRepo
                 .findByCodeInstanceOrderByDateMouvementDesc(numeroSerie);
 
-        log.info("📜 {} mouvements trouvés pour l'instance {}", mouvements.size(), numeroSerie);
+        log.info("{} mouvements trouvés pour l'instance {}", mouvements.size(), numeroSerie);
 
         // Convertir en DTO
         return mouvements.stream()

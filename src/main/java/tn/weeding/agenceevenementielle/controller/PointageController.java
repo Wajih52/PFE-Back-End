@@ -20,9 +20,7 @@ import tn.weeding.agenceevenementielle.services.PointageServiceInterface;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Contrôleur REST pour la gestion des pointages
- */
+
 @RestController
 @RequestMapping("/api/pointages")
 @RequiredArgsConstructor
@@ -33,9 +31,6 @@ public class PointageController {
     private final PointageServiceInterface pointageService;
     private final AuthenticationFacade authenticationFacade;
 
-    // ============================================
-    // ENDPOINTS EMPLOYÉ
-    // ============================================
 
     /**
      * Pointer son arrivée
@@ -45,7 +40,7 @@ public class PointageController {
     @Operation(summary = "Pointer l'arrivée",
             description = "Permet à un employé de pointer son heure d'arrivée")
     public ResponseEntity<PointageResponseDto> pointerArrivee() {
-        log.info("⏰ Demande de pointage arrivée");
+        log.info("Demande de pointage arrivée");
 
         String username = authenticationFacade.getAuthentication().getName();
         PointageResponseDto pointage = pointageService.pointerArrivee(username);
@@ -61,7 +56,7 @@ public class PointageController {
     @Operation(summary = "Pointer le départ",
             description = "Permet à un employé de pointer son heure de départ")
     public ResponseEntity<PointageResponseDto> pointerDepart() {
-        log.info("⏰ Demande de pointage départ");
+        log.info("Demande de pointage départ");
 
         String username = authenticationFacade.getAuthentication().getName();
         PointageResponseDto pointage = pointageService.pointerDepart(username);
@@ -77,7 +72,7 @@ public class PointageController {
     @Operation(summary = "Mon pointage du jour",
             description = "Récupère le pointage du jour de l'utilisateur connecté")
     public ResponseEntity<PointageResponseDto> getMonPointageDuJour() {
-        log.info("📋 Récupération du pointage du jour");
+        log.info("Récupération du pointage du jour");
 
         String username = authenticationFacade.getAuthentication().getName();
         PointageResponseDto pointage = pointageService.getPointageDuJour(username);
@@ -96,7 +91,7 @@ public class PointageController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
 
-        log.info("📋 Récupération de l'historique personnel: {} à {}", dateDebut, dateFin);
+        log.info("Récupération de l'historique personnel: {} à {}", dateDebut, dateFin);
 
         String username = authenticationFacade.getAuthentication().getName();
         List<PointageResponseDto> pointages = pointageService.getMesPointages(username, dateDebut, dateFin);
@@ -115,7 +110,7 @@ public class PointageController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
 
-        log.info("📊 Récupération des statistiques personnelles");
+        log.info("Récupération des statistiques personnelles");
 
         String username = authenticationFacade.getAuthentication().getName();
         StatistiquesPointageDto stats = pointageService.getMesStatistiques(username, dateDebut, dateFin);
@@ -123,9 +118,6 @@ public class PointageController {
         return ResponseEntity.ok(stats);
     }
 
-    // ============================================
-    // ENDPOINTS ADMIN/MANAGER
-    // ============================================
 
     /**
      * Créer un pointage manuel
@@ -137,7 +129,7 @@ public class PointageController {
     public ResponseEntity<PointageResponseDto> creerPointageManuel(
             @Valid @RequestBody PointageRequestDto dto) {
 
-        log.info("📝 Création pointage manuel");
+        log.info("Création pointage manuel");
 
         String username = authenticationFacade.getAuthentication().getName();
         PointageResponseDto pointage = pointageService.creerPointageManuel(dto, username);
@@ -156,7 +148,7 @@ public class PointageController {
             @PathVariable Long idPointage,
             @Valid @RequestBody PointageRequestDto dto) {
 
-        log.info("✏️ Modification pointage ID: {}", idPointage);
+        log.info("Modification pointage ID: {}", idPointage);
 
         String username = authenticationFacade.getAuthentication().getName();
         PointageResponseDto pointage = pointageService.modifierPointage(idPointage, dto, username);
@@ -172,7 +164,7 @@ public class PointageController {
     @Operation(summary = "Supprimer un pointage",
             description = "Permet de supprimer un pointage")
     public ResponseEntity<Void> supprimerPointage(@PathVariable Long idPointage) {
-        log.info("🗑️ Suppression pointage ID: {}", idPointage);
+        log.info("Suppression pointage ID: {}", idPointage);
 
         String username = authenticationFacade.getAuthentication().getName();
         pointageService.supprimerPointage(idPointage, username);
@@ -192,7 +184,7 @@ public class PointageController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
 
-        log.info("📋 Récupération pointages employé ID: {}", idEmploye);
+        log.info(" Récupération pointages employé ID: {}", idEmploye);
 
         List<PointageResponseDto> pointages =
                 pointageService.getPointagesEmploye(idEmploye, dateDebut, dateFin);
@@ -212,7 +204,7 @@ public class PointageController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
 
-        log.info("📊 Récupération statistiques employé ID: {}", idEmploye);
+        log.info("Récupération statistiques employé ID: {}", idEmploye);
 
         StatistiquesPointageDto stats =
                 pointageService.getStatistiquesEmploye(idEmploye, dateDebut, dateFin);
@@ -232,7 +224,7 @@ public class PointageController {
     @Operation(summary = "Pointages du jour",
             description = "Récupère tous les pointages d'aujourd'hui")
     public ResponseEntity<List<PointageResponseDto>> getPointagesAujourdhui() {
-        log.info("📋 Récupération des pointages du jour");
+        log.info("Récupération des pointages du jour");
 
         List<PointageResponseDto> pointages = pointageService.getPointagesAujourdhui();
 
@@ -250,7 +242,7 @@ public class PointageController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
 
-        log.info("📋 Récupération pointages période: {} à {}", dateDebut, dateFin);
+        log.info("Récupération pointages période: {} à {}", dateDebut, dateFin);
 
         List<PointageResponseDto> pointages =
                 pointageService.getTousLesPointages(dateDebut, dateFin);
@@ -269,7 +261,7 @@ public class PointageController {
             @PathVariable StatutPointage statut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        log.info("📋 Récupération pointages statut: {} pour le {}", statut, date);
+        log.info("Récupération pointages statut: {} pour le {}", statut, date);
 
         List<PointageResponseDto> pointages = pointageService.getPointagesByStatut(statut, date);
 
@@ -286,7 +278,7 @@ public class PointageController {
     public ResponseEntity<List<Long>> getEmployesAbsents(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        log.info("📋 Récupération des absents du {}", date);
+        log.info("Récupération des absents du {}", date);
 
         List<Long> idsAbsents = pointageService.getEmployesAbsents(date);
 
@@ -294,7 +286,7 @@ public class PointageController {
     }
 
     /**
-     * Déclencher manuellement le marquage des absents
+     * lancement manuellement de marquage des absents
      */
     @PostMapping("/marquer-absents")
     @PreAuthorize("hasRole('ADMIN')")

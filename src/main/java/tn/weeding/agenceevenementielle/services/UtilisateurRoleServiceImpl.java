@@ -80,7 +80,7 @@ public class UtilisateurRoleServiceImpl implements UtilisateurRoleServiceInterfa
         //sauvegarder
          UtilisateurRole saved = utilisateurRoleRepository.save(utilisateurRole);
 
-        log.info("✅ Rôle '{}' attribué à '{}' par '{}'",
+        log.info("Rôle '{}' attribué à '{}' par '{}'",
                 role.getNom(),
                 utilisateur.getPseudo(),
                 codeUtilisateurConnecte
@@ -113,7 +113,7 @@ public class UtilisateurRoleServiceImpl implements UtilisateurRoleServiceInterfa
         utilisateurRole.setUtilisateur(utilisateur);
         utilisateurRole.setRole(role);
 
-        // ✅ Récupérer automatiquement le code de l'utilisateur connecté
+        // Récupérer automatiquement le code de l'utilisateur connecté
         String pseudoConnecte = authenticationFacade.getCurrentUserPseudo();
         Utilisateur utilisateurConnecte = utilisateurRepository.findByPseudo(pseudoConnecte)
                 .orElseThrow(() -> new CustomException("Utilisateur connecté introuvable"));
@@ -122,7 +122,7 @@ public class UtilisateurRoleServiceImpl implements UtilisateurRoleServiceInterfa
 
         UtilisateurRole updated = utilisateurRoleRepository.save(utilisateurRole);
 
-        log.info("✅ Relation utilisateur-rôle {} mise à jour par '{}'",
+        log.info(" Relation utilisateur-rôle {} mise à jour par '{}'",
                 idUtilisateurRole,
                 utilisateurConnecte.getCodeUtilisateur()
         );

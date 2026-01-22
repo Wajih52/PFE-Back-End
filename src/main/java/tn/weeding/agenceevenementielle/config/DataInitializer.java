@@ -144,16 +144,16 @@ public class DataInitializer {
                     user.getUtilisateurRoles().add(utilisateurRole);
 
                     utilisateurRepository.save(user);
-                    System.out.println("✅ Utilisateur " + roleName + " créé automatiquement : " + userData.getEmail());
+                    System.out.println(" Utilisateur " + roleName + " créé automatiquement : " + userData.getEmail());
                 } else {
-                    System.out.println("❌ Le rôle " + roleName + " n'a pas été trouvé");
+                    System.out.println(" Le rôle " + roleName + " n'a pas été trouvé");
                 }
 
             } catch (Exception e) {
-                System.out.println("❌ Erreur lors de la création de l'utilisateur " + roleName + " : " + e.getMessage());
+                System.out.println(" Erreur lors de la création de l'utilisateur " + roleName + " : " + e.getMessage());
             }
         } else {
-            System.out.println("✅ Utilisateur " + roleName + " existe déjà");
+            System.out.println(" Utilisateur " + roleName + " existe déjà");
         }
     }
 

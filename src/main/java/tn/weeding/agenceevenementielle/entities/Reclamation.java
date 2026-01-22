@@ -56,7 +56,7 @@ public class Reclamation implements Serializable {
 
     private LocalDateTime dateReponse;
 
-    // Traité par (code de l'utilisateur admin/employé)
+    // Traité par (code de l'utilisateur admin/manager)
     private String traitePar;
 
     //Reclamation 0..* ------------------ 1 Utilisateur

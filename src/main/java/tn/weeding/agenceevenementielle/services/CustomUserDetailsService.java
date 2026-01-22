@@ -36,13 +36,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Cacheable (value = "users", key = "#identifiant")
     public UserDetails loadUserByUsername(String identifiant) throws UsernameNotFoundException {
 
-        log.info("🔍 Tentative de chargement de l'utilisateur avec identifiant: {}", identifiant);
+        log.info("Tentative de chargement de l'utilisateur avec identifiant: {}", identifiant);
 
         // Chercher par pseudo OU email
         Utilisateur utilisateur = utilisateurRepository.findByPseudoOrEmail(identifiant, identifiant)
                 .filter(Utilisateur::getActivationCompte)
                 .orElseThrow(() -> {
-                    log.error("❌ Utilisateur introuvable ou compte non activé ⚠️  : {}", identifiant);
+                    log.error("Utilisateur introuvable ou compte non activé   : {}", identifiant);
                     return new UsernameNotFoundException("Identifiant ou mot de passe incorrect");
                 });
 
@@ -50,7 +50,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Charger les rôles de l'utilisateur
         Collection<? extends GrantedAuthority> authorities = getAuthorities(utilisateur);
 
-        log.info("✅ Utilisateur '{}' chargé avec {} rôle(s)", utilisateur.getPseudo(), authorities.size());
+        log.info("Utilisateur '{}' chargé avec {} rôle(s)", utilisateur.getPseudo(), authorities.size());
 
         return User.builder()
                 .username(utilisateur.getPseudo())

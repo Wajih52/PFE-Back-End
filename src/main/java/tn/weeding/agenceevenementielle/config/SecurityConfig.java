@@ -42,9 +42,6 @@ public class SecurityConfig {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private Environment env;
-
-    @Autowired
     private GoogleOAuth2UserService googleOAuth2UserService;
 
     //pour autoriser l'utilisation des End Points
@@ -74,7 +71,8 @@ public class SecurityConfig {
                                           "/error",
                                           "/api/reclamations/create"
 
-                        ).permitAll().anyRequest().authenticated()
+                        ).permitAll()
+                                .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oauth2LoginSuccessHandler())
@@ -94,17 +92,13 @@ public class SecurityConfig {
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
-    @Bean
-    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
-        StrictHttpFirewall firewall = new StrictHttpFirewall();
-        firewall.setAllowUrlEncodedDoubleSlash(true);
-        return firewall;
-    }
+
+
 
     @Bean
     public OAuth2LoginSuccessHandler oauth2LoginSuccessHandler() {
         OAuth2LoginSuccessHandler handler = new OAuth2LoginSuccessHandler(jwtUtil, googleOAuth2UserService);
-        log.info("✅ OAuth2LoginSuccessHandler bean créé avec succès");
+        log.info("OAuth2LoginSuccessHandler bean créé avec succès");
         return handler;
     }
 
@@ -133,7 +127,22 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
-        log.info("✅ Configuration CORS activée pour http://localhost:8000 (NGINX) et http://localhost:4200 (DEV)");
+        log.info(" Configuration CORS activée pour http://localhost:8000 (NGINX) et http://localhost:4200 (DEV)");
         return source;
+    }
+
+
+
+
+
+
+
+
+
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedDoubleSlash(true);
+        return firewall;
     }
 }

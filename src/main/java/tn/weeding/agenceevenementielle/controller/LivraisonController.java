@@ -21,10 +21,7 @@ import tn.weeding.agenceevenementielle.services.LivraisonServiceInterface;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Contrôleur REST pour la gestion des livraisons
- *
- */
+
 @RestController
 @RequestMapping("/api/livraisons")
 @RequiredArgsConstructor
@@ -50,7 +47,7 @@ public class LivraisonController {
     public ResponseEntity<LivraisonResponseDto> creerLivraison(
             @Valid @RequestBody LivraisonRequestDto livraisonRequest) {
 
-        log.info("🚚 Création d'une nouvelle livraison");
+        log.info("Création d'une nouvelle livraison");
 
         String username = authenticationFacade.getAuthentication().getName();
         LivraisonResponseDto livraison = livraisonService.creerLivraison(livraisonRequest, username);
@@ -69,7 +66,7 @@ public class LivraisonController {
             @PathVariable Long id,
             @Valid @RequestBody LivraisonRequestDto livraisonRequest) {
 
-        log.info("✏️ Modification de la livraison ID: {}", id);
+        log.info("Modification de la livraison ID: {}", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         LivraisonResponseDto livraison = livraisonService.modifierLivraison(id, livraisonRequest, username);
@@ -85,7 +82,7 @@ public class LivraisonController {
     @Operation(summary = "Récupérer une livraison",
             description = "Récupérer les détails d'une livraison par son ID")
     public ResponseEntity<LivraisonResponseDto> getLivraisonById(@PathVariable Long id) {
-        log.info("📋 Récupération de la livraison ID: {}", id);
+        log.info("Récupération de la livraison ID: {}", id);
 
         LivraisonResponseDto livraison = livraisonService.getLivraisonById(id);
         return ResponseEntity.ok(livraison);
@@ -99,7 +96,7 @@ public class LivraisonController {
     @Operation(summary = "Récupérer toutes les livraisons",
             description = "Récupérer la liste de toutes les livraisons")
     public ResponseEntity<List<LivraisonResponseDto>> getAllLivraisons() {
-        log.info("📋 Récupération de toutes les livraisons");
+        log.info("Récupération de toutes les livraisons");
 
         List<LivraisonResponseDto> livraisons = livraisonService.getAllLivraisons();
         return ResponseEntity.ok(livraisons);
@@ -115,7 +112,7 @@ public class LivraisonController {
     public ResponseEntity<List<LivraisonResponseDto>> getLivraisonsByStatut(
             @PathVariable StatutLivraison statut) {
 
-        log.info("📋 Récupération des livraisons avec statut: {}", statut);
+        log.info("Récupération des livraisons avec statut: {}", statut);
 
         List<LivraisonResponseDto> livraisons = livraisonService.getLivraisonsByStatut(statut);
         return ResponseEntity.ok(livraisons);
@@ -131,7 +128,7 @@ public class LivraisonController {
     public ResponseEntity<List<LivraisonResponseDto>> getLivraisonsByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        log.info("📋 Récupération des livraisons du: {}", date);
+        log.info("Récupération des livraisons du: {}", date);
 
         List<LivraisonResponseDto> livraisons = livraisonService.getLivraisonsByDate(date);
         return ResponseEntity.ok(livraisons);
@@ -148,7 +145,7 @@ public class LivraisonController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
 
-        log.info("📋 Récupération des livraisons entre {} et {}", dateDebut, dateFin);
+        log.info("Récupération des livraisons entre {} et {}", dateDebut, dateFin);
 
         List<LivraisonResponseDto> livraisons =
                 livraisonService.getLivraisonsBetweenDates(dateDebut, dateFin);
@@ -164,7 +161,7 @@ public class LivraisonController {
     @Operation(summary = "Récupérer les livraisons d'aujourd'hui",
             description = "Récupérer toutes les livraisons prévues pour aujourd'hui")
     public ResponseEntity<List<LivraisonResponseDto>> getLivraisonsAujourdhui() {
-        log.info("📋 Récupération des livraisons d'aujourd'hui");
+        log.info("Récupération des livraisons d'aujourd'hui");
 
         List<LivraisonResponseDto> livraisons = livraisonService.getLivraisonsAujourdhui();
         return ResponseEntity.ok(livraisons);
@@ -180,7 +177,7 @@ public class LivraisonController {
     public ResponseEntity<List<LivraisonResponseDto>> getLivraisonsByEmploye(
             @PathVariable Long idEmploye) {
 
-        log.info("📋 Récupération des livraisons de l'employé ID: {}", idEmploye);
+        log.info("Récupération des livraisons de l'employé ID: {}", idEmploye);
 
         List<LivraisonResponseDto> livraisons = livraisonService.getLivraisonsByEmploye(idEmploye);
         return ResponseEntity.ok(livraisons);
@@ -196,7 +193,7 @@ public class LivraisonController {
     public ResponseEntity<List<LivraisonResponseDto>> getLivraisonsByReservation(
             @PathVariable Long idReservation) {
 
-        log.info("📋 Récupération des livraisons de la réservation ID: {}", idReservation);
+        log.info("Récupération des livraisons de la réservation ID: {}", idReservation);
 
         List<LivraisonResponseDto> livraisons =
                 livraisonService.getLivraisonsByReservation(idReservation);
@@ -212,7 +209,7 @@ public class LivraisonController {
     @Operation(summary = "Supprimer une livraison",
             description = "Supprimer une livraison (non livrée uniquement)")
     public ResponseEntity<Void> supprimerLivraison(@PathVariable Long id) {
-        log.info("🗑️ Suppression de la livraison ID: {}", id);
+        log.info("Suppression de la livraison ID: {}", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         livraisonService.supprimerLivraison(id, username);
@@ -235,7 +232,7 @@ public class LivraisonController {
             @PathVariable Long id,
             @RequestParam StatutLivraison nouveauStatut) {
 
-        log.info("🔄 Changement de statut de la livraison ID {} -> {}", id, nouveauStatut);
+        log.info("Changement de statut de la livraison ID {} -> {}", id, nouveauStatut);
 
         String username = authenticationFacade.getAuthentication().getName();
         LivraisonResponseDto livraison =
@@ -252,7 +249,7 @@ public class LivraisonController {
     @Operation(summary = "Marquer en cours",
             description = "Marquer une livraison comme étant en cours")
     public ResponseEntity<LivraisonResponseDto> marquerEnCours(@PathVariable Long id) {
-        log.info("🚚 Marquage de la livraison ID {} comme EN_COURS", id);
+        log.info("Marquage de la livraison ID {} comme EN_COURS", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         LivraisonResponseDto livraison = livraisonService.marquerLivraisonEnCours(id, username);
@@ -268,7 +265,7 @@ public class LivraisonController {
     @Operation(summary = "Marquer livrée",
             description = "Marquer une livraison comme étant livrée")
     public ResponseEntity<LivraisonResponseDto> marquerLivree(@PathVariable Long id) {
-        log.info("✅ Marquage de la livraison ID {} comme LIVREE", id);
+        log.info("Marquage de la livraison ID {} comme LIVREE", id);
 
         String username = authenticationFacade.getAuthentication().getName();
         LivraisonResponseDto livraison = livraisonService.marquerLivraisonLivree(id, username);
@@ -289,7 +286,7 @@ public class LivraisonController {
                     "la livraison est automatiquement marquée comme LIVREE."
     )
     public ResponseEntity<LigneReservationResponseDto> marquerLigneLivree(@PathVariable Long idLigne) {
-        log.info("📦 Marquage de la ligne de réservation ID {} comme LIVREE", idLigne);
+        log.info("Marquage de la ligne de réservation ID {} comme LIVREE", idLigne);
 
         String username = authenticationFacade.getAuthentication().getName();
         LigneReservationResponseDto ligne = livraisonService.marquerLigneLivree(idLigne, username);
@@ -299,8 +296,9 @@ public class LivraisonController {
 
     /**
      * Obtenir toutes les lignes d'une livraison avec leur statut
-     * Utile pour afficher le tableau dans le détail de livraison
+     * pour les afficher dans le tableau de détail de livraison
      */
+
     @GetMapping("/{idLivraison}/lignes")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYE', 'CLIENT')")
     @Operation(
@@ -308,7 +306,7 @@ public class LivraisonController {
             description = "Récupérer toutes les lignes de réservation associées à une livraison"
     )
     public ResponseEntity<List<LigneReservationResponseDto>> getLignesLivraison(@PathVariable Long idLivraison) {
-        log.info("📋 Récupération des lignes de la livraison ID {}", idLivraison);
+        log.info("Récupération des lignes de la livraison ID {}", idLivraison);
 
         List<LigneReservationResponseDto> lignes = livraisonService.getLignesLivraison(idLivraison);
 
@@ -329,7 +327,7 @@ public class LivraisonController {
     public ResponseEntity<AffectationLivraisonDto> affecterEmploye(
             @Valid @RequestBody AffectationLivraisonRequestDto affectationRequest) {
 
-        log.info("👤 Affectation d'un employé à une livraison");
+        log.info("Affectation d'un employé à une livraison");
 
         String username = authenticationFacade.getAuthentication().getName();
         AffectationLivraisonDto affectation =
@@ -346,7 +344,7 @@ public class LivraisonController {
     @Operation(summary = "Retirer un employé",
             description = "Retirer un employé d'une livraison")
     public ResponseEntity<Void> retirerEmploye(@PathVariable Long idAffectation) {
-        log.info("🗑️ Retrait de l'affectation ID: {}", idAffectation);
+        log.info("Retrait de l'affectation ID: {}", idAffectation);
 
         String username = authenticationFacade.getAuthentication().getName();
         livraisonService.retirerEmploye(idAffectation, username);
@@ -364,7 +362,7 @@ public class LivraisonController {
     public ResponseEntity<List<AffectationLivraisonDto>> getAffectationsByLivraison(
             @PathVariable Long idLivraison) {
 
-        log.info("📋 Récupération des affectations de la livraison ID: {}", idLivraison);
+        log.info("Récupération des affectations de la livraison ID: {}", idLivraison);
 
         List<AffectationLivraisonDto> affectations =
                 livraisonService.getAffectationsByLivraison(idLivraison);
@@ -382,7 +380,7 @@ public class LivraisonController {
     public ResponseEntity<List<AffectationLivraisonDto>> getAffectationsByEmploye(
             @PathVariable Long idEmploye) {
 
-        log.info("📋 Récupération des affectations de l'employé ID: {}", idEmploye);
+        log.info("Récupération des affectations de l'employé ID: {}", idEmploye);
 
         List<AffectationLivraisonDto> affectations =
                 livraisonService.getAffectationsByEmploye(idEmploye);
@@ -402,7 +400,7 @@ public class LivraisonController {
     @Operation(summary = "Générer bon de livraison",
             description = "Générer et télécharger le bon de livraison en PDF")
     public ResponseEntity<byte[]> genererBonLivraison(@PathVariable Long id) {
-        log.info("📄 Génération du bon de livraison ID: {}", id);
+        log.info("Génération du bon de livraison ID: {}", id);
 
         byte[] pdf = livraisonService.genererBonLivraison(id);
 
@@ -428,7 +426,7 @@ public class LivraisonController {
     @Operation(summary = "Compter par statut",
             description = "Compter le nombre de livraisons avec un statut donné")
     public ResponseEntity<Long> countByStatut(@PathVariable StatutLivraison statut) {
-        log.info("📊 Comptage des livraisons avec statut: {}", statut);
+        log.info("Comptage des livraisons avec statut: {}", statut);
 
         Long count = livraisonService.countByStatut(statut);
         return ResponseEntity.ok(count);
@@ -446,7 +444,7 @@ public class LivraisonController {
                     "Les instances passent en statut EN_RETOUR."
     )
     public ResponseEntity<LigneReservationResponseDto> marquerLigneEnRetour(@PathVariable Long idLigne) {
-        log.info("🔙 Marquage de la ligne de réservation ID {} comme EN RETOUR", idLigne);
+        log.info(" Marquage de la ligne de réservation ID {} comme EN RETOUR", idLigne);
 
         String username = authenticationFacade.getAuthentication().getName();
         LigneReservationResponseDto ligne = livraisonService.marquerLigneEnRetour(idLigne, username);
@@ -467,7 +465,7 @@ public class LivraisonController {
                     "Lorsque toutes les lignes sont retournées, la livraison passe à RETOURNEE."
     )
     public ResponseEntity<LigneReservationResponseDto> marquerLigneRetournee(@PathVariable Long idLigne) {
-        log.info("✅ Marquage de la ligne de réservation ID {} comme RETOURNEE", idLigne);
+        log.info("Marquage de la ligne de réservation ID {} comme RETOURNEE", idLigne);
 
         String username = authenticationFacade.getAuthentication().getName();
         LigneReservationResponseDto ligne = livraisonService.marquerLigneRetournee(idLigne, username);

@@ -32,13 +32,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
-        // ✅ Log lisible avec un champ par ligne
-        log.warn("⚠️ Erreur de validation :");
+        // Log lisible avec un champ par ligne
+        log.warn("Erreur de validation :");
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
-            log.warn("  ❌ {}: {}", fieldName, errorMessage);  // ← Un champ par ligne
+            log.warn("{}: {}", fieldName, errorMessage);  // ← Un champ par ligne
         });
 
         // Réponse JSON structurée
@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
-        log.warn("⚠ Tentative de connexion échouée: {}", ex.getMessage());
+        log.warn("Tentative de connexion échouée: {}", ex.getMessage());
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Identifiants incorrects");
         body.put("detail", "Le nom d'utilisateur ou le mot de passe est incorrect");
@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException .class)
     public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        log.warn("⚠ Utilisateur non trouvé: {}", ex.getMessage());
+        log.warn("Utilisateur non trouvé: {}", ex.getMessage());
         Map<String, Object> body = new HashMap<>();
         body.put("message", "Utilisateur non trouvé");
         body.put("detail", ex.getMessage());
@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<?> handleAuthorizationDenied(AuthorizationDeniedException ex) {
-        log.warn("⛔ Accès refusé : {}", ex.getMessage());
+        log.warn("Accès refusée : {}", ex.getMessage());
 
         ErrorResponse error = new ErrorResponse(
                 "Accès refusé",
@@ -131,7 +131,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDenied(AccessDeniedException ex) {
-        log.warn("⛔ Accès refusé : {}", ex.getMessage());
+        log.warn("Accès refusé : {}", ex.getMessage());
 
         ErrorResponse error = new ErrorResponse(
                 "Accès refusé",
@@ -147,7 +147,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
-        log.warn("🔐 Erreur d'authentification : {}", ex.getMessage());
+        log.warn("Erreur d'authentification : {}", ex.getMessage());
 
         ErrorResponse error = new ErrorResponse(
                 "Authentification requise",
@@ -276,12 +276,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse2> handleGeneralException(Exception ex) {
-        log.error(" 🚨 Erreur interne du serveur : ", ex);
+        log.error(" Erreur interne du serveur : ", ex);
 
         ErrorResponse2 error = new ErrorResponse2(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "🚨Erreur interne du serveur",
-                " 🚨 Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
+                "Erreur interne du serveur",
+                "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
                 "/api"
         );
 

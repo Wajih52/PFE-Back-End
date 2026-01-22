@@ -32,10 +32,6 @@ public interface ReservationServiceInterface {
      * - Calcul du montant total
      * - Statut: EnAttente
      *
-     * @param devisRequest Détails du devis (produits, quantités, dates)
-     * @param idUtilisateur ID du client
-     * @param username Username du client (pour traçabilité)
-     * @return Le devis créé avec statut "En Attente"
      */
     ReservationResponseDto creerDevis(DevisRequestDto devisRequest, Long idUtilisateur, String username);
 
@@ -43,16 +39,12 @@ public interface ReservationServiceInterface {
      * Vérifier la disponibilité d'un produit sur une période AVANT de créer le devis
      * Utile pour afficher la disponibilité en temps réel au client
      *
-     * @param verificationDto Détails de la vérification
-     * @return Réponse avec disponibilité et quantité disponible
      */
     DisponibiliteResponseDto verifierDisponibilite(VerificationDisponibiliteDto verificationDto);
 
     /**
      * Vérifier la disponibilité de plusieurs produits en une fois
      *
-     * @param verifications Liste des vérifications
-     * @return Liste des disponibilités
      */
     List<DisponibiliteResponseDto> verifierDisponibilites(List<VerificationDisponibiliteDto> verifications);
 
@@ -65,18 +57,12 @@ public interface ReservationServiceInterface {
      * - Recalcule automatiquement le montant total
      * - Le devis reste en statut "EnAttente" jusqu'à la validation client
      *
-     * @param modificationDto Modifications à appliquer
-     * @param username Username de l'admin
-     * @return Le devis modifié
      */
     ReservationResponseDto modifierDevisParAdmin(DevisModificationDto modificationDto, String username);
 
     /**
      * L'admin peut annuler un devis (si le client ne répond pas, etc.)
      *
-     * @param idReservation ID du devis
-     * @param motif Motif de l'annulation
-     * @param username Username de l'admin
      */
     void annulerDevisParAdmin(Long idReservation, String motif, String username);
 
@@ -85,7 +71,7 @@ public interface ReservationServiceInterface {
     /**
      * Étape 3: Le CLIENT valide ou refuse le devis modifié par l'admin
      * - Si accepté: Statut passe à "confirme" + Réservation des instances/quantités
-     * - Si refusé: Statut passe à "annule"
+     * - Si refusé: Statut passe à "annuller"
      *
      * @param validationDto Décision du client
      * @param username Username du client
@@ -173,7 +159,7 @@ public interface ReservationServiceInterface {
 
 
     /**
-     * 📅 Vérifier si des nouvelles dates sont disponibles pour une réservation
+     * Vérifier si des nouvelles dates sont disponibles pour une réservation
      *
      * Permet au client de vérifier AVANT de modifier
      * Ne modifie rien, juste vérifie
@@ -213,7 +199,6 @@ public interface ReservationServiceInterface {
 
     /**
      * Récupérer les devis expirés (en attente depuis trop longtemps)
-     * (pour relance client)
      */
     List<ReservationResponseDto> getDevisExpires(int nbreJours);
 

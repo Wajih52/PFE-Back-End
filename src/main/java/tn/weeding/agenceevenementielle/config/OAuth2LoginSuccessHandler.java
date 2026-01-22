@@ -39,30 +39,30 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             String prenom = oAuth2User.getAttribute("given_name");
             String photo = oAuth2User.getAttribute("picture");
 
-            log.info("🔐 Authentification Google réussie pour : {}", email);
-            log.info("📝 Nom complet : {} {}", prenom, nom);
+            log.info(" Authentification Google réussie pour : {}", email);
+            log.info(" Nom complet : {} {}", prenom, nom);
 
             // Créer ou récupérer l'utilisateur en base de données
             String pseudo = googleOAuth2UserService.processOAuth2User(email, prenom, nom, photo);
 
             //  Générer TON JWT
             String jwtToken = jwtUtil.generateToken(pseudo);
-            log.info("✅ JWT généré pour l'utilisateur : {}", pseudo);
+            log.info(" JWT généré pour l'utilisateur : {}", pseudo);
 
-            // 4️⃣ Rediriger vers Angular avec le token
+            // Rediriger vers Angular avec le token
             String redirectUrl = UriComponentsBuilder
                     .fromUriString("http://localhost:4200/auth/oauth2/redirect")
                     .queryParam("token", jwtToken)
                     .build()
                     .toUriString();
 
-            log.info("🔄 Redirection vers Angular : {}", redirectUrl);
+            log.info("Redirection vers Angular : {}", redirectUrl);
             getRedirectStrategy().sendRedirect(request, response, redirectUrl);
 
         } catch (CustomException ex)
         {
             if (ex.getMessage().equals("CONNEXION_EXIST_IN_CLASSIC_MODE")) {
-                log.warn("⛔ Tentative de connexion Google avec un compte classique existant:");
+                log.warn(" Tentative de connexion Google avec un compte classique existant:");
 
              String redirectUrl = "http://localhost:4200/auth/login?access=false&message="+ URLEncoder.encode(
                      "Cet email est déjà utilisé avec une connexion Classique. Veuillez utiliser votre mot de passe",
@@ -76,7 +76,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             response.sendRedirect(redirectUrl);
         }
         catch (Exception e) {
-            log.error("❌ Erreur lors de l'authentification OAuth2 : {}", e.getMessage());
+            log.error(" Erreur lors de l'authentification OAuth2 : {}", e.getMessage());
 
             // En cas d'erreur, rediriger vers une page d'erreur Angular
             String errorUrl = UriComponentsBuilder

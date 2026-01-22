@@ -20,10 +20,7 @@ import tn.weeding.agenceevenementielle.services.Reservation.InstanceProduitServi
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Contrôleur REST pour la gestion des instances de produits avec référence
- * Sprint 3 - Gestion des produits et du stock
- */
+
 @RestController
 @RequestMapping("/api/instances")
 @RequiredArgsConstructor
@@ -214,7 +211,7 @@ public class InstanceProduitController {
             description = "Récupère tous les mouvements liés à une instance spécifique")
     public ResponseEntity<List<MouvementStockResponseDto>> getHistoriqueMouvementsInstance(
             @PathVariable String numeroSerie) {
-        log.info("📜 Requête historique mouvements pour instance: {}", numeroSerie);
+        log.info(" Requête historique mouvements pour instance: {}", numeroSerie);
 
         List<MouvementStockResponseDto> mouvements = instanceService
                 .getHistoriqueMouvementsInstance(numeroSerie);

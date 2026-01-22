@@ -22,8 +22,6 @@ import java.time.format.DateTimeFormatter;
  * ==========================================
  * SERVICE DE GÉNÉRATION DE RAPPORTS
  * ==========================================
- * BONUS : Génération de rapports PDF et Excel
- * Permet d'exporter les statistiques du dashboard
  */
 @Service
 @RequiredArgsConstructor
@@ -40,7 +38,7 @@ public class RapportStatistiquesService {
      * Générer un rapport PDF des statistiques
      */
     public byte[] genererRapportPDF() throws DocumentException {
-        log.info("📄 Génération du rapport PDF");
+        log.info("Génération du rapport PDF");
 
         DashboardStatistiquesDto stats = dashboardService.getDashboardStatistiques();
 
@@ -75,10 +73,10 @@ public class RapportStatistiquesService {
             addFooter(document);
 
             document.close();
-            log.info("✅ Rapport PDF généré avec succès");
+            log.info("Rapport PDF généré avec succès");
 
         } catch (Exception e) {
-            log.error("❌ Erreur génération PDF", e);
+            log.error("Erreur génération PDF", e);
             throw new DocumentException("Erreur génération PDF: " + e.getMessage());
         }
 
@@ -89,7 +87,7 @@ public class RapportStatistiquesService {
      * Générer un rapport PDF pour une période spécifique
      */
     public byte[] genererRapportPDFPeriode(LocalDate debut, LocalDate fin) throws DocumentException {
-        log.info("📄 Génération du rapport PDF pour période: {} - {}", debut, fin);
+        log.info("Génération du rapport PDF pour période: {} - {}", debut, fin);
 
         DashboardStatistiquesDto stats = dashboardService.getDashboardStatistiquesPeriode(debut, fin);
 
@@ -106,7 +104,7 @@ public class RapportStatistiquesService {
      * Générer un rapport Excel des statistiques
      */
     public byte[] genererRapportExcel() throws IOException {
-        log.info("📊 Génération du rapport Excel");
+        log.info("Génération du rapport Excel");
 
         DashboardStatistiquesDto stats = dashboardService.getDashboardStatistiques();
 
@@ -129,18 +127,18 @@ public class RapportStatistiquesService {
             workbook.write(baos);
             workbook.close();
 
-            log.info("✅ Rapport Excel généré avec succès");
+            log.info("Rapport Excel généré avec succès");
             return baos.toByteArray();
 
         } catch (Exception e) {
-            log.error("❌ Erreur génération Excel", e);
+            log.error("Erreur génération Excel", e);
             workbook.close();
             throw new IOException("Erreur génération Excel: " + e.getMessage());
         }
     }
 
     // ============================================
-    // MÉTHODES PRIVÉES - PDF
+    // MÉTHODES  - PDF
     // ============================================
 
     private void addTitre(Document document, String texte) throws DocumentException {
@@ -160,7 +158,7 @@ public class RapportStatistiquesService {
     private void addSectionKPIs(Document document, DashboardStatistiquesDto stats) throws DocumentException {
         // Titre de section
         Font fontTitre = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);
-        document.add(new Paragraph("📈 INDICATEURS CLÉS", fontTitre));
+        document.add(new Paragraph("INDICATEURS CLÉS", fontTitre));
         document.add(new Paragraph("\n"));
 
         // Tableau des KPIs
@@ -194,7 +192,7 @@ public class RapportStatistiquesService {
 
     private void addSectionReservations(Document document, DashboardStatistiquesDto stats) throws DocumentException {
         Font fontTitre = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);
-        document.add(new Paragraph("📋 RÉSERVATIONS", fontTitre));
+        document.add(new Paragraph("RÉSERVATIONS", fontTitre));
         document.add(new Paragraph("\n"));
 
         PdfPTable table = new PdfPTable(2);
@@ -217,7 +215,7 @@ public class RapportStatistiquesService {
 
     private void addSectionProduits(Document document, DashboardStatistiquesDto stats) throws DocumentException {
         Font fontTitre = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);
-        document.add(new Paragraph("🏆 TOP 5 PRODUITS", fontTitre));
+        document.add(new Paragraph("TOP 5 PRODUITS", fontTitre));
         document.add(new Paragraph("\n"));
 
         PdfPTable table = new PdfPTable(4);
@@ -246,7 +244,7 @@ public class RapportStatistiquesService {
 
     private void addSectionEmployes(Document document, DashboardStatistiquesDto stats) throws DocumentException {
         Font fontTitre = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);
-        document.add(new Paragraph("👥 ÉQUIPE", fontTitre));
+        document.add(new Paragraph(" ÉQUIPE", fontTitre));
         document.add(new Paragraph("\n"));
 
         PdfPTable table = new PdfPTable(2);

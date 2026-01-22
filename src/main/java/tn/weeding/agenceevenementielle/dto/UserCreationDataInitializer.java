@@ -24,7 +24,7 @@ public class UserCreationDataInitializer {
     private String bio;
     private boolean doitChangerMotDePasse;
 
-    // Constructeurs, getters et setters
+    // Constructeurs
     public UserCreationDataInitializer(String codeUtilisateur, String nom, String prenom, String pseudo,
                             String genre, Long telephone, String adresse, String email,
                             String motDePasse, String poste, Date dateEmbauche,

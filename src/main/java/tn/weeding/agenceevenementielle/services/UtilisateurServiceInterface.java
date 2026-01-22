@@ -29,6 +29,5 @@ public interface UtilisateurServiceInterface {
     void suspenduCompte(Long id);
     void archiverCompte(Long id);
 
-    //-------------------Inscription Utilisateur ----------------------------
 
 }

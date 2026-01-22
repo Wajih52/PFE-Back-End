@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import tn.weeding.agenceevenementielle.config.JwtUtil;
 import tn.weeding.agenceevenementielle.config.TokenBlacklistService;
@@ -37,14 +36,13 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     private UtilisateurRepository utilisateurRepository;
     private UtilisateurServiceInterface utilisateurService;
-    private PasswordEncoder passwordEncoder;
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> logIn(@Valid @RequestBody AuthRequest request) {
 
         try {
-            log.info("🔐 Tentative de connexion pour l'utilisateur: {}", request.getIdentifiant());
+            log.info(" Tentative de connexion pour l'utilisateur: {}", request.getIdentifiant());
 
             // Vérifier si l'utilisateur existe et si son compte est activé
             Optional<Utilisateur> utilisateurOpt = utilisateurRepository
@@ -53,32 +51,32 @@ public class AuthController {
             if (utilisateurOpt.isPresent()) {
                 Utilisateur utilisateur = utilisateurOpt.get();
 
-                // ⚠️ CAS 1 : Compte non activé
+                //  CAS 1 : Compte non activé
                 if (!utilisateur.getActivationCompte()) {
-                    log.warn("⚠️ Tentative de connexion avec un compte non activé: {}", request.getIdentifiant());
+                    log.warn(" Tentative de connexion avec un compte non activé: {}", request.getIdentifiant());
 
                     Map<String, Object> response = new HashMap<>();
                     response.put("error", "ACCOUNT_NOT_ACTIVATED");
                     response.put("message", "Votre compte n'est pas encore activé");
                     response.put("detail", "Veuillez vérifier votre email pour activer votre compte");
                     response.put("email", utilisateur.getEmail());
-                    response.put("canResend", true); // Indiquer qu'on peut renvoyer l'email
+                    response.put("canResend", true);
 
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+                    return ResponseEntity.status(HttpStatus.LOCKED).body(response);
                 }
-                // ✅ CAS 2 : Blocage si Compte Suspendu
+                //  CAS 2 : Blocage si Compte Suspendu
                 if(utilisateur.getEtatCompte()==StatutCompte.SUSPENDU) {
-                    log.warn("⛔ Tentative de connexion avec un compte Suspendu: {}", request.getIdentifiant());
+                    log.warn(" Tentative de connexion avec un compte Suspendu: {}", request.getIdentifiant());
                     ErrorResponse errorResponse = new ErrorResponse(
                             "Compte Suspendu",
                             "Merci de Contacter Notre Support , Votre Compte Est Suspendu",
-                            HttpStatus.LOCKED.value()
+                            HttpStatus.LOCKED.value() // Code HTTP 423
                     );
                     return ResponseEntity.status(HttpStatus.LOCKED).body(errorResponse);
                 }
-
+                // CAS 3: Vérification si le compte est ARCHIVE (supprimé)
                 if(utilisateur.getEtatCompte()==StatutCompte.ARCHIVE) {
-                    log.warn("⛔ Tentative de connexion avec un compte Supprimé(ARCHIVE): {}", request.getIdentifiant());
+                    log.warn(" Tentative de connexion avec un compte Supprimé(ARCHIVE): {}", request.getIdentifiant());
                     ErrorResponse errorResponse = new ErrorResponse(
                             "Compte Supprimé",
                             "Identifiant Introuvable",
@@ -87,11 +85,11 @@ public class AuthController {
                     return ResponseEntity.status(HttpStatus.LOCKED).body(errorResponse);
                 }
 
-                // ✅ CAS 3 : Réactivation automatique si désactivé
+                //  CAS 4 : Réactivation automatique si désactivé
                 utilisateurService.activerCompteAvecLogin(utilisateur);
             }
 
-            // ✅ CAS 4 : Tentative d'authentification normale
+            //  CAS 5 : Tentative d'authentification normale
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getIdentifiant(),
@@ -102,9 +100,9 @@ public class AuthController {
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String token = jwtUtil.generateToken(userDetails.getUsername());
 
-            log.info("✅ Connexion réussie pour l'utilisateur: {}", userDetails.getUsername());
+            log.info(" Connexion réussie pour l'utilisateur: {}", userDetails.getUsername());
 
-            // ✅ Vérifier si l'utilisateur doit changer son mot de passe
+            // Vérifier si l'utilisateur doit changer son mot de passe
             Optional<Utilisateur> userOpt = utilisateurRepository.findByPseudo(userDetails.getUsername());
             if (userOpt.isPresent() && Boolean.TRUE.equals(userOpt.get().getDoitChangerMotDePasse())) {
                 Map<String, Object> response = new HashMap<>();
@@ -112,7 +110,7 @@ public class AuthController {
                 response.put("requirePasswordChange", true);
                 response.put("message", "Vous devez changer votre mot de passe temporaire");
 
-                log.info("🔐 Utilisateur doit changer son mot de passe: {}", userDetails.getUsername());
+                log.info(" Utilisateur doit changer son mot de passe: {}", userDetails.getUsername());
                 return ResponseEntity.ok(response);
             }
 
@@ -120,7 +118,7 @@ public class AuthController {
 
         } catch (DisabledException ex) {
             // Compte désactivé par l'admin
-            log.warn("⛔ Compte désactivé: {}", request.getIdentifiant());
+            log.warn(" Compte désactivé: {}", request.getIdentifiant());
             ErrorResponse error = new ErrorResponse(
                     "Compte désactivé",
                     "Votre compte a été désactivé. Contactez l'administrateur.",
@@ -129,7 +127,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 
         } catch (BadCredentialsException ex) {
-            log.warn("❌ Identifiants invalides pour l'utilisateur: {}", request.getIdentifiant());
+            log.warn(" Identifiants invalides pour l'utilisateur: {}", request.getIdentifiant());
             ErrorResponse error = new ErrorResponse(
                     "Authentification échouée",
                     "Identifiant ou mot de passe incorrect",
@@ -138,7 +136,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
 
         } catch (Exception ex) {
-            log.error("💥 Erreur lors de l'authentification: {}", ex.getMessage());
+            log.error("Erreur lors de l'authentification: {}", ex.getMessage());
             ErrorResponse error = new ErrorResponse(
                     "Erreur d'authentification",
                     "Une erreur interne s'est produite",
@@ -160,7 +158,7 @@ public class AuthController {
                 // Effacer le contexte de sécurité
                 SecurityContextHolder.clearContext();
 
-                log.info("🚪 Utilisateur déconnecté avec succès");
+                log.info(" Utilisateur déconnecté avec succès");
 
                 Map<String, String> response = new HashMap<>();
                 response.put("message", "Déconnexion réussie");
@@ -173,7 +171,7 @@ public class AuthController {
             return ResponseEntity.ok(response);
 
         } catch (Exception ex) {
-            log.error("❌ Erreur lors de la déconnexion: {}", ex.getMessage());
+            log.error(" Erreur lors de la déconnexion: {}", ex.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("message", "Erreur lors de la déconnexion");
             error.put("detail", ex.getMessage());
