@@ -35,7 +35,7 @@ WORKDIR /app
 # Le nom du JAR correspond à ton pom.xml : agenceEvenementielle-0.0.1-SNAPSHOT.jar
 COPY --from=build /app/target/agenceEvenementielle-0.0.1-SNAPSHOT.jar app.jar
 
-# Créer le répertoire pour les uploads (images produits, avatars, etc.)
+# Créer le répertoire pour les uploads (images produits, avatars, etc..)
 RUN mkdir -p /app/uploads && chown -R spring:spring /app
 
 # Changer l'utilisateur
