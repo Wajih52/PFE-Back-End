@@ -59,7 +59,7 @@ public class LigneReservation implements Serializable {
     /**
 
      * Utilisé UNIQUEMENT pour les produits avec référence (typeProduit = AVEC_REFERENCE)
-     * - Pour produits quantitatifs : cette liste est vide/null (NORMAL)
+     * - Pour produits quantitatifs : cette liste est vide/null
      * - Pour produits avec référence : contient les N instances réservées
 
      * Exemple pour 3 projecteurs réservés :

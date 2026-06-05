@@ -1,6 +1,8 @@
 package tn.weeding.agenceevenementielle.config;
 
 
+
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +26,21 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final JwtUtil jwtUtil;
     private final GoogleOAuth2UserService googleOAuth2UserService;
+    private final AppConfig appConfig ;
+
+    @PostConstruct
+    public void init() {
+        log.info(">>> AppConfig.frontendUrl = {}", appConfig.getFrontendUrl());
+    }
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException{
+
+        log.info(">>> onAuthenticationSuccess appelé !");
+        log.info(">>> frontendUrl = {}", appConfig.getFrontendUrl());
 
         try {
             // Récupérer les infos de l'utilisateur Google
@@ -51,12 +63,13 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
             // Rediriger vers Angular avec le token
             String redirectUrl = UriComponentsBuilder
-                    .fromUriString("http://localhost:4200/auth/oauth2/redirect")
+                    .fromUriString(appConfig.getFrontendUrl() + "/auth/oauth2/redirect")
                     .queryParam("token", jwtToken)
                     .build()
                     .toUriString();
 
             log.info("Redirection vers Angular : {}", redirectUrl);
+
             getRedirectStrategy().sendRedirect(request, response, redirectUrl);
 
         } catch (CustomException ex)
@@ -64,14 +77,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             if (ex.getMessage().equals("CONNEXION_EXIST_IN_CLASSIC_MODE")) {
                 log.warn(" Tentative de connexion Google avec un compte classique existant:");
 
-             String redirectUrl = "http://localhost:4200/auth/login?access=false&message="+ URLEncoder.encode(
+             String redirectUrl = appConfig.getFrontendUrl() + "/auth/login?access=false&message="+ URLEncoder.encode(
                      "Cet email est déjà utilisé avec une connexion Classique. Veuillez utiliser votre mot de passe",
                      StandardCharsets.UTF_8);
              response.sendRedirect(redirectUrl);
                 return;
             }
             // Gérer d'autres CustomException
-            String redirectUrl = "http://localhost:4200/auth/login?error=" +
+            String redirectUrl = appConfig.getFrontendUrl() + "/auth/login?error=" +
                     URLEncoder.encode(ex.getMessage(), StandardCharsets.UTF_8);
             response.sendRedirect(redirectUrl);
         }
@@ -80,7 +93,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
             // En cas d'erreur, rediriger vers une page d'erreur Angular
             String errorUrl = UriComponentsBuilder
-                    .fromUriString("http://localhost:4200/login")
+                    .fromUriString(appConfig.getFrontendUrl() + "/login")
                     .queryParam("error", e.getMessage())
                     .build()
                     .toUriString();

@@ -17,14 +17,17 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
 
      boolean existsByPseudoAndActivationCompteTrue(String pseudo);
      boolean existsByPseudo(String pseudo);
-     boolean existsByNom(String nom);
-     boolean existsByEmail(String email);
+
      Optional<Utilisateur> findByPseudoOrEmail(String pseudo, String email);
+
      Optional<Utilisateur> findByActivationToken(String token);
+
      Optional<Utilisateur> findByEmail(String email);
+
      Optional<Utilisateur> findByPseudo(String pseudo);
+
      Optional<Utilisateur> findByResetPasswordToken(String token);
-     Optional<Utilisateur> findByCodeUtilisateur(String codeUtilisateur);
+
 
      @Query(value = "SELECT u.codeClient FROM utilisateur u " +
              "WHERE u.codeClient LIKE CONCAT(:prefix, '%') " +
@@ -81,41 +84,5 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
              "WHERE ur.role.nom IN :nomsRoles " +
              "AND u.etatCompte = 'ACTIVE'")
      List<Utilisateur> findByRolesInAndActifTrue(@Param("nomsRoles") List<String> nomsRoles);
-
-     /**
-      * Compter les utilisateurs par état de compte
-      * Ex: combien d'utilisateurs ACTIVE, INACTIVE, SUSPENDED
-      */
-     @Query("SELECT u.etatCompte, COUNT(u) FROM Utilisateur u " +
-             "WHERE u.activationCompte = true " +
-             "GROUP BY u.etatCompte")
-     List<Object[]> countUtilisateursByEtatCompte();
-
-     /**
-      * Distribution des utilisateurs par rôle (pour graphique)
-      * Retourne: [nomRole, nombreUtilisateurs]
-      */
-     @Query("SELECT ur.role.nom, COUNT(DISTINCT u) " +
-             "FROM Utilisateur u " +
-             "JOIN u.utilisateurRoles ur " +
-             "WHERE u.etatCompte = 'ACTIVE' " +
-             "GROUP BY ur.role.nom " +
-             "ORDER BY COUNT(DISTINCT u) DESC")
-     List<Object[]> countUtilisateursByRole();
-
-     /**
-      * Nouveaux utilisateurs par période (pour graphique d'évolution)
-      * Retourne: [mois, année, nombreNouveauxUtilisateurs]
-      */
-     @Query(value = "SELECT MONTH(u.date_creation) as mois, " +
-             "YEAR(u.date_creation) as annee, " +
-             "COUNT(*) as nombre " +
-             "FROM utilisateur u " +
-             "WHERE u.actif = true " +
-             "AND u.date_creation >= :dateDebut " +
-             "GROUP BY YEAR(u.date_creation), MONTH(u.date_creation) " +
-             "ORDER BY annee DESC, mois DESC",
-             nativeQuery = true)
-     List<Object[]> countNouveauxUtilisateursParMois(@Param("dateDebut") LocalDateTime dateDebut);
 
 }

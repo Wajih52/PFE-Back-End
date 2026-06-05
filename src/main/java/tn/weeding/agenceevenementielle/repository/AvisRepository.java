@@ -14,9 +14,6 @@ import java.util.Optional;
 @Repository
 public interface AvisRepository extends JpaRepository<Avis, Long> {
 
-    // ============================================
-    // VÉRIFICATIONS
-    // ============================================
 
     /**
      * Vérifier si un client a déjà évalué un produit pour une réservation donnée
@@ -27,14 +24,6 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
             Long produitId
     );
 
-    /**
-     * Vérifier si un client a déjà évalué un produit (toutes réservations confondues)
-     */
-    boolean existsByClient_IdUtilisateurAndProduit_IdProduit(Long clientId, Long produitId);
-
-    // ============================================
-    // RECHERCHE PAR PRODUIT
-    // ============================================
 
     /**
      * Tous les avis d'un produit (peu importe le statut)
@@ -49,49 +38,12 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
             "ORDER BY a.dateAvis DESC")
     List<Avis> findAvisApprouvesByProduit(@Param("produitId") Long produitId);
 
-    /**
-     * Avis d'un produit avec un statut spécifique
-     */
-    List<Avis> findByProduit_IdProduitAndStatutOrderByDateAvisDesc(
-            Long produitId,
-            StatutAvis statut
-    );
-
-    // ============================================
-    // RECHERCHE PAR CLIENT
-    // ============================================
 
     /**
      * Tous les avis d'un client
      */
     List<Avis> findByClient_IdUtilisateurOrderByDateAvisDesc(Long clientId);
 
-    /**
-     * Avis d'un client pour un produit spécifique
-     */
-    List<Avis> findByClient_IdUtilisateurAndProduit_IdProduit(Long clientId, Long produitId);
-
-    /**
-     * Trouver l'avis d'un client pour une réservation et un produit
-     */
-    Optional<Avis> findByClient_IdUtilisateurAndReservation_IdReservationAndProduit_IdProduit(
-            Long clientId,
-            Long reservationId,
-            Long produitId
-    );
-
-    // ============================================
-    // RECHERCHE PAR RÉSERVATION
-    // ============================================
-
-    /**
-     * Tous les avis d'une réservation
-     */
-    List<Avis> findByReservation_IdReservation(Long reservationId);
-
-    // ============================================
-    // RECHERCHE PAR STATUT
-    // ============================================
 
     /**
      * Tous les avis avec un statut donné
@@ -110,9 +62,8 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
      */
     long countByStatut(StatutAvis statut);
 
-    // ============================================
+
     // STATISTIQUES
-    // ============================================
 
     /**
      * Moyenne des notes approuvées pour un produit
@@ -121,15 +72,6 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
             "AND a.statut = 'APPROUVE' AND a.visible = true")
     Double getMoyenneNotesByProduit(@Param("produitId") Long produitId);
 
-
-    /**
-     * Répartition des notes pour un produit
-     */
-    @Query("SELECT a.note, COUNT(a) FROM Avis a " +
-            "WHERE a.produit.idProduit = :produitId " +
-            "AND a.statut = 'APPROUVE' AND a.visible = true " +
-            "GROUP BY a.note ORDER BY a.note DESC")
-    List<Object[]> getRepartitionNotesByProduit(@Param("produitId") Long produitId);
 
     /**
      * Produits avec les meilleures notes (minimum X avis)
@@ -141,9 +83,9 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
             "ORDER BY moyenne DESC")
     List<Object[]> getTopProduitsByNote(@Param("minAvis") Long minAvis);
 
-    // ============================================
+
     // RECHERCHE AVANCÉE
-    // ============================================
+
 
     /**
      * Rechercher des avis par note
@@ -169,9 +111,8 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
 
 
 
-    //===================================
     //  Dashbooard et analyse
-    //==================================
+
 
     /**
      * Moyenne des notes par catégorie de produits
@@ -184,11 +125,6 @@ public interface AvisRepository extends JpaRepository<Avis, Long> {
             "GROUP BY p.categorieProduit " +
             "ORDER BY AVG(a.note) DESC")
     List<Object[]> findMoyenneNotesParCategorie();
-
-    /**
-     * Trouver les avis approuvés d'un produit
-     */
-    List<Avis> findByProduit_IdProduitAndStatutContainingAndVisibleTrue(Long idProduit, StatutAvis statutAvis);
 
     /**
      * Trouver les avis approuvés d'un produit

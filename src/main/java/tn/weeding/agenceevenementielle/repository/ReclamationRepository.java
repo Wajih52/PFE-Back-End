@@ -54,13 +54,6 @@ public interface ReclamationRepository extends JpaRepository<Reclamation, Long> 
      */
     List<Reclamation> findByPrioriteReclamation(PrioriteReclamation priorite);
 
-    /**
-     * Récupérer les réclamations par statut ET priorité
-     */
-    List<Reclamation> findByStatutReclamationAndPrioriteReclamation(
-            StatutReclamation statut,
-            PrioriteReclamation priorite
-    );
 
     /**
      * Récupérer les réclamations liées à une réservation
@@ -72,10 +65,7 @@ public interface ReclamationRepository extends JpaRepository<Reclamation, Long> 
      */
     List<Reclamation> findByDateReclamationBetween(LocalDateTime debut, LocalDateTime fin);
 
-    /**
-     * Récupérer les réclamations traitées par un employé/admin
-     */
-    List<Reclamation> findByTraitePar(String codeUtilisateur);
+
 
     /**
      * Recherche multi-critères

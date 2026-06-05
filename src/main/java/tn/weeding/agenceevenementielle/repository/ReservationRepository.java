@@ -51,13 +51,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      */
     List<Reservation> findByStatutReservation(StatutReservation statut);
 
-    /**
-     * Trouver les réservations d'un client par statut
-     */
-    List<Reservation> findByUtilisateur_IdUtilisateurAndStatutReservation(
-            Long idUtilisateur,
-            StatutReservation statut
-    );
+
 
     /**
      * Compter les réservations par statut
@@ -86,18 +80,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findReservationsBetweenDates(
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin
-    );
-
-    /**
-     * Trouver les réservations qui se chevauchent avec une période donnée
-     * Utile pour vérifier les conflits de disponibilité
-     */
-    @Query("SELECT r FROM Reservation r WHERE " +
-            "r.statutReservation = 'CONFIRME' AND " +
-            "((r.dateDebut <= :dateFin AND r.dateFin >= :dateDebut))")
-    List<Reservation> findReservationsOverlapping(
-            @Param("dateDebut") Date dateDebut,
-            @Param("dateFin") Date dateFin
     );
 
     /**
@@ -148,13 +130,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "AND r.montantPaye < r.montantTotal")
     List<Reservation> findReservationsAvecPaiementIncomplet();
 
-    /**
-     * Compter le nombre de réservations d'un client
-     */
-    long countByUtilisateur_IdUtilisateur(Long idUtilisateur);
-
-
-
 
     // ============ RECHERCHE MULTICRITÈRES ============
 
@@ -175,13 +150,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("reference") String reference
     );
 
-    /**
-     * Rechercher par nom ou prénom du client
-     */
-    @Query("SELECT r FROM Reservation r WHERE " +
-            "LOWER(r.utilisateur.nom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(r.utilisateur.prenom) LIKE LOWER(CONCAT('%', :search, '%'))")
-    List<Reservation> searchByClientName(@Param("search") String search);
+
 
     // ============ ALERTES ET NOTIFICATIONS ============
 
@@ -221,7 +190,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
 
     /**
-     * 📅 Récupérer les réservations dont les dates de lignes chevauchent une période
+     * Récupérer les réservations dont les dates de lignes chevauchent une période
      * Utilisé pour le calendrier
      */
     @Query("SELECT DISTINCT r FROM Reservation r " +
@@ -233,7 +202,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     );
 
     /**
-     * 📊 Compter les réservations dans une période
+     * Compter les réservations dans une période
      */
     @Query("SELECT COUNT(DISTINCT r) FROM Reservation r " +
             "JOIN r.ligneReservations l " +

@@ -8,14 +8,10 @@ import tn.weeding.agenceevenementielle.entities.InstanceProduit;
 import tn.weeding.agenceevenementielle.entities.enums.StatutInstance;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repository pour la gestion des instances de produits
- * Sprint 3 - Gestion des produits et du stock
- */
+
 @Repository
 public interface InstanceProduitRepository extends JpaRepository<InstanceProduit, Long> {
 
@@ -43,7 +39,7 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
 
     /**
      * Récupérer les instances disponibles d'un produit sur une période
-     * (statut DISPONIBLE et pas de ligne réservation sur une prériode donnée)
+     * (statut DISPONIBLE)
      */
     @Query("SELECT i FROM InstanceProduit i " +
             "WHERE i.produit.idProduit = :idProduit " +
@@ -53,7 +49,7 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "    WHERE i MEMBER OF lr.instancesReservees " +
             "    AND lr.dateDebut <= :dateFin " +
             "    AND lr.dateFin >= :dateDebut " +
-            "    AND lr.reservation.statutReservation = 'CONFIRME'" +  // ✅ UNIQUEMENT CONFIRME
+            "    AND lr.reservation.statutReservation = 'CONFIRME'" +
             ") " +
             "ORDER BY i.numeroSerie")
     List<InstanceProduit> findInstancesDisponiblesSurPeriode(
@@ -61,21 +57,6 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin
     );
-
-    /**
-     * Récupérer les N premières instances disponibles d'un produit
-     */
-    @Query("SELECT i FROM InstanceProduit i WHERE i.produit.idProduit = :idProduit " +
-            "AND i.statut = tn.weeding.agenceevenementielle.entities.enums.StatutInstance.DISPONIBLE " +
-            "ORDER BY i.numeroSerie")
-    List<InstanceProduit> findTopNInstancesDisponibles(@Param("idProduit") Long idProduit);
-
-    /**
-     * Compter les instances disponibles d'un produit
-     */
-    @Query("SELECT COUNT(i) FROM InstanceProduit i WHERE i.produit.idProduit = :idProduit " +
-            "AND i.statut = 'DISPONIBLE'")
-    int countInstancesDisponibles(@Param("idProduit") Long idProduit);
 
 
     /**
@@ -89,17 +70,13 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "    WHERE i MEMBER OF lr.instancesReservees " +
             "    AND lr.dateDebut <= :dateFin " +
             "    AND lr.dateFin >= :dateDebut " +
-            "    AND lr.reservation.statutReservation = 'CONFIRME'" +  // ✅ UNIQUEMENT CONFIRME
+            "    AND lr.reservation.statutReservation = 'CONFIRME'" +
             ")")
     int countInstancesDisponiblesSurPeriode(
             @Param("idProduit") Long idProduit,
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin
     );
-    /**
-     * Récupérer les instances d'un produit par statut
-     */
-    List<InstanceProduit> findByProduit_IdProduitAndStatut(Long idProduit, StatutInstance statut);
 
     /**
      * Récupérer les instances par statut (tous produits)
@@ -114,12 +91,6 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
             "AND i.statut != 'EN_MAINTENANCE'")
     List<InstanceProduit> findInstancesNecessitantMaintenance(@Param("date") LocalDate date);
 
-    /**
-     * Récupérer les instances hors service
-     */
-    @Query("SELECT i FROM InstanceProduit i WHERE i.statut IN (tn.weeding.agenceevenementielle.entities.enums.StatutInstance.HORS_SERVICE," +
-            " tn.weeding.agenceevenementielle.entities.enums.StatutInstance.PERDU)")
-    List<InstanceProduit> findInstancesHorsService();
 
     Long  countByProduit_IdProduit (Long idProduit);
 }

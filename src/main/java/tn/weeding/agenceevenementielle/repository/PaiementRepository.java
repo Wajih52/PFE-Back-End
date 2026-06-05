@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface PaiementRepository extends JpaRepository<Paiement, Long> {
     Optional<Paiement> findByCodePaiement(String codePaiement);
-    boolean existsByCodePaiement(String codePaiement);
+
     List<Paiement> findByReservationIdReservationOrderByDatePaiementDesc(Long idReservation);
     List<Paiement> findByStatutPaiementOrderByDatePaiementDesc(StatutPaiement statut);
 

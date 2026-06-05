@@ -92,6 +92,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/monitoring/health")
                 || path.startsWith("/api/oauth2")
                 || path.startsWith("/api/login/oauth2")
-                || path.startsWith("/uploads");
+                || path.startsWith("/uploads")
+                || path.startsWith("/api/uploads");
     }
 }

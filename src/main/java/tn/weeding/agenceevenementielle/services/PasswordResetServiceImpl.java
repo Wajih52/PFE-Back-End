@@ -1,6 +1,7 @@
 package tn.weeding.agenceevenementielle.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,9 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
     // Durée de validité du token : 30 minutes
     private static final int TOKEN_EXPIRATION_MINUTES = 30;
+
+    @Value("${app.frontend.url:http://localhost:4200}")
+    private String frontendUrl ;
 
     @Override
     @Transactional
@@ -68,7 +72,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         log.info("Token généré et sauvegardé pour : {}", utilisateur.getEmail());
 
         // 7. Construire le lien de réinitialisation
-        String resetLink = "http://localhost:4200/auth/reset-password?token=" + resetToken;
+        String resetLink = frontendUrl + "/auth/reset-password?token=" + resetToken;
 
         // 6. Envoyer l'email
         String emailContent = emailService.construireEmailResetPassword(utilisateur.getPrenom(), resetLink);

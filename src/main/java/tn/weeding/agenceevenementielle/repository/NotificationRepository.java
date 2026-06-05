@@ -32,18 +32,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
      */
     Long countByUtilisateurAndLueFalse(Utilisateur utilisateur);
 
-    /**
-     * Récupérer les notifications avec pagination
-     */
-    Page<Notification> findByUtilisateurOrderByDateCreationDesc(Utilisateur utilisateur, Pageable pageable);
 
-    /**
-     * Récupérer les notifications d'un type spécifique
-     */
-    List<Notification> findByUtilisateurAndTypeNotificationOrderByDateCreationDesc(
-            Utilisateur utilisateur,
-            TypeNotification type
-    );
 
     /**
      * Marquer toutes les notifications comme lues
@@ -59,11 +48,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
      */
     void deleteByDateCreationBefore(LocalDateTime date);
 
-    /**
-     * Récupérer les notifications récentes (dernières 24h)
-     */
-    @Query("SELECT n FROM Notification n WHERE n.utilisateur = :utilisateur " +
-            "AND n.dateCreation >= :dateDebut ORDER BY n.dateCreation DESC")
-    List<Notification> findRecentNotifications(@Param("utilisateur") Utilisateur utilisateur,
-                                               @Param("dateDebut") LocalDateTime dateDebut);
 }

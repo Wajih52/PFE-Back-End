@@ -25,10 +25,7 @@ public interface PointageRepository extends JpaRepository<Pointage, Long> {
      */
     boolean existsByUtilisateurIdUtilisateurAndDateTravail(Long idUtilisateur, LocalDate dateTravail);
 
-    /**
-     * Récupérer tous les pointages d'un utilisateur
-     */
-    List<Pointage> findByUtilisateurIdUtilisateur(Long idUtilisateur);
+
 
     /**
      * Récupérer les pointages d'un utilisateur pour une période
@@ -42,10 +39,7 @@ public interface PointageRepository extends JpaRepository<Pointage, Long> {
             @Param("dateFin") LocalDate dateFin
     );
 
-    /**
-     * Récupérer tous les pointages d'une date spécifique
-     */
-    List<Pointage> findByDateTravail(LocalDate dateTravail);
+
 
     /**
      * Récupérer les pointages entre deux dates
@@ -56,11 +50,6 @@ public interface PointageRepository extends JpaRepository<Pointage, Long> {
             @Param("dateDebut") LocalDate dateDebut,
             @Param("dateFin") LocalDate dateFin
     );
-
-    /**
-     * Récupérer les pointages par statut
-     */
-    List<Pointage> findByStatutPointage(StatutPointage statut);
 
     /**
      * Récupérer les pointages par statut pour une date

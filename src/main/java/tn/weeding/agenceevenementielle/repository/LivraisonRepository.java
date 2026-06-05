@@ -11,10 +11,6 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Repository pour gérer les livraisons
- * Sprint 6 - Gestion des livraisons
- */
 @Repository
 public interface LivraisonRepository extends JpaRepository<Livraison, Long> {
 
@@ -39,19 +35,6 @@ public interface LivraisonRepository extends JpaRepository<Livraison, Long> {
             @Param("dateFin") LocalDate dateFin
     );
 
-    /**
-     * Trouver les livraisons en attente
-     */
-    @Query("SELECT l FROM Livraison l WHERE l.statutLivraison = 'EN_ATTENTE' " +
-            "ORDER BY l.dateLivraison ASC, l.heureLivraison ASC")
-    List<Livraison> findLivraisonsEnAttente();
-
-    /**
-     * Trouver les livraisons en cours
-     */
-    @Query("SELECT l FROM Livraison l WHERE l.statutLivraison = 'EN_COURS' " +
-            "ORDER BY l.dateLivraison ASC, l.heureLivraison ASC")
-    List<Livraison> findLivraisonsEnCours();
 
     /**
      * Trouver les livraisons d'aujourd'hui
@@ -84,14 +67,15 @@ public interface LivraisonRepository extends JpaRepository<Livraison, Long> {
     List<Livraison> findLivraisonsByReservation(@Param("idReservation") Long idReservation);
 
     /**
-     * 📅 Récupérer les livraisons entre deux dates
+     * Récupérer les livraisons entre deux dates
      */
     List<Livraison> findByDateLivraisonBetween(LocalDate dateDebut, LocalDate dateFin);
 
     /**
-     * 📊 Compter les livraisons entre deux dates
+     * Compter les livraisons entre deux dates
      */
     long countByDateLivraisonBetween(LocalDate dateDebut, LocalDate dateFin);
+
     //=================================================
     // Statistiques (Pour dashboard)
     //=================================================

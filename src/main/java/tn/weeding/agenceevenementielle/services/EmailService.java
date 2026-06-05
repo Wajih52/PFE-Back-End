@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import tn.weeding.agenceevenementielle.config.AppConfig;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
 import tn.weeding.agenceevenementielle.entities.enums.TypeNotification;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
@@ -20,8 +21,10 @@ public class EmailService {
     private static final int EMAIL_DELAY_MINUTES = 2;
     private JavaMailSenderImpl mailSender;
 
+    private final AppConfig appConfig ;
+
+
     /**
-     *  Méthode générique pour envoyer des emails HTML
      * Utilisée pour la réinitialisation de mot de passe
      */
     @Async
@@ -266,7 +269,7 @@ public class EmailService {
     private String construireEmailNouvelEmploye(String prenom, String pseudo, String motDePasse) {
         // Encoder les identifiants pour l'URL
         String loginUrl = String.format(
-                "http://localhost:4200/auth/first-login?pseudo=%s&token=%s",
+                appConfig.getFrontendUrl() + "/auth/first-login?pseudo=%s&token=%s",
                 pseudo,
                 java.net.URLEncoder.encode(motDePasse, java.nio.charset.StandardCharsets.UTF_8)
         );
@@ -303,7 +306,7 @@ public class EmailService {
                     </div>
                     
                     <div style="text-align: center;">
-                        <a href="http://localhost:4200/auth/login" class="button">
+                        <a href="%s/auth/login" class="button">
                              Se connecter maintenant
                         </a>
                     </div>
@@ -332,7 +335,7 @@ public class EmailService {
             </div>
         </body>
         </html>
-        """, prenom, pseudo, motDePasse, loginUrl);
+        """, prenom, pseudo, motDePasse, appConfig.getFrontendUrl());
     }
 
     /**
@@ -383,7 +386,7 @@ public class EmailService {
                         %s
                     </div>
                     <p>Connectez-vous à votre espace client pour plus de détails.</p>
-                    <a href="http://localhost:4200/profile" class="button">
+                    <a href="%s/profile" class="button">
                         Accéder à mon espace
                     </a>
                 </div>
@@ -394,7 +397,7 @@ public class EmailService {
             </div>
         </body>
         </html>
-        """, prenom, message);
+        """, prenom, message, appConfig.getFrontendUrl());
     }
 
     }

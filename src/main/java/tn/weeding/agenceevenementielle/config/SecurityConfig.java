@@ -33,6 +33,9 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     @Autowired
+    private OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+
+    @Autowired
     private CustomUserDetailsService userDetailsService;
 
     @Autowired
@@ -68,6 +71,7 @@ public class SecurityConfig {
                                           "/swagger-ui.html",
                                           "/webjars/**",
                                           "/uploads/**",
+                                          "/api/uploads/**",
                                           "/error",
                                           "/api/reclamations/create"
 
@@ -75,7 +79,11 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(oauth2LoginSuccessHandler())
+                        //la base URI de l’endpoint d’autorisation (lancement de la connexion Google)
+                        .authorizationEndpoint(authz -> authz.baseUri("/api/oauth2/authorization"))
+                        //la base URI du callback (code retourné par Google)
+                        .redirectionEndpoint(redir -> redir.baseUri("/api/login/oauth2/code/*"))
+                        .successHandler(oauth2LoginSuccessHandler)
                 );
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -95,12 +103,12 @@ public class SecurityConfig {
 
 
 
-    @Bean
+   /* @Bean
     public OAuth2LoginSuccessHandler oauth2LoginSuccessHandler() {
         OAuth2LoginSuccessHandler handler = new OAuth2LoginSuccessHandler(jwtUtil, googleOAuth2UserService);
         log.info("OAuth2LoginSuccessHandler bean créé avec succès");
         return handler;
-    }
+    }*/
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
