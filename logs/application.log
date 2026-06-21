@@ -1,49 +1,169 @@
-2026-05-20 09:42:38 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10h23m29s429ms700µs300ns).
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler -  DEBUT - Job Cron de mise à jour des statuts (NOT_TODAY → EN_ATTENTE)
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler -  Date du jour: 2026-05-20
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - ÉTAPE 1: Recherche des réservations avec statutLivraisonRes = NOT_TODAY...
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - 0 réservation(s) trouvée(s) avec NOT_TODAY et dateDebut = aujourd'hui
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler -  ÉTAPE 2: Recherche des lignes de réservation avec statutLivraisonLigne = NOT_TODAY...
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - 0 ligne(s) de réservation trouvée(s) avec NOT_TODAY et dateDebut = aujourd'hui
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - ========== RÉSUMÉ DE LA MISE À JOUR ==========
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Réservations mises à jour: 0
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Lignes de réservation mises à jour: 0
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Instances mises à jour: 0
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - FIN - Job Cron terminé avec succès
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - DEBUT - Job Cron de mise à jour des statuts de livraison (NOT_TODAY → EN_ATTENTE)
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Date du jour: 2026-05-20
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Recherche des livraisons avec statut NOT_TODAY et date de livraison = aujourd'hui...
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - 0 livraison(s) trouvée(s) avec NOT_TODAY et dateLivraison = aujourd'hui
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - ========== RÉSUMÉ DE LA MISE À JOUR ==========
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler -  Livraisons mises à jour: 0
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Job Cron terminé avec succès
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Démarrage du job d'annulation des devis expirés...
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - 0 devis expirés trouvés
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Job terminé : 0 devis annulés
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - DEBUT - Job de rappel validation devis avant expiration
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - 0 devis en attente de validation trouvé(s)
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Job terminé: 0 rappel(s) de validation devis envoyé(s)
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - DEBUT - Job de rappel paiement acompte avant expiration
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - 0 réservation(s) confirmée(s) en attente de paiement trouvée(s)
-2026-05-20 10:23:07 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Job terminé: 0 rappel(s) de paiement envoyé(s)
-2026-05-20 11:00:00 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - DEBUT - Job de rappel régularisation financière après fin réservation
-2026-05-20 11:00:00 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - 0 réservation(s) terminée(s) avec paiement partiel trouvée(s)
-2026-05-20 11:00:00 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Job terminé: 0 rappel(s) de régularisation envoyé(s)
-2026-05-20 11:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
-2026-05-20 11:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
-2026-05-20 12:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
-2026-05-20 12:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
-2026-05-20 14:41:58 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2h5m15s846ms161µs900ns).
-2026-05-20 15:05:05 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
-2026-05-20 15:05:06 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
-2026-05-20 16:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
-2026-05-20 16:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
-2026-05-20 18:53:35 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2h42m2s111ms405µs200ns).
-2026-05-20 19:56:36 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=27m30s415ms863µs200ns).
-2026-05-20 20:08:41 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
-2026-05-20 20:08:41 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
-2026-05-20 20:08:41 [scheduling-1] INFO  t.w.a.services.PointageServiceImpl -  Tâche automatique: Marquage des absents du jour
-2026-05-20 20:08:41 [scheduling-1] INFO  t.w.a.services.PointageServiceImpl - 2 employé(s) marqué(s) absent(s)
-2026-05-20 20:13:33 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m56s160ms791µs800ns).
+2026-06-21 10:37:31 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=22h45m44s21ms732µs900ns).
+2026-06-21 10:41:25 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 10:41:26 [http-nio-8080-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-21 10:41:27 [http-nio-8080-exec-9] ERROR t.w.a.config.AuthEntryPointJwt - Réponse non autorisée: Full authentication is required to access this resource
+2026-06-21 10:41:30 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 10:41:30 [http-nio-8080-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-21 10:41:30 [http-nio-8080-exec-2] ERROR t.w.a.config.AuthEntryPointJwt - Réponse non autorisée: Full authentication is required to access this resource
+2026-06-21 10:45:27 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.services.PointageServiceImpl -  Tâche automatique: Marquage des absents du jour
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.services.PointageServiceImpl - 2 employé(s) marqué(s) absent(s)
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler -  DEBUT - Job Cron de mise à jour des statuts (NOT_TODAY → EN_ATTENTE)
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler -  Date du jour: 2026-06-21
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - ÉTAPE 1: Recherche des réservations avec statutLivraisonRes = NOT_TODAY...
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - 0 réservation(s) trouvée(s) avec NOT_TODAY et dateDebut = aujourd'hui
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler -  ÉTAPE 2: Recherche des lignes de réservation avec statutLivraisonLigne = NOT_TODAY...
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - 0 ligne(s) de réservation trouvée(s) avec NOT_TODAY et dateDebut = aujourd'hui
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - ========== RÉSUMÉ DE LA MISE À JOUR ==========
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Réservations mises à jour: 0
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Lignes de réservation mises à jour: 0
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Instances mises à jour: 0
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - FIN - Job Cron terminé avec succès
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - DEBUT - Job Cron de mise à jour des statuts de livraison (NOT_TODAY → EN_ATTENTE)
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Date du jour: 2026-06-21
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Recherche des livraisons avec statut NOT_TODAY et date de livraison = aujourd'hui...
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - 0 livraison(s) trouvée(s) avec NOT_TODAY et dateLivraison = aujourd'hui
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - ========== RÉSUMÉ DE LA MISE À JOUR ==========
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler -  Livraisons mises à jour: 0
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Job Cron terminé avec succès
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Démarrage du job d'annulation des devis expirés...
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - 0 devis expirés trouvés
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.ReservationScheduler - Job terminé : 0 devis annulés
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Démarrage du nettoyage des anciennes notifications...
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Nettoyage terminé - Notifications avant 2026-05-22T10:45:28.202933900 supprimées
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - DEBUT - Job de rappel validation devis avant expiration
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - 0 devis en attente de validation trouvé(s)
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Job terminé: 0 rappel(s) de validation devis envoyé(s)
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - DEBUT - Job de rappel paiement acompte avant expiration
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - 0 réservation(s) confirmée(s) en attente de paiement trouvée(s)
+2026-06-21 10:45:28 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Job terminé: 0 rappel(s) de paiement envoyé(s)
+2026-06-21 11:00:00 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - DEBUT - Job de rappel régularisation financière après fin réservation
+2026-06-21 11:00:00 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - 0 réservation(s) terminée(s) avec paiement partiel trouvée(s)
+2026-06-21 11:00:00 [scheduling-1] INFO  t.w.a.s.NotificationScheduler - Job terminé: 0 rappel(s) de régularisation envoyé(s)
+2026-06-21 11:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
+2026-06-21 11:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
+2026-06-21 11:51:34 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/auth/login
+2026-06-21 11:51:34 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/login
+2026-06-21 11:51:34 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-21 11:51:34 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/auth/login
+2026-06-21 11:51:36 [http-nio-8080-exec-1] INFO  t.w.a.c.a.AuthController -  Tentative de connexion pour l'utilisateur: admin@hive.tn
+2026-06-21 11:51:37 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: admin@hive.tn
+2026-06-21 11:51:37 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:51:37 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:51:37 [http-nio-8080-exec-1] DEBUG o.s.s.a.d.DaoAuthenticationProvider - Authenticated user
+2026-06-21 11:51:37 [http-nio-8080-exec-1] INFO  t.w.a.c.a.AuthController -  Connexion réussie pour l'utilisateur: WajihAdmin
+2026-06-21 11:51:37 [http-nio-8080-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/utilisateurs/me
+2026-06-21 11:51:37 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/utilisateurs/me
+2026-06-21 11:51:37 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/notifications/count
+2026-06-21 11:51:37 [http-nio-8080-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/notifications/non-lues
+2026-06-21 11:51:37 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:51:37 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/non-lues
+2026-06-21 11:51:37 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:51:37 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:51:37 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:51:37 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:51:37 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:51:37 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:51:37 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:51:37 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:51:37 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:51:37 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:51:37 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/non-lues
+2026-06-21 11:51:37 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:51:37 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:51:37 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:51:37 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.getNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:51:37 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:51:37 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/utilisateurs/me
+2026-06-21 11:51:37 [http-nio-8080-exec-8] INFO  t.w.a.c.UtilisateurController - Récupération des infos pour l'utilisateur : WajihAdmin
+2026-06-21 11:51:37 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:51:37 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.getNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:51:38 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /uploads/profiles/WajihAdmin_1773882577074.jpg
+2026-06-21 11:51:38 [http-nio-8080-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-21 11:51:38 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /uploads/profiles/WajihAdmin_1773882577074.jpg
+2026-06-21 11:51:38 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing OPTIONS /api/utilisateurs/1
+2026-06-21 11:51:38 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/utilisateurs/1
+2026-06-21 11:51:38 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:51:38 [http-nio-8080-exec-7] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:51:38 [http-nio-8080-exec-7] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:51:38 [http-nio-8080-exec-7] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:51:38 [http-nio-8080-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/utilisateurs/1
+2026-06-21 11:51:38 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficher(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2026-06-21 11:51:38 [http-nio-8080-exec-7] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.UtilisateurController.afficher(java.lang.Long); target is of class [tn.weeding.agenceevenementielle.controller.UtilisateurController]
+2026-06-21 11:52:08 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:52:08 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:52:08 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:52:08 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:52:08 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:52:08 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:52:08 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:52:08 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:52:38 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:52:38 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:52:38 [http-nio-8080-exec-8] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:52:38 [http-nio-8080-exec-8] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:52:38 [http-nio-8080-exec-8] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:52:38 [http-nio-8080-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:52:38 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:52:38 [http-nio-8080-exec-8] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:53:08 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:53:08 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:53:08 [http-nio-8080-exec-4] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:53:08 [http-nio-8080-exec-4] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:53:08 [http-nio-8080-exec-4] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:53:08 [http-nio-8080-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:53:08 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:53:08 [http-nio-8080-exec-4] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:53:38 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:53:38 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:53:38 [http-nio-8080-exec-3] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:53:38 [http-nio-8080-exec-3] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:53:38 [http-nio-8080-exec-3] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:53:38 [http-nio-8080-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:53:38 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:53:38 [http-nio-8080-exec-3] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:54:08 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:54:08 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:54:08 [http-nio-8080-exec-9] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:54:08 [http-nio-8080-exec-9] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:54:08 [http-nio-8080-exec-9] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:54:08 [http-nio-8080-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:54:08 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:54:08 [http-nio-8080-exec-9] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:54:38 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:54:38 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:54:38 [http-nio-8080-exec-2] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:54:38 [http-nio-8080-exec-2] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:54:38 [http-nio-8080-exec-2] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:54:38 [http-nio-8080-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:54:38 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:54:38 [http-nio-8080-exec-2] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:55:45 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:55:45 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:55:45 [http-nio-8080-exec-1] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:55:45 [http-nio-8080-exec-1] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:55:45 [http-nio-8080-exec-1] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:55:45 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:55:45 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:55:45 [http-nio-8080-exec-1] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:56:45 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-06-21 11:56:45 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - Tentative de chargement de l'utilisateur avec identifiant: WajihAdmin
+2026-06-21 11:56:45 [http-nio-8080-exec-5] DEBUG t.w.a.s.CustomUserDetailsService - Ajout du rôle: ROLE_ADMIN
+2026-06-21 11:56:45 [http-nio-8080-exec-5] INFO  t.w.a.s.CustomUserDetailsService - Utilisateur 'WajihAdmin' chargé avec 1 rôle(s)
+2026-06-21 11:56:45 [http-nio-8080-exec-5] DEBUG t.w.a.config.AuthTokenFilter -  Utilisateur 'WajihAdmin' authentifié avec 1 rôles
+2026-06-21 11:56:45 [http-nio-8080-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-06-21 11:56:45 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 11:56:45 [http-nio-8080-exec-5] DEBUG o.s.s.a.m.AuthorizationManagerBeforeMethodInterceptor - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity tn.weeding.agenceevenementielle.controller.NotificationController.compterNotificationsNonLues(); target is of class [tn.weeding.agenceevenementielle.controller.NotificationController]
+2026-06-21 12:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
+2026-06-21 12:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
+2026-06-21 16:38:10 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3h48m5s807ms556µs300ns).
+2026-06-21 16:47:35 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
+2026-06-21 16:47:35 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
+2026-06-21 17:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Vérification des retours en retard...
+2026-06-21 17:00:00 [scheduling-1] INFO  t.w.a.scheduling.LivraisonScheduler - Aucun retour en retard détecté
+2026-06-21 17:30:50 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-21 17:30:54 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-06-21 17:31:03 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-21 17:31:04 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-06-21 17:31:04 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
