@@ -76,6 +76,8 @@ public class SecurityConfig {
                                           "/api/reclamations/create"
 
                         ).permitAll()
+                                .requestMatchers("/api/chatbot/**").hasAnyRole("CLIENT")
+                                .requestMatchers("/api/ai/recommendations/**").hasAnyRole("CLIENT")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

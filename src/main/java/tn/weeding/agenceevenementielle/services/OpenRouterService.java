@@ -1,4 +1,4 @@
-package tn.weeding.agenceevenementielle.services.statistiques;
+package tn.weeding.agenceevenementielle.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,10 +12,10 @@ import java.util.Map;
 @Service
 public class OpenRouterService {
 
-    @Value("${openrouter.api.key}")
+    @Value("${openrouter.manager.api.key}")
     private String apiKey;
 
-    @Value("${openrouter.model}")
+    @Value("${openrouter.manager.model}")
     private String model;
 
     private final WebClient webClient = WebClient.builder()
