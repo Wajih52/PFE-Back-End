@@ -91,6 +91,13 @@ public class InstanceProduitController {
         InstanceProduitResponseDto instance = instanceService.getInstanceById(id);
         return ResponseEntity.ok(instance);
     }
+    @GetMapping("/qr/{token}")
+    @Operation(summary = "Obtenir une instance par QR Code", description = "Récupère les détails d'une instance à laide de son code QR")
+    public ResponseEntity<InstanceProduitResponseDto> getInstanceByQrCode(@PathVariable String token) {
+        log.info("Récupération de l'instance Token: {}", token);
+        InstanceProduitResponseDto instance = instanceService.getInstanceByQrCodeToken(token);
+        return ResponseEntity.ok(instance);
+    }
     @GetMapping("/all")
     @Operation(summary = "Obtenir toutes les instances", description = "Récupère Toutes les instances qui existent ")
     public ResponseEntity<List<InstanceProduitResponseDto>> getInstances() {

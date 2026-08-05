@@ -18,6 +18,7 @@ public class InstanceProduitResponseDto {
     private String numeroSerie;
     private StatutInstance statut;
     private EtatPhysique etatPhysique;
+    private String qrCodeToken;
 
     // Informations du produit parent
     private Long idProduit;

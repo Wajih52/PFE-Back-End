@@ -89,6 +89,9 @@ public class InstanceProduit implements Serializable {
      */
     private String motif;
 
+    @Column(unique = true, nullable = false, updatable = false, length = 100)
+    private String qrCodeToken;
+
 
 
     // ============ MÉTHODES UTILITAIRES ============
@@ -107,6 +110,13 @@ public class InstanceProduit implements Serializable {
         return dateProchaineMaintenance != null
                 && dateProchaineMaintenance.isBefore(LocalDate.now())
                 && statut != StatutInstance.EN_MAINTENANCE;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.qrCodeToken == null || this.qrCodeToken.isBlank()) {
+            this.qrCodeToken = java.util.UUID.randomUUID().toString();
+        }
     }
 
 }

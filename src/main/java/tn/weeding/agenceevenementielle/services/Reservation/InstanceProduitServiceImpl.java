@@ -216,6 +216,13 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         return toDto(instance);
     }
 
+    @Override
+    public InstanceProduitResponseDto getInstanceByQrCodeToken(String token) {
+        InstanceProduit instance = instanceRepo.findByQrCodeToken(token)
+                .orElseThrow(() -> new RuntimeException("QR code invalide ou instance introuvable"));
+
+        return toDto(instance);
+    }
 
 
     @Override
@@ -594,6 +601,7 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         InstanceProduitResponseDto dto = InstanceProduitResponseDto.builder()
                 .idInstance(instance.getIdInstance())
                 .numeroSerie(instance.getNumeroSerie())
+                .qrCodeToken(instance.getQrCodeToken())
                 .statut(instance.getStatut())
                 .etatPhysique(instance.getEtatPhysique())
                 .idProduit(instance.getProduit().getIdProduit())
@@ -631,6 +639,9 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                 .effectuePar(mouvement.getEffectuePar())
                 .dateMouvement(mouvement.getDateMouvement())
                 .idReservation(mouvement.getIdReservation())
+                .referenceReservation(mouvement.getReferenceReservation())
+                .dateDebut(mouvement.getDateDebut())
+                .dateFin(mouvement.getDateFin())
                 .numeroSerie(mouvement.getCodeInstance())
                 .build();
     }

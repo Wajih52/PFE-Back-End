@@ -21,6 +21,11 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
     Optional<InstanceProduit> findByNumeroSerie(String numeroSerie);
 
     /**
+     * Trouver une instance par son code QR
+     */
+    Optional<InstanceProduit> findByQrCodeToken(String qrCodeToken);
+
+    /**
      * Vérifier si un numéro de série existe déjà
      */
     boolean existsByNumeroSerie(String numeroSerie);

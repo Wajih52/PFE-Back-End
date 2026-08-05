@@ -37,6 +37,12 @@ public interface InstanceProduitServiceInterface {
     InstanceProduitResponseDto getInstanceById(Long idInstance);
 
     /**
+     * Récupérer une instance par son codeQR
+     */
+    InstanceProduitResponseDto getInstanceByQrCodeToken(String token);
+
+
+    /**
      * Récupérer toutes les instances
      */
     List<InstanceProduitResponseDto> getInstances();
