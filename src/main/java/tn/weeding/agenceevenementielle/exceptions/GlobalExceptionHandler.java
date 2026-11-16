@@ -52,8 +52,6 @@ public class GlobalExceptionHandler {
     }
 
 
-
-
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
          ErrorResponse errorResponse = new ErrorResponse(
@@ -109,6 +107,8 @@ public class GlobalExceptionHandler {
         body.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 
     /**
      * Gère les erreurs d'autorisation (@PreAuthorize)

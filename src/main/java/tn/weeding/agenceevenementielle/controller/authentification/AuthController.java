@@ -86,7 +86,7 @@ public class AuthController {
                 }
 
                 //  CAS 4 : Réactivation automatique si désactivé
-                utilisateurService.activerCompteAvecLogin(utilisateur);
+                utilisateurService.activerCompte(utilisateur.getIdUtilisateur());
             }
 
             //  CAS 5 : Tentative d'authentification normale

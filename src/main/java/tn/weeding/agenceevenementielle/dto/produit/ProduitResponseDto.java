@@ -2,6 +2,7 @@ package tn.weeding.agenceevenementielle.dto.produit;
 
 import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.Categorie;
+import tn.weeding.agenceevenementielle.entities.enums.StatutProduit;
 import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class ProduitResponseDto {
     private Integer quantiteDisponible;
     private Boolean maintenanceRequise;
     private TypeProduit typeProduit;
+    private StatutProduit statutProduit;
     private Integer seuilCritique;
 
     // Indicateurs

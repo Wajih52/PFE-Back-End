@@ -40,7 +40,8 @@ public class UtilisateurRole implements Serializable {
     @JoinColumn(nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "motDePasse", "utilisateurRoles"
     ,"dernierEnvoiEmail","activationToken","tokenExpiration","activationCompte","googleAccount","resetPasswordToken"
-    ,"resetPasswordExpiration","doitChangerMotDePasse"})
+    ,"resetPasswordExpiration","doitChangerMotDePasse", "utilisateurRoles", "notifications", "reservations"
+            , "reclamations",})
     Utilisateur utilisateur;
 
     @PrePersist

@@ -164,7 +164,7 @@ public class UtilisateurRoleServiceImpl implements UtilisateurRoleServiceInterfa
                         .prenom(ur.getUtilisateur().getPrenom())
                         .email(ur.getUtilisateur().getEmail())
                         .codeUtilisateur(ur.getUtilisateur().getCodeUtilisateur())
-                        .telephone(ur.getUtilisateur().getTelephone().toString())
+                        .telephone(ur.getUtilisateur().getTelephone() != null ? ur.getUtilisateur().getTelephone().toString() : null)
                         .image(ur.getUtilisateur().getImage())
                         .etatCompte(ur.getUtilisateur().getEtatCompte() != null
                                 ? ur.getUtilisateur().getEtatCompte().toString()

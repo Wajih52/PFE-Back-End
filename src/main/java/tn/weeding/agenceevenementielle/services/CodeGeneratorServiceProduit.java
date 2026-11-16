@@ -33,8 +33,30 @@ public class CodeGeneratorServiceProduit {
     @Transactional(readOnly = true)
     public String generateProduitCode(String nomProduit) {
         int currentYear = Year.now().getValue();
-        String yearPrefix = PRODUIT_PREFIX + "-" + currentYear + "-"+generateProductPrefix(nomProduit);
-        return  yearPrefix ;
+        String basePrefix = PRODUIT_PREFIX + "-" + currentYear + "-";
+
+        // Génère le préfixe de base (ex: "CH" pour CHAISE PLASTIQUE)
+        String productPrefix = generateProductPrefix(nomProduit);
+        String finalCode = basePrefix + productPrefix;
+
+        // Caractère de distinction pour résoudre les conflits (sans utiliser de chiffres)
+        char suffixeDistinction = 'A';
+
+        // On utilise findByCodeProduit pour vérifier si le code existe déjà
+        while (produitRepository.findByCodeProduit(finalCode).isPresent()) {
+            // On ajoute une lettre qui s'incrémente (A, B, C...)
+            // Ex: PRD-2026-CHA, puis PRD-2026-CHB...
+            finalCode = basePrefix + productPrefix + suffixeDistinction;
+            suffixeDistinction++;
+
+            // Sécurité anti-boucle infinie (si on épuise tout l'alphabet de A à Z)
+            if (suffixeDistinction > 'Z') {
+                finalCode = basePrefix + productPrefix + java.util.UUID.randomUUID().toString().substring(0, 3).toUpperCase();
+                break;
+            }
+        }
+
+        return finalCode;
     }
 
     /**
@@ -102,6 +124,7 @@ public class CodeGeneratorServiceProduit {
                 Map.entry("PROJECTEUR", "PR"),
                 Map.entry("CHAISE PLASTIQUE", "CH"),
                 Map.entry("CHAISE NAPOLEON", "CHN"),
+                Map.entry("CHAISE PLEXIGLAS", "CX"),
                 Map.entry("TANTE", "TT"),
                 Map.entry("TABLE", "TA"),
                 Map.entry("TABLE BASSE", "TB"),

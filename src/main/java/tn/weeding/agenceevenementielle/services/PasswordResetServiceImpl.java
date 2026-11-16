@@ -131,5 +131,15 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         );
     }
 
+    @Override
+    public void verifierTokenReset(String token) {
+        Utilisateur utilisateur = utilisateurRepository.findByResetPasswordToken(token)
+                .orElseThrow(() -> new CustomException("Token invalide ou expiré"));
+
+        if (utilisateur.getResetPasswordExpiration().isBefore(LocalDateTime.now())) {
+            throw new CustomException("Le token a expiré. Veuillez refaire une demande.");
+        }
+    }
+
 
 }

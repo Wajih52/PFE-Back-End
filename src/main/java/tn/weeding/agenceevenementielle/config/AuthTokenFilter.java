@@ -52,6 +52,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         // 3. Charger l'utilisateur avec ses rôles
                         final UserDetails userDetails = customUserDetailsService.loadUserByUsername(identifiant);
 
+                        // --- AJOUT : Bloquer si le compte est suspendu ou désactivé ---
+                        if (!userDetails.isEnabled() || !userDetails.isAccountNonLocked()) {
+                            log.warn(" Rejet du token : le compte de '{}' est suspendu ou désactivé.", identifiant);
+                            // On ne fait rien d'autre : la requête sera refusée et Spring renverra une erreur 401
+                        }else {
+
                         // 4. Créer l'authentification avec les autorités (rôles)
                         UsernamePasswordAuthenticationToken authenticationToken =
                                 new UsernamePasswordAuthenticationToken(
@@ -67,6 +73,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                         log.debug(" Utilisateur '{}' authentifié avec {} rôles",
                                 identifiant, userDetails.getAuthorities().size());
+                             }
                     }
                 }
             }catch (Exception e) {

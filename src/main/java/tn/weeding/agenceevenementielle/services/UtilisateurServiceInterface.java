@@ -24,8 +24,9 @@ public interface UtilisateurServiceInterface {
     void changerMotDePasse(Long id, ChangePasswordDto dto);
 
     void desactiverCompte(Long id);
-    void activerCompteAvecLogin(Utilisateur utilisateur);
     void activerCompte(Long id);
+    void activerCompteViaToken(String token, String nouveauMotDePasse);
+    void verifierTokenActivation(String token);
     void suspenduCompte(Long id);
     void archiverCompte(Long id);
 

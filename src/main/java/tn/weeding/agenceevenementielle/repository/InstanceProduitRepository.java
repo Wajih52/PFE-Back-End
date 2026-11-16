@@ -44,11 +44,14 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
 
     /**
      * Récupérer les instances disponibles d'un produit sur une période
-     * (statut DISPONIBLE)
+     * (Accepte DISPONIBLE, EN_ATTENTE, EN_LIVRAISON, EN_UTILISATION, EN_RETOUR tant qu'il n'y a pas de conflit sur la période)
      */
     @Query("SELECT i FROM InstanceProduit i " +
             "WHERE i.produit.idProduit = :idProduit " +
-            "AND i.statut = tn.weeding.agenceevenementielle.entities.enums.StatutInstance.DISPONIBLE " +
+            "AND i.statut NOT IN (tn.weeding.agenceevenementielle.entities.enums.StatutInstance.HORS_SERVICE, " +
+            "                     tn.weeding.agenceevenementielle.entities.enums.StatutInstance.EN_MAINTENANCE, " +
+            "                     tn.weeding.agenceevenementielle.entities.enums.StatutInstance.PERDU, " +
+            "                     tn.weeding.agenceevenementielle.entities.enums.StatutInstance.EN_PANNE) " +
             "AND NOT EXISTS (" +
             "    SELECT lr FROM LigneReservation lr " +
             "    WHERE i MEMBER OF lr.instancesReservees " +
@@ -69,7 +72,10 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
      */
     @Query("SELECT COUNT(i) FROM InstanceProduit i " +
             "WHERE i.produit.idProduit = :idProduit " +
-            "AND i.statut = tn.weeding.agenceevenementielle.entities.enums.StatutInstance.DISPONIBLE " +
+            "AND i.statut NOT IN (tn.weeding.agenceevenementielle.entities.enums.StatutInstance.HORS_SERVICE, " +
+            "                     tn.weeding.agenceevenementielle.entities.enums.StatutInstance.EN_MAINTENANCE, " +
+            "                     tn.weeding.agenceevenementielle.entities.enums.StatutInstance.PERDU, " +
+            "                     tn.weeding.agenceevenementielle.entities.enums.StatutInstance.EN_PANNE) " +
             "AND NOT EXISTS (" +
             "    SELECT lr FROM LigneReservation lr " +
             "    WHERE i MEMBER OF lr.instancesReservees " +

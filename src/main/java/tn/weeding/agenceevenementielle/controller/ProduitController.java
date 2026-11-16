@@ -103,10 +103,10 @@ public class ProduitController {
     @PostMapping("/{id}/reactiver")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Réactiver un produit",
-            description = "Réactive un produit désactivé avec une nouvelle quantité")
+            description = "Réactive un produit désactivé (avec quantité optionnelle)")
     public ResponseEntity<ProduitResponseDto> reactiverProduit(
             @PathVariable Long id,
-            @RequestParam Integer quantite) {
+            @RequestParam(required = false) Integer quantite) {
         log.info("Requête de réactivation du produit ID : {}", id);
         String username = authenticationFacade.getAuthentication().getName();
         ProduitResponseDto produit = produitService.reactiverProduit(id, quantite, username);
@@ -146,7 +146,7 @@ public class ProduitController {
 
     @GetMapping("/disponibles")
     @Operation(summary = "Obtenir les produits disponibles (stock global)",
-            description = "⚠️ NE PREND PAS EN COMPTE LES PÉRIODES - Utilisé pour vue admin uniquement")
+            description = "NE PREND PAS EN COMPTE LES PÉRIODES - Utilisé pour vue admin uniquement")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsDisponibles() {
         log.info("Requête de récupération des produits disponibles (stock global)");
         List<ProduitResponseDto> produits = produitService.getProduitsDisponibles();
@@ -158,7 +158,7 @@ public class ProduitController {
     @Operation(summary = "Obtenir les produits en rupture de stock",
             description = "Liste des produits avec quantité = 0")
     public ResponseEntity<List<ProduitResponseDto>> getProduitsEnRupture() {
-        log.info("📋 Requête de récupération des produits en rupture");
+        log.info(" Requête de récupération des produits en rupture");
         List<ProduitResponseDto> produits = produitService.getProduitsEnRupture();
         return ResponseEntity.ok(produits);
     }

@@ -38,6 +38,15 @@ public class RoleServiceImpl implements RoleServiceInterface{
     @Override
     public RoleResponseDto updateRole(Long id, RoleRequestDto roleRequestDto) {
         Role role = roleRepository.findById(id).orElseThrow(()->new RoleNotFoundException(id));
+
+        // Liste des rôles systèmes protégés
+        List<String> rolesSystemes = List.of("ADMIN", "CLIENT", "MANAGER", "EMPLOYE");
+
+        // Vérification si on tente de renommer un rôle système protégé
+        if (rolesSystemes.contains(role.getNom()) && !role.getNom().equals(roleRequestDto.getNom())) {
+            throw new IllegalArgumentException("Le nom d'un rôle système (" + role.getNom() + ") ne peut pas être modifié.");
+        }
+
         //verifie que le nom est unique
         if (!role.getNom().equals(roleRequestDto.getNom())&& roleRepository.existsByNom(roleRequestDto.getNom())) {
             throw new IllegalArgumentException("un rôle avec ce nom existe déjà");
@@ -45,6 +54,21 @@ public class RoleServiceImpl implements RoleServiceInterface{
         role.setNom(roleRequestDto.getNom());
         role.setDescription(roleRequestDto.getDescription());
         Role updated = roleRepository.save(role);
+        return mapToResponse(updated);
+    }
+
+    @Override
+    public RoleResponseDto toggleRoleStatus(Long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new RoleNotFoundException(id));
+
+        if ("ADMIN".equals(role.getNom())) {
+            throw new IllegalArgumentException("Le rôle ADMIN ne peut pas être désactivé par sécurité.");
+        }
+
+        role.setActive(!role.getActive()); // Inverse le statut actuel
+        Role updated = roleRepository.save(role);
+
         return mapToResponse(updated);
     }
 

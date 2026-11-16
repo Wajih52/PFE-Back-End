@@ -8,4 +8,6 @@ public interface PasswordResetService {
 void demanderReinitialisationMotDePasse(PasswordResetRequestDto request);
 
 void reinitialiserMotDePasse(PasswordResetDto request);
+
+    void verifierTokenReset(String token) ;
 }

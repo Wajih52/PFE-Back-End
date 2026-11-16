@@ -41,7 +41,7 @@ public class DataInitializer {
         Date dateFinContrat = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         UserCreationDataInitializer adminData = new UserCreationDataInitializer(
-                "AD001", "Wajih", "Rjeb", "WajihAdmin", "Homme", 54496597L,
+                "AD0001", "Wajih", "Rjeb", "WajihAdmin", "Homme", 54496597L,
                 "Rue Monji SLim", "admin@Hive.tn", "Wajih.19.01?", "Administration",
                 new Date(), dateFinContrat, StatutEmp.EnTravail, "Etudiant ingénieur", false
         );
@@ -51,7 +51,7 @@ public class DataInitializer {
 
     public void initClientUser() {
         UserCreationDataInitializer clientData = new UserCreationDataInitializer(
-                "CL001", "Client", "Test", "ClientTest", "Homme", 52240470L,
+                "CL0001", "Client", "Test", "ClientTest", "Homme", 52240470L,
                 "Rue de stade n°7", "client@Hive.tn", "Client.19.01?", null,
                 null, null, null, "Bio client", false
         );
@@ -64,7 +64,7 @@ public class DataInitializer {
         Date dateFinContrat = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         UserCreationDataInitializer employeData = new UserCreationDataInitializer(
-                "EM001", "Employe", "Test", "EmployeTest", "Femme", 54330769L,
+                "EM0001", "Employe", "Test", "EmployeTest", "Femme", 54330769L,
                 "Rue abou kacem chebbi", "employe@Hive.tn", "Employe.19.01?", "Responsable équipe",
                 new Date(), dateFinContrat, StatutEmp.EnTravail, "Bio employe", false
         );
@@ -77,7 +77,7 @@ public class DataInitializer {
         Date dateFinContrat = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         UserCreationDataInitializer managerData = new UserCreationDataInitializer(
-                "MA001", "Manager", "Test", "ManagerTest", "Homme", 50408537L,
+                "MA0001", "Manager", "Test", "ManagerTest", "Homme", 50408537L,
                 "Adresse manager", "manager@Hive.tn", "Manager.19.01?", "Manager",
                 new Date(), dateFinContrat, StatutEmp.EnTravail, "Bio manager", false
         );

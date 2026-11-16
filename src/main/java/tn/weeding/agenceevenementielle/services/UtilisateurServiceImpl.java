@@ -19,6 +19,7 @@ import tn.weeding.agenceevenementielle.repository.RoleRepository;
 import tn.weeding.agenceevenementielle.repository.UtilisateurRepository;
 
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
+public class  UtilisateurServiceImpl implements UtilisateurServiceInterface {
 
 
     private final EmailService emailService;
@@ -59,25 +60,22 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
                 throw new CustomException("Pseudo déjà utilisé par un autre utilisateur !");
             }
             utilisateurMapper.updateUtilisateurFromUtilisateurResquestDto(utilisateurRequestDto,utilisateur);
-
-
         }else {
             if (utilisateurRepository.existsByPseudoAndActivationCompteTrue(utilisateurRequestDto.getPseudo())) {
                 throw new CustomException("Pseudo déjà utilisé par un autre compte!");
             }
-
-
              utilisateur = utilisateurMapper.requestDtoToUtilisateur(utilisateurRequestDto);
         }
 
-        //parametres communs (pour les deux cas ==> update or create )
-            utilisateur.setTokenExpiration(null);
-            utilisateur.setActivationCompte(true);
-          //  utilisateur.setEtatCompte(StatutCompte.ACTIVE);
+        // Gestion du token d'activation (valable 24h)
+        String token = UUID.randomUUID().toString();
+        utilisateur.setActivationToken(token);
+        utilisateur.setTokenExpiration(LocalDateTime.now().plusHours(24));
+        utilisateur.setActivationCompte(false); // Le compte s'activera lors de la validation du mot de passe
+        //utilisateur.setEtatCompte(StatutCompte.ACTIVE);
 
-
-
-//--------------------------------vérification existance role ------------------------------------
+        //Role
+            //---------------vérification existance role ---
             String typeRole = utilisateurRequestDto.getRole() != null ? utilisateurRequestDto.getRole():"EMPLOYE";
 
             utilisateur.setCodeUtilisateur(codeGeneratorService.generateNextCode(typeRole));
@@ -92,10 +90,15 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
                 if (utilisateur.getUtilisateurRoles() == null) {
                     utilisateur.setUtilisateurRoles(new HashSet<>());
                 }
-            utilisateur.getUtilisateurRoles().add(utilisateurRole);
+                 utilisateur.getUtilisateurRoles().add(utilisateurRole);
 
-        // Générer mot de passe temporaire
-        String motDePasseTemporaire = UUID.randomUUID().toString().substring(0, 12);
+        // Mot de passe temporairement en base
+        utilisateur.setMotDePasse(passwordEncoder.encode(UUID.randomUUID().toString()));
+        utilisateur.setDoitChangerMotDePasse(true);
+        utilisateur.setImage(null);
+
+        utilisateur = utilisateurRepository.save(utilisateur);
+
 
         //  Envoyer email si c'est un employé/admin
         if (role != null ) {
@@ -103,20 +106,10 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
                     utilisateur.getEmail(),
                     utilisateur.getPrenom(),
                     utilisateur.getPseudo(),
-                    motDePasseTemporaire
+                    token
             );
         }
 
-        utilisateur.setMotDePasse(passwordEncoder.encode(motDePasseTemporaire));
-
-
-        //  Marquer comme "doit changer mot de passe"
-        utilisateur.setDoitChangerMotDePasse(true);
-
-        utilisateur.setImage(null);
-
-
-        utilisateur = utilisateurRepository.save(utilisateur);
 
         // Puis ajouter l'image si elle existe
         if (utilisateurRequestDto.getImage() != null &&
@@ -185,17 +178,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         log.info("Compte désactivé : {}", utilisateur.getEmail());
     }
 
-    /**
-     * Activer le compte automatiquement lorsqu'il se connecte de nouveau
-     * */
-    @Override
-    public void activerCompteAvecLogin(Utilisateur utilisateur) {
-        if (utilisateur.getEtatCompte() == StatutCompte.DESACTIVE) {
-            log.info("Réactivation automatique du compte : {}", utilisateur.getEmail());
-            utilisateur.setEtatCompte(StatutCompte.ACTIVE);
-            utilisateurRepository.save(utilisateur);
-        }
-    }
+
 
     @Override
     public void activerCompte(Long id) {
@@ -206,6 +189,36 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         utilisateurRepository.save(utilisateur);
 
         log.info("Compte Activé : {}", utilisateur.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public void activerCompteViaToken(String token, String nouveauMotDePasse) {
+        Utilisateur utilisateur = utilisateurRepository.findByActivationToken(token)
+                .orElseThrow(() -> new CustomException("Lien d'activation invalide ou introuvable."));
+
+        if (utilisateur.getTokenExpiration() == null || utilisateur.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new CustomException("Le lien d'activation a expiré. Veuillez contacter l'administrateur.");
+        }
+
+        utilisateur.setMotDePasse(passwordEncoder.encode(nouveauMotDePasse));
+        utilisateur.setActivationCompte(true);
+        utilisateur.setActivationToken(null);
+        utilisateur.setTokenExpiration(null);
+        utilisateur.setDoitChangerMotDePasse(false);
+
+        utilisateurRepository.save(utilisateur);
+        log.info("Compte activé avec succès pour l'utilisateur: {}", utilisateur.getEmail());
+    }
+
+    @Override
+    public void verifierTokenActivation(String token) {
+        Utilisateur utilisateur = utilisateurRepository.findByActivationToken(token)
+                .orElseThrow(() -> new CustomException("Lien d'activation invalide ou introuvable."));
+
+        if (utilisateur.getTokenExpiration() == null || utilisateur.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new CustomException("Le lien d'activation a expiré. Veuillez demander un nouveau lien.");
+        }
     }
 
     @Override
@@ -281,6 +294,7 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
 
         // Hasher et sauvegarder le nouveau
         utilisateur.setMotDePasse(passwordEncoder.encode(dto.getNouveauMotDePasse()));
+        utilisateur.setDoitChangerMotDePasse(false);
         utilisateurRepository.save(utilisateur);
 
         log.info(" Mot de passe modifié avec succès");
@@ -340,6 +354,8 @@ public class UtilisateurServiceImpl implements UtilisateurServiceInterface {
         dtoResponse.setStatutEmploye(utilisateur.getStatutEmploye());
         dtoResponse.setDateCreation(utilisateur.getDateCreation());
         dtoResponse.setBio(utilisateur.getBio());
+        dtoResponse.setDoitChangerMotDePasse(utilisateur.getDoitChangerMotDePasse());
+        dtoResponse.setSoldeConges(utilisateur.getSoldeConges());
         dtoResponse.setRoles(utilisateur.getUtilisateurRoles().stream().
                 map(ur-> ur.getRole().getNom())
                 .collect(Collectors.toSet()));

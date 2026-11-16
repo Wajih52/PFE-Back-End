@@ -10,6 +10,7 @@ import tn.weeding.agenceevenementielle.entities.Reservation;
 import tn.weeding.agenceevenementielle.entities.Utilisateur;
 import tn.weeding.agenceevenementielle.entities.enums.PrioriteReclamation;
 import tn.weeding.agenceevenementielle.entities.enums.StatutReclamation;
+import tn.weeding.agenceevenementielle.entities.enums.TypeNotification;
 import tn.weeding.agenceevenementielle.entities.enums.TypeReclamation;
 import tn.weeding.agenceevenementielle.exceptions.CustomException;
 import tn.weeding.agenceevenementielle.repository.ReclamationRepository;
@@ -32,6 +33,9 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
     private final ReclamationRepository reclamationRepository;
     private final UtilisateurRepository utilisateurRepository;
     private final ReservationRepository reservationRepository;
+    private final EmailService emailService;
+    private final NotificationServiceInterface notificationService;
+
 
     @Override
     public ReclamationResponseDto creerReclamation(ReclamationRequestDto dto, String username) {
@@ -70,6 +74,28 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
 
         Reclamation saved = reclamationRepository.save(reclamation);
         log.info("Réclamation créée avec succès - Code: {}", saved.getCodeReclamation());
+
+        // ========================================
+        // NOTIFIER LES ADMINS ET MANAGERS
+        // ========================================
+        String messageNotif = String.format(
+                "Une nouvelle réclamation (%s) de type '%s' a été soumise. " +
+                        "Contact: %s.",
+                saved.getCodeReclamation(),
+                saved.getTypeReclamation().name(),
+                saved.getContactEmail()
+        );
+
+        // Extraire l'ID de la réservation si elle existe
+        Long idRes = (saved.getReservation() != null) ? saved.getReservation().getIdReservation() : null;
+
+        notificationService.creerNotificationPourStaff(
+                TypeNotification.NOUVELLE_RECLAMATION,
+                "Nouvelle réclamation à traiter",
+                messageNotif,
+                idRes,
+                "/admin/reclamations" // Redirigera l'admin vers la liste
+        );
 
         return mapToResponseDto(saved);
     }
@@ -210,6 +236,32 @@ public class ReclamationServiceImpl implements ReclamationServiceInterface {
 
         Reclamation updated = reclamationRepository.save(reclamation);
         log.info("Réclamation traitée avec succès");
+
+        // ========================================
+        // NOTIFICATION PAR E-MAIL AU VISITEUR/CLIENT
+        // ========================================
+        if (updated.getContactEmail() != null && !updated.getContactEmail().isEmpty()) {
+            // Déterminer le prénom (s'il est connecté) ou utiliser un terme générique pour un visiteur
+            String prenomVisiteur = (updated.getUtilisateur() != null) ? updated.getUtilisateur().getPrenom() : "Cher client";
+
+            String titreEmail = "Mise à jour de votre réclamation : " + updated.getCodeReclamation();
+            String contenuEmail = String.format(
+                    "Votre réclamation a été traitée par notre équipe.<br><br>" +
+                            "<strong>Statut :</strong> %s<br>" +
+                            "<strong>Réponse de l'administration :</strong><br> %s",
+                    updated.getStatutReclamation().name(),
+                    updated.getReponse()
+            );
+
+            emailService.envoyerEmailNotification(
+                    updated.getContactEmail(),
+                    prenomVisiteur,
+                    TypeNotification.SYSTEME_INFO,
+                    titreEmail,
+                    contenuEmail
+            );
+            log.info("E-mail de réponse envoyé à la suite du traitement de la réclamation à {}", updated.getContactEmail());
+        }
 
 
         return mapToResponseDto(updated);

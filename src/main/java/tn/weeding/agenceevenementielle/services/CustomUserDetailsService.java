@@ -50,6 +50,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Charger les rôles de l'utilisateur
         Collection<? extends GrantedAuthority> authorities = getAuthorities(utilisateur);
 
+        // --- Vérification de l'état du compte ---
+        String etat = utilisateur.getEtatCompte() != null ? utilisateur.getEtatCompte().toString() : "ACTIVE";
+        boolean isSuspendu = "SUSPENDU".equals(etat);
+        boolean isDesactiveOrArchive = "DESACTIVE".equals(etat) || "ARCHIVE".equals(etat);
+
         log.info("Utilisateur '{}' chargé avec {} rôle(s)", utilisateur.getPseudo(), authorities.size());
 
         return User.builder()
@@ -57,9 +62,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .password(utilisateur.getMotDePasse())
                 .authorities(authorities)
                 .accountExpired(false)
-                .accountLocked(false)
+                .accountLocked(isSuspendu) // vrai si le compte est suspendu
                 .credentialsExpired(false)
-                .disabled(!utilisateur.getActivationCompte())
+                .disabled(!utilisateur.getActivationCompte() || isDesactiveOrArchive) // Vrai si non activé, désactivé ou archivé
                 .build();
     }
 
@@ -76,8 +81,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
             // Ajouter les rôles avec le préfixe ROLE_
             for (Role role : roles) {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getNom()));
-                log.debug("Ajout du rôle: ROLE_{}", role.getNom());
+                if (Boolean.TRUE.equals(role.getActive())) { // <-- NOUVELLE CONDITION
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getNom()));
+                    log.debug("Ajout du rôle: ROLE_{}", role.getNom());
+                } else {
+                    log.warn("Le rôle ROLE_{} est inactif et ne sera pas attribué à {}", role.getNom(), utilisateur.getPseudo());
+                }
             }
 
 

@@ -56,6 +56,14 @@ public class RoleController {
     }
 
     /**
+     * Activer ou désactiver un rôle
+     */
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<RoleResponseDto> toggleRoleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(roleService.toggleRoleStatus(id));
+    }
+
+    /**
      *supoprimer un role
      */
     @DeleteMapping("/supprimerRole/{id}")

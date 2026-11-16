@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import tn.weeding.agenceevenementielle.dto.authentification.ActiverCompteDto;
 import tn.weeding.agenceevenementielle.dto.authentification.ChangePasswordDto;
 import tn.weeding.agenceevenementielle.dto.UtilisateurRequestDto;
 import tn.weeding.agenceevenementielle.dto.UtilisateurRequestPatchDto;
@@ -199,5 +200,22 @@ public class UtilisateurController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * vérifier le token de premiere connexion et activer le compte
+     */
+    @PostMapping("/activer-compte")
+    public ResponseEntity<?> activerCompte(@RequestBody ActiverCompteDto dto) {
+        utilisateurServiceInterface.activerCompteViaToken(dto.getToken(), dto.getNouveauMotDePasse());
+        return ResponseEntity.ok(Map.of("message", "Compte activé avec succès !"));
+    }
+
+    /**
+     * vérifier le token de premiere connexion
+     */
+    @GetMapping("/verifier-token")
+    public ResponseEntity<?> verifierToken(@RequestParam String token) {
+        utilisateurServiceInterface.verifierTokenActivation(token);
+        return ResponseEntity.ok(Map.of("message", "Token valide"));
+    }
 
 }

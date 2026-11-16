@@ -102,6 +102,7 @@ public interface PointageRepository extends JpaRepository<Pointage, Long> {
             ")")
     List<Long> findEmployesAbsents(@Param("date") LocalDate date);
 
+
     //=================================================
     // Statistiques (Pour dashboard)
     //=================================================

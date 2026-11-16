@@ -6,6 +6,7 @@ import java.util.Set;
 import jakarta.persistence.*;
 import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.Categorie;
+import tn.weeding.agenceevenementielle.entities.enums.StatutProduit;
 import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 
 @Entity
@@ -34,6 +35,10 @@ public class Produit implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Categorie categorieProduit;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatutProduit statutProduit = StatutProduit.ACTIF;
 
     @Column(nullable = false)
     private Double prixUnitaire;
@@ -77,6 +82,9 @@ public class Produit implements Serializable {
     public void onCreate (){
         dateCreation = LocalDateTime.now();
         dateModification = LocalDateTime.now();
+        if ( statutProduit == null ){
+            statutProduit = StatutProduit.ACTIF ;
+        }
     }
     @PreUpdate
     public void onUpdate (){
@@ -113,7 +121,9 @@ public class Produit implements Serializable {
      * Vérifie si le produit est disponible
      */
     public boolean isDisponible() {
-        return quantiteDisponible != null && quantiteDisponible > 0;
+        return this.statutProduit == StatutProduit.ACTIF
+                && quantiteDisponible != null
+                && quantiteDisponible > 0;
     }
 
 }

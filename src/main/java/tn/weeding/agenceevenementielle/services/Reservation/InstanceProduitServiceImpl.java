@@ -559,8 +559,10 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
         if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
             // Pour chercher les instances disponibles pour AUJOURD'HUI
 
-            int disponibles = instanceRepo.countInstancesDisponiblesSurPeriode(
-                    produit.getIdProduit(), LocalDate.now(), LocalDate.now());
+           /* int disponibles = instanceRepo.countInstancesDisponiblesSurPeriode(
+                    produit.getIdProduit(), LocalDate.now(), LocalDate.now());*/
+
+            int disponibles = instanceRepo.findInstancesDisponibles(produit.getIdProduit()).size();
             produit.setQuantiteDisponible(disponibles);
             produitRepo.save(produit);
             log.debug("Quantité disponible du produit {} mise à jour : {}",

@@ -143,6 +143,9 @@ public class Utilisateur implements Serializable {
     @Column(name = "doitChangerMotDePasse")
     private Boolean doitChangerMotDePasse = false;
 
+    @Column(name = "soldeConges")
+    private Integer soldeConges = 30;
+
 
     //Utilisateur 1 ---------------- 1..* UtilisateurRole
     @OneToMany(mappedBy = "utilisateur",cascade = CascadeType.ALL,orphanRemoval = true)

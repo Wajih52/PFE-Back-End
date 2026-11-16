@@ -45,4 +45,10 @@ public class PasswordResetController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/verifier-token-reset")
+    public ResponseEntity<?> verifierTokenReset(@RequestParam String token) {
+        passwordResetService.verifierTokenReset(token);
+        return ResponseEntity.ok(Map.of("message", "Token valide"));
+    }
 }

@@ -34,5 +34,6 @@ public class UtilisateurResponseDto {
     StatutEmp statutEmploye;
     String bio ;
     boolean doitChangerMotDePasse ;
+    Integer soldeConges;
     private Set<String> roles;
 }

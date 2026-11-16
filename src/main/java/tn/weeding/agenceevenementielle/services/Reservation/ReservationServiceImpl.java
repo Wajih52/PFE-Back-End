@@ -1602,6 +1602,8 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
         List<LigneReservationResponseDto> lignesDto = new ArrayList<>();
         if (reservation.getLigneReservations() != null) {
             lignesDto = reservation.getLigneReservations().stream()
+                    .sorted(Comparator.comparing(LigneReservation::getDateDebut)
+                            .thenComparing(LigneReservation::getIdLigneReservation))
                     .map(this::convertLigneToDto)
                     .collect(Collectors.toList());
         }
@@ -1710,7 +1712,9 @@ public class ReservationServiceImpl implements ReservationServiceInterface {
                         .collect(Collectors.toSet());
 
                 ligne.setInstancesReservees(instancesAAffecter);
-                ligneReservationRepo.save(ligne);
+                // Sauvegarder et flusher immédiatement la ligne pour que la requête
+                // de la ligne suivante voie ces instances comme déjà réservées !
+                ligneReservationRepo.saveAndFlush(ligne);
 
                 for(InstanceProduit instanceProduit : instancesAAffecter){
                     enregistrerMouvementStockInstance(instanceProduit,TypeMouvement.RESERVATION,

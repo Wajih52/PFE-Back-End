@@ -3,6 +3,7 @@ package tn.weeding.agenceevenementielle.dto.produit;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import tn.weeding.agenceevenementielle.entities.enums.Categorie;
+import tn.weeding.agenceevenementielle.entities.enums.StatutProduit;
 import tn.weeding.agenceevenementielle.entities.enums.TypeProduit;
 
 @Data
@@ -32,6 +33,8 @@ public class ProduitRequestDto {
 
     @NotNull(message = "Le type de produit est obligatoire")
     private TypeProduit typeProduit;
+
+    private StatutProduit statutProduit = StatutProduit.ACTIF;
 
     private Boolean maintenanceRequise = false;
 

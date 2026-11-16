@@ -30,7 +30,11 @@ public enum TypeNotification {
 
     // Notifications système
     SYSTEME_INFO("Information système", "ℹ️"),
-    SYSTEME_ALERTE("Alerte système", "⚠️");
+    SYSTEME_ALERTE("Alerte système", "⚠️"),
+
+    NOUVELLE_DEMANDE_CONGE("Nouvelle demande de congé", "🏖️"),
+    CONGE_ACCEPTE("Congé accepté", "✅"),
+    CONGE_REFUSE("Congé refusé", "❌");
 
     private final String libelle;
     private final String icone;

@@ -261,17 +261,17 @@ public class EmailService {
             """, prenom, resetLink, resetLink);
     }
 @Async
-    public void envoyerEmailNouvelEmploye(String email, String prenom, String pseudo, String motDePasseTemporaire) {
-        String contenu = construireEmailNouvelEmploye(prenom, pseudo, motDePasseTemporaire);
-        sendEmail(email, " Bienvenue chez Elegant Hive - Vos identifiants", contenu);
+    public void envoyerEmailNouvelEmploye(String email, String prenom, String pseudo, String token) {
+        String contenu = construireEmailNouvelEmploye(prenom, pseudo, token);
+        sendEmail(email, " Bienvenue chez Elegant Hive ", contenu);
     }
 
-    private String construireEmailNouvelEmploye(String prenom, String pseudo, String motDePasse) {
-        // Encoder les identifiants pour l'URL
-        String loginUrl = String.format(
-                appConfig.getFrontendUrl() + "/auth/first-login?pseudo=%s&token=%s",
-                pseudo,
-                java.net.URLEncoder.encode(motDePasse, java.nio.charset.StandardCharsets.UTF_8)
+    private String construireEmailNouvelEmploye(String prenom, String pseudo, String token) {
+        // Lien direct vers le composant first-login avec le token
+        String activationUrl = String.format(
+                "%s/auth/first-login?token=%s",
+                appConfig.getFrontendUrl(),
+                token
         );
 
         return String.format("""
@@ -298,44 +298,41 @@ public class EmailService {
                 <div class="content">
                     <p>Bonjour <strong>%s</strong>,</p>
                
-                    <p>Votre compte employé a été créé avec succès ! 🎊</p>
+                    <p>Votre compte a été créé avec succès ! 🎊</p>
                     
                     <div class="credentials">
                         <p><strong> Identifiant (Pseudo) :</strong> <code>%s</code></p>
-                        <p><strong> Mot de passe temporaire :</strong> <code>%s</code></p>
                     </div>
                     
                     <div style="text-align: center;">
-                        <a href="%s/auth/login" class="button">
-                             Se connecter maintenant
+                        <a href="%s" class="button">
+                             Activer mon compte
                         </a>
                     </div>
                     
                     <div class="warning">
                         <p><strong> IMPORTANT :</strong></p>
                         <ul style="margin: 10px 0; padding-left: 20px;">
-                            <li>Ce mot de passe est <strong>temporaire</strong></li>
-                            <li>Vous devrez le changer à votre première connexion</li>
-                            <li>Ne partagez jamais vos identifiants</li>
+                            <li>Ce lien d'activation est personnel et à usage unique.</li>
                             <li>Ce lien expire dans 24 heures</li>
                         </ul>
                     </div>
                     
                     <p style="color: #666; font-size: 14px; margin-top: 30px;">
-                        Si vous n'avez pas demandé ce compte, contactez immédiatement notre support.
+                       Si vous n'êtes pas concerné, veuillez ignorer ce message.
                     </p>
                     
                     <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
                     
                     <p style="color: #999; font-size: 12px; text-align: center;">
                         Elegant Hive - Agence Événementielle<br>
-                        © 2025 Tous droits réservés
+                        © 2026 Tous droits réservés
                     </p>
                 </div>
             </div>
         </body>
         </html>
-        """, prenom, pseudo, motDePasse, appConfig.getFrontendUrl());
+        """, prenom, pseudo, activationUrl);
     }
 
     /**

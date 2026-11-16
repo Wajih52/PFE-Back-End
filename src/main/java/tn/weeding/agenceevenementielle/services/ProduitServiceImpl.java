@@ -49,6 +49,9 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
     public ProduitResponseDto creerProduit(ProduitRequestDto produitDto, String username) {
         log.info("Création d'un nouveau produit : {} par {}", produitDto.getNomProduit(), username);
 
+        if (produitRepository.existsByNomProduit(produitDto.getNomProduit())) {
+            throw new CustomException("Un produit avec le nom '" + produitDto.getNomProduit() + "' existe déjà dans le catalogue. Veuillez plutôt ajuster son stock.");
+        }
         String imagePath = null;
 
         // Générer un code produit à partir du nom de produit
@@ -86,6 +89,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         produit.setPrixUnitaire(produitDto.getPrixUnitaire());
         produit.setQuantiteDisponible(produitDto.getQuantiteInitial());
         produit.setTypeProduit(produitDto.getTypeProduit());
+        produit.setStatutProduit(produitDto.getStatutProduit() != null ? produitDto.getStatutProduit() : StatutProduit.ACTIF);
         produit.setSeuilCritique(produitDto.getSeuilCritique());
         produit.setImageProduit(imagePath);
 
@@ -148,7 +152,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
     @Override
     public void supprimerProduit(Long id, String username) {
-        log.info("Suppression du produit ID: {} par {}", id, username);
+        log.info("Désactivation du produit ID: {} par {}", id, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -161,30 +165,13 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         );
 
         if(exist){
-            throw new CustomException("Tu ne peux pas supprimer un produit qui est déjà reservé");
+            throw new CustomException("Tu ne peux pas désactiver un produit qui est déjà reservé");
         }
-        if(produit.getTypeProduit()==TypeProduit.AVEC_REFERENCE){
-            List<InstanceProduit> instanceProduits = instanceProduitRepository.findByProduit_IdProduit(id);
-            log.info("nombre instances produit trouvé {}",instanceProduits.size());
-            for(InstanceProduit instanceProduit : instanceProduits){
-                instanceProduit.setStatut(StatutInstance.HORS_SERVICE);
-                enregistrerMouvementInstance(
-                        instanceProduit.getProduit(),
-                        TypeMouvement.DESACTIVATION,
-                        -1,
-                        "Instance :désactivé/supprimé "+StatutInstance.HORS_SERVICE,
-                        username,
-                        instanceProduit
-                );
-                produit.setQuantiteDisponible(produit.getQuantiteDisponible()-1);
-               // produitRepository.save(produit);
-            }
-            produit.setQuantiteDisponible(0);
+
+        // Passage du statut à DESACTIVE
+        produit.setStatutProduit(StatutProduit.DESACTIVE);
 
 
-        }else{
-            // Soft delete
-            produit.setQuantiteDisponible(0);
 
             // Enregistrer le mouvement
             enregistrerMouvement(
@@ -192,17 +179,16 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
                     TypeMouvement.DESACTIVATION,
                     0,
                     produit.getQuantiteDisponible(),
-                    0,
-                    "Produit désactivé/supprimé",
+                    produit.getQuantiteDisponible(),
+                    "Produit désactivé (retiré du catalogue)",
                     username,
                     null
             );
 
-        }
 
         produitRepository.save(produit);
 
-        log.info("Produit désactivé: Code={}", produit.getCodeProduit());
+        log.info("Produit ID: {} désactivé avec succès", id);
     }
 
     @Override
@@ -227,7 +213,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         // Détacher les mouvements de stock AVANT suppression
         List<MouvementStock> mouvements = mouvementStockRepository.findByProduit_IdProduit(id);
 
-        log.info("📦 {} mouvements de stock trouvés pour ce produit", mouvements.size());
+        log.info("{} mouvements de stock trouvés pour ce produit", mouvements.size());
 
         // Détacher chaque mouvement du produit
         for (MouvementStock mouvement : mouvements) {
@@ -290,7 +276,7 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
     @Override
     public ProduitResponseDto reactiverProduit(Long id, Integer quantite, String username) {
-        log.info("Réactivation du produit ID: {} avec quantité: {} par {}", id, quantite, username);
+        log.info("Réactivation du produit ID: {} par {}", id, username);
 
         Produit produit = produitRepository.findById(id)
                 .orElseThrow(() -> new CustomException(
@@ -298,29 +284,31 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
 
 
-        if(produit.getTypeProduit()==TypeProduit.AVEC_REFERENCE){
-            throw new CustomException("pour Réactiver produit de réference il faut réactiver ses instances");
+        int quantiteAvant = produit.getQuantiteDisponible() != null ? produit.getQuantiteDisponible() : 0;
+        int nouvelleQuantite = quantiteAvant;
+
+        // Si une nouvelle quantité est explicitement passée pour un produit EN_QUANTITE
+        if (produit.getTypeProduit() == TypeProduit.EN_QUANTITE && quantite != null && quantite >= 0) {
+            nouvelleQuantite = quantite;
+            produit.setQuantiteDisponible(nouvelleQuantite);
+            if (nouvelleQuantite > produit.getQuantiteInitial()) {
+                produit.setQuantiteInitial(nouvelleQuantite);
+            }
         }
 
-        if(produit.getQuantiteDisponible()!=0){
-            throw new CustomException("produit déjà activer !!!");
-        }
-
-        Integer quantiteAvant = 0;
-        produit.setQuantiteDisponible(quantite);
+        produit.setStatutProduit(StatutProduit.ACTIF);
 
         // Enregistrer le mouvement
         enregistrerMouvement(
                 produit,
                 TypeMouvement.REACTIVATION,
-                quantite,
+                nouvelleQuantite - quantiteAvant,
                 quantiteAvant,
-                quantite,
-                "Produit réactivé",
+                nouvelleQuantite,
+                "Produit réactivé et remis au catalogue",
                 username,
                 null
         );
-
         produit = produitRepository.save(produit);
 
         log.info(" Produit réactivé: Code={}", produit.getCodeProduit());
@@ -729,9 +717,17 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
 
                 if (instancesReservees == null) instancesReservees = 0L;
 
+                int instancesReellementDispos = instanceProduitRepository
+                        .countInstancesDisponiblesSurPeriode(
+                                produit.getIdProduit(),
+                                dateDebut,
+                                dateFin
+                        );
+
                 dto.setQuantiteTotale(totalInstances.intValue());
                 dto.setQuantiteReservee(instancesReservees.intValue());
-                dto.setQuantiteDisponible(totalInstances.intValue() - instancesReservees.intValue());
+              //  dto.setQuantiteDisponible(totalInstances.intValue() - instancesReservees.intValue());
+                dto.setQuantiteDisponible(instancesReellementDispos);
             }
 
             resultat.add(dto);
@@ -1110,6 +1106,23 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
      * Convertir une entité Produit en DTO
      */
     private ProduitResponseDto convertToDto(Produit produit) {
+        Integer quantiteActuelle = produit.getQuantiteDisponible();
+        // Pour un produit AVEC_REFERENCE, le stock actuel correspond au nombre d'instances au statut DISPONIBLE
+        if (produit.getTypeProduit() == TypeProduit.AVEC_REFERENCE) {
+            quantiteActuelle = instanceProduitRepository
+                    .findInstancesDisponibles(produit.getIdProduit())
+                    .size();
+            if (!Objects.equals(produit.getQuantiteDisponible(), quantiteActuelle)) {
+                produit.setQuantiteDisponible(quantiteActuelle);
+                produitRepository.save(produit);
+            }
+        }
+        boolean enStock = produit.getQuantiteDisponible() != null && produit.getQuantiteDisponible() > 0;
+        boolean alerteCritique = produit.getStatutProduit() == StatutProduit.ACTIF
+                && produit.getSeuilCritique() != null
+                && produit.getQuantiteDisponible() != null
+                && produit.getQuantiteDisponible() <= produit.getSeuilCritique();
+
         ProduitResponseDto dto = new ProduitResponseDto();
         dto.setIdProduit(produit.getIdProduit());
         dto.setCodeProduit(produit.getCodeProduit());
@@ -1120,10 +1133,12 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
         dto.setTypeProduit(produit.getTypeProduit());
         dto.setPrixUnitaire(produit.getPrixUnitaire());
         dto.setQuantiteInitial(produit.getQuantiteInitial());
-        dto.setQuantiteDisponible(produit.getQuantiteDisponible());
+        dto.setQuantiteDisponible(quantiteActuelle);
         dto.setMaintenanceRequise(produit.getMaintenanceRequise());
-        dto.setAlerteStockCritique(produit.getQuantiteDisponible()<produit.getSeuilCritique());
-        dto.setEnStock(produit.getQuantiteDisponible()>0);
+        dto.setTypeProduit(produit.getTypeProduit());
+        dto.setStatutProduit(produit.getStatutProduit() != null ? produit.getStatutProduit() : StatutProduit.ACTIF);
+        dto.setAlerteStockCritique(alerteCritique);
+        dto.setEnStock(enStock);
         dto.setDateCreation(produit.getDateCreation());
         dto.setDateDerniereModification(produit.getDateModification());
         dto.setSeuilCritique(produit.getSeuilCritique());

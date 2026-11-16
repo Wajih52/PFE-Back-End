@@ -10,6 +10,8 @@ public interface RoleServiceInterface {
 
     RoleResponseDto updateRole(Long id ,RoleRequestDto roleRequestDto);
 
+    RoleResponseDto toggleRoleStatus(Long id);
+
     RoleResponseDto getRoleParId(Long id);
 
     List<RoleResponseDto> getAllRoles();

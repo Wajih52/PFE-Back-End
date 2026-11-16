@@ -161,8 +161,7 @@ public enum TypeMouvement {
      */
     public boolean isSortie() {
         return switch (this) {
-            case DESACTIVATION,
-                 RETRAIT_STOCK,
+            case RETRAIT_STOCK,
                  MAINTENANCE,
                  PRODUIT_ENDOMMAGE,
                  SUPPRESSION_INSTANCE,
