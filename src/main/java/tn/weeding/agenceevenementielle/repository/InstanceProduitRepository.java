@@ -30,6 +30,9 @@ public interface InstanceProduitRepository extends JpaRepository<InstanceProduit
      */
     boolean existsByNumeroSerie(String numeroSerie);
 
+    @Query("SELECT CASE WHEN COUNT(lr) > 0 THEN true ELSE false END FROM LigneReservation lr JOIN lr.instancesReservees ip WHERE ip.idInstance = :idInstance")
+    boolean existsAnyReservationForInstance(@Param("idInstance") Long idInstance);
+
     /**
      * Récupérer toutes les instances d'un produit
      */

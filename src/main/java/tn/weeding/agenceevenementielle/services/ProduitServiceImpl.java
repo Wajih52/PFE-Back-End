@@ -210,7 +210,15 @@ public class ProduitServiceImpl implements ProduitServiceInterface {
             throw new CustomException("Impossible de supprimer un produit qui est actuellement réservé");
         }
 
-        // Détacher les mouvements de stock AVANT suppression
+        //  Vérifier l'historique complet (réservations terminées ou annulées)
+        boolean hasHistoriqueReservation = ligneReservationRepository.existsByProduit_IdProduit(id);
+        if (hasHistoriqueReservation) {
+            throw new CustomException(
+                    "Suppression définitive impossible : ce produit est associé à d'anciennes réservations (terminées ou annulées). Veuillez le désactiver pour conserver l'historique."
+            );
+        }
+
+        // Détacher les mouvements de stock et supprimer le produit uniquement s'il n'a jamais été réservé
         List<MouvementStock> mouvements = mouvementStockRepository.findByProduit_IdProduit(id);
 
         log.info("{} mouvements de stock trouvés pour ce produit", mouvements.size());

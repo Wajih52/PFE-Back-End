@@ -243,6 +243,9 @@ public interface LigneReservationRepository extends JpaRepository<LigneReservati
             @Param("dateFin") LocalDate dateFin
     );
 
+
+    // Vérifie si le produit a déjà été utilisé dans au moins une ligne de réservation (active, terminée ou annulée)
+    boolean existsByProduit_IdProduit(Long idProduit);
     //=================================================
     // Statistiques (Pour dashboard)
     //=================================================

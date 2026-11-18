@@ -180,6 +180,13 @@ public class InstanceProduitServiceImpl implements InstanceProduitServiceInterfa
                             " car elle est actuellement réservée");
         }
 
+        if (instanceRepo.existsAnyReservationForInstance(instance.getIdInstance())) {
+            throw new ProduitException(
+                    "Impossible de supprimer l'instance " + instance.getNumeroSerie() +
+                            " car elle est liée à un historique de réservations. Passez son statut à HORS_SERVICE."
+            );
+        }
+
         Produit produit = instance.getProduit();
         instanceRepo.delete(instance);
 
